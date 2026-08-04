@@ -26,3 +26,13 @@ AI Priority: MEDIUM
 
 - **Lesson**: Mixing repository scaffolding with application code leads to premature coupling and architectural drift.
 - **Application**: Phase 0 strictly prohibits application source code, focusing 100% on governance, documentation, and DevOps skeletons.
+
+## 4. Documentation Chunking for Large Constitutional Documents
+
+- **Lesson**: Extremely long governance documents (>6000 lines) benefit from multi-part structure with clear section numbering continuity rather than monolithic single files.
+- **Application**: PROJECT_PHILOSOPHY.md is written in sequential parts (Part 01: Sections 1-65, Part 02: Sections 66-95) to maintain quality and context window efficiency while preserving a single unified document with continuous section numbering.
+
+## 5. Visual Variety in AI-First Documentation
+
+- **Lesson**: AI-first repositories require diverse visual structures (Mermaid diagrams, ASCII art, tables, decision trees) approximately every 150 lines to maintain navigability and comprehension for both AI agents and human readers.
+- **Application**: Part 02 includes 47+ Mermaid diagrams, 50+ ASCII art structures, 55+ tables, and 5 image placeholders distributed throughout the content.
