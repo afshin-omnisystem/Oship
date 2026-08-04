@@ -1,7 +1,7 @@
 ---
 File ID: AI-BEST-001
 Title: AI-Native Enterprise Best Practices
-Version: 1.0.0
+Version: 1.1.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -29,3 +29,9 @@ AI Priority: CRITICAL
 - **Rule 3.1**: Maintain strict separation of concerns between top-level directories (e.g., `/architecture` for blueprints vs. `/docs/architecture` for narrative docs).
 - **Rule 3.2**: Ensure every empty folder contains a `.gitkeep` file so folder structures remain deterministic across git clones.
 - **Rule 3.3**: Document any structural change in `.ai/DECISION_LOG.md` and create a corresponding ADR when required.
+
+## 4. Quality Gates & Continuous Optimization
+
+- **Rule 4.1**: Every change must satisfy Repository, Documentation, and AI Quality Gates prior to merging.
+- **Rule 4.2**: Keep documentation current. Update relevant pages concurrently with code changes in the same PR.
+- **Rule 4.3**: Monitor Repository Health Score (RHS). If RHS drops below 90, focus entirely on resolving technical/documentation debt.

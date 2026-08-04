@@ -1,7 +1,7 @@
 ---
 File ID: AI-LESS-001
 Title: Enterprise AI Development Lessons Learned
-Version: 1.0.0
+Version: 1.2.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -36,3 +36,18 @@ AI Priority: MEDIUM
 
 - **Lesson**: AI-first repositories require diverse visual structures (Mermaid diagrams, ASCII art, tables, decision trees) approximately every 150 lines to maintain navigability and comprehension for both AI agents and human readers.
 - **Application**: Part 02 includes 47+ Mermaid diagrams, 50+ ASCII art structures, 55+ tables, and 5 image placeholders distributed throughout the content.
+
+## 6. Dual-Engine and Process-Guided Review
+
+- **Lesson**: Human reviewers are often bottlenecks in PR pipelines. Combining systemic AI review gates with human architectural consensus avoids blocking while ensuring high quality.
+- **Application**: Enforced the Dual-Engine Review model (Section 101) where AI agents verify mechanical linting/vulnerability criteria, leaving humans to focus entirely on pattern validation.
+
+## 7. The Repository as an Operating System Kernel
+
+- **Lesson**: Organizing multi-agent development requires clear task routing and memory persistency interfaces.
+- **Application**: Treating the repository as a bootable kernel (Section 125) with a process scheduler (`NEXT_ACTION.md`), registries (YAML headers), and memory managers (`SESSION_MEMORY.md`) allows high-density agent parallelization.
+
+## 8. Domain-Driven Repository Partitioning
+
+- **Lesson**: Structuring a software repository using Domain-Driven Design (DDD) principles (bounded contexts, context maps, ubiquitous language) eliminates developer cognitive overload and AI agent search fatigue.
+- **Application**: Configured clear, self-contained business boundaries in our topology (Section 127), preventing inter-domain bleeding and logical sprawl.

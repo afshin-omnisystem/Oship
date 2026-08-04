@@ -1,7 +1,7 @@
 ---
 File ID: AI-ACT-001
 Title: Deterministic Next Action Queue
-Version: 1.0.0
+Version: 1.2.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -29,6 +29,8 @@ This queue defines the deterministic sequence of tasks required to transition fr
 | **P1** | `DOCS-03` | Document enterprise Branch Strategy in `docs/development/BRANCH_STRATEGY.md`. | AI Agent Mode | `COMPLETED` |
 | **P0** | `PHIL-01` | Create PROJECT_PHILOSOPHY.md constitutional document. | AI Agent Mode | `COMPLETED` |
 | **P1** | `PHIL-02` | Expand PROJECT_PHILOSOPHY.md with Part 02 extended enterprise framework (Sections 66-95). | AI Agent Mode | `COMPLETED` |
+| **P1** | `PHIL-03` | Expand PROJECT_PHILOSOPHY.md with Part 03 scale & self-evolution framework (Sections 96-126). | AI Agent Mode | `COMPLETED` |
+| **P1** | `PHIL-04` | Expand PROJECT_PHILOSOPHY.md with Part 04 bounded domains & knowledge layers (Sections 127-146). | AI Agent Mode | `COMPLETED` |
 
 ## 3. Transition Criteria for Phase A
 
