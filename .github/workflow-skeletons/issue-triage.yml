@@ -1,0 +1,23 @@
+# ==============================================================================
+# AUTOMATED ISSUE & PR TRIAGE WORKFLOW (SKELETON)
+# Repository: afshin-omnisystem/Oship
+# ==============================================================================
+# Phase 0 Skeleton: Assigns labels and project boards based on issue forms.
+# ==============================================================================
+name: "Issue Triage & Project Board Assignment"
+
+on:
+  issues:
+    types: [opened, reopened, labeled]
+  pull_request:
+    types: [opened, reopened, labeled]
+
+jobs:
+  triage:
+    name: "Automated Label & Project Triage (Skeleton)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Execute Triage Rules (Skeleton)
+        run: echo "Phase 0 Skeleton: Parsing issue form inputs and assigning labels/projects..."

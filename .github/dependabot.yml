@@ -1,0 +1,52 @@
+# ==============================================================================
+# ENTERPRISE DEPENDABOT CONFIGURATION
+# Repository: afshin-omnisystem/Oship
+# ==============================================================================
+version: 2
+updates:
+  # Maintain GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "UTC"
+    labels:
+      - "type: devops"
+      - "type: security"
+      - "priority: medium"
+    assignees:
+      - "afshin-omnisystem"
+    open-pull-requests-limit: 10
+
+  # Maintain Docker base image dependencies
+  - package-ecosystem: "docker"
+    directory: "/docker"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "UTC"
+    labels:
+      - "type: devops"
+      - "type: infrastructure"
+      - "priority: medium"
+    assignees:
+      - "afshin-omnisystem"
+    open-pull-requests-limit: 5
+
+  # Maintain NPM packages (Phase C+)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "UTC"
+    labels:
+      - "type: devops"
+      - "priority: medium"
+    assignees:
+      - "afshin-omnisystem"
+    open-pull-requests-limit: 10

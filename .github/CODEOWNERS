@@ -1,0 +1,41 @@
+# ==============================================================================
+# ENTERPRISE CODEOWNERS POLICY
+# Repository: afshin-omnisystem/Oship
+# ==============================================================================
+# This file defines code ownership for automated review assignment and required
+# approvals on protected branches.
+#
+# Syntax: <path-pattern> <owners...>
+# ==============================================================================
+
+# Global fallback owner
+*                   @afshin-omnisystem
+
+# Repository Governance & AI Control Plane
+/.github/           @afshin-omnisystem
+/.ai/               @afshin-omnisystem
+/docs/              @afshin-omnisystem
+
+# Architecture & Design Specifications
+/architecture/      @afshin-omnisystem
+/design/            @afshin-omnisystem
+/docs/ADR/          @afshin-omnisystem
+
+# Infrastructure & DevOps
+/infra/             @afshin-omnisystem
+/deployment/        @afshin-omnisystem
+/docker/            @afshin-omnisystem
+/k8s/               @afshin-omnisystem
+/.github/workflows/ @afshin-omnisystem
+
+# Security & Compliance
+/security/          @afshin-omnisystem
+/.github/SECURITY.md @afshin-omnisystem
+
+# Application Domains & Services (Phase C+)
+/apps/              @afshin-omnisystem
+/services/          @afshin-omnisystem
+/packages/          @afshin-omnisystem
+/apis/              @afshin-omnisystem
+/database/          @afshin-omnisystem
+/storage/           @afshin-omnisystem

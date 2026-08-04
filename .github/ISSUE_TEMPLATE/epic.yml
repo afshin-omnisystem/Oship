@@ -1,0 +1,35 @@
+name: "Epic Tracker"
+description: "Track a large cross-cutting strategic initiative or multi-sprint capability."
+title: "[EPIC]: "
+labels: ["type: architecture", "size: xl", "status: backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Enterprise Epic Tracker
+        Epics group multiple feature tasks, ADRs, and bounded domain improvements under a unified initiative.
+  - type: textarea
+    id: objective
+    attributes:
+      label: "Epic Objective & Strategic Alignment"
+      description: "Explain the overarching objective and which Phase (0–F) this Epic supports."
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: "In-Scope & Out-of-Scope Boundaries"
+      description: "Define the explicit architectural boundaries of this epic."
+    validations:
+      required: true
+  - type: textarea
+    id: child_tasks
+    attributes:
+      label: "Child Tasks & Deliverables"
+      description: "List the constituent issues, PRs, and milestones."
+      placeholder: |
+        - [ ] #___ Feature A
+        - [ ] #___ Feature B
+        - [ ] #___ ADR-000X Approval
+    validations:
+      required: true

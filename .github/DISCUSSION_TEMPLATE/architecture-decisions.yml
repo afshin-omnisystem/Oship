@@ -1,0 +1,21 @@
+title: "[ARCH DISCUSSION]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Architectural Discussion
+        Use this template to discuss early-stage architectural ideas before creating a formal Architecture Decision Record (ADR).
+  - type: textarea
+    id: problem_context
+    attributes:
+      label: "Architectural Problem / Context"
+      description: "What technical challenge or architectural trade-off are we discussing?"
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_options
+    attributes:
+      label: "Proposed Options"
+      description: "List options under consideration and their pros/cons."
+    validations:
+      required: true

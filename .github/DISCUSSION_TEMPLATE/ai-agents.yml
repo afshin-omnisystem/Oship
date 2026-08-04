@@ -1,0 +1,14 @@
+title: "[AI AGENT WORKFLOW]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## AI Agent & Automation Discussion
+        Discuss LLM agent prompts, context windows, deterministic rules, and vector memory embeddings.
+  - type: textarea
+    id: topic
+    attributes:
+      label: "AI Topic / Pattern"
+      description: "Describe the agent behavior, prompt engineering technique, or automation pipeline."
+    validations:
+      required: true

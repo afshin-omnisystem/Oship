@@ -1,0 +1,19 @@
+name: "Documentation Request"
+description: "Report missing, incorrect, or outdated documentation."
+title: "[DOCS]: "
+labels: ["type: documentation", "status: backlog"]
+body:
+  - type: textarea
+    id: location
+    attributes:
+      label: "Affected Documentation Path"
+      description: "Specify the exact Markdown path or directory (e.g., docs/architecture/)."
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Required Improvements"
+      description: "Describe what information is missing, unclear, or needs updating."
+    validations:
+      required: true

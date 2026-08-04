@@ -1,0 +1,39 @@
+# ==============================================================================
+# ENTERPRISE DECLARATIVE GITHUB MILESTONES GITOPS CONFIGURATION
+# Repository: afshin-omnisystem/Oship
+# ==============================================================================
+# This file defines the canonical set of milestones for the repository, matching
+# the exact specification in docs/roadmap/MILESTONES.md.
+# ==============================================================================
+
+milestones:
+  - title: "Phase 0"
+    description: "Initialize the enterprise AI-native repository foundation and governance surfaces."
+    state: "open"
+  - title: "Phase A"
+    description: "Approve product context, bounded domains, and the first architecture decisions."
+    state: "open"
+  - title: "Phase B"
+    description: "Approve platform, interface, data, security, and delivery design."
+    state: "open"
+  - title: "Phase C"
+    description: "Deliver the first implementation increments with reviewable evidence."
+    state: "open"
+  - title: "Phase D"
+    description: "Validate the release candidate across quality, security, compatibility, and performance."
+    state: "open"
+  - title: "Phase E"
+    description: "Establish operational release readiness, support, and recovery evidence."
+    state: "open"
+  - title: "Phase F"
+    description: "Institutionalize scale, cost, SLO, and AI feedback loops."
+    state: "open"
+  - title: "Version 0.1"
+    description: "First bounded, reviewable capability under the pre-1.0 contract."
+    state: "open"
+  - title: "Version 0.5"
+    description: "Integrated capability with operational evidence and a stable development contract."
+    state: "open"
+  - title: "Version 1.0"
+    description: "Stable supported contract and production release policy."
+    state: "open"

@@ -1,0 +1,36 @@
+name: "Engineering Task"
+description: "Define a granular engineering, DevOps, or documentation task."
+title: "[TASK]: "
+labels: ["status: ready"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Task Description"
+      description: "Describe the specific work to be performed."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "List deterministic verification criteria required for completion."
+      placeholder: |
+        - [ ] All tests pass
+        - [ ] Metadata standard header is present
+        - [ ] Docs index updated
+    validations:
+      required: true
+  - type: dropdown
+    id: domain
+    attributes:
+      label: "Domain / Category"
+      options:
+        - "type: backend"
+        - "type: frontend"
+        - "type: database"
+        - "type: devops"
+        - "type: infrastructure"
+        - "type: ai"
+    validations:
+      required: true

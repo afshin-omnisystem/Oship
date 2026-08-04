@@ -1,0 +1,26 @@
+name: "Research & Investigation"
+description: "Request technical research, prototype exploration, or uncertainty resolution."
+title: "[RESEARCH]: "
+labels: ["research", "status: backlog"]
+body:
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: "Research Question / Hypothesis"
+      description: "State the architectural or technical question being investigated."
+    validations:
+      required: true
+  - type: textarea
+    id: methodology
+    attributes:
+      label: "Proposed Methodology / Evaluation Plan"
+      description: "Describe how the investigation will be conducted."
+    validations:
+      required: true
+  - type: textarea
+    id: expected_artifact
+    attributes:
+      label: "Expected Artifact"
+      description: "What will be delivered (e.g., ADR, benchmark report, prototype in experiments/)?"
+    validations:
+      required: true
