@@ -1,0 +1,26 @@
+# ==============================================================================
+# ENTERPRISE DOCUMENTATION VERIFICATION WORKFLOW (SKELETON)
+# Repository: afshin-omnisystem/Oship
+# ==============================================================================
+# Phase 0 Skeleton: Checks Markdown linting, link validity, and headers.
+# ==============================================================================
+name: "Documentation Verification"
+
+on:
+  pull_request:
+    paths:
+      - "**.md"
+      - "docs/**"
+      - ".ai/**"
+
+jobs:
+  docs-lint:
+    name: "Verify Markdown & Links (Skeleton)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Execute Markdown Lint (Skeleton)
+        run: echo "Phase 0 Skeleton: Linting markdown style and UTF-8 encoding..."
+      - name: Execute Broken Link Check (Skeleton)
+        run: echo "Phase 0 Skeleton: Verifying internal and external documentation links..."

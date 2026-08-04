@@ -1,0 +1,23 @@
+name: "Security Control Improvement"
+description: "Propose a security control, hardening measure, or compliance enhancement."
+title: "[SEC]: "
+labels: ["type: security", "priority: high", "status: backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **WARNING:** Do not report sensitive vulnerabilities here! Use [Security Advisories](https://github.com/afshin-omnisystem/Oship/security/advisories/new) for confidential disclosure.
+  - type: textarea
+    id: enhancement
+    attributes:
+      label: "Security Improvement Description"
+      description: "Describe the non-sensitive hardening measure or policy improvement."
+    validations:
+      required: true
+  - type: textarea
+    id: compliance
+    attributes:
+      label: "Compliance / Risk Mitigation"
+      description: "Specify which security standard or threat model this addresses."
+    validations:
+      required: true

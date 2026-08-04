@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Security Vulnerability Disclosures"
+    url: "https://github.com/afshin-omnisystem/Oship/security/advisories/new"
+    about: "Report a confidential security vulnerability or risk directly to the security team."
+  - name: "Community Discussions & Architecture Q&A"
+    url: "https://github.com/afshin-omnisystem/Oship/discussions"
+    about: "Ask architectural questions, brainstorm ideas, and engage with community engineers."

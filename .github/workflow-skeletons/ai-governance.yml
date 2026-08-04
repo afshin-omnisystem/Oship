@@ -1,0 +1,24 @@
+# ==============================================================================
+# AI GOVERNANCE & PR REVIEW WORKFLOW (SKELETON)
+# Repository: afshin-omnisystem/Oship
+# ==============================================================================
+# Phase 0 Skeleton: Automates AI agent verification, context adherence,
+# and PR metadata checks.
+# ==============================================================================
+name: "AI Governance & Review"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  verify-ai-context:
+    name: "Verify AI Workspace & Context Invariants"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Check Session Handover Notes (Skeleton)
+        run: echo "Phase 0 Skeleton: Verifying session memory and context boundaries..."
+      - name: Execute AI PR Structural Review (Skeleton)
+        run: echo "Phase 0 Skeleton: Running automated AI PR triage and checklist verification..."

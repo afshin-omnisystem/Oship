@@ -1,0 +1,14 @@
+title: "[IDEA]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Enterprise Idea Brainstorm
+        Share innovative ideas for new capabilities, AI agent workflows, or DevOps automation.
+  - type: textarea
+    id: idea_summary
+    attributes:
+      label: "Idea Summary"
+      description: "Describe your idea and the value it brings to Oship."
+    validations:
+      required: true

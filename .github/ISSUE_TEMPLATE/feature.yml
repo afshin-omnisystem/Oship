@@ -1,0 +1,40 @@
+name: "Feature Proposal"
+description: "Propose a new capability, architectural service, or user outcome."
+title: "[FEAT]: "
+labels: ["type: feature", "status: backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Enterprise Feature Proposal
+        Please detail your proposal with architectural clarity and measurable outcomes.
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problem Statement / Business Need"
+      description: "Is your feature request related to a problem or business outcome? Please describe clearly."
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Proposed Solution"
+      description: "Describe the desired solution or architectural capability."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternatives Considered"
+      description: "Describe any alternative solutions or features you have considered."
+  - type: dropdown
+    id: size
+    attributes:
+      label: "Estimated T-Shirt Size"
+      options:
+        - "size: s"
+        - "size: m"
+        - "size: l"
+        - "size: xl"
+    validations:
+      required: true

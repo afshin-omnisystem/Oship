@@ -1,0 +1,26 @@
+name: "Architecture Decision Proposal"
+description: "Propose an architectural change, cross-cutting pattern, or ADR."
+title: "[ARCH]: "
+labels: ["type: architecture", "status: review"]
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: "Architectural Context"
+      description: "Describe the current state and the forces driving the need for an architectural decision."
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: "Proposed Architectural Change"
+      description: "Detail the proposed architecture, diagrams, and components."
+    validations:
+      required: true
+  - type: textarea
+    id: trade_offs
+    attributes:
+      label: "Trade-offs & Implications"
+      description: "List the pros, cons, and performance/security implications."
+    validations:
+      required: true

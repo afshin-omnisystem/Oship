@@ -1,0 +1,29 @@
+# ==============================================================================
+# ENTERPRISE DECLARATIVE GITHUB PROJECT BOARDS GITOPS CONFIGURATION
+# Repository: afshin-omnisystem/Oship
+# ==============================================================================
+# This file defines the canonical set of project boards for the repository,
+# matching the exact specification in docs/roadmap/PROJECT_BOARDS.md.
+# ==============================================================================
+
+projects:
+  - name: "Enterprise Roadmap"
+    description: "High-level strategic portfolio board tracking lifecycle phases (Phase 0–F) and major releases."
+  - name: "Architecture"
+    description: "Architectural governance board tracking ADRs, bounded domain design, and technical trade-offs."
+  - name: "Development"
+    description: "Engineering execution board tracking active sprints, feature deliverables, and code milestones."
+  - name: "Documentation"
+    description: "Documentation tracking board ensuring self-documenting coverage across docs/ and .ai/."
+  - name: "AI Knowledge"
+    description: "AI capability board tracking agent workflows, prompt libraries, context windows, and vector memory."
+  - name: "Research"
+    description: "R&D investigation board tracking competitive analysis, emerging LLM models, and experiments."
+  - name: "Bug Tracking"
+    description: "Defect remediation board tracking bug severity, regression testing, and production patches."
+  - name: "Security"
+    description: "Security control board tracking vulnerabilities, SAST/SCA scanning, and compliance checklists."
+  - name: "Performance"
+    description: "Performance and scalability board tracking latency, throughput, cost, and optimization ideas."
+  - name: "UI/UX"
+    description: "User experience board tracking design systems, wireframes, mockups, and client interactions."

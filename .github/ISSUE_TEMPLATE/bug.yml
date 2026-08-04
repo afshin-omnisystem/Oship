@@ -1,0 +1,48 @@
+name: "Bug Report"
+description: "Report a defect, regression, or unexpected behavior in the enterprise repository."
+title: "[BUG]: "
+labels: ["type: bug", "status: backlog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Enterprise Bug Report
+        Thank you for reporting a bug. Please fill out all required fields deterministically to assist both human engineers and AI triage agents.
+  - type: textarea
+    id: description
+    attributes:
+      label: "Bug Description"
+      description: "Provide a clear and concise description of the bug."
+      placeholder: "When executing workflow X, unexpected behavior Y occurs..."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "Steps to Reproduce"
+      description: "Provide deterministic steps to reproduce the behavior."
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Run command '...'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: "Expected Behavior"
+      description: "Describe what you expected to happen."
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "Suggested Priority"
+      options:
+        - "priority: critical"
+        - "priority: high"
+        - "priority: medium"
+        - "priority: low"
+    validations:
+      required: true

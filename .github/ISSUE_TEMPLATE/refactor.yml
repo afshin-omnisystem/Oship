@@ -1,0 +1,19 @@
+name: "Refactor / Technical Debt"
+description: "Propose a behavior-preserving structural improvement or debt remediation."
+title: "[REFACTOR]: "
+labels: ["refactor", "technical debt", "status: backlog"]
+body:
+  - type: textarea
+    id: debt_item
+    attributes:
+      label: "Technical Debt / Refactor Target"
+      description: "Identify the code, schema, or structural pattern that requires improvement."
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: "Rationale & Benefit"
+      description: "Explain why this refactoring improves maintainability, AI parsing, or performance."
+    validations:
+      required: true

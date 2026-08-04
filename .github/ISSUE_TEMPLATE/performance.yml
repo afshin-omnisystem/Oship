@@ -1,0 +1,19 @@
+name: "Performance & Scalability Optimization"
+description: "Propose a latency, throughput, capacity, or token-cost optimization."
+title: "[PERF]: "
+labels: ["type: performance", "status: backlog"]
+body:
+  - type: textarea
+    id: bottleneck
+    attributes:
+      label: "Bottleneck / Resource Cost"
+      description: "Describe the latency, memory, CPU, or AI token cost bottleneck."
+    validations:
+      required: true
+  - type: textarea
+    id: optimization
+    attributes:
+      label: "Proposed Optimization"
+      description: "Explain how the optimization works and how it will be measured."
+    validations:
+      required: true

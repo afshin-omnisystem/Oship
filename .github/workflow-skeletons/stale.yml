@@ -1,0 +1,21 @@
+# ==============================================================================
+# STALE ISSUE & PR MANAGEMENT WORKFLOW (SKELETON)
+# Repository: afshin-omnisystem/Oship
+# ==============================================================================
+# Phase 0 Skeleton: Identifies inactive issues/PRs to keep backlog clean.
+# ==============================================================================
+name: "Stale Management"
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Every night at 02:00 UTC
+
+jobs:
+  stale:
+    name: "Mark and Close Stale Issues (Skeleton)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Staging Stale Action Placeholder (Skeleton)
+        run: echo "Phase 0 Skeleton: Checking for stale issues (>60 days inactive) and PRs..."

@@ -1,0 +1,14 @@
+title: "[ANNOUNCEMENT]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Enterprise Repository Announcement
+        Please provide architectural updates, phase transitions, or release notes below.
+  - type: textarea
+    id: announcement_body
+    attributes:
+      label: "Announcement Details"
+      description: "Describe the update or strategic milestone."
+    validations:
+      required: true
