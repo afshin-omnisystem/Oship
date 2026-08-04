@@ -1,7 +1,7 @@
 ---
 File ID: AI-DEC-001
 Title: AI Workspace Architectural Decision Log
-Version: 1.0.0
+Version: 1.2.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -26,3 +26,5 @@ This decision log records all architectural, structural, and governance trade-of
 | `DEC-004` | 2026-08-04 | GitOps Labels & Milestones | Syncs GitHub project management primitives via repository-managed configs. | `ADR-0001` | `APPROVED` |
 | `DEC-005` | 2026-08-04 | Zero Application Code in Phase 0 | Ensures clean architectural decoupling of infrastructure from implementation. | `ADR-0001` | `APPROVED` |
 | `DEC-006` | 2026-08-04 | PROJECT_PHILOSOPHY Part 02 Extension | Extended enterprise framework with 30 additional sections covering governance, AI maturity, and scalability models to achieve comprehensive constitutional coverage. | N/A | `APPROVED` |
+| `DEC-007` | 2026-08-04 | PROJECT_PHILOSOPHY Part 03 Extension | Completed repository scale & self-evolution framework with 31 additional sections covering governance, quality gates, metrics, and OS concepts. | N/A | `APPROVED` |
+| `DEC-008` | 2026-08-04 | PROJECT_PHILOSOPHY Part 04 Extension | Completed repository bounded domains & knowledge layers with 20 additional sections covering DDD, repository DNA, multi-agent coordination, and sustainability. | N/A | `APPROVED` |

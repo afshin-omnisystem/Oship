@@ -1,7 +1,7 @@
 ---
 File ID: AI-INDEX-001
 Title: AI Workspace Master Index
-Version: 1.0.0
+Version: 1.2.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -50,6 +50,10 @@ This repository is designed **primarily for AI Agents and secondarily for human 
 | [`SESSION_MEMORY.md`](./SESSION_MEMORY.md) | Persistent working memory, handover protocol, and context state. | `HIGH` | Continuous |
 | [`PROJECT_STATUS.md`](./PROJECT_STATUS.md) | Matrix of Phase 0–F and SemVer 0.1–1.0 readiness gates. | `HIGH` | Weekly / Phase Gate |
 | [`ROADMAP_AI.md`](./ROADMAP_AI.md) | Specialized roadmap for AI-native agent capabilities and DevOps. | `MEDIUM` | Monthly |
+| [`REPOSITORY_EVOLUTION.md`](./REPOSITORY_EVOLUTION.md) | Chronology of repository health metrics and Phase transitions. | `HIGH` | Weekly |
+| [`METRICS.md`](./METRICS.md) | Formulas, thresholds, and target bounds for quality metrics. | `HIGH` | Weekly |
+| [`REPOSITORY_DNA.md`](./REPOSITORY_DNA.md) | Core immutable architectural and topological design genes. | `CRITICAL` | Monthly |
+| [`CONTEXT_ROUTER.md`](./CONTEXT_ROUTER.md) | Declarative context routing and navigation targets for AI. | `CRITICAL` | Weekly |
 | [`NEXT_ACTION.md`](./NEXT_ACTION.md) | Deterministic task queue and immediate execution priorities. | `HIGH` | Daily / Session End |
 | [`DECISION_LOG.md`](./DECISION_LOG.md) | Chronological architectural decision log linking to formal ADRs. | `HIGH` | Per ADR Approval |
 | [`LESSONS_LEARNED.md`](./LESSONS_LEARNED.md) | Institutional knowledge base of prompt and DevOps learnings. | `MEDIUM` | Post-Mortem / Phase |

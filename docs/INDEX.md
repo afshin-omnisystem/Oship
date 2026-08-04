@@ -1,7 +1,7 @@
 ---
 File ID: DOC-IND-001
 Title: Enterprise Documentation Master Index
-Version: 1.0.0
+Version: 1.1.0
 Status: ACTIVE
 Owner: Technical Writing Team / Enterprise Software Architect
 Review Date: 2026-11-04
