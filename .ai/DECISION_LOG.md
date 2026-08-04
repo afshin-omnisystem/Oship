@@ -25,3 +25,4 @@ This decision log records all architectural, structural, and governance trade-of
 | `DEC-003` | 2026-08-04 | Semantic Versioning 2.0.0 | Guarantees strict compatibility contracts across releases and APIs. | `ADR-0001` | `APPROVED` |
 | `DEC-004` | 2026-08-04 | GitOps Labels & Milestones | Syncs GitHub project management primitives via repository-managed configs. | `ADR-0001` | `APPROVED` |
 | `DEC-005` | 2026-08-04 | Zero Application Code in Phase 0 | Ensures clean architectural decoupling of infrastructure from implementation. | `ADR-0001` | `APPROVED` |
+| `DEC-006` | 2026-08-04 | PROJECT_PHILOSOPHY Part 02 Extension | Extended enterprise framework with 30 additional sections covering governance, AI maturity, and scalability models to achieve comprehensive constitutional coverage. | N/A | `APPROVED` |
