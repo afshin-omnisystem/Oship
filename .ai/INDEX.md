@@ -60,6 +60,8 @@ This repository is designed **primarily for AI Agents and secondarily for human 
 | [`BEST_PRACTICES.md`](./BEST_PRACTICES.md) | Enterprise coding, git etiquette, documentation, and security rules. | `CRITICAL` | Quarterly |
 | [`COMMON_MISTAKES.md`](./COMMON_MISTAKES.md) | Known anti-patterns, prohibited operations, and remediation. | `HIGH` | Continuous |
 | [`OPTIMIZATION_IDEAS.md`](./OPTIMIZATION_IDEAS.md) | Backlog of performance, cost, and workflow optimization proposals. | `LOW` | Monthly |
+| [`DOCUMENTATION_COMPLETION_STANDARD.md`](./DOCUMENTATION_COMPLETION_STANDARD.md) | Permanent quality contract defining what "complete" means for every documentation artifact (DoD, metadata, visuals, quality scoring, lifecycle, change management, AI reading). | `CRITICAL` | Per Standard Change |
+| [`AI_AGENT_OPERATING_MANUAL.md`](./AI_AGENT_OPERATING_MANUAL.md) | The permanent operational constitution for every AI agent: startup, context, decisions, coding, collaboration, memory, errors, safety, git, and improvement. | `CRITICAL` | Per Manual Change |
 
 ## 3. Dedicated Subdirectories
 
