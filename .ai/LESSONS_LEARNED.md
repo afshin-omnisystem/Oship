@@ -51,3 +51,18 @@ AI Priority: MEDIUM
 
 - **Lesson**: Structuring a software repository using Domain-Driven Design (DDD) principles (bounded contexts, context maps, ubiquitous language) eliminates developer cognitive overload and AI agent search fatigue.
 - **Application**: Configured clear, self-contained business boundaries in our topology (Section 127), preventing inter-domain bleeding and logical sprawl.
+
+## 9. Deterministic ID Generation Prevents Duplicate Declarations
+
+- **Lesson**: When generating high-volume ID namespaces (DGM/TBL/JSON/YML/IMG), range labels inside registry tables can collide with real declarations and create apparent duplicates.
+- **Application**: For MCX-MEM-001 we removed numeric placeholders from range cells (e.g. `001–959`) and from library headings so every `TBL/DGM/JSON/YML-MEM-###` occurrence is a genuine declaration. The final document shows no duplicate declarations; range tables are described in non-colliding form.
+
+## 10. Fence-Balance and JSON-Parsing Gates for Large Documents
+
+- **Lesson**: Very large generated documents (30k+ lines) are prone to unbalanced code fences and malformed JSON blocks that break parsers.
+- **Application**: MCX-MEM-001 was verified with a toggle-based fence-balance check (784 Mermaid fences balanced) and programmatic JSON parsing (448/448 valid) before release — a reusable gate for all future large documents.
+
+## 11. Release Gate as Immutable Reconstruction Anchor
+
+- **Lesson**: Tagging a major MASTER_CONTEXT document (e.g. `mcx-mem-001-v1.0.0`) gives future AI agents a fixed, immutable reference point to reconstruct the memory architecture regardless of later drift on `main`.
+- **Application**: Released MCX-MEM-001 v1.0.0 via PR #5 and tag `mcx-mem-001-v1.0.0`, recording the merge commit (`e3fb4d4`) and actual metrics in the release notes.

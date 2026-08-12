@@ -104,7 +104,8 @@ These operational metrics track the health of the repository and the knowledge i
 | **Link Integrity** | 100/100 | All links/anchors resolve |
 | **ID Uniqueness** | 100/100 | DGM/TBL/JSON/YML/IMG-MEM all unique |
 | **Reconstructability** | 99/100 | Full memory-system rebuild from document (PART 49) |
-| **Quantitative Targets** | 100/100 | 448 JSON, 420 YAML, 268 DSL, 300 scenarios, 400 failures, 200 recovery, 240 validation rules, 120 ranking/summarization/learning algorithms, 160 decision trees/sequences/state machines |
+| **Quantitative Targets** | 100/100 | 448 JSON, 420 YAML, 264 DSL, 300 scenarios, 400 failures, 200 recovery, 247 validation rules, 120 ranking/summarization/learning algorithms, 160 decision trees/sequences/state machines |
+| **Release Status** | 100/100 | **RELEASED v1.0.0** via PR #5 (merge `e3fb4d4`), tag `mcx-mem-001-v1.0.0` |
 | **Consistency** | 97/100 | Aligned with RULES, SCHEMA, RELATIONSHIPS, EXECUTION_MODEL |
 
 ### MASTER_CONTEXT Schema Audit (MCX-SCHEMA-01)

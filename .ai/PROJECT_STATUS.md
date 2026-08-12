@@ -68,4 +68,19 @@ This document provides a comprehensive tracking matrix for the repository lifecy
   - [x] Create the MASTER_CONTEXT relationship model (`docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md`) — the complete relationship graph of Oship (MCX-REL-01).
   - [x] Create the MASTER_CONTEXT execution model (`docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md`) — the runtime operating system of Oship (MCX-EXEC-01).
   - [x] Create the MASTER_CONTEXT memory system (`docs/MASTER_CONTEXT/MASTER_CONTEXT_MEMORY_SYSTEM.md`) — the cognitive memory architecture of Oship (MCX-MEM-01, EPIC-2 Sprint B7).
+  - [x] Release MCX-MEM-001 v1.0.0 via PR #5 merged into `main` (merge commit `e3fb4d4`) and tag `mcx-mem-001-v1.0.0`. **STATUS: RELEASED.**
+
+### Release Register — MCX-MEM-001 (Oship Memory Constitution)
+
+| Field | Value |
+| :--- | :--- |
+| **Document ID** | `MCX-MEM-001` |
+| **STATUS** | `RELEASED` |
+| **VERSION** | `1.0.0` |
+| **Merge PR** | [#5](https://github.com/afshin-omnisystem/Oship/pull/5) |
+| **Merge Commit** | `e3fb4d43ddee6466797690dcc1c3e3a3a3172626` |
+| **Release Tag** | `mcx-mem-001-v1.0.0` |
+| **Release URL** | https://github.com/afshin-omnisystem/Oship/releases/tag/mcx-mem-001-v1.0.0 |
+| **Actual Metrics** | 34,428 lines · 50 parts · 784 Mermaid · 620 tables · 448 JSON · 420 YAML · 264 DSL · 56 image specs |
+| **Next Objective** | Phase A bounded-domain content documents under MASTER_CONTEXT (README-07 / AOM-02), e.g. `04_ARCHITECTURE SYSTEM_ARCHITECTURE.md` |
   - [x] Create the AI Agent Operating Manual (`.ai/AI_AGENT_OPERATING_MANUAL.md`) — permanent operational constitution for all AI agents (AOM-01).
