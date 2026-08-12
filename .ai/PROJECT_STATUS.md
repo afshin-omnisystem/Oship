@@ -57,3 +57,15 @@ This document provides a comprehensive tracking matrix for the repository lifecy
   - [x] Expand PROJECT_PHILOSOPHY.md with extended enterprise framework (PART 02).
   - [x] Complete PROJECT_PHILOSOPHY.md with scale & self-evolution framework (PART 03).
   - [x] Complete PROJECT_PHILOSOPHY.md with bounded domains & knowledge layers framework (PART 04).
+  - [x] Establish MASTER_CONTEXT knowledge graph (24 knowledge domains with INDEX.md, global graph, routing, metrics).
+  - [x] Begin README AI-native repository landing page (EPIC-1 Sprint A1 Part 01: hero → technology stack).
+  - [x] Complete README AI-native repository landing page (all sections: Hero → Footer, navigation hub over MASTER_CONTEXT).
+  - [x] Final README audit pass (README-06): AI boot journey, AI confusion prevention, knowledge-layer navigation graph, visual identifier registry, persona routing, future expansion readiness. All gates PASSED.
+  - [ ] Transition to Phase A: author bounded-domain content documents under MASTER_CONTEXT (README-07).
+  - [x] Create the Documentation Completion Standard (`.ai/DOCUMENTATION_COMPLETION_STANDARD.md`) — permanent quality contract for all documentation artifacts (DOC-STD-01).
+  - [x] Create the MASTER_CONTEXT operating rules (`docs/MASTER_CONTEXT/MASTER_CONTEXT_RULES.md`) — the constitutional law of the cognitive OS (MCX-RULES-01).
+  - [x] Create the MASTER_CONTEXT enterprise schema (`docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md`) — the DNA of Oship defining every knowledge representation (MCX-SCHEMA-01).
+  - [x] Create the MASTER_CONTEXT relationship model (`docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md`) — the complete relationship graph of Oship (MCX-REL-01).
+  - [x] Create the MASTER_CONTEXT execution model (`docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md`) — the runtime operating system of Oship (MCX-EXEC-01).
+  - [x] Create the MASTER_CONTEXT memory system (`docs/MASTER_CONTEXT/MASTER_CONTEXT_MEMORY_SYSTEM.md`) — the cognitive memory architecture of Oship (MCX-MEM-01, EPIC-2 Sprint B7).
+  - [x] Create the AI Agent Operating Manual (`.ai/AI_AGENT_OPERATING_MANUAL.md`) — permanent operational constitution for all AI agents (AOM-01).
