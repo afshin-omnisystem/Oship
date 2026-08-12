@@ -46,7 +46,7 @@ This queue defines the deterministic sequence of tasks required to transition fr
 | **P0** | `MCX-SCHEMA-01` | Create the MASTER_CONTEXT enterprise knowledge schema (`docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md`) — the DNA of Oship defining how every piece of knowledge is represented (object model, graphs, context, prompts, memory, routing, validation, workflows, AI, events, DSL, libraries). | AI Agent Mode | `COMPLETED` |
 | **P0** | `MCX-REL-01` | Create the MASTER_CONTEXT relationship model (`docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md`) — the complete relationship graph of Oship enabling full self-reconstruction. | AI Agent Mode | `COMPLETED` |
 | **P0** | `MCX-EXEC-01` | Create the MASTER_CONTEXT execution model (`docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md`) — the runtime operating system of Oship enabling full runtime reconstruction. | AI Agent Mode | `COMPLETED` |
-| **P0** | `MCX-MEM-01` | Create the MASTER_CONTEXT memory system (`docs/MASTER_CONTEXT/MASTER_CONTEXT_MEMORY_SYSTEM.md`) — the cognitive memory architecture of Oship enabling full memory reconstruction (50 parts, 34,427+ lines, 784 mermaid, 620 tables, 448 JSON, 420 YAML, 268 DSL, 56 image specs). | AI Agent Mode | `COMPLETED` |
+| **P0** | `MCX-MEM-01` | Create the MASTER_CONTEXT memory system (`docs/MASTER_CONTEXT/MASTER_CONTEXT_MEMORY_SYSTEM.md`) — the cognitive memory architecture of Oship enabling full memory reconstruction (50 parts, 34,428 lines, 784 mermaid, 620 tables, 448 JSON, 420 YAML, 264 DSL, 56 image specs). | AI Agent Mode | `RELEASED` (PR #5, tag `mcx-mem-001-v1.0.0`) |
 
 ## 3. Transition Criteria for Phase A
 
