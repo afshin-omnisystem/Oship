@@ -1,7 +1,7 @@
 ---
 File ID: AI-ACT-001
 Title: Deterministic Next Action Queue
-Version: 1.3.0
+Version: 1.4.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -51,6 +51,11 @@ This queue defines the deterministic sequence of tasks required to transition fr
 | **P0** | `ARCH-02` | (Next) Author `AOM-ARCH-001` **PART 02**, appended after the `<!-- CONTINUATION_POINT -->` marker. Resume from the recorded `NEXT_SECTION` and `NEXT_ID` values; never rewrite, reorder, or squash Part 01. Discharge the forward obligations in `TBL-ARCH-262` — reach the line-density target and add the three outstanding decision trees. | AI Agent Mode | `PENDING` |
 | **P1** | `ARCH-03` | (Blocked by final part) Full-document validation, then PR → review → merge to `main` → release tag `aom-arch-001-v1.0.0`. No release before the FINAL part. | AI Agent Mode | `BLOCKED` |
 | **P1** | `ARCH-04` | (Next after `AOM-ARCH-001`) Update `docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md` to move `SYSTEM_ARCHITECTURE.md` from `PLANNED` to its real status and recompute domain completeness. | AI Agent Mode | `PENDING` |
+| **P0** | `VIS-01` | Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (`AOM-VIS-001`) **PART 01 — System Identity and Vision Constitution**: §01.1–§01.28 plus Appendix A (image specifications) and Appendix B (glossary, status vocabulary, identifier ledger, metrics, evidence, change record). | AI Agent Mode | `COMPLETED` (5,095 lines · 53 Mermaid · 138 tables · 200 validation rules · 120 failure modes · 70 capabilities; Mermaid and anchor validation GREEN) |
+| **P0** | `VIS-02` | (Next) Author `AOM-VIS-001` **PART 02 — Domain Vision and Product Surfaces**, appended after the `<!-- CONTINUATION_POINT -->` marker. Resume at `NEXT_SECTION: 02.1`, `NEXT_ID: VIS-104`; never rewrite, reorder, or squash Part 01. Raise the exhausted `AI-VIS-` and `VAL-VIS-` namespace ceilings via `DEC-VIS-021` before allocating in those namespaces. | AI Agent Mode | `PENDING` |
+| **P1** | `VIS-03` | (Blocked by final part) Full-document validation, then PR → review → merge to `main` → release tag `aom-vis-001-v1.0.0`. No release before the FINAL part. | AI Agent Mode | `BLOCKED` |
+| **P1** | `VIS-04` | Close the traceability gaps recorded in Part 01: map the `UNMAPPED` set (`CAP-VIS-009`, `CAP-VIS-049`…`056`, `PRN-VIS-015`) onto architecture anchors in `AOM-ARCH-001` Part 02, and instrument the 13 success measures currently `NOT YET MEASURED`. | AI Agent Mode | `PENDING` |
+| **P2** | `VIS-05` | Automate the validation rules: `VAL-VIS-006` (anchors) and `VAL-VIS-007` (Mermaid) already have local checkers; promote them into `.github/workflow-skeletons/documentation` and install the workflow so validation is executed rather than asserted. | AI Agent Mode | `PENDING` |
 
 ## 3. Transition Criteria for Phase A
 

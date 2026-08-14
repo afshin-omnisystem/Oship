@@ -1,7 +1,7 @@
 ---
 Document ID: MCX-01-001
 Title: Product Knowledge Domain Index
-Version: 1.0.0
+Version: 1.1.0
 Status: ACTIVE
 Knowledge Layer: L1 Constitutional / L2 Blueprints
 Knowledge Domain: 01_PRODUCT
@@ -13,7 +13,7 @@ Estimated AI Read Time: 4 min
 Estimated Human Read Time: 10 min
 Repository Version: v0.1.0-alpha.0 (Phase 0)
 Owner: Product Management / Chief Product Officer
-Last Updated: 2026-08-04
+Last Updated: 2026-08-14
 ---
 # Product Knowledge Domain — INDEX
 
@@ -57,18 +57,19 @@ This domain houses the following documents. All documents follow the enterprise 
 
 | Document | Purpose | Status |
 | :--- | :--- | :--- |
-| [`PRODUCT_VISION.md`](./PRODUCT_VISION.md) | Canonical product vision, mission, and long-term strategic intent. | PLANNED |
+| [`SYSTEM_VISION.md`](./SYSTEM_VISION.md) | `AOM-VIS-001` — the strategic and conceptual constitution of Oship: identity, vision, mission, problem space, actors, value model, capabilities, boundaries, principles, non-goals, success model, outcomes, AI-native model, traceability to `AOM-ARCH-001`, validation rules, and the failure library. Supersedes `PRODUCT_VISION.md`. | IN_PROGRESS |
+| ~~`PRODUCT_VISION.md`~~ | Superseded before creation by `SYSTEM_VISION.md`, which carries the canonical product vision, mission, and long-term strategic intent. | SUPERSEDED |
 | [`VALUE_PROPOSITION.md`](./VALUE_PROPOSITION.md) | Customer value model and differentiation versus alternatives. | PLANNED |
 | [`PRODUCT_STRATEGY.md`](./PRODUCT_STRATEGY.md) | Strategic pillars, priorities, and OKR mapping for the product. | PLANNED |
 | [`FEATURE_REGISTRY.md`](./FEATURE_REGISTRY.md) | Master register of product features and their lifecycle states. | PLANNED |
 
 ## Reading Order
 
-Start at PRODUCT_VISION, then VALUE_PROPOSITION, then PRODUCT_STRATEGY, then FEATURE_REGISTRY.
+Start at SYSTEM_VISION, then VALUE_PROPOSITION, then PRODUCT_STRATEGY, then FEATURE_REGISTRY.
 
 ## AI Reading Order
 
-AI agents building features must read PRODUCT_VISION and FEATURE_REGISTRY before touching implementation domains. Route feature-related prompts here first.
+AI agents building features must read SYSTEM_VISION and FEATURE_REGISTRY before touching implementation domains. Route feature-related prompts here first. `SYSTEM_VISION.md` is L1 authority: when it conflicts with any downstream product document, it wins.
 
 ## Cross References
 
