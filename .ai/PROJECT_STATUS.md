@@ -1,7 +1,7 @@
 ---
 File ID: AI-STAT-001
 Title: Enterprise Project Phase & Milestone Status
-Version: 1.6.0
+Version: 1.7.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -82,7 +82,7 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 | **Release Tag** | `mcx-mem-001-v1.0.0` |
 | **Release URL** | https://github.com/afshin-omnisystem/Oship/releases/tag/mcx-mem-001-v1.0.0 |
 | **Actual Metrics** | 34,428 lines · 50 parts · 784 Mermaid · 620 tables · 448 JSON · 420 YAML · 264 DSL · 56 image specs |
-| **Next Objective** | Phase A bounded-domain content documents under MASTER_CONTEXT (README-07 / AOM-02) — `04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` (Part 01 complete) and `01_PRODUCT/SYSTEM_VISION.md` (Parts 01 and 02 complete) |
+| **Next Objective** | Phase A bounded-domain content documents under MASTER_CONTEXT (README-07 / AOM-02) — `04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` (Part 01 complete) and `01_PRODUCT/SYSTEM_VISION.md` (Parts 01–04 complete) |
   - [x] Create the AI Agent Operating Manual (`.ai/AI_AGENT_OPERATING_MANUAL.md`) — permanent operational constitution for all AI agents (AOM-01).
   - [x] Begin Phase A bounded-domain content: author `docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` (AOM-ARCH-001) **PART 01 — System Architecture Constitution** (ARCH-01).
 
@@ -107,6 +107,7 @@ This document provides a comprehensive tracking matrix for the repository lifecy
   - [x] Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (AOM-VIS-001) **PART 01 — System Identity and Vision Constitution** (VIS-01).
   - [x] Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (AOM-VIS-001) **PART 02 — Domain Vision Architecture** (VIS-02), appended after the Part 01 continuation point.
   - [x] Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (AOM-VIS-001) **PART 03 — Capability Vision Model** (VIS-03), §03.1–§03.21, appended after the Part 02 continuation point.
+  - [x] Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (AOM-VIS-001) **PART 04 — Measurement, Evidence and System Observability Vision** (VIS-04), §04.0–§04.31, appended after the Part 03 continuation point.
 
 ### Work-in-Progress Register — AOM-VIS-001 (Oship System Vision)
 
@@ -114,7 +115,7 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 | :--- | :--- |
 | **Document ID** | `AOM-VIS-001` |
 | **Path** | `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` |
-| **STATUS** | `IN_PROGRESS` — Parts 01, 02 and 03 of a planned 6 complete |
+| **STATUS** | `IN_PROGRESS` — Parts 01, 02, 03 and 04 of a planned 6 complete |
 | **VERSION** | `1.0.0` (unreleased) |
 | **Authority Level** | L1 — Strategic / Constitutional |
 | **Knowledge Domain** | `01_PRODUCT` (supersedes the `PLANNED` `PRODUCT_VISION.md` entry) |
@@ -149,3 +150,25 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 | **Namespace Ceilings Reached** | `FAL-VIS-` has reached its declared ceiling of **200** — PART 04 must raise it by decision record or place new failure modes elsewhere. `IMG-VIS-` was **closed at 045** by `VIS-347` and must be reopened explicitly or not at all. |
 | **Continuation** | The **last** `<!-- CONTINUATION_POINT -->` in the file is authoritative. `NEXT_SECTION: §04.1 — Measurement Preconditions`, `NEXT_ID: VIS-376`. Next free: `TBL-VIS-396` · `DGM-VIS-108` · `CAP-VIS-171` · `SCAP-VIS-051` · `VAL-VIS-471` · `FAL-VIS-251` (ceiling) · `CON-VIS-061` · `CMET-VIS-051` · `AI-VIS-101` · `DEC-VIS-036` · `OBL-34` · `DOMAIN-VIS-051` · `DMET-VIS-061`. Permanent gaps that must never be filled: `CAP-VIS-057`…`059`, `TBL-VIS-244`, `DEC-VIS-008`…`009`. |
 | **Next Objective** | PART 04 — MEASUREMENT AND INSTRUMENTATION. **Blocked** on `OUT-VIS-004` (CI installation) for its instrumentation content; the unblocked portion is the measurement precondition model. The only fully unblocked capability chain in the repository is `CAP-VIS-072` → `075` → `077` → `104`. |
+
+  - [x] Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (AOM-VIS-001) **PART 04 — Measurement, Evidence and System Observability Vision** (VIS-04), §04.0–§04.31, appended after the Part 03 continuation point.
+
+### PART 04 Completion Register — AOM-VIS-001 (Measurement, Evidence and System Observability Vision)
+
+| Field | Value |
+| :--- | :--- |
+| **Part** | PART 04 — MEASUREMENT, EVIDENCE AND SYSTEM OBSERVABILITY VISION, §04.0 – §04.31 |
+| **Part status** | **COMPLETE — FROZEN, APPEND-ONLY** |
+| **Document status** | `IN_PROGRESS` — unchanged. `VAL-VIS-470` and `VAL-VIS-941` both forbid `RELEASED` while any HALT rule fails; four still do. |
+| **Part 04 Scope** | Namespace decisions · 32 measurement preconditions (`MPC-01`…`032`) · the `EV0`…`EV6` evidence class ladder · the claim-to-evidence binding model · a 15-family metric taxonomy (`MCAT-01`…`015`) · the 21-field canonical metric contract and 50 metric definitions (`MET-VIS-001`…`050`) · the seven-state metric lifecycle · an eight-dimension data quality model with 52 rules (`DQR-001`…`052`) · the five-plane observability architecture · 52 AI observability metrics (`AIO-001`…`052`) · the 24-field agent trace contract (`TRC-001`…`024`) · the decision evidence matrix · project progress measurement · the documentation metrics dashboard · the AI Readability Index · the context loading cost model · the enterprise evidence graph · a 100-mapping traceability matrix · nine quality gates (`QG-0`…`QG-8`) · the measurement failure library and 40 anti-patterns (`FAL-VIS-251`…`290`) · the seven-state correction lifecycle (`CORR-1`…`7`) · metric governance · the eight-layer dashboard information architecture (`DSH-01`…`08`) · AI metric interpretation · forecasting and prediction disambiguation · six metric security classes (`MSC-1`…`6`) · the six-link audit evidence chain · the reproducibility contract · the nine-step AI evidence loading sequence (`AI-VIS-101`…`115`) · the executable reference appendix · inventory and closure |
+| **Part 04 Metrics** | **5,513 lines · 60,804 words · 24 Mermaid diagrams · 162 captioned tables · 193 vision statements (`VIS-376`…`568`) · 474 validation rules (`VAL-VIS-471`…`944`, contiguous) · 40 failure modes (`FAL-VIS-251`…`290`) · 7 decision records (`DEC-VIS-036`…`042`) · 7 image specifications (`IMG-VIS-046`…`052`, none produced) · 50 metrics · 32 preconditions · 52 data quality rules · 52 AI observability metrics · 24 trace fields · 100 traceability mappings · 10 new obligations (`OBL-34`…`OBL-43`)** |
+| **Cumulative Metrics** | **19,263 lines · 214,085 words · 131 Mermaid diagrams · 554 captioned tables · 944 validation rules · 290 failure modes · 60 constraints · 167 capabilities defined · 50 system domains · 32 image specifications (none produced) · 568 vision statements** |
+| **Validation** | Mermaid `mermaid.parse()` — **131 blocks, 0 failures**. Diagram annotation — 131 of 131 carry a `Diagram ID` and an `Explanation`. Identifiers — zero duplicate `TBL-VIS-`, `DGM-VIS-`, or `VIS-` captions. Validation contiguity — `VAL-VIS-471`…`944` fully enumerated with no gaps. Append-only integrity — the first 13,749 lines are byte-identical to commit `e87d3c8`. Visual density — longest unbroken prose run in PART 04 is **43 lines** (§04.30), against a 120-line constitutional limit. |
+| **Honest Findings — Part 04** | **Oship's evidence ceiling is `EV3`** — no claim in the repository can exceed "repository verified", because `MPC-17` (recorded execution) is unmet and `CODEOWNERS` resolves to a single principal, making every verification a self-verification. Of 50 defined metrics, **21 have ever been collected, all manually, none `TRUSTED`**; the lifecycle funnel is `PROPOSED` 111 → `DEFINED` 50 → `IMPLEMENTED` 21 → `COLLECTING`/`VALIDATED`/`TRUSTED` 0. Of 52 AI observability metrics, **9 are collectable and 0 have been collected**; the agent plane is not built. Of nine quality gates, **only `QG-0`/`QG-1`/`QG-2` are attainable**, `QG-3` is partial, `QG-4`…`QG-8` are unattainable; `QG-6` requires at least two `CODEOWNERS` principals. Of 100 traceability mappings, **76 resolve**. Of six audit chain links, **independence and continuity fail**. Of 40 measurement anti-patterns, **12 are PRESENT** in the repository today (5 definition, 2 collection, 1 interpretation, 3 presentation, 1 governance). Two of three enterprise assertions break at the **L1→L2 edge**. `README.md` **must not be loaded as agent context** (`FAL-VIS-171` — the "24 of 24" badge is false). The AI Readability Index composite for SYSTEM_VISION.md is **REFUSED**, not estimated, because one component is unmeasurable. A self-audit performed at closure found that **198 validation rules across five bands were declared by range but never enumerated**; the defect was repaired inside §04.31.2 by append rather than by editing the affected sections. |
+| **Ten-Check Closure Gate** | **9 PASS / 1 FAIL.** PASS: Mermaid validity · diagram annotation · identifier uniqueness · validation contiguity · failure allocation · append-only integrity · prose density · aggregate recount · fabrication audit. **FAIL: check 10, release gate `VAL-VIS-470`** — expected and intended; the document remains `IN_PROGRESS`. |
+| **Release Gate** | **FAILS, unchanged from PART 03.** `VAL-VIS-437` (no retention class defined anywhere), `VAL-VIS-443` (14 capabilities assume persistence while `OBL-03` is open), `VAL-VIS-456` (the term "creator" resolves three ways, `OBL-27`), and consequently `VAL-VIS-470`. PART 04 did not attempt to clear them and did not weaken them. |
+| **Obligations Added** | `OBL-34`…`OBL-43` — 10. **Seven of the ten are blocked by nothing at all**: they require authoring or a single script, not infrastructure. `OBL-39` (traceability parser), `OBL-40` (frontmatter for 10 files), `OBL-41` (declarativeness parser), `OBL-42` (upward evidence index) and `OBL-43` (validator negative test) are the cheapest. |
+| **Highest-Value Single Action** | **Install one CI workflow that runs the Mermaid validator and records its output.** This lifts `MET-VIS-011` from `EV3` to `EV4`, closes the sixth reproducibility condition, opens `QG-4`, and repairs the continuity link in the audit chain. One file. It is not written because it was outside this document's scope, and that boundary is recorded rather than quietly observed. |
+| **Namespace Ceilings** | `VAL-VIS-` at **944 of 1000** (`DEC-VIS-042`) — 56 remain. `FAL-VIS-` at **290 of 300** (`DEC-VIS-038`) — 10 remain. `IMG-VIS-` at **052 of 060** (`DEC-VIS-039`) — 8 remain; the declared 15-specification allocation was under-consumed and the shortfall is disclosed in §04.31.1 rather than padded. |
+| **Continuation** | The **last** `<!-- CONTINUATION_POINT -->` in the file is authoritative. `NEXT_SECTION: §05.1`, `NEXT_ID: VIS-569`. Next free: `TBL-VIS-559` · `DGM-VIS-132` · `VAL-VIS-945` · `FAL-VIS-291` · `IMG-VIS-053` · `DEC-VIS-043` · `OBL-44` · `AI-VIS-116` · `MET-VIS-051` · `MPC-33` · `DQR-053` · `AIO-053` · `TRC-025` · `MCAT-16` · `DSH-09` · `CAP-VIS-171` · `CON-VIS-061`. Permanent gaps that must never be filled: `CAP-VIS-057`…`059`, `TBL-VIS-244`, `TBL-VIS-423`, `DEC-VIS-008`…`009`. |
+| **Next Objective** | PART 05 — not yet scoped. Nothing blocks further documentation work; everything measurable remains blocked on `OBL-03` (persistence decision, human-only) and `OUT-VIS-004` (CI installation). |

@@ -57,7 +57,7 @@ This domain houses the following documents. All documents follow the enterprise 
 
 | Document | Purpose | Status |
 | :--- | :--- | :--- |
-| [`SYSTEM_VISION.md`](./SYSTEM_VISION.md) | `AOM-VIS-001` — the strategic and conceptual constitution of Oship: identity, vision, mission, problem space, actors, value model, capabilities, boundaries, principles, non-goals, success model, outcomes, AI-native model, traceability to `AOM-ARCH-001`, validation rules, and the failure library. Supersedes `PRODUCT_VISION.md`. | IN_PROGRESS |
+| [`SYSTEM_VISION.md`](./SYSTEM_VISION.md) | `AOM-VIS-001` — the strategic and conceptual constitution of Oship: identity, vision, mission, problem space, actors, value model, capabilities, boundaries, principles, non-goals, success model, outcomes, AI-native model, traceability to `AOM-ARCH-001`, validation rules, and the failure library; and — from PART 04 — the measurement, evidence and observability model (`EV0`…`EV6` evidence classes, the 21-field metric contract, quality gates `QG-0`…`QG-8`, the agent trace contract, the audit evidence chain, and the reproducibility contract). PARTS 01–04 of a planned 6 are complete and frozen. Supersedes `PRODUCT_VISION.md`. | IN_PROGRESS |
 | ~~`PRODUCT_VISION.md`~~ | Superseded before creation by `SYSTEM_VISION.md`, which carries the canonical product vision, mission, and long-term strategic intent. | SUPERSEDED |
 | [`VALUE_PROPOSITION.md`](./VALUE_PROPOSITION.md) | Customer value model and differentiation versus alternatives. | PLANNED |
 | [`PRODUCT_STRATEGY.md`](./PRODUCT_STRATEGY.md) | Strategic pillars, priorities, and OKR mapping for the product. | PLANNED |
