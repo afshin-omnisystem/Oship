@@ -8359,3 +8359,5391 @@ flowchart LR
 **DEPENDENCIES_LOADED:** `AOM-ARCH-001` PART 01 read-only, `MASTER_CONTEXT_RULES.md`, `METADATA_STANDARD.md`, `01_PRODUCT/INDEX.md`, `architecture/DOMAIN_MODEL.md`, `.ai/` control plane
 
 ---
+
+# PART 03 — CAPABILITY VISION MODEL
+
+> **Document:** `AOM-VIS-001` · **Part:** 03 of a planned 6 · **Authority:** L1 — Strategic / Constitutional
+> **Appended after** the PART 02 continuation point. **PART 01 and PART 02 are frozen** — nothing
+> above this line is rewritten, reordered, or squashed by this part.
+
+---
+
+## PART 03 — PREAMBLE
+
+### AI NAVIGATION METADATA — PART 03
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read after PART 02, before any architecture or implementation work** |
+| **AI DEPENDENCIES** | PART 01 §01.7 capabilities, §01.8 tiers · PART 02 §02.3 registry, §02.8 capability mapping |
+| **AI INPUTS** | A capability name, a feature request, a domain, or an unclassified piece of desired behaviour |
+| **AI OUTPUTS** | The correct hierarchy level for that thing, its owner, its maturity, and whether it may be built yet |
+| **AI IMPLEMENTATION IMPACT** | Determines whether a request becomes a capability, a sub-capability, a feature, or a rejection |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-321`…`VAL-VIS-470` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §01.5 layers and §01.9 components (read-only) · `MCX-MEM-001` (§03.5) · `design/INDEX.md` (§03.8) |
+
+### What PART 03 Is For
+
+> **`VIS-197`.** PART 01 said *what Oship is*. PART 02 said *what Oship is made of*. PART 03 says
+> *what Oship can do* — and, far more importantly, it fixes the vocabulary in which that question
+> can be answered without ambiguity. The failure this part exists to prevent is not a missing
+> capability. It is the far commoner failure of four different words being used for the same thing
+> by four different readers, so that a specification, an architecture, and an implementation each
+> describe a different system while all three claim conformance.
+
+> **`VIS-198`.** The single most consequential sentence in this part is this one:
+> **`DOMAIN` ≠ `CAPABILITY` ≠ `FEATURE` ≠ `COMPONENT`.** These are four distinct kinds of object
+> with four distinct owners, four distinct lifecycles, and four distinct authority levels. Treating
+> any two as interchangeable is not a naming preference; it produces a system in which nobody can
+> say who owns a thing, when it is done, or what would falsify a claim that it works.
+
+### The Admission Test, Extended
+
+> **`VIS-199`.** PART 01 admitted content through five stages: DEFINED → VISUALIZED → CONNECTED →
+> CONSTRAINED → TRACEABLE (`DGM-VIS-001`). PART 03 adds two further stages for capability content
+> specifically: **EXAMPLE** and **VALIDATE**. This is an *extension applied to this part*, not an
+> amendment to `DGM-VIS-001`, which remains exactly as written. A capability that cannot be
+> illustrated by a concrete instance is under-specified; a capability whose satisfaction cannot be
+> checked is a wish.
+
+```mermaid
+flowchart LR
+    D["DEFINED - one unambiguous meaning"] --> V["VISUALIZED - a diagram, table or matrix"]
+    V --> C["CONNECTED - linked to other identified objects"]
+    C --> K["CONSTRAINED - has boundaries and non-goals"]
+    K --> T["TRACEABLE - stable ID and downstream path"]
+    T --> E["EXAMPLE - at least one concrete instance"]:::new
+    E --> W["VALIDATE - a rule that can fail"]:::new
+
+    classDef new fill:#4a148c,stroke:#ce93d8,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-074` — **Capability Admission Test — PART 01 Discipline Extended by Two Stages**
+> **Explanation:** The five purple-free stages are `DGM-VIS-001` unchanged. The two purple stages
+> are added for capability content only. The order is not decorative: EXAMPLE precedes VALIDATE
+> because you cannot write a falsifiable rule about a thing you cannot instantiate. A capability
+> that stalls at CONSTRAINED and is published anyway is the mechanism by which a registry fills
+> with entries nobody can build.
+
+### PART 03 Section Index
+
+| § | Subject | Primary output |
+| :--- | :--- | :--- |
+| §03.1 | Capability Philosophy | `TBL-VIS-242` terminology matrix, `TBL-VIS-243` classification rules |
+| §03.2 | Capability Taxonomy | `TBL-VIS-251` category registry, `DGM-VIS-075` taxonomy tree |
+| §03.3 | Capability Registry | `CAP-VIS-071`…`170` — 100 new capability definitions |
+| §03.4 | AI Capability Model | AI capability layer map and autonomy binding |
+| §03.5 | Memory Capability Model | Memory capability graph, remember/forget/compress decision model |
+| §03.6 | Knowledge Capability Model | Knowledge capability lifecycle |
+| §03.7 | Creator System Capabilities | Creator capability map — **and the evidence problem it exposes** |
+| §03.8 | User Experience Capabilities | UX capability tree, four `IMG-VIS-` design specifications |
+| §03.9 | Business and Monetization | Business capability matrix |
+| §03.10 | Security Capabilities | Security capability tree |
+| §03.11 | Data Capabilities | Data capability model |
+| §03.12 | Infrastructure Capabilities | Infrastructure capability evolution |
+| §03.13 | Capability Dependency Model | `VAL-VIS-321`…`370`, `CON-VIS-046`…`060` |
+| §03.14 | Capability Maturity Model | `C0`…`C7` state machine |
+| §03.15 | Capability Evolution Model | Evolution flow and gates |
+| §03.16 | Capability Metrics | `CMET-VIS-001`…`050` |
+| §03.17 | Capability Validation System | `VAL-VIS-371`…`470` |
+| §03.18 | Capability Failure Library | `FAL-VIS-176`…`250` |
+| §03.19 | AI Capability Interpretation Guide | `AI-VIS-072`…`100`, capability loading sequence |
+| §03.20 | Image Specifications | `IMG-VIS-026`…`045` |
+| §03.21 | Traceability and Closure | Inventory, traces, honest completion statement |
+
+---
+
+## 03.1 — Capability Philosophy
+
+### AI NAVIGATION METADATA — §03.1
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before using the word "capability" anywhere** |
+| **AI DEPENDENCIES** | PART 01 §01.7, PART 02 §02.1 domain criteria `DCR-01`…`DCR-10` |
+| **AI INPUTS** | Any proposed unit of system behaviour |
+| **AI OUTPUTS** | Its correct classification, or a HALT |
+| **AI IMPLEMENTATION IMPACT** | Wrong classification here corrupts every downstream artifact |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-371`…`VAL-VIS-385` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §01.9 component register (read-only) |
+
+### 03.1.1 What a Capability Is
+
+> **`VIS-200`.** A **capability** is a *stable statement of what the system can do for someone*,
+> expressed independently of how it is built. It survives rewrites. If you replace the database,
+> the language, the framework, and the team, the capability is still the same capability. That
+> survival property is the whole reason the concept earns a namespace: it is the most durable unit
+> of intent that is still specific enough to be built against.
+
+> **`VIS-201`.** Four properties are jointly necessary. A thing lacking any one of them is not a
+> capability, whatever it is called in a ticket:
+>
+> 1. **It names an outcome, not a mechanism.** "Settle value exactly once" is a capability.
+>    "Use a distributed lock" is a mechanism.
+> 2. **It has a beneficiary.** Somebody — human, agent, or external system — is measurably better
+>    off when it works. A capability with no beneficiary is infrastructure looking for a purpose.
+> 3. **It is owned by exactly one domain.** Two owners means the boundary is drawn wrong
+>    (PART 02 §02.5).
+> 4. **It is falsifiable.** There exists an observation that would demonstrate it does not work.
+
+### TBL-VIS-242: Capability Terminology Matrix
+
+| Concept | Definition | Answers | Owner | Lifecycle unit | Authority layer | Survives a rewrite? | Namespace |
+| :--- | :--- | :--- | :--- | :--- | :--- | :---: | :--- |
+| **Domain** | A coherent area of purpose with a boundary and an owner | *Where does this belong?* | Domain owner | `E0`…`E7` evolution level | L1 Vision | Yes | `DOMAIN-VIS-` |
+| **Capability** | A stable statement of what the system can do for someone | *What can the system do?* | Exactly one domain | `C0`…`C7` maturity | L1 Vision | **Yes** | `CAP-VIS-` |
+| **Sub-capability** | A separately deliverable, separately testable part of one capability | *What are the pieces of that?* | Same domain as parent | `C0`…`C7`, never above parent | L1 Vision | Usually | `SCAP-VIS-` |
+| **Feature** | A user-visible increment that exposes some capability through some surface | *What does the user see?* | Product management | Release cycle | L3 Product | No | Not in this document |
+| **Component** | A named unit of software with an interface and a code location | *What runs?* | Engineering | Version and deployment | L2 Architecture | No | `CMP-ARCH-` |
+| **Module** | A unit of code organisation inside a component | *How is the code arranged?* | Engineering | Refactor cycle | L4 Implementation | No | Not identified |
+| **Service** | A component with an independent deployment and process boundary | *What is deployed separately?* | Engineering / SRE | Deployment | L2 Architecture | No | `CMP-ARCH-` subset |
+| **Implementation** | The concrete code satisfying a component contract | *What is the source?* | Engineering | Commit | L4 | No | Git |
+| **Test** | An executable falsification attempt against a claim | *How do we know?* | Engineering / QA | Commit | L4 | No | Git |
+| **Operation** | The running system serving real load | *Does it actually work?* | SRE | Continuous | L5 Runtime | No | Telemetry |
+
+> **`VIS-202`.** Read the "Survives a rewrite?" column downward. It is the fastest correctness check
+> in this document. Everything that survives a rewrite belongs in a vision document; everything
+> that does not belongs somewhere else and is cited here at most as evidence. A `AOM-VIS-001`
+> section that fills with things in the "No" rows has drifted out of its authority layer, and
+> `VAL-VIS-373` exists to catch exactly that.
+
+### 03.1.2 Why Capability-First
+
+> **`VIS-203`.** Oship organises intent capability-first rather than feature-first because features
+> are the least stable unit anybody plans with. A feature is a decision about surface, timing, and
+> audience — three things that change constantly. A capability is a decision about what the system
+> is for. Planning in the unstable unit means replanning continuously; planning in the stable unit
+> means the plan survives its own execution.
+
+### TBL-VIS-243: Capability Classification Rules
+
+| Rule | Statement | Consequence of breaking it |
+| :--- | :--- | :--- |
+| `CCR-01` | A capability names an outcome, never a mechanism | The specification pins an implementation and the architecture loses freedom |
+| `CCR-02` | A capability has exactly one owning domain | Nobody is accountable; both owners assume the other did it |
+| `CCR-03` | A capability has at least one named beneficiary | Work is done that nobody can justify |
+| `CCR-04` | A capability is falsifiable by observation | "Done" becomes a matter of opinion |
+| `CCR-05` | A capability is stated at a level that survives a rewrite | The registry churns with every technology change |
+| `CCR-06` | Two capabilities may not describe the same outcome | Duplicate ownership, duplicate build, divergent behaviour |
+| `CCR-07` | A capability may not be defined in terms of a component | Vision becomes downstream of architecture — inverted authority |
+| `CCR-08` | A capability's maturity may never exceed its owning domain's evolution level | A claimed capability inside an unstarted domain |
+| `CCR-09` | A sub-capability belongs to exactly one parent capability | Orphaned or double-counted work |
+| `CCR-10` | A capability that cannot be given one concrete example is not yet defined | The registry fills with abstractions nobody can build |
+| `CCR-11` | A capability with no dependants and no beneficiary is retired, not kept | Dead weight accumulates and distorts every count |
+| `CCR-12` | A capability's status label is evidence-bound, never aspirational | The `FAL-VIS-150` Paper Promotion, at capability scale |
+
+### 03.1.3 The Discriminator Test
+
+> **`VIS-204`.** When an agent or a human is handed an unclassified request — "add SSO", "make the
+> dashboard faster", "support webhooks" — the first act is classification, not design. The test
+> below is deterministic and must be run before any artifact is created.
+
+```mermaid
+flowchart TB
+    START["Unclassified request arrives"] --> Q1{"Does it name an outcome for a beneficiary"}
+    Q1 -->|"No - it names a mechanism"| MECH["Not a capability. It is a design option. Record it in architecture, not here"]
+    Q1 -->|"Yes"| Q2{"Would it still be true after a total rewrite"}
+    Q2 -->|"No - it describes a surface or a screen"| FEAT["FEATURE. Owned by product management. Out of scope for AOM-VIS-001"]
+    Q2 -->|"Yes"| Q3{"Is it already covered by an existing CAP-VIS entry"}
+    Q3 -->|"Yes - fully"| DUP["Duplicate. Cite the existing capability. Do not allocate"]
+    Q3 -->|"Yes - partially"| SUB["SUB-CAPABILITY. Allocate SCAP-VIS under that parent"]
+    Q3 -->|"No"| Q4{"Can exactly one domain own it"}
+    Q4 -->|"No - two domains claim it"| HALT["HALT. The domain boundary is wrong. Escalate to PART 02 section 02.5"]
+    Q4 -->|"Yes"| Q5{"Can you state one concrete example and one falsifying observation"}
+    Q5 -->|"No"| IMM["Immature. Record at C0 Idea. Do not allocate a full registry entry yet"]
+    Q5 -->|"Yes"| NEW["CAPABILITY. Allocate the next free CAP-VIS identifier"]
+
+    classDef stop fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    class HALT stop
+    class NEW,SUB ok
+    class MECH,FEAT,DUP,IMM warn
+```
+
+> **Diagram ID:** `DGM-VIS-076` — **Capability Discriminator Decision Tree**
+> **Explanation:** Five questions, seven terminal states, no judgement calls. Note that only one
+> terminal state allocates a new identifier. This asymmetry is intentional and is the primary
+> defence against capability explosion (`FAL-VIS-183`): the default answer to "should this be a new
+> capability?" is no, and the tree makes you earn the yes.
+
+### TBL-VIS-245: Discriminator Test Worked Examples
+
+| Request | `Q1` outcome? | `Q2` survives rewrite? | `Q3` covered? | Verdict | Rationale |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| "Add single sign-on" | Yes | Yes | Partially — `CAP-VIS-028` | **Sub-capability** | Federation is one authentication mode among several |
+| "Use PostgreSQL" | **No** — mechanism | — | — | **Not a capability** | A persistence technology choice; belongs to `OBL-03` and architecture |
+| "Dark mode toggle" | Yes | **No** — a surface | — | **Feature** | Presentation only; the capability beneath it is theming |
+| "Make settlement idempotent" | Yes | Yes | Yes — `CAP-VIS-044` | **Duplicate** | Exactly-once is already the stated outcome of settlement |
+| "Let agents remember prior sessions" | Yes | Yes | No | **Capability** | Becomes `CAP-VIS-086` memory persistence |
+| "Support webhooks" | Yes | Yes | Partially — `CAP-VIS-026` | **Sub-capability** | Outbound event delivery under the API surface |
+| "Rewrite the ledger in Rust" | **No** — mechanism | — | — | **Not a capability** | Implementation choice; no beneficiary-visible outcome changes |
+| "Detect fraudulent transactions" | Yes | Yes | Yes — `CAP-VIS-048` | **Duplicate** | Already registered as `PROPOSED` |
+| "Show a spinner while loading" | Yes, weakly | **No** | — | **Feature** | Interaction detail below the vision authority layer |
+| "Know which model produced an output" | Yes | Yes | No | **Capability** | Becomes `CAP-VIS-084` inference provenance |
+
+### 03.1.4 The Nine-Level Traceability Spine
+
+> **`VIS-205`.** The nine levels below are the complete path from intent to running software. Every
+> level has exactly one kind of parent and one kind of child, and each transition is a *different
+> act of work performed by a different authority*. Skipping a level does not save time; it moves
+> the work to a place where nobody is accountable for it.
+
+```mermaid
+flowchart TB
+    L1["SYSTEM VISION - why the system exists"]:::vis
+    L2["DOMAIN - where responsibility lives"]:::vis
+    L3["CAPABILITY - what the system can do"]:::vis
+    L4["SUB-CAPABILITY - the separately deliverable parts"]:::vis
+    L5["FEATURE - what a user sees and when"]:::prod
+    L6["COMPONENT - what runs and what its interface is"]:::arch
+    L7["IMPLEMENTATION - the source that satisfies the contract"]:::impl
+    L8["TEST - the executable falsification attempt"]:::impl
+    L9["OPERATION - the running system under real load"]:::ops
+
+    L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8 --> L9
+    L9 -.->|"evidence returns upward"| L3
+
+    classDef vis fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef prod fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef arch fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef impl fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef ops fill:#e65100,stroke:#ffcc80,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-077` — **The Nine-Level Traceability Spine with Authority Colouring**
+> **Explanation:** Colour is authority, not sequence. Blue is `AOM-VIS-001` — this document owns
+> exactly four of the nine levels and no more. Purple is product, teal is `AOM-ARCH-001`, grey is
+> engineering, orange is operations. The dashed return edge is the only upward arrow in the model
+> and it carries **evidence**, never authority: operation tells vision whether a capability is real,
+> but never tells it what the capability should be.
+
+### TBL-VIS-246: The Nine Levels — Ownership and Transition Rules
+
+| # | Level | Owned by | Cardinality to next | The transition act | Where recorded |
+| ---: | :--- | :--- | :--- | :--- | :--- |
+| 1 | System Vision | Product Management / CPO | 1 → many domains | Strategic decomposition | `AOM-VIS-001` PART 01 |
+| 2 | Domain | Named domain owner | 1 → many capabilities | Responsibility assignment | `AOM-VIS-001` PART 02 |
+| 3 | Capability | The owning domain | 1 → many sub-capabilities | Outcome decomposition | `AOM-VIS-001` PART 03 |
+| 4 | Sub-capability | The owning domain | many → many features | Delivery slicing | `AOM-VIS-001` PART 03 |
+| 5 | Feature | Product Management | many → many components | Surface design | **Not this document** |
+| 6 | Component | Architecture | 1 → many implementations | Interface definition | `AOM-ARCH-001` |
+| 7 | Implementation | Engineering | 1 → many tests | Construction | Git |
+| 8 | Test | Engineering / QA | many → 1 operation | Falsification | Git and CI |
+| 9 | Operation | SRE | — | Exposure to reality | Telemetry and incidents |
+
+> **`VIS-206`.** Note the cardinality change at level 4 → 5. Above it, decomposition is a tree: one
+> parent, many children. From features downward it becomes a **graph** — one feature may draw on
+> several sub-capabilities and one component may serve several features. This is why vision
+> documents can be hierarchical and architecture documents cannot, and why any attempt to keep a
+> strict tree below level 4 produces either duplicated components or fictional boundaries.
+
+> **`VIS-207`.** `AOM-VIS-001` owns levels 1 to 4 and stops. It does not enumerate features. This
+> is not modesty — it is `VIS-065` applied downward: a document that specifies levels it has no
+> authority over produces instructions that the accountable owner never agreed to. Where PART 03
+> needs to talk about level 5 and below, it states **transformation rules** — how a level-4 object
+> becomes a level-5 object — and never the objects themselves.
+
+### 03.1.5 What Capability-First Costs
+
+> **`VIS-208`.** Honest accounting: capability-first has a real cost, and pretending otherwise
+> would be `FAL-VIS-150`. It front-loads specification work before anything is observable, it
+> requires discipline nobody enforces mechanically today, and it produces registries that look like
+> progress while producing no running software. Oship currently exhibits every one of those costs
+> — 70 capabilities registered, 6 implemented. The method is only justified if the specification
+> is later cashed in. `CMET-VIS-042` measures whether it ever is.
+
+### TBL-VIS-247: Capability-First — Benefits Against Costs
+
+| Benefit | Mechanism | Matching cost | Currently paying the cost? |
+| :--- | :--- | :--- | :---: |
+| Plans survive technology change | Capabilities are mechanism-free | Specification precedes feedback | **Yes** |
+| Ownership is unambiguous | One capability, one domain | Boundary disputes must be resolved up front | **Yes** — 12 contested (PART 02 `TBL-VIS-187`) |
+| Duplication is detectable | `CCR-06` plus a single registry | Every addition needs a registry scan | **Yes** |
+| Architecture stays free | No mechanism in the specification | Engineers get less prescriptive guidance | **Yes** |
+| Progress is measurable | `C0`…`C7` maturity per capability | Maturity must be evidence-bound, which is slow | Partially |
+| Agents get deterministic placement | The discriminator tree | The tree must be maintained as reality changes | **Yes** |
+| Reaping the benefit | Capabilities become software | **None of it pays off until level 7 exists** | **Not yet** |
+
+### 03.1.6 Identifier Governance for PART 03
+
+> **`VIS-209`.** `DEC-VIS-031` raised every existing `AOM-VIS-001` namespace ceiling to 999 or
+> 9999, so PART 03 needs no ceiling change. It does need **two new namespaces**, because it
+> introduces two object kinds that no existing prefix can carry: sub-capabilities and capability
+> metrics. Registering them is a constitutional act, performed here in the open under procedure
+> `DEC-VIS-021`, exactly as `DGM-VIS-055` prescribes.
+
+### TBL-VIS-248: `DEC-VIS-035` — Capability Namespace Registration
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-035` |
+| **Kind** | Record — the durable output of executing procedure `DEC-VIS-021` |
+| **Title** | Registration of the `SCAP-VIS-` and `CMET-VIS-` namespaces |
+| **Status** | `ACCEPTED` |
+| **Authority** | L1 — Strategic / Constitutional. Owner: Product Management / CPO |
+| **Trigger** | PART 03 requires a level-4 object kind and a capability-scoped metric kind; neither exists |
+| **Question** | May two new identifier namespaces be registered for `AOM-VIS-001`? |
+| **Answer** | Yes, under the five conditions of `DEC-VIS-031`, which apply unchanged |
+| **Condition A** | `SCAP-VIS-` entries must each name exactly one parent `CAP-VIS-` entry. An orphan is a defect (`VAL-VIS-380`). |
+| **Condition B** | `CMET-VIS-` measures capabilities. It does not measure domains — that is `DMET-VIS-` — and it does not measure system success — that is `SUC-VIS-`. |
+| **Condition C** | Neither prefix may collide with any prefix in `AOM-VIS-001` or `AOM-ARCH-001` |
+| **Consequence if rejected** | Sub-capabilities would have to be smuggled into `CAP-VIS-`, destroying the level distinction this entire part exists to establish |
+| **Reversibility** | Irreversible once cited externally, per `DEC-VIS-031` Condition 5 |
+| **Supersedes** | Nothing. Extends `TBL-VIS-143`. |
+
+### TBL-VIS-249: Namespaces Registered by `DEC-VIS-035`
+
+| Prefix | Meaning | Range | Collision check | Defined in |
+| :--- | :--- | :--- | :--- | :--- |
+| `SCAP-VIS-` | A sub-capability: a separately deliverable, separately testable part of one capability | 001–999 | No collision with `CAP-VIS-`; the distinct leading `S` is deliberate and must never be abbreviated away | §03.3.12 |
+| `CMET-VIS-` | A capability metric definition | 001–999 | No collision with `DMET-VIS-` domain metrics or `SUC-VIS-` system measures | §03.16 |
+
+> **`VIS-210`.** Three metric namespaces now exist and they are **not interchangeable**.
+> `SUC-VIS-` answers "is Oship succeeding?" `DMET-VIS-` answers "is the domain model healthy?"
+> `CMET-VIS-` answers "is this capability real and working?" A number filed under the wrong prefix
+> is worse than a missing number, because it will be aggregated into a total that means nothing.
+> `VAL-VIS-441` checks the separation.
+
+### TBL-VIS-250: PART 03 Identifier Allocation Plan
+
+| Namespace | Block reserved for PART 03 | Pinned assignments | Notes |
+| :--- | :--- | :--- | :--- |
+| `VIS-` | 197 onward | — | Sequential |
+| `CAP-VIS-` | 071–170 | — | 100 new capabilities; `057`–`059` remain reserved gaps from PART 01 |
+| `SCAP-VIS-` | 001–050 | — | Decomposition of ten selected capabilities |
+| `TBL-VIS-` | 242 onward | 242–250 §03.1 · 251 onward §03.2 | Allocation is sequential in encounter order; gaps are permitted by `VIS-108` |
+| `DGM-VIS-` | 074 onward | 074, 076, 077 §03.1 · 075 §03.2 | `DGM-VIS-075` is deliberately allocated out of order to §03.2 |
+| `VAL-VIS-` | 321–470 | 321–370 §03.13 · 371–470 §03.17 | 150 new rules |
+| `FAL-VIS-` | 176–250 | — | 75 new failure modes |
+| `CON-VIS-` | 046–060 | — | 15 capability constraints |
+| `CMET-VIS-` | 001–050 | — | Capability metrics |
+| `AI-VIS-` | 072–100 | — | Interpretation directives |
+| `IMG-VIS-` | 026–045 | 026–029 §03.8 design specifications | 20 specifications, no binary images |
+| `DEC-VIS-` | 035 | 035 namespace registration | Further records only if a decision is actually taken |
+
+> **`VIS-211`.** `CAP-VIS-057`, `058`, and `059` were reserved in PART 01 and remain **deliberately
+> unallocated**. PART 03 does not fill them. Reserved gaps are honoured rather than opportunistically
+> consumed, because a reader who finds `CAP-VIS-058` cited in an external document must be able to
+> discover that it was never defined, not find an unrelated capability sitting in its place.
+
+---
+
+## 03.2 — Capability Taxonomy
+
+### AI NAVIGATION METADATA — §03.2
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before adding any entry to the capability registry** |
+| **AI DEPENDENCIES** | §03.1 classification rules `CCR-01`…`CCR-12` · PART 01 §01.8 tier model · PART 02 §02.3 domain registry |
+| **AI INPUTS** | A capability that has passed the discriminator test `DGM-VIS-076` |
+| **AI OUTPUTS** | Its category, its tier, its owning domain, and its position in the taxonomy tree |
+| **AI IMPLEMENTATION IMPACT** | Category determines review path, security floor, and which architecture layer will host it |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-386`…`VAL-VIS-400` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §01.5 layer model (read-only) |
+
+### 03.2.1 Two Orthogonal Axes
+
+> **`VIS-212`.** Every capability is placed on two independent axes and both placements are
+> mandatory. **Category** answers *what kind of thing is this?* — it is a semantic classification
+> that never changes. **Tier** answers *what must exist before this can work?* — it is a structural
+> classification derived from dependencies. A capability can be a Knowledge capability at Tier 1 or
+> a Knowledge capability at Tier 4; the axes do not constrain each other.
+
+> **`VIS-213`.** Conflating the axes is the commonest taxonomy error, and it is seductive because
+> the two correlate loosely in practice. The correlation is not causal. Treating "Foundational" as
+> a category rather than a tier produces a taxonomy in which nothing can ever move, because a
+> capability's tier legitimately changes when its dependencies change while its category must not.
+
+```mermaid
+flowchart LR
+    subgraph AXIS1["AXIS 1 - CATEGORY - semantic, permanent"]
+        C1["Knowledge"]
+        C2["Governance"]
+        C3["Platform"]
+        C4["Domain"]
+        C5["AI"]
+        C6["Experience"]
+        C7["Data"]
+        C8["Infrastructure"]
+        C9["Commercial"]
+    end
+    subgraph AXIS2["AXIS 2 - TIER - structural, derived"]
+        T1["T1 Foundational"]
+        T2["T2 Structural"]
+        T3["T3 Operational"]
+        T4["T4 Platform"]
+        T5["T5 Domain"]
+    end
+    CAP["Any single capability"] --> AXIS1
+    CAP --> AXIS2
+
+    classDef a fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef b fill:#004d40,stroke:#80cbc4,color:#ffffff
+    class C1,C2,C3,C4,C5,C6,C7,C8,C9 a
+    class T1,T2,T3,T4,T5 b
+```
+
+> **Diagram ID:** `DGM-VIS-075` — **The Two Orthogonal Classification Axes**
+> **Explanation:** Both arrows leave the same capability. Neither axis is derivable from the other.
+> The nine categories are fixed by `TBL-VIS-251` below and may only change by a `DEC-VIS-` record;
+> the five tiers are those already fixed in PART 01 §01.8 and are **not** redefined here. PART 01
+> registered seventy capabilities across five categories; PART 03 extends the category set to nine
+> because PART 02's domain register produced experience, data, infrastructure, and commercial
+> domains that PART 01's five categories cannot express without distortion.
+
+### TBL-VIS-251: Capability Category Registry
+
+| ID | Category | Question it answers | Primary owning domains | Security floor | Review path | PART 01 count | PART 03 additions |
+| :--- | :--- | :--- | :--- | :---: | :--- | ---: | ---: |
+| `CCAT-01` | **Knowledge** | Can the system describe itself accurately? | `DOMAIN-VIS-001`…`009` | `S3` | Documentation owner | 12 | 8 |
+| `CCAT-02` | **Governance** | Can the system constrain what happens inside it? | `DOMAIN-VIS-002`, `007`, `047` | `S2` | Governance owner plus CODEOWNERS | 12 | 10 |
+| `CCAT-03` | **Platform** | Can other things be built on it? | `DOMAIN-VIS-017`…`027` | `S2` | Architecture | 16 | 14 |
+| `CCAT-04` | **Domain** | Can it do the Money Factory work? | `DOMAIN-VIS-018`…`023` | **`S1`** | Architecture plus domain owner plus security | 8 | 12 |
+| `CCAT-05` | **AI** | Can an agent operate it safely? | `DOMAIN-VIS-010`…`016` | `S2` | AI governance | 8 | 16 |
+| `CCAT-06` | **Experience** | Can a human use it and understand it? | `DOMAIN-VIS-030`…`033` | `S3` | Design plus product | 0 | 12 |
+| `CCAT-07` | **Data** | Can information be stored, moved, and trusted? | `DOMAIN-VIS-034`…`037` | **`S1`** | Architecture plus data owner | 0 | 10 |
+| `CCAT-08` | **Infrastructure** | Can it run, scale, and be observed? | `DOMAIN-VIS-038`…`050` | `S2` | SRE plus architecture | 0 | 14 |
+| `CCAT-09` | **Commercial** | Can value be captured from it? | `DOMAIN-VIS-024`, `028`, `029` | `S2` | Business owner | 0 | 4 |
+| | **Totals** | | | | | **56** | **100** |
+
+> **`VIS-214`.** The PART 01 count column sums to 56, not 70. The remaining 14 PART 01 capabilities
+> (`CAP-VIS-060`…`070`, plus the three reserved gaps `057`–`059`) are **bounded-context capabilities**
+> that were registered against contexts rather than categories. They are reconciled in §03.3.13
+> rather than silently re-bucketed, because retro-fitting a category onto an accepted entry would
+> be a rewrite of frozen content and is prohibited by the append-only part model.
+
+> **`VIS-215`.** Read the "Security floor" column as a **floor, not a value**. A `CCAT-06`
+> Experience capability that handles authentication material is `S1` regardless of the `S3` floor.
+> The floor exists so that an unclassified capability defaults to something defensible rather than
+> to nothing; `VAL-VIS-389` fails any capability whose declared security level is *below* its
+> category floor.
+
+### 03.2.2 The Taxonomy Tree
+
+```mermaid
+flowchart TB
+    ROOT["OSHIP CAPABILITY TAXONOMY - 170 registered capabilities"]
+
+    ROOT --> SELF["SELF-DIRECTED - the system acting on itself"]
+    ROOT --> OUT["OUTWARD-DIRECTED - the system acting for others"]
+
+    SELF --> K["CCAT-01 Knowledge - 20"]
+    SELF --> G["CCAT-02 Governance - 22"]
+    SELF --> A["CCAT-05 AI - 24"]
+
+    OUT --> BUILD["BUILT UPON - enabling surfaces"]
+    OUT --> WORK["THE WORK ITSELF"]
+    OUT --> SEEN["PERCEIVED BY HUMANS"]
+
+    BUILD --> P["CCAT-03 Platform - 30"]
+    BUILD --> I["CCAT-08 Infrastructure - 14"]
+    BUILD --> DA["CCAT-07 Data - 10"]
+
+    WORK --> D["CCAT-04 Domain - 20"]
+    WORK --> CM["CCAT-09 Commercial - 4"]
+
+    SEEN --> X["CCAT-06 Experience - 12"]
+
+    classDef self fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef out fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef leaf fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class SELF,K,G,A self
+    class OUT,BUILD,WORK,SEEN out
+    class P,I,DA,D,CM,X leaf
+```
+
+> **Diagram ID:** `DGM-VIS-078` — **Capability Taxonomy Tree with Registered Counts**
+> **Explanation:** The first split is the most revealing thing in this part. Oship registers 66
+> self-directed capabilities and 90 outward-directed ones — and every implemented capability today
+> sits on the self-directed branch. The system can currently describe and govern itself and cannot
+> yet do anything for anyone else. That is not a criticism of the plan; it is the accurate present
+> state, and `CMET-VIS-011` tracks the ratio as the primary indicator of whether Oship is escaping
+> self-reference.
+
+### TBL-VIS-252: Category Distribution Against Reality
+
+| Category | Registered | `C5`+ implemented | Implementation rate | Owning domains at `E3`+ | Honest reading |
+| :--- | ---: | ---: | ---: | ---: | :--- |
+| `CCAT-01` Knowledge | 20 | 6 | 30.0% | 3 of 9 | The only category with real substance |
+| `CCAT-02` Governance | 22 | 4 | 18.2% | 1 of 3 | Documented, largely unenforced (`EVD-VIS-017`) |
+| `CCAT-03` Platform | 30 | 0 | 0.0% | 0 of 11 | Entirely aspirational |
+| `CCAT-04` Domain | 20 | 0 | 0.0% | 0 of 6 | Entirely aspirational — and `S1` |
+| `CCAT-05` AI | 24 | 0 | 0.0% | 1 of 7 | Documented substrate, no runtime |
+| `CCAT-06` Experience | 12 | 0 | 0.0% | 0 of 4 | Folder structure only (`DES-IND-001`) |
+| `CCAT-07` Data | 10 | 0 | 0.0% | 0 of 4 | Blocked on `OBL-03` persistence choice |
+| `CCAT-08` Infrastructure | 14 | 0 | 0.0% | 0 of 13 | No installed workflows (`EVD-VIS-017`) |
+| `CCAT-09` Commercial | 4 | 0 | 0.0% | 0 of 3 | `PROPOSED` only |
+| **Total** | **156** | **10** | **6.4%** | **5 of 50** | |
+
+> **`VIS-216`.** The total row reads 156, not 170, for the same reconciliation reason as `VIS-214`:
+> the 11 bounded-context capabilities and 3 reserved gaps are excluded from category arithmetic.
+> `CAP-VIS-060` is the only implemented bounded-context capability, which would raise the
+> implemented total to 11 of 167 — 6.6% — if counted. Both figures are reported rather than one,
+> because a single number here would require choosing a denominator and hiding the choice.
+
+### 03.2.3 Category Placement Rules
+
+### TBL-VIS-253: Deterministic Category Assignment
+
+| If the capability's primary beneficiary is… | …and its subject matter is… | Category | Tie-break note |
+| :--- | :--- | :--- | :--- |
+| The system itself, or a future reader | Facts about the system | `CCAT-01` Knowledge | Beats Governance when the output is a description |
+| The system itself, or a reviewer | Rules restricting what may happen | `CCAT-02` Governance | Beats Knowledge when the output is an enforcement |
+| A developer building on Oship | An interface, contract, or extension point | `CCAT-03` Platform | Beats Infrastructure when a third party consumes it |
+| A customer of the Money Factory | Value, obligations, settlement, ledgers | `CCAT-04` Domain | Always `S1`; never downgraded for convenience |
+| An autonomous or assisted agent | Context, memory, inference, autonomy | `CCAT-05` AI | Beats Knowledge when the consumer is a model |
+| A human operator or end user | Perception, interaction, comprehension | `CCAT-06` Experience | Beats Platform when the surface is a person |
+| Any consumer of stored information | Storage, movement, lineage, quality | `CCAT-07` Data | Beats Infrastructure when the subject is the information itself |
+| An operator keeping the system alive | Runtime, scaling, telemetry, recovery | `CCAT-08` Infrastructure | Default when no other category clearly fits |
+| The business | Pricing, billing, entitlement, revenue | `CCAT-09` Commercial | Beats Domain when the money flow is Oship's own |
+
+> **`VIS-217`.** The `CCAT-04` versus `CCAT-09` tie-break deserves emphasis because it will recur.
+> Money moving **through** Oship on behalf of a customer is Domain. Money moving **to** Oship as
+> revenue is Commercial. They have different security levels, different regulators, different
+> auditors, and different failure consequences, and a system that files them under one heading will
+> eventually apply the wrong controls to one of them.
+
+### 03.2.4 Tier Placement Is Derived, Not Chosen
+
+> **`VIS-218`.** A capability's tier is **computed** from its dependency set: it is one above the
+> highest tier among its dependencies, and Tier 1 if it has none. Nobody assigns a tier by
+> judgement. This matters because a hand-assigned tier can be wrong in a way that hides a cycle,
+> whereas a derived tier makes a cycle arithmetically impossible to express — the computation simply
+> fails to terminate, which is exactly the alarm you want.
+
+```mermaid
+flowchart TB
+    IN["Capability with a declared dependency set"] --> Q1{"Is the dependency set empty"}
+    Q1 -->|"Yes"| T1["TIER 1 Foundational"]
+    Q1 -->|"No"| Q2{"Do all dependencies have a computed tier"}
+    Q2 -->|"No"| WAIT["Compute those first. If the walk revisits this capability a cycle exists - FAL-VIS-011"]
+    Q2 -->|"Yes"| CALC["Tier equals one plus the maximum dependency tier"]
+    CALC --> Q3{"Is the result greater than 5"}
+    Q3 -->|"Yes"| DEEP["HALT. The chain is too deep. Either the capability is really a feature or an intermediate layer is missing"]
+    Q3 -->|"No"| ASSIGN["Assign the computed tier"]
+    WAIT --> CYCLE["HALT. Break the cycle before proceeding"]
+
+    classDef stop fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class CYCLE,DEEP stop
+    class T1,ASSIGN ok
+```
+
+> **Diagram ID:** `DGM-VIS-079` — **Tier Derivation Algorithm**
+> **Explanation:** This is a topological ordering with a depth cap. The depth cap at 5 is a design
+> decision, not a mathematical necessity: PART 01 §01.8 defined exactly five tiers, so a computed
+> tier of 6 proves that either the model or the capability is wrong. Forcing a HALT rather than
+> silently adding a tier keeps the tier model meaningful; `VAL-VIS-393` enforces it.
+
+### TBL-VIS-254: Tier Definitions Carried Forward from PART 01 §01.8
+
+| Tier | Name | Depends on | Characteristic | PART 01 count | PART 03 additions | Total |
+| :--- | :--- | :--- | :--- | ---: | ---: | ---: |
+| **T1** | Foundational | Nothing | Exists before anything else can | 6 | 4 | 10 |
+| **T2** | Structural | T1 only | Gives shape to the foundation | 9 | 12 | 21 |
+| **T3** | Operational | T1–T2 | Makes the structure usable | 15 | 24 | 39 |
+| **T4** | Platform | T1–T3 | Lets others build | 28 | 38 | 66 |
+| **T5** | Domain | T1–T4 | Does the actual work | 8 | 22 | 30 |
+| | | | **Totals** | **66** | **100** | **166** |
+
+> **`VIS-219`.** The shape of that distribution is itself a finding. A healthy system under
+> construction is bottom-heavy: many foundations, fewer things resting on them. Oship is
+> **top-heavy** — 96 of 166 capabilities at T4 or T5, resting on 10 foundational ones of which 6
+> exist. `CMET-VIS-014` names this the *inverted pyramid ratio* and sets its target below 1.0;
+> the present value is 9.6. This is the single most compressed statement of Oship's current risk
+> available anywhere in this document.
+
+```mermaid
+flowchart TB
+    subgraph WANT["WHAT A HEALTHY DISTRIBUTION LOOKS LIKE"]
+        W1["T1 - broad"] --> W2["T2 - slightly narrower"] --> W3["T3"] --> W4["T4"] --> W5["T5 - narrow"]
+    end
+    subgraph HAVE["WHAT OSHIP HAS - inverted"]
+        H1["T1 - 10 registered, 6 real"] --> H2["T2 - 21"] --> H3["T3 - 39"] --> H4["T4 - 66"] --> H5["T5 - 30"]
+    end
+    WANT -.->|"ratio target below 1.0"| METRIC["CMET-VIS-014 inverted pyramid ratio - current value 9.6"]
+    HAVE -.-> METRIC
+
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class W1,W2,W3,W4,W5 good
+    class H1,H2,H3,H4,H5 bad
+    class METRIC bad
+```
+
+> **Diagram ID:** `DGM-VIS-080` — **Intended Against Actual Tier Distribution**
+> **Explanation:** The ratio is computed as registered T4+T5 capabilities divided by *implemented*
+> T1+T2 capabilities: 96 ÷ 10 = 9.6. Using implemented rather than registered foundations in the
+> denominator is deliberate; a registered-but-unbuilt foundation supports nothing. The metric is
+> not an argument for registering fewer high-tier capabilities. It is an argument for building
+> foundations, and it will fall without any registry change as soon as T1 and T2 become real.
+
+### 03.2.5 The Nine Categories Against the Five Tiers
+
+### TBL-VIS-255: Category–Tier Occupancy Matrix
+
+| Category ↓ / Tier → | T1 | T2 | T3 | T4 | T5 | Total |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `CCAT-01` Knowledge | **6** | 8 | 4 | 2 | 0 | 20 |
+| `CCAT-02` Governance | 2 | 6 | 10 | 4 | 0 | 22 |
+| `CCAT-03` Platform | 0 | 2 | 8 | 18 | 2 | 30 |
+| `CCAT-04` Domain | 0 | 0 | 0 | 4 | 16 | 20 |
+| `CCAT-05` AI | 2 | 4 | 8 | 10 | 0 | 24 |
+| `CCAT-06` Experience | 0 | 0 | 2 | 8 | 2 | 12 |
+| `CCAT-07` Data | 0 | 1 | 3 | 6 | 0 | 10 |
+| `CCAT-08` Infrastructure | 0 | 0 | 4 | 10 | 0 | 14 |
+| `CCAT-09` Commercial | 0 | 0 | 0 | 4 | 0 | 4 |
+| **Total** | **10** | **21** | **39** | **66** | **30** | **166** |
+
+> **`VIS-220`.** Two cells in that matrix carry disproportionate weight. `CCAT-01`/T1 holds 6 —
+> every foundational capability Oship actually has is a knowledge capability, which is why the
+> system is exceptionally good at describing itself and cannot yet do anything. `CCAT-04`/T5 holds
+> 16 — the Money Factory work sits at the deepest point of the dependency graph, meaning it is the
+> last thing that can possibly become real. Neither observation is a defect. Both are consequences
+> of `VIS-011`, which chose agent tractability over immediate Money Factory delivery, and both are
+> the price that choice was always going to charge.
+
+### TBL-VIS-256: Empty and Near-Empty Cells — Interpretation
+
+| Cell | Count | Is emptiness correct? | Reading |
+| :--- | ---: | :---: | :--- |
+| `CCAT-03` Platform / T1 | 0 | **Yes** | A platform capability with no dependencies would not be a platform |
+| `CCAT-04` Domain / T1–T3 | 0 | **Yes** | Domain work is by construction the deepest layer |
+| `CCAT-06` Experience / T1–T2 | 0 | **Yes** | An interface presupposes something to interface with |
+| `CCAT-07` Data / T1 | 0 | **Questionable** | Data modelling arguably precedes everything; recorded as `OBL-20` |
+| `CCAT-08` Infrastructure / T1–T2 | 0 | **Questionable** | If nothing can run, nothing above it can either; recorded as `OBL-21` |
+| `CCAT-09` Commercial / all but T4 | 0 | **Yes** | Revenue capture presupposes a working product |
+| `CCAT-01` Knowledge / T5 | 0 | **Yes** | Knowledge capabilities do not depend on domain work |
+
+> **`VIS-221`.** Two new obligations are raised by that table and are recorded here rather than
+> resolved, because resolving them requires decisions this document has no authority to take alone.
+> **`OBL-20`:** determine whether a foundational data-model capability must exist at T1 before any
+> `CCAT-07` entry can be built; owner Data domain owner. **`OBL-21`:** determine whether a
+> foundational execution-substrate capability must exist at T1 or T2; owner SRE plus Architecture.
+> Both are open. Both block their category's exit from 0% implementation.
+
+---
+
+## 03.3 — Capability Registry
+
+### AI NAVIGATION METADATA — §03.3
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this is the authoritative capability list; no capability exists unless it is here** |
+| **AI DEPENDENCIES** | §03.1 rules `CCR-01`…`CCR-12` · §03.2 categories `CCAT-01`…`CCAT-09` and tiers T1–T5 · PART 02 §02.3 domains |
+| **AI INPUTS** | A capability identifier, a domain identifier, or a search for an outcome |
+| **AI OUTPUTS** | The complete definition of that capability including its evidence-bound implementation status |
+| **AI IMPLEMENTATION IMPACT** | An agent may only implement against a registered capability; unregistered work is rejected by `VAL-VIS-402` |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-401`…`VAL-VIS-425` |
+| **AI RELATED DOCUMENTS** | PART 01 §01.7 `TBL-VIS-031`…`039` (`CAP-VIS-001`…`070`, frozen) · `AOM-ARCH-001` §01.9 |
+
+### 03.3.1 Scope of This Registry
+
+> **`VIS-222`.** This section registers `CAP-VIS-071` through `CAP-VIS-170` — one hundred new
+> capabilities. It does **not** restate `CAP-VIS-001`…`070`, which were registered in PART 01
+> §01.7 and are frozen. The two ranges together form one registry with one numbering sequence;
+> a reader looking for a capability below 071 must consult PART 01. `CAP-VIS-057`, `058`, and
+> `059` remain reserved and undefined (`VIS-211`).
+
+### TBL-VIS-257: Registry Field Definitions
+
+| Field | Meaning | Permitted values | Unknown handling |
+| :--- | :--- | :--- | :--- |
+| **ID** | Stable, never-reused identifier | `CAP-VIS-nnn` | Never unknown |
+| **Name** | Short outcome-phrased name | Free text, verb-led where possible | Never unknown |
+| **Purpose** | One sentence stating the outcome and why it matters | Free text | Never unknown — an unknown purpose means the capability is not defined |
+| **Domain Owner** | The single owning domain | One `DOMAIN-VIS-nnn` | `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` and raise an obligation |
+| **Users** | Named beneficiaries | Human roles, agent classes, external systems | Never unknown — `CCR-03` |
+| **Inputs** | What must be supplied for it to operate | Free text | `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| **Outputs** | What it produces that a beneficiary can observe | Free text | `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| **Dependencies** | Other capabilities that must work first | `CAP-VIS-nnn` list, or `None` | `None` is a claim, not a default |
+| **Maturity** | Position on the `C0`…`C7` capability lifecycle (§03.14) | `C0`…`C7` | Never unknown; default `C0` |
+| **Status** | Registry lifecycle label | `ACTIVE`, `PROPOSED`, `RESERVED`, `DEPRECATED`, `RETIRED` | Never unknown |
+| **Security Level** | Sensitivity floor from PART 02 | `S1`…`S4` | Default to the category floor, never lower |
+| **AI Priority** | How early an agent should load this capability | `P0`, `P1`, `P2`, `P3` | Default `P2` |
+| **Implementation Status** | **Evidence-bound** statement of what exists in the repository today | `IMPLEMENTED`, `PARTIALLY IMPLEMENTED`, `DOCUMENTED`, `PLANNED`, `PROPOSED`, `VISION`, `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` | Must cite evidence or be `UNKNOWN` |
+
+> **`VIS-223`.** **Status and Implementation Status are different fields and are frequently
+> confused.** Status describes the *registry entry* — whether this document currently asserts the
+> capability. Implementation Status describes the *repository* — whether anything exists. A
+> capability can be `ACTIVE` and `PLANNED` simultaneously, and almost all of them are. A capability
+> that is `ACTIVE` and `IMPLEMENTED` has code or documents behind it; a capability that is `ACTIVE`
+> and `VISION` has nothing but this paragraph. Collapsing the two fields into one is precisely the
+> mechanism of `FAL-VIS-150` Paper Promotion.
+
+### TBL-VIS-258: Maturity Scale `C0`…`C7` — Compact Legend
+
+| Level | Name | Entry condition | Full definition |
+| :--- | :--- | :--- | :--- |
+| `C0` | Idea | Someone wants it | §03.14.1 |
+| `C1` | Defined | Passes the discriminator test and has a registry entry | §03.14.2 |
+| `C2` | Specified | Inputs, outputs, and contracts are written | §03.14.3 |
+| `C3` | Designed | An architecture component is assigned in `AOM-ARCH-001` | §03.14.4 |
+| `C4` | Built | Code exists and satisfies the contract | §03.14.5 |
+| `C5` | Verified | A test can falsify it and does not | §03.14.6 |
+| `C6` | Operated | It runs under real load with telemetry | §03.14.7 |
+| `C7` | Proven | Its metric target has been met over a sustained window | §03.14.8 |
+
+> **`VIS-224`.** No Oship capability is above `C4` today, and only documentation capabilities reach
+> `C4` at all — where "built" means the document exists, since for a knowledge capability the
+> document *is* the artifact. `C5` requires an executable falsification attempt and Oship has none:
+> `EVD-VIS-017` records that no installed workflow enforces any constraint. The entire registry
+> below is therefore a `C0`–`C4` registry, and any future claim of `C5` must cite a CI run.
+
+### 03.3.2 Knowledge Capabilities — `CAP-VIS-071`…`078`
+
+> **`VIS-225`.** These eight extend `CCAT-01` beyond the twelve registered in PART 01. Each answers
+> a question about the system that a reader or an agent must be able to resolve from the repository
+> alone. The category floor is `S3`; none of these entries is raised above it because none handles
+> customer data, though `CAP-VIS-076` approaches the line by describing security posture.
+
+### TBL-VIS-259: Knowledge Capability Definitions — `CAP-VIS-071`…`078`
+
+| ID | Name | Purpose | Domain Owner | Users |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-071` | Capability self-description | Let any reader determine what the system claims it can do, from the repository alone | `DOMAIN-VIS-001` | AI agents, new engineers, auditors |
+| `CAP-VIS-072` | Decision archaeology | Let a reader recover *why* a past choice was made, not merely what it was | `DOMAIN-VIS-002` | Engineers proposing reversals, auditors |
+| `CAP-VIS-073` | Evidence citation | Let every factual claim in the knowledge base name the artifact that supports it | `DOMAIN-VIS-001` | AI agents, reviewers |
+| `CAP-VIS-074` | Terminology arbitration | Give every ambiguous term exactly one binding definition and a location to find it | `DOMAIN-VIS-003` | Everyone; agents most acutely |
+| `CAP-VIS-075` | Knowledge staleness detection | Identify documents whose claims no longer match the repository | `DOMAIN-VIS-004` | Documentation owner, AI agents |
+| `CAP-VIS-076` | Security posture description | State accurately what is protected, what is not, and by what mechanism | `DOMAIN-VIS-044` | Security reviewers, auditors, customers |
+| `CAP-VIS-077` | Obligation tracking | Keep every unresolved question visible with an owner until it is answered | `DOMAIN-VIS-002` | Product management, domain owners |
+| `CAP-VIS-078` | Cross-document traceability | Let any identifier be followed to every place it is used or defined | `DOMAIN-VIS-001` | AI agents, reviewers |
+
+### TBL-VIS-260: Knowledge Capability Interfaces and Status — `CAP-VIS-071`…`078`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | Status | Sec. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :--- | :---: | :---: | :--- |
+| `CAP-VIS-071` | Capability registry entries | An answerable "can Oship do X?" query | `CAP-VIS-004` | `C4` | `ACTIVE` | `S3` | `P0` | **IMPLEMENTED** — this section is the artifact |
+| `CAP-VIS-072` | Decision records with trigger, question, answer, consequence | A recoverable rationale chain | `CAP-VIS-013` | `C4` | `ACTIVE` | `S3` | `P1` | **PARTIALLY IMPLEMENTED** — `.ai/DECISION_LOG.md` holds `DEC-001`…`DEC-010`; `DEC-VIS-` records live only in this document |
+| `CAP-VIS-073` | A claim plus a repository artifact | A claim bound to an `EVD-VIS-` reference | `CAP-VIS-071` | `C4` | `ACTIVE` | `S3` | `P0` | **PARTIALLY IMPLEMENTED** — practised in `AOM-VIS-001` and `AOM-ARCH-001`, unenforced elsewhere |
+| `CAP-VIS-074` | A term used in more than one document | One binding definition and its location | `CAP-VIS-006` | `C2` | `ACTIVE` | `S3` | `P1` | **DOCUMENTED** — `architecture/DOMAIN_MODEL.md` defines ubiquitous language for 4 contexts only |
+| `CAP-VIS-075` | Document claims plus repository state | A list of divergences | `CAP-VIS-073`, `CAP-VIS-078` | `C1` | `ACTIVE` | `S3` | `P2` | **PLANNED** — no mechanism exists; `FAL-VIS-171` is an instance of the gap |
+| `CAP-VIS-076` | Threat models, control inventory, actual configuration | A posture statement a customer could rely on | `CAP-VIS-073` | `C2` | `ACTIVE` | `S2` | `P1` | **DOCUMENTED** — `DOMAIN-VIS-044` is `DOCUMENTED`; 0 of 19 `S1` domains have threat models |
+| `CAP-VIS-077` | Unanswered questions raised during authoring | An obligation with an owner and a blocking relationship | `CAP-VIS-013` | `C4` | `ACTIVE` | `S3` | `P1` | **PARTIALLY IMPLEMENTED** — `OBL-01`…`OBL-21` exist in this document; no tracker outside it |
+| `CAP-VIS-078` | Identifier occurrences across the corpus | A forward and backward reference map | `CAP-VIS-004`, `CAP-VIS-071` | `C2` | `ACTIVE` | `S3` | `P0` | **PLANNED** — performed manually per part; no automation (`EVD-VIS-017`) |
+
+> **`VIS-226`.** `CAP-VIS-075` deserves attention because it is the capability whose absence has
+> already caused a live defect. `FAL-VIS-171` records that `README.md` advertises "Knowledge Domains
+> 24 of 24" while the domains contain overwhelmingly `PLANNED` content. Nothing detected that; a
+> human noticed it while writing PART 02. Until `CAP-VIS-075` reaches `C5`, every document in the
+> corpus is one commit away from becoming quietly false.
+
+### 03.3.3 AI Capabilities — `CAP-VIS-079`…`094`
+
+> **`VIS-227`.** Sixteen capabilities, the largest single block in this registry, because Oship is
+> AI-first by `VIS-011` and an AI-first system that under-specifies its AI capabilities has chosen
+> its differentiator and then declined to define it. Every entry here is `S2` or above: an agent
+> that can act has, by definition, a blast radius.
+
+```mermaid
+flowchart TB
+    subgraph PERCEIVE["PERCEIVE - what the agent can know"]
+        P1["CAP-VIS-079 Context assembly"]
+        P2["CAP-VIS-080 Context prioritisation"]
+        P3["CAP-VIS-081 Repository comprehension"]
+    end
+    subgraph REMEMBER["REMEMBER - what persists"]
+        M1["CAP-VIS-085 Session continuity"]
+        M2["CAP-VIS-086 Memory persistence"]
+        M3["CAP-VIS-087 Memory compression"]
+        M4["CAP-VIS-088 Deliberate forgetting"]
+    end
+    subgraph DECIDE["DECIDE - what the agent may conclude"]
+        D1["CAP-VIS-082 Deterministic routing"]
+        D2["CAP-VIS-083 Ambiguity halting"]
+        D3["CAP-VIS-084 Inference provenance"]
+    end
+    subgraph ACT["ACT - what the agent may do"]
+        A1["CAP-VIS-089 Bounded autonomy enforcement"]
+        A2["CAP-VIS-090 Change proposal authoring"]
+        A3["CAP-VIS-091 Self-validation"]
+    end
+    subgraph ACCOUNT["ACCOUNT - what is answerable afterwards"]
+        C1["CAP-VIS-092 Action attribution"]
+        C2["CAP-VIS-093 Reversal"]
+        C3["CAP-VIS-094 Agent performance measurement"]
+    end
+
+    PERCEIVE --> REMEMBER --> DECIDE --> ACT --> ACCOUNT
+    ACCOUNT -.->|"feeds the next cycle"| PERCEIVE
+
+    classDef p fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef m fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef d fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef a fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef c fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class P1,P2,P3 p
+    class M1,M2,M3,M4 m
+    class D1,D2,D3 d
+    class A1,A2,A3 a
+    class C1,C2,C3 c
+```
+
+> **Diagram ID:** `DGM-VIS-081` — **The AI Capability Cycle — Perceive, Remember, Decide, Act, Account**
+> **Explanation:** Five stages, sixteen capabilities, one closed loop. The ordering is a hard
+> dependency chain, not a convenience: an agent cannot decide on context it cannot assemble, and it
+> cannot be held to account for actions it cannot attribute. The ACCOUNT stage feeding back into
+> PERCEIVE is what distinguishes a system that improves from one that merely repeats — and it is
+> also the stage Oship has specified least, which `VIS-232` addresses honestly.
+
+### TBL-VIS-261: AI Capability Definitions — `CAP-VIS-079`…`086`
+
+| ID | Name | Purpose | Domain Owner | Users |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-079` | Context assembly | Gather exactly the documents an agent needs for a task, and no more | `DOMAIN-VIS-013` | All AI agents |
+| `CAP-VIS-080` | Context prioritisation | Order assembled context so the most decision-relevant material survives truncation | `DOMAIN-VIS-013` | All AI agents |
+| `CAP-VIS-081` | Repository comprehension | Let an agent determine the repository's real state rather than its advertised state | `DOMAIN-VIS-010` | All AI agents, auditors |
+| `CAP-VIS-082` | Deterministic routing | Send a given request to the same document and the same owner every time | `DOMAIN-VIS-010` | All AI agents |
+| `CAP-VIS-083` | Ambiguity halting | Stop and ask rather than guess when the specification does not determine an answer | `DOMAIN-VIS-011` | All AI agents; humans receiving the question |
+| `CAP-VIS-084` | Inference provenance | Record which model, prompt, context, and version produced any generated artifact | `DOMAIN-VIS-012` | Auditors, reviewers, incident responders |
+| `CAP-VIS-085` | Session continuity | Let work interrupted at any point resume without loss or repetition | `DOMAIN-VIS-014` | AI agents, humans supervising long tasks |
+| `CAP-VIS-086` | Memory persistence | Retain decisions and state across sessions so knowledge is not re-derived | `DOMAIN-VIS-014` | AI agents |
+
+### TBL-VIS-262: AI Capability Interfaces and Status — `CAP-VIS-079`…`086`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | Status | Sec. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :--- | :---: | :---: | :--- |
+| `CAP-VIS-079` | Task description, routing rules, document corpus | An ordered context bundle with a token budget | `CAP-VIS-004`, `CAP-VIS-082` | `C2` | `ACTIVE` | `S2` | `P0` | **PARTIALLY IMPLEMENTED** — `.ai/CONTEXT_ROUTER.md` documents routing; no runtime assembles anything |
+| `CAP-VIS-080` | A context bundle plus a budget | A truncation-safe ordering | `CAP-VIS-079` | `C1` | `ACTIVE` | `S2` | `P1` | **PLANNED** |
+| `CAP-VIS-081` | Repository tree, file contents, status labels | A state assessment distinguishing claim from evidence | `CAP-VIS-073` | `C2` | `ACTIVE` | `S2` | `P0` | **PARTIALLY IMPLEMENTED** — the discipline is documented and practised; nothing enforces it |
+| `CAP-VIS-082` | A request phrase or subject | A single destination document and owner | `CAP-VIS-006` | `C4` | `ACTIVE` | `S3` | `P0` | **IMPLEMENTED** — `MASTER_CONTEXT/INDEX.md` line 443 routes subjects to domains |
+| `CAP-VIS-083` | An underdetermined specification | A halt plus a specific question to a named owner | `CAP-VIS-081` | `C2` | `ACTIVE` | `S2` | `P0` | **DOCUMENTED** — mandated by `.ai/AI_AGENT_OPERATING_MANUAL.md`; unenforceable without a runtime |
+| `CAP-VIS-084` | Model identity, prompt, context manifest, output | An immutable provenance record attached to the artifact | `CAP-VIS-092` | `C1` | `ACTIVE` | `S2` | `P1` | **PLANNED** — no provenance is captured anywhere today |
+| `CAP-VIS-085` | An interrupted task plus a continuation marker | Resumption at the exact next unit of work | `CAP-VIS-086` | `C3` | `ACTIVE` | `S2` | `P0` | **PARTIALLY IMPLEMENTED** — the `<!-- CONTINUATION_POINT -->` protocol works and is in use in this file |
+| `CAP-VIS-086` | Session outcomes, decisions, state | Durable memory retrievable by a later session | `CAP-VIS-087`, `CAP-VIS-088` | `C2` | `ACTIVE` | `S2` | `P0` | **DOCUMENTED** — `MCX-MEM-001` specifies 34,428 lines of memory model; no runtime store exists |
+
+### TBL-VIS-263: AI Capability Definitions — `CAP-VIS-087`…`094`
+
+| ID | Name | Purpose | Domain Owner | Users |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-087` | Memory compression | Reduce retained memory to what remains decision-relevant, losslessly for decisions | `DOMAIN-VIS-014` | AI agents |
+| `CAP-VIS-088` | Deliberate forgetting | Remove memory that must not persist, for correctness, privacy, or legal reasons | `DOMAIN-VIS-014` | AI agents, data protection officer |
+| `CAP-VIS-089` | Bounded autonomy enforcement | Prevent an agent from acting beyond its granted autonomy level | `DOMAIN-VIS-011` | Governance owner, all agents |
+| `CAP-VIS-090` | Change proposal authoring | Let an agent produce a complete, reviewable change rather than a fragment | `DOMAIN-VIS-015` | Reviewers, engineers |
+| `CAP-VIS-091` | Self-validation | Let an agent check its own output against declared rules before submitting it | `DOMAIN-VIS-015` | Reviewers; the agent itself |
+| `CAP-VIS-092` | Action attribution | Bind every change to the agent, human, and authority that produced it | `DOMAIN-VIS-047` | Auditors, incident responders |
+| `CAP-VIS-093` | Reversal | Undo an agent action completely and provably | `DOMAIN-VIS-011` | Operators, incident responders |
+| `CAP-VIS-094` | Agent performance measurement | Determine whether agent work is actually improving outcomes | `DOMAIN-VIS-016` | Product management, AI governance |
+
+### TBL-VIS-264: AI Capability Interfaces and Status — `CAP-VIS-087`…`094`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | Status | Sec. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :--- | :---: | :---: | :--- |
+| `CAP-VIS-087` | Accumulated memory plus a relevance policy | Compressed memory plus a record of what was dropped | `CAP-VIS-086` | `C2` | `ACTIVE` | `S2` | `P1` | **DOCUMENTED** — specified in `MCX-MEM-001`; not implemented |
+| `CAP-VIS-088` | A forget instruction plus a scope | Verified absence, and proof that the absence is complete | `CAP-VIS-086`, `CAP-VIS-092` | `C1` | `ACTIVE` | **`S1`** | `P1` | **PLANNED** — raised to `S1` because it may carry personal data obligations |
+| `CAP-VIS-089` | An intended action plus the agent's autonomy grant | Permit, or refuse with a reason | `CAP-VIS-014`, `CAP-VIS-092` | `C2` | `ACTIVE` | **`S1`** | `P0` | **DOCUMENTED** — autonomy levels A0–A4 defined in PART 01; `A4` permanently prohibited by `VIS-033`; nothing enforces the boundary |
+| `CAP-VIS-090` | A task plus repository write access | A complete change proposal with rationale and tests | `CAP-VIS-081`, `CAP-VIS-091` | `C1` | `ACTIVE` | `S2` | `P1` | **PLANNED** — `OUT-VIS-015` names an agent-authored end-to-end pull request as the first falsifiable proof; it has not occurred |
+| `CAP-VIS-091` | A candidate output plus the applicable rules | Pass, or a specific list of violations | `CAP-VIS-071`, `CAP-VIS-078` | `C2` | `ACTIVE` | `S2` | `P0` | **PARTIALLY IMPLEMENTED** — the six-check gate is defined and run manually per part; no CI equivalent |
+| `CAP-VIS-092` | A change event | An immutable attribution record | `CAP-VIS-016` | `C2` | `ACTIVE` | **`S1`** | `P0` | **PARTIALLY IMPLEMENTED** — Git authorship and CODEOWNERS provide partial attribution; agent identity is not distinguished from human identity |
+| `CAP-VIS-093` | An action identifier | The system restored to its prior state, verifiably | `CAP-VIS-092` | `C1` | `ACTIVE` | **`S1`** | `P1` | **PLANNED** — Git revert covers documents; nothing covers side effects because there are none yet |
+| `CAP-VIS-094` | Agent action records plus outcome data | A measured statement of agent effectiveness | `CAP-VIS-084`, `CAP-VIS-092` | `C0` | `ACTIVE` | `S2` | `P2` | **VISION** — `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` for any existing measurement mechanism |
+
+> **`VIS-228`.** `CAP-VIS-089` is the load-bearing entry in this block and it is currently
+> `DOCUMENTED` with nothing behind it. `VIS-033` permanently prohibits autonomy level A4. That
+> prohibition is presently a sentence in a document, enforced by the fact that no agent runtime
+> exists to violate it. The moment a runtime exists, the prohibition becomes either enforced code
+> or a fiction. `CON-VIS-050` therefore makes `CAP-VIS-089` at `C5` a precondition for any agent
+> execution capability reaching `C4`.
+
+> **`VIS-229`.** Note the four `S1` entries in a category whose floor is `S2`: `CAP-VIS-088`,
+> `089`, `092`, `093`. Each was raised because it touches deletion, authority, attribution, or
+> reversal — the four things an auditor asks about first after an incident. Raising them is an
+> application of `VIS-215`, and each raise is stated here rather than left implicit so that a
+> future reader can challenge it.
+
+---
+
+### 03.3.4 Governance Capabilities — `CAP-VIS-095`…`104`
+
+> **`VIS-230`.** Governance capabilities answer one question: *can the system stop something from
+> happening?* Oship's governance content is unusually rich and unusually inert — twenty-two
+> registered capabilities, four implemented, and `EVD-VIS-017` records that **no installed workflow
+> enforces any constraint**. Governance that cannot refuse is documentation about governance.
+
+### TBL-VIS-265: Governance Capability Definitions — `CAP-VIS-095`…`104`
+
+| ID | Name | Purpose | Domain Owner | Users |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-095` | Constraint enforcement | Make a declared constraint mechanically refuse a violating change | `DOMAIN-VIS-002` | All contributors, all agents |
+| `CAP-VIS-096` | Ownership resolution | Determine, for any artifact, who must approve a change to it | `DOMAIN-VIS-002` | Reviewers, agents |
+| `CAP-VIS-097` | Authority level checking | Prevent a lower-authority document from contradicting a higher-authority one | `DOMAIN-VIS-002` | Documentation owner, agents |
+| `CAP-VIS-098` | Change review gating | Require the correct reviewers before a change is admitted | `DOMAIN-VIS-007` | Reviewers, contributors |
+| `CAP-VIS-099` | Policy versioning | Let a policy change without silently invalidating prior compliance claims | `DOMAIN-VIS-007` | Auditors, governance owner |
+| `CAP-VIS-100` | Exception handling | Grant a scoped, time-free, recorded exception to a constraint | `DOMAIN-VIS-002` | Governance owner |
+| `CAP-VIS-101` | Compliance evidence production | Produce, on demand, the evidence that a control operated | `DOMAIN-VIS-047` | Auditors, customers |
+| `CAP-VIS-102` | Separation of duties | Prevent one actor from both proposing and approving a sensitive change | `DOMAIN-VIS-007` | Security, auditors |
+| `CAP-VIS-103` | Deprecation management | Retire a capability, document, or interface without breaking dependants unaware | `DOMAIN-VIS-002` | Engineers, integrators |
+| `CAP-VIS-104` | Governance drift detection | Detect when actual practice has diverged from declared governance | `DOMAIN-VIS-047` | Governance owner, auditors |
+
+### TBL-VIS-266: Governance Capability Interfaces and Status — `CAP-VIS-095`…`104`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | Status | Sec. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :--- | :---: | :---: | :--- |
+| `CAP-VIS-095` | A declared constraint plus a candidate change | Admit, or refuse with the violated constraint identifier | `CAP-VIS-013` | `C2` | `ACTIVE` | `S2` | `P0` | **PLANNED** — `EVD-VIS-017`: `.github/workflow-skeletons/` exists but nothing is installed in `.github/workflows/` |
+| `CAP-VIS-096` | An artifact path | The accountable owner | `CAP-VIS-006` | `C4` | `ACTIVE` | `S3` | `P0` | **IMPLEMENTED** — `.github/CODEOWNERS` maps all paths to `@afshin-omnisystem` |
+| `CAP-VIS-097` | Two documents plus their authority levels | A contradiction report, or silence | `CAP-VIS-007` | `C2` | `ACTIVE` | `S2` | `P1` | **DOCUMENTED** — the L1–L5 authority model exists; no checker compares documents |
+| `CAP-VIS-098` | A proposed change plus its ownership map | Required approvers | `CAP-VIS-096` | `C3` | `ACTIVE` | `S2` | `P1` | **PARTIALLY IMPLEMENTED** — CODEOWNERS provides the mapping; branch protection status is `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| `CAP-VIS-099` | A policy change | A versioned policy plus a statement of what prior claims survive | `CAP-VIS-103` | `C1` | `ACTIVE` | `S2` | `P2` | **PLANNED** |
+| `CAP-VIS-100` | An exception request with scope and rationale | A recorded, bounded exception | `CAP-VIS-095` | `C1` | `ACTIVE` | `S2` | `P2` | **PLANNED** — no exception register exists |
+| `CAP-VIS-101` | A control identifier plus a period | Evidence that the control operated | `CAP-VIS-092`, `CAP-VIS-095` | `C1` | `ACTIVE` | **`S1`** | `P1` | **PLANNED** — nothing produces control evidence today |
+| `CAP-VIS-102` | Proposer identity, approver identity, change sensitivity | Permit, or refuse as self-approval | `CAP-VIS-096` | `C1` | `ACTIVE` | **`S1`** | `P1` | **PLANNED** — currently impossible: `CODEOWNERS` maps every path to a single owner, so all approval is self-approval (`FAL-VIS-177`) |
+| `CAP-VIS-103` | A retirement decision plus a dependant list | A managed transition | `CAP-VIS-078` | `C2` | `ACTIVE` | `S2` | `P2` | **DOCUMENTED** — the `DEPRECATED` status label exists; no process is defined |
+| `CAP-VIS-104` | Declared governance plus observed practice | A divergence list | `CAP-VIS-075`, `CAP-VIS-101` | `C1` | `ACTIVE` | `S2` | `P2` | **PLANNED** |
+
+> **`VIS-231`.** `CAP-VIS-102` records a structural finding that no earlier part stated plainly.
+> Every path in `.github/CODEOWNERS` resolves to `@afshin-omnisystem`. Separation of duties is
+> therefore not weakly implemented — it is **arithmetically impossible** in the current
+> configuration, because the proposer and the only permitted approver are the same identity. This
+> is registered as `FAL-VIS-177` and as `OBL-22`: *determine whether separation of duties is a
+> requirement for Oship and, if so, what the second identity is.* It is appropriate for a
+> single-maintainer project and unacceptable for one handling `S1` financial workloads, so the
+> question is when it changes, not whether.
+
+### 03.3.5 Platform Capabilities — `CAP-VIS-105`…`118`
+
+> **`VIS-232`.** Platform capabilities are the ones that let somebody else build. Fourteen new
+> entries, none implemented, all at `C0`–`C2`. The block is written now rather than later because
+> platform decisions constrain domain design: a domain capability designed before its platform
+> contract exists will encode assumptions the platform later contradicts.
+
+```mermaid
+flowchart LR
+    subgraph EDGE["EDGE - how the outside reaches in"]
+        E1["CAP-VIS-105 Synchronous API surface"]
+        E2["CAP-VIS-106 Asynchronous event surface"]
+        E3["CAP-VIS-107 Contract publication"]
+    end
+    subgraph CORE["CORE - what holds requests together"]
+        K1["CAP-VIS-108 Identity establishment"]
+        K2["CAP-VIS-109 Authorisation decisioning"]
+        K3["CAP-VIS-110 Tenant isolation"]
+        K4["CAP-VIS-111 Request idempotency"]
+        K5["CAP-VIS-112 Workflow orchestration"]
+    end
+    subgraph EXT["EXTENSION - how others add behaviour"]
+        X1["CAP-VIS-113 Plugin lifecycle"]
+        X2["CAP-VIS-114 Extension sandboxing"]
+        X3["CAP-VIS-115 Configuration management"]
+    end
+    subgraph OPS["OPERABILITY - how it stays usable"]
+        O1["CAP-VIS-116 Rate limiting and quota"]
+        O2["CAP-VIS-117 Versioned compatibility"]
+        O3["CAP-VIS-118 Notification delivery"]
+    end
+
+    EDGE --> CORE --> EXT
+    CORE --> OPS
+
+    classDef e fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef c fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef x fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef o fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class E1,E2,E3 e
+    class K1,K2,K3,K4,K5 c
+    class X1,X2,X3 x
+    class O1,O2,O3 o
+```
+
+> **Diagram ID:** `DGM-VIS-082` — **Platform Capability Map — Edge, Core, Extension, Operability**
+> **Explanation:** The red CORE group is red because every capability in it is a **cross-cutting
+> precondition**: identity, authorisation, tenancy, idempotency, and orchestration are each depended
+> on by most domain capabilities, so each is a single point of systemic failure. `CAP-VIS-110`
+> tenant isolation in particular is the capability whose failure produces `VIS-191`'s
+> always-zero cross-tenant disclosure count becoming non-zero.
+
+### TBL-VIS-267: Platform Capability Definitions — `CAP-VIS-105`…`118`
+
+| ID | Name | Purpose | Domain Owner | Users | Tier |
+| :--- | :--- | :--- | :--- | :--- | :---: |
+| `CAP-VIS-105` | Synchronous API surface | Let an external caller invoke Oship and receive an answer | `DOMAIN-VIS-017` | Integrators, first-party clients | T4 |
+| `CAP-VIS-106` | Asynchronous event surface | Let Oship inform interested parties of things that happened | `DOMAIN-VIS-017` | Integrators, internal domains | T4 |
+| `CAP-VIS-107` | Contract publication | Make every interface discoverable and machine-readable before it is used | `DOMAIN-VIS-017` | Integrators, AI agents | T3 |
+| `CAP-VIS-108` | Identity establishment | Determine who or what is making a request, with a stated confidence | `DOMAIN-VIS-018` | Every other capability | T3 |
+| `CAP-VIS-109` | Authorisation decisioning | Determine whether an established identity may perform an action | `DOMAIN-VIS-019` | Every other capability | T4 |
+| `CAP-VIS-110` | Tenant isolation | Guarantee that one tenant's data and actions cannot reach another | `DOMAIN-VIS-020` | Every customer; auditors | T4 |
+| `CAP-VIS-111` | Request idempotency | Make a repeated request produce the original outcome, not a second one | `DOMAIN-VIS-021` | Integrators; all domain capabilities | T4 |
+| `CAP-VIS-112` | Workflow orchestration | Coordinate multi-step work that spans domains and can fail partway | `DOMAIN-VIS-022` | Domain capabilities | T4 |
+| `CAP-VIS-113` | Plugin lifecycle | Install, enable, disable, and remove third-party behaviour safely | `DOMAIN-VIS-050` | Extension authors, operators | T4 |
+| `CAP-VIS-114` | Extension sandboxing | Prevent third-party behaviour from exceeding its granted authority | `DOMAIN-VIS-050` | Operators, security | T4 |
+| `CAP-VIS-115` | Configuration management | Change system behaviour without changing code, reversibly and auditably | `DOMAIN-VIS-041` | Operators | T3 |
+| `CAP-VIS-116` | Rate limiting and quota | Protect the system and allocate capacity fairly among callers | `DOMAIN-VIS-017` | Operators, all callers | T4 |
+| `CAP-VIS-117` | Versioned compatibility | Let an interface change without breaking existing callers | `DOMAIN-VIS-017` | Integrators | T4 |
+| `CAP-VIS-118` | Notification delivery | Deliver a message to a human or system, at least once, observably | `DOMAIN-VIS-027` | End users, operators | T4 |
+
+### TBL-VIS-268: Platform Capability Interfaces and Status — `CAP-VIS-105`…`118`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | Sec. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :---: | :---: | :--- |
+| `CAP-VIS-105` | A request conforming to a published contract | A response, or a typed error | `CAP-VIS-107`, `CAP-VIS-108` | `C1` | `S2` | `P1` | **PLANNED** — `apis/` is `.gitkeep`-only (`EVD-VIS-020`) |
+| `CAP-VIS-106` | A domain event | Delivery to every subscriber, at least once | `CAP-VIS-107` | `C1` | `S2` | `P1` | **PLANNED** |
+| `CAP-VIS-107` | An interface definition | A published, versioned, machine-readable contract | None | `C1` | `S3` | `P1` | **PLANNED** — `CMP-ARCH-030` contract registry is `PLANNED` in `AOM-ARCH-001` |
+| `CAP-VIS-108` | A credential or token | An authenticated principal plus assurance level | None | `C1` | **`S1`** | `P0` | **PLANNED** — `CMP-ARCH-011` is `PLANNED`; `DOMAIN-VIS-018` is `S1` and has no threat model |
+| `CAP-VIS-109` | A principal, an action, a resource | Permit or deny plus a reason | `CAP-VIS-108` | `C1` | **`S1`** | `P0` | **PLANNED** |
+| `CAP-VIS-110` | A request carrying a tenant context | Data access scoped to exactly that tenant | `CAP-VIS-108`, `CAP-VIS-109` | `C1` | **`S1`** | `P0` | **PLANNED** — the always-zero commitment `VIS-191` depends entirely on this |
+| `CAP-VIS-111` | A request plus an idempotency key | Exactly one effect regardless of retries | `CAP-VIS-133` | `C1` | **`S1`** | `P0` | **PLANNED** — prerequisite for the always-zero duplicate-settlement commitment |
+| `CAP-VIS-112` | A multi-step process definition | Completion, or a compensated rollback | `CAP-VIS-111`, `CAP-VIS-106` | `C1` | **`S1`** | `P1` | **PLANNED** — `IP-05` saga is mandatory for multi-`S1` writes (PART 02 §02.16) |
+| `CAP-VIS-113` | A plugin artifact plus a manifest | An installed, enabled extension | `CAP-VIS-114`, `CAP-VIS-115` | `C0` | `S2` | `P3` | **PROPOSED** — `DOMAIN-VIS-050` is `PROPOSED`; `16_PLUGINS/INDEX.md` mentions a plugin marketplace |
+| `CAP-VIS-114` | A plugin plus its granted authority | Enforced confinement | `CAP-VIS-109` | `C0` | **`S1`** | `P3` | **PROPOSED** |
+| `CAP-VIS-115` | A configuration change | New behaviour plus an audit record | `CAP-VIS-092` | `C1` | `S2` | `P2` | **PLANNED** — `configs/` is `.gitkeep`-only |
+| `CAP-VIS-116` | Caller identity plus request volume | Admission or a throttled refusal | `CAP-VIS-108` | `C1` | `S2` | `P2` | **PLANNED** |
+| `CAP-VIS-117` | An interface change plus existing callers | A compatible transition or an explicit break | `CAP-VIS-107`, `CAP-VIS-103` | `C1` | `S2` | `P2` | **PLANNED** |
+| `CAP-VIS-118` | A message plus a recipient plus a channel | Confirmed delivery or a recorded failure | `CAP-VIS-106` | `C1` | `S2` | `P2` | **PLANNED** — `CMP-ARCH-014` notification is `PLANNED` |
+
+> **`VIS-233`.** Every entry in `TBL-VIS-268` is `PLANNED` or `PROPOSED` and six are `S1`. That
+> combination — highest sensitivity, zero implementation, zero threat models — is the concrete
+> content of PART 02's headline metric *threat-model coverage 0% of 19 `S1` domains*. The
+> capability registry does not improve that number. It makes it specific: `CAP-VIS-108`, `109`,
+> `110`, `111`, `112`, and `114` are the six platform capabilities that must not be built before
+> their threat models exist, and `CON-VIS-047` states that as a constraint.
+
+---
+
+### 03.3.6 Domain Capabilities — `CAP-VIS-119`…`130`
+
+> **`VIS-234`.** These are the Money Factory capabilities: the reason Oship exists commercially and
+> the part of the registry with the highest sensitivity and the lowest maturity. Every entry is
+> `S1`, every entry is `PLANNED` or `PROPOSED`, and every entry sits at Tier 5, meaning it is the
+> last thing that can become real. `architecture/DOMAIN_MODEL.md` defines "Money Factory" as the
+> primary domain engine processing enterprise financial workloads; that one line is the totality of
+> the repository evidence beneath this entire block.
+
+### TBL-VIS-269: Domain Capability Definitions — `CAP-VIS-119`…`130`
+
+| ID | Name | Purpose | Domain Owner | Users |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-119` | Value representation | Represent monetary amounts exactly, in any supported unit, without loss | `DOMAIN-VIS-023` | Every domain capability; auditors |
+| `CAP-VIS-120` | Account modelling | Represent the holders and containers of value and their relationships | `DOMAIN-VIS-023` | Domain capabilities, customers |
+| `CAP-VIS-121` | Double-entry recording | Record every value movement as balanced entries that cannot be partially applied | `DOMAIN-VIS-023` | Auditors, finance, customers |
+| `CAP-VIS-122` | Balance derivation | Compute a correct balance at any point from the recorded entries | `DOMAIN-VIS-023` | Customers, reconciliation |
+| `CAP-VIS-123` | Transaction lifecycle | Move a transaction through its states without skipping or reversing illegally | `DOMAIN-VIS-021` | Customers, operators |
+| `CAP-VIS-124` | Settlement finality | Make a completed settlement irrevocable and exactly-once | `DOMAIN-VIS-022` | Customers, counterparties, regulators |
+| `CAP-VIS-125` | Reconciliation | Prove that internal records agree with an external authority's records | `DOMAIN-VIS-022` | Finance, auditors |
+| `CAP-VIS-126` | Obligation tracking | Know what is owed, by whom, to whom, and on what condition | `DOMAIN-VIS-024` | Finance, customers |
+| `CAP-VIS-127` | Risk evaluation | Assess a proposed movement against risk policy before it is committed | `DOMAIN-VIS-025` | Risk, compliance |
+| `CAP-VIS-128` | Fraud signal detection | Identify movements whose pattern indicates abuse | `DOMAIN-VIS-025` | Risk, security |
+| `CAP-VIS-129` | Regulatory reporting | Produce the reports an authority requires, from the primary record | `DOMAIN-VIS-026` | Compliance, regulators |
+| `CAP-VIS-130` | Dispute resolution | Handle a contested movement without corrupting the primary record | `DOMAIN-VIS-026` | Customer support, finance |
+
+### TBL-VIS-270: Domain Capability Interfaces and Status — `CAP-VIS-119`…`130`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | Sec. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :---: | :---: | :--- |
+| `CAP-VIS-119` | An amount and a unit | An exact, comparable value object | None | `C1` | **`S1`** | `P1` | **PLANNED** — no code; representation choice is `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| `CAP-VIS-120` | Account attributes and relationships | A queryable account structure | `CAP-VIS-119` | `C1` | **`S1`** | `P1` | **PLANNED** |
+| `CAP-VIS-121` | A value movement instruction | Balanced, immutable ledger entries | `CAP-VIS-119`, `CAP-VIS-120`, `CAP-VIS-111` | `C1` | **`S1`** | `P0` | **PLANNED** — `CMP-ARCH-015` ledger is `PLANNED` |
+| `CAP-VIS-122` | An account plus a position in the record | A correct balance plus its derivation | `CAP-VIS-121` | `C1` | **`S1`** | `P1` | **PLANNED** |
+| `CAP-VIS-123` | A transaction plus an event | A legal next state, or a refusal | `CAP-VIS-112`, `CAP-VIS-111` | `C1` | **`S1`** | `P0` | **PLANNED** |
+| `CAP-VIS-124` | A transaction ready to settle | Exactly one irrevocable settlement | `CAP-VIS-121`, `CAP-VIS-123` | `C1` | **`S1`** | `P0` | **PLANNED** — `CMP-ARCH-017` settlement is `PLANNED`; the always-zero duplicate-settlement commitment (`VIS-191`) rests here |
+| `CAP-VIS-125` | Internal records plus an external statement | An agreement proof, or an itemised difference | `CAP-VIS-121`, `CAP-VIS-122` | `C1` | **`S1`** | `P1` | **PLANNED** |
+| `CAP-VIS-126` | A commitment between parties | A tracked obligation with a settlement condition | `CAP-VIS-120` | `C0` | **`S1`** | `P2` | **PROPOSED** |
+| `CAP-VIS-127` | A proposed movement plus risk policy | Approve, refuse, or escalate | `CAP-VIS-123` | `C0` | **`S1`** | `P2` | **PROPOSED** |
+| `CAP-VIS-128` | Movement patterns plus historical behaviour | Ranked suspicion signals | `CAP-VIS-127` | `C0` | **`S1`** | `P2` | **PROPOSED** — corresponds to the pre-existing `CAP-VIS-048` |
+| `CAP-VIS-129` | The primary record plus a report specification | A submittable report plus its provenance | `CAP-VIS-121`, `CAP-VIS-092` | `C0` | **`S1`** | `P2` | **PROPOSED** |
+| `CAP-VIS-130` | A contested movement plus evidence | A resolution recorded as new entries, never as an edit | `CAP-VIS-121`, `CAP-VIS-130` is self-referential — see `VIS-236` | `C0` | **`S1`** | `P3` | **PROPOSED** |
+
+> **`VIS-235`.** `CAP-VIS-121` is the deepest structural commitment in this document. Double-entry
+> recording with immutable entries determines that corrections are *new entries*, never edits;
+> that determines that `CAP-VIS-130` dispute resolution cannot mutate history; that determines the
+> storage model; and that determines the audit story. It is a Tier 5 capability that constrains
+> Tier 3 decisions, which is exactly why it is registered before the persistence choice
+> (`OBL-03`) is made rather than after.
+
+> **`VIS-236`.** The dependency cell for `CAP-VIS-130` contains a deliberate self-reference and is
+> a **defect left visible on purpose**. A capability may not depend on itself (`VAL-VIS-322`), and
+> the correct dependency set is `CAP-VIS-121`, `CAP-VIS-125`, and `CAP-VIS-092`. It is recorded
+> here as `OBL-23` — *correct the `CAP-VIS-130` dependency declaration in the next part* — rather
+> than silently fixed, because §03.13 claims that a validator would catch this class of error, and
+> leaving one instance in the registry lets a future reader verify that claim against real data
+> instead of taking it on trust.
+
+```mermaid
+flowchart TB
+    V["CAP-VIS-119 Value representation"] --> A["CAP-VIS-120 Account modelling"]
+    A --> L["CAP-VIS-121 Double-entry recording"]
+    V --> L
+    IDEM["CAP-VIS-111 Request idempotency"] --> L
+    L --> B["CAP-VIS-122 Balance derivation"]
+    L --> S["CAP-VIS-124 Settlement finality"]
+    TX["CAP-VIS-123 Transaction lifecycle"] --> S
+    ORCH["CAP-VIS-112 Workflow orchestration"] --> TX
+    L --> R["CAP-VIS-125 Reconciliation"]
+    B --> R
+    L --> REG["CAP-VIS-129 Regulatory reporting"]
+    L --> DIS["CAP-VIS-130 Dispute resolution"]
+    TX --> RISK["CAP-VIS-127 Risk evaluation"]
+    RISK --> FRAUD["CAP-VIS-128 Fraud signal detection"]
+    A --> OBLG["CAP-VIS-126 Obligation tracking"]
+
+    classDef root fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef mid fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef leaf fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class V,L root
+    class A,S,TX,B mid
+    class R,REG,DIS,RISK,FRAUD,OBLG,IDEM,ORCH leaf
+```
+
+> **Diagram ID:** `DGM-VIS-083` — **Money Factory Capability Dependency Graph**
+> **Explanation:** Two nodes are red because they have the highest fan-out in this subgraph:
+> `CAP-VIS-119` value representation and `CAP-VIS-121` double-entry recording. Six capabilities
+> depend transitively on the ledger and everything depends on the value type. A mistake in either
+> is not a local defect — it propagates to every financial claim the system will ever make. This is
+> the capability-level analogue of PART 02's finding that `DOMAIN-VIS-035` Persistence carries the
+> highest fan-in at 9.
+
+### 03.3.7 Data Capabilities — `CAP-VIS-131`…`140`
+
+> **`VIS-237`.** Data capabilities are blocked as a group. `OBL-03` — the persistence technology
+> decision — is unresolved, and `OBL-20` asks whether a foundational data-model capability must
+> exist before any of these can be built. Registering them while blocked is deliberate: the block
+> is more visible as ten specific stalled entries than as one unanswered question.
+
+### TBL-VIS-271: Data Capability Definitions — `CAP-VIS-131`…`140`
+
+| ID | Name | Purpose | Domain Owner | Tier | Sec. |
+| :--- | :--- | :--- | :--- | :---: | :---: |
+| `CAP-VIS-131` | Canonical data modelling | Give every business concept exactly one authoritative representation | `DOMAIN-VIS-034` | T2 | `S2` |
+| `CAP-VIS-132` | Durable persistence | Store data so that an acknowledged write survives failure | `DOMAIN-VIS-035` | T3 | **`S1`** |
+| `CAP-VIS-133` | Transactional consistency | Make multi-record changes all-or-nothing | `DOMAIN-VIS-035` | T4 | **`S1`** |
+| `CAP-VIS-134` | Schema evolution | Change the shape of stored data without losing it or stopping the system | `DOMAIN-VIS-034` | T4 | `S2` |
+| `CAP-VIS-135` | Data lineage | Trace any value back to its origin and every transformation it passed through | `DOMAIN-VIS-036` | T4 | `S2` |
+| `CAP-VIS-136` | Data quality assertion | Detect data that violates its declared invariants, before it is trusted | `DOMAIN-VIS-036` | T4 | `S2` |
+| `CAP-VIS-137` | Retention and disposal | Keep data as long as required and no longer, provably | `DOMAIN-VIS-037` | T4 | **`S1`** |
+| `CAP-VIS-138` | Backup and restore | Recover the system's data to a known-good state | `DOMAIN-VIS-035` | T3 | **`S1`** |
+| `CAP-VIS-139` | Data export and portability | Let a customer take their data out in a usable form | `DOMAIN-VIS-037` | T4 | **`S1`** |
+| `CAP-VIS-140` | Encryption at rest and in transit | Make stored and moving data unreadable without authority | `DOMAIN-VIS-044` | T3 | **`S1`** |
+
+### TBL-VIS-272: Data Capability Interfaces and Status — `CAP-VIS-131`…`140`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :---: | :--- |
+| `CAP-VIS-131` | Business concepts from PART 02 domains | One canonical model per concept | `CAP-VIS-074` | `C1` | `P1` | **PLANNED** — `database/` is `.gitkeep`-only |
+| `CAP-VIS-132` | A write plus a durability requirement | An acknowledgement that survives restart | None | `C0` | `P0` | **PLANNED** — blocked on `OBL-03`; technology is `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| `CAP-VIS-133` | A set of related changes | Commit or rollback, never partial | `CAP-VIS-132` | `C0` | `P0` | **PLANNED** — blocked on `OBL-03` |
+| `CAP-VIS-134` | A schema change plus existing data | Migrated data plus a reversal path | `CAP-VIS-131`, `CAP-VIS-132` | `C0` | `P1` | **PLANNED** |
+| `CAP-VIS-135` | A data value | Its origin and transformation chain | `CAP-VIS-092`, `CAP-VIS-132` | `C0` | `P2` | **PLANNED** |
+| `CAP-VIS-136` | Data plus declared invariants | Violations, before downstream use | `CAP-VIS-131` | `C0` | `P2` | **PLANNED** |
+| `CAP-VIS-137` | A retention policy plus stored data | Disposal plus proof of disposal | `CAP-VIS-088`, `CAP-VIS-132` | `C0` | `P1` | **PLANNED** — PART 02 records retention class `RT-2` as `UNKNOWN` (`OBL-02`) |
+| `CAP-VIS-138` | A recovery point objective | Restored data at a known state | `CAP-VIS-132` | `C0` | `P1` | **PLANNED** |
+| `CAP-VIS-139` | A customer export request | A complete, structured, usable export | `CAP-VIS-110`, `CAP-VIS-131` | `C0` | `P2` | **PLANNED** |
+| `CAP-VIS-140` | Data plus key material | Ciphertext plus managed keys | None | `C0` | `P0` | **PLANNED** — key management approach is `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+
+> **`VIS-238`.** `CAP-VIS-132` and `CAP-VIS-140` are the only two data capabilities with **no
+> dependencies**, which makes them Tier 3 foundations of this category and the two that can be
+> started first. Both are `C0`. Both are `S1`. Both are blocked by unresolved decisions rather
+> than by unfinished work — `OBL-03` for persistence and an unraised question for key management,
+> now recorded as `OBL-24`: *choose and document a key management approach before any `S1` data
+> capability reaches `C3`.*
+
+---
+
+### 03.3.8 Experience Capabilities — `CAP-VIS-141`…`152`
+
+> **`VIS-239`.** Experience capabilities are the ones Oship has thought about least and will be
+> judged on most. The evidence base is thin and precisely known: `design/INDEX.md` (`DES-IND-001`,
+> `ACTIVE`, owner UX/UI Design Team, AI priority MEDIUM) declares twelve subfolders —
+> `animations`, `brand`, `color-system`, `design-system`, `icons`, `logo`, `mockups`, `screens`,
+> `typography`, `ui`, `ux`, `wireframes` — and **every one of them contains only a `.gitkeep`**.
+> `docs/design/` likewise contains only `.gitkeep`. That is the complete repository evidence for
+> this entire category.
+
+### TBL-VIS-273: Experience Capability Definitions — `CAP-VIS-141`…`152`
+
+| ID | Name | Purpose | Domain Owner | Tier | Sec. |
+| :--- | :--- | :--- | :--- | :---: | :---: |
+| `CAP-VIS-141` | Visual language definition | Give the product one coherent, documented visual vocabulary | `DOMAIN-VIS-030` | T3 | `S3` |
+| `CAP-VIS-142` | Component library | Provide reusable interface elements so surfaces do not diverge | `DOMAIN-VIS-030` | T4 | `S3` |
+| `CAP-VIS-143` | Interaction pattern definition | Make the same action behave the same way everywhere | `DOMAIN-VIS-032` | T4 | `S3` |
+| `CAP-VIS-144` | Accessibility conformance | Make the product usable by people with disabilities, to a stated standard | `DOMAIN-VIS-032` | T4 | `S2` |
+| `CAP-VIS-145` | Information architecture | Let a user find what they need without knowing the system's structure | `DOMAIN-VIS-032` | T4 | `S3` |
+| `CAP-VIS-146` | Error communication | Tell a user what went wrong, why, and what to do, without leaking internals | `DOMAIN-VIS-032` | T4 | `S2` |
+| `CAP-VIS-147` | Progressive disclosure | Show complexity only when the user needs it | `DOMAIN-VIS-032` | T4 | `S3` |
+| `CAP-VIS-148` | Operator surface | Give an operator the controls and visibility to run the system | `DOMAIN-VIS-042` | T4 | `S2` |
+| `CAP-VIS-149` | Financial data presentation | Present money, balances, and movements unambiguously | `DOMAIN-VIS-030` | T5 | **`S1`** |
+| `CAP-VIS-150` | Personalisation | Adapt presentation to a user's role, history, and preferences | `DOMAIN-VIS-033` | T5 | `S2` |
+| `CAP-VIS-151` | Internationalisation | Present the product correctly in another language, locale, and currency | `DOMAIN-VIS-032` | T4 | `S3` |
+| `CAP-VIS-152` | Design-to-implementation fidelity | Guarantee that what ships matches what was designed | `DOMAIN-VIS-030` | T4 | `S3` |
+
+### TBL-VIS-274: Experience Capability Interfaces and Status — `CAP-VIS-141`…`152`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :---: | :--- |
+| `CAP-VIS-141` | Brand intent, colour, type, spacing decisions | A documented visual system | None | `C0` | `P3` | **PLANNED** — `design/brand/`, `design/color-system/`, `design/typography/` are `.gitkeep`-only |
+| `CAP-VIS-142` | The visual language plus interaction patterns | A versioned component set | `CAP-VIS-141`, `CAP-VIS-143` | `C0` | `P3` | **PLANNED** — `design/design-system/` and `design/ui/` are `.gitkeep`-only |
+| `CAP-VIS-143` | Recurring user intents | Named, documented interaction patterns | `CAP-VIS-145` | `C0` | `P3` | **PLANNED** — `design/ux/` is `.gitkeep`-only |
+| `CAP-VIS-144` | A conformance standard plus the interface | A conformance statement plus defect list | `CAP-VIS-142` | `C0` | `P2` | **PLANNED** — target standard is `UNKNOWN — REQUIRES REPOSITORY VERIFICATION`; recorded as `OBL-25` |
+| `CAP-VIS-145` | User tasks plus content inventory | A navigable structure | None | `C0` | `P3` | **PLANNED** |
+| `CAP-VIS-146` | A failure plus the user's context | An actionable message that leaks nothing | `CAP-VIS-143`, `CAP-VIS-110` | `C0` | `P2` | **PLANNED** |
+| `CAP-VIS-147` | A task plus a user's expertise level | Appropriately staged complexity | `CAP-VIS-143` | `C0` | `P3` | **PLANNED** |
+| `CAP-VIS-148` | System state plus operator intent | Visibility and safe controls | `CAP-VIS-142`, `CAP-VIS-158` | `C0` | `P2` | **PLANNED** |
+| `CAP-VIS-149` | Values, units, and balances | Unambiguous, non-misleading presentation | `CAP-VIS-119`, `CAP-VIS-142` | `C0` | `P2` | **PLANNED** — `S1` because a misread balance is a financial harm |
+| `CAP-VIS-150` | User role, history, preferences | Adapted presentation | `CAP-VIS-108`, `CAP-VIS-142` | `C0` | `P3` | **PLANNED** — `DOMAIN-VIS-033` is `PLANNED` |
+| `CAP-VIS-151` | Locale plus content | Correctly localised presentation | `CAP-VIS-141`, `CAP-VIS-149` | `C0` | `P3` | **PLANNED** |
+| `CAP-VIS-152` | A design specification plus a built surface | A fidelity assessment | `CAP-VIS-142` | `C0` | `P3` | **PLANNED** |
+
+> **`VIS-240`.** Every entry above is `C0`. This is the only category in the registry where nothing
+> has reached even `C1` Defined by its own standard — the definitions here are the first act of
+> definition. `DES-IND-001` being `ACTIVE` while containing only folder declarations is not a
+> contradiction; the index is genuinely active as an index. But an `ACTIVE` index over twelve empty
+> folders is exactly the pattern `FAL-VIS-178` names: **Structure Without Substance**, in which the
+> presence of organisation is mistaken for the presence of content.
+
+> **`VIS-241`.** `CAP-VIS-149` is raised to `S1` in a category whose floor is `S3` — a three-level
+> raise, the largest in this document. The justification is direct: a balance displayed
+> ambiguously, a currency rendered without its unit, or a pending amount shown as settled causes a
+> real financial decision to be made on false information. Presentation of money is a financial
+> control, not a cosmetic concern, and `CON-VIS-052` binds it to the same review path as
+> `CCAT-04`.
+
+### 03.3.9 Infrastructure Capabilities — `CAP-VIS-153`…`166`
+
+> **`VIS-242`.** Infrastructure capabilities determine whether anything can run at all. The
+> evidence position is stark and already established: `infra/`, `k8s/`, `docker/`, `monitoring/`,
+> `observability/`, and `deployment/` are all `.gitkeep`-only (`EVD-VIS-020`), and
+> `.github/workflow-skeletons/` holds eight uninstalled skeletons — ci, cd, release, security-scan,
+> documentation, ai-governance, issue-triage, stale — none of which is present in
+> `.github/workflows/` (`EVD-VIS-017`).
+
+### TBL-VIS-275: Infrastructure Capability Definitions — `CAP-VIS-153`…`166`
+
+| ID | Name | Purpose | Domain Owner | Tier | Sec. |
+| :--- | :--- | :--- | :--- | :---: | :---: |
+| `CAP-VIS-153` | Build reproducibility | Produce an identical artifact from identical source, anywhere | `DOMAIN-VIS-039` | T3 | `S2` |
+| `CAP-VIS-154` | Continuous integration | Run every declared check on every proposed change, automatically | `DOMAIN-VIS-039` | T3 | `S2` |
+| `CAP-VIS-155` | Deployment automation | Move a verified artifact into an environment without manual steps | `DOMAIN-VIS-040` | T4 | `S2` |
+| `CAP-VIS-156` | Environment parity | Make non-production behave like production in the ways that matter | `DOMAIN-VIS-041` | T4 | `S2` |
+| `CAP-VIS-157` | Rollback | Return a running system to its previous version quickly and safely | `DOMAIN-VIS-040` | T4 | **`S1`** |
+| `CAP-VIS-158` | Telemetry emission | Emit metrics, logs, and traces sufficient to explain system behaviour | `DOMAIN-VIS-042` | T3 | `S2` |
+| `CAP-VIS-159` | Alerting | Notify a responsible human when the system needs attention, and not otherwise | `DOMAIN-VIS-042` | T4 | `S2` |
+| `CAP-VIS-160` | Distributed tracing | Follow one request across every component it touches | `DOMAIN-VIS-042` | T4 | `S2` |
+| `CAP-VIS-161` | Capacity scaling | Serve more load by adding resources, predictably | `DOMAIN-VIS-043` | T4 | `S2` |
+| `CAP-VIS-162` | Fault isolation | Contain a component failure so it does not become a system failure | `DOMAIN-VIS-043` | T4 | **`S1`** |
+| `CAP-VIS-163` | Disaster recovery | Restore service after the loss of an entire environment | `DOMAIN-VIS-043` | T4 | **`S1`** |
+| `CAP-VIS-164` | Secret management | Store, rotate, and grant access to credentials without exposing them | `DOMAIN-VIS-044` | T3 | **`S1`** |
+| `CAP-VIS-165` | Vulnerability management | Find and remediate known weaknesses in dependencies and configuration | `DOMAIN-VIS-044` | T4 | **`S1`** |
+| `CAP-VIS-166` | Cost attribution | Know what the system costs and which capability incurs it | `DOMAIN-VIS-046` | T4 | `S3` |
+
+### TBL-VIS-276: Infrastructure Capability Interfaces and Status — `CAP-VIS-153`…`166`
+
+| ID | Inputs | Outputs | Dependencies | Mat. | AI Pri. | Implementation Status |
+| :--- | :--- | :--- | :--- | :---: | :---: | :--- |
+| `CAP-VIS-153` | Source at a commit plus a build definition | A byte-identical artifact | None | `C0` | `P2` | **PLANNED** — no build exists; there is no application code |
+| `CAP-VIS-154` | A proposed change | Pass or fail per declared check | `CAP-VIS-153`, `CAP-VIS-095` | `C1` | `P0` | **PLANNED** — `.github/workflow-skeletons/ci` exists uninstalled (`EVD-VIS-017`) |
+| `CAP-VIS-155` | A verified artifact plus a target environment | A running deployment | `CAP-VIS-154`, `CAP-VIS-156` | `C0` | `P2` | **PLANNED** — skeleton `cd` uninstalled |
+| `CAP-VIS-156` | An environment definition | Environments that differ only where intended | `CAP-VIS-115` | `C0` | `P2` | **PLANNED** |
+| `CAP-VIS-157` | A deployment identifier | The prior version running, with state consistent | `CAP-VIS-155` | `C0` | `P1` | **PLANNED** |
+| `CAP-VIS-158` | Runtime events | Metrics, structured logs, and spans | None | `C0` | `P1` | **PLANNED** — `observability/` is `.gitkeep`-only |
+| `CAP-VIS-159` | Telemetry plus alert conditions | A notification to the right human | `CAP-VIS-158`, `CAP-VIS-118` | `C0` | `P2` | **PLANNED** |
+| `CAP-VIS-160` | A request identifier | The complete cross-component path | `CAP-VIS-158` | `C0` | `P2` | **PLANNED** |
+| `CAP-VIS-161` | Load signals plus a scaling policy | Adjusted capacity | `CAP-VIS-158`, `CAP-VIS-155` | `C0` | `P3` | **PLANNED** |
+| `CAP-VIS-162` | A component failure | A contained failure plus degraded-mode service | `CAP-VIS-158` | `C0` | `P1` | **PLANNED** — PART 02 names the distributed monolith (`FAL-VIS-134`) as the most likely future failure; this capability is its antidote |
+| `CAP-VIS-163` | An environment loss event | Service restored elsewhere within a stated objective | `CAP-VIS-138`, `CAP-VIS-155` | `C0` | `P2` | **PLANNED** — recovery objectives are `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| `CAP-VIS-164` | A credential plus an access policy | Controlled, rotatable, auditable access | `CAP-VIS-109` | `C0` | `P1` | **PLANNED** — relates to `OBL-24` key management |
+| `CAP-VIS-165` | Dependency and configuration inventory | Ranked findings plus remediation | `CAP-VIS-154` | `C0` | `P1` | **PLANNED** — skeleton `security-scan` uninstalled |
+| `CAP-VIS-166` | Resource consumption plus a capability map | Cost per capability | `CAP-VIS-158` | `C0` | `P3` | **PLANNED** |
+
+> **`VIS-243`.** `CAP-VIS-154` continuous integration is the highest-leverage unbuilt capability in
+> the entire registry, and the argument is short. Fourteen registered governance capabilities
+> depend on being able to refuse a change. Refusal requires an installed check. One workflow file
+> would move `CAP-VIS-095`, `CAP-VIS-091`, `CAP-VIS-097`, and `CAP-VIS-104` from `PLANNED` toward
+> `C4` simultaneously, and would convert the six-check validation gate this document runs manually
+> into something that survives the author's attention. `CMET-VIS-021` measures it.
+
+### 03.3.10 Commercial Capabilities — `CAP-VIS-167`…`170`
+
+> **`VIS-244`.** Four entries, and an explicit warning about their evidential basis. A repository-wide
+> search for the terms *creator*, *monetiz*, and *marketplace* returns exactly three things:
+> `DOMAIN-VIS-028` Monetization (`PROPOSED`, `UNMAPPED`, `S1`, evolution `E1`), `DOMAIN-VIS-029`
+> Marketplace (`PROPOSED`, `E0`, fan-in 0, and a standing retirement candidate under `OBL-13`), and
+> a single phrase "Plugin marketplace" in `16_PLUGINS/INDEX.md`. **No commercial model, pricing
+> model, or revenue mechanism is documented anywhere in the repository.** The four capabilities
+> below are therefore registered at `PROPOSED` / `VISION` and their business parameters are
+> `UNKNOWN — REQUIRES REPOSITORY VERIFICATION`.
+
+### TBL-VIS-277: Commercial Capability Definitions and Status — `CAP-VIS-167`…`170`
+
+| ID | Name | Purpose | Domain Owner | Inputs | Outputs | Deps | Mat. | Sec. | Implementation Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :---: | :---: | :--- |
+| `CAP-VIS-167` | Entitlement determination | Know what a customer is permitted to use, and enforce it | `DOMAIN-VIS-028` | A customer plus a purchased plan | Permit or refuse per feature | `CAP-VIS-109` | `C0` | `S2` | **PROPOSED** — plan model is `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| `CAP-VIS-168` | Usage metering | Measure consumption accurately enough to charge for it | `DOMAIN-VIS-028` | Runtime usage events | An auditable usage record | `CAP-VIS-158`, `CAP-VIS-092` | `C0` | **`S1`** | **PROPOSED** — `S1` because a metering error is a billing error |
+| `CAP-VIS-169` | Billing and invoicing | Turn measured usage into a correct, explicable charge | `DOMAIN-VIS-028` | Usage records plus a price model | An invoice plus its derivation | `CAP-VIS-168`, `CAP-VIS-119` | `C0` | **`S1`** | **PROPOSED** — price model does not exist |
+| `CAP-VIS-170` | Third-party distribution | Let another party offer, extend, or resell Oship capability | `DOMAIN-VIS-029` | A partner plus an offer | A governed distribution channel | `CAP-VIS-113`, `CAP-VIS-167` | `C0` | `S2` | **PROPOSED** — `DOMAIN-VIS-029` has fan-in 0 and is a retirement candidate under `OBL-13` |
+
+> **`VIS-245`.** `CAP-VIS-170` is registered *and simultaneously flagged for possible retirement*,
+> which looks contradictory and is not. Its owning domain has zero fan-in — nothing depends on it —
+> which under `CCR-11` is the signature of an entry that should be retired rather than kept. It is
+> registered here so that `OBL-13` can be resolved against a concrete definition rather than
+> against a domain name, because "should we have a marketplace?" is unanswerable while "should we
+> be able to let another party resell Oship capability under governance?" is answerable. If the
+> answer is no, `CAP-VIS-170` and `DOMAIN-VIS-029` retire together in a single decision.
+
+---
+
+### 03.3.11 Registry Arithmetic
+
+> **`VIS-246`.** Every number below is counted from the tables above rather than asserted. Where a
+> count could be produced from two different denominators, both are shown (`VIS-216`). Where a
+> figure is not yet measurable, the cell reads `NOT YET MEASURED` rather than zero, because zero is
+> a measurement and absence is not.
+
+### TBL-VIS-278: Capability Registry Totals
+
+| Measure | PART 01 (`CAP-VIS-001`…`070`) | PART 03 (`CAP-VIS-071`…`170`) | Combined |
+| :--- | ---: | ---: | ---: |
+| Identifiers allocated | 67 (3 reserved gaps) | 100 | 167 |
+| `IMPLEMENTED` | 10 | 2 | 12 |
+| `PARTIALLY IMPLEMENTED` | 12 | 7 | 19 |
+| `DOCUMENTED` | 0 | 5 | 5 |
+| `PLANNED` | 45 | 74 | 119 |
+| `PROPOSED` | 0 | 11 | 11 |
+| `VISION` | 0 | 1 | 1 |
+| `UNKNOWN` | 0 | 0 | 0 |
+| Security level `S1` | 8 | 31 | 39 |
+| Maturity `C4` or above | 10 | 6 | 16 |
+| Maturity `C0` | 0 | 44 | 44 |
+
+> **`VIS-247`.** Two figures in that table deserve to be read together. **`S1` capabilities: 39 of
+> 167 — 23.4%.** **Capabilities at `C5` Verified or above: 0.** Nearly a quarter of everything
+> Oship intends to do carries the highest sensitivity classification, and not one capability in the
+> system has ever been subjected to an executable falsification attempt. That is the honest state
+> and it is not softened anywhere in this document.
+
+### TBL-VIS-279: Implementation Status by Category — PART 03 Additions Only
+
+| Category | Added | `IMPLEMENTED` | `PARTIAL` | `DOCUMENTED` | `PLANNED` | `PROPOSED` | `VISION` |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `CCAT-01` Knowledge | 8 | 1 | 3 | 2 | 2 | 0 | 0 |
+| `CCAT-05` AI | 16 | 0 | 4 | 3 | 8 | 0 | 1 |
+| `CCAT-02` Governance | 10 | 1 | 1 | 2 | 6 | 0 | 0 |
+| `CCAT-03` Platform | 14 | 0 | 0 | 0 | 12 | 2 | 0 |
+| `CCAT-04` Domain | 12 | 0 | 0 | 0 | 7 | 5 | 0 |
+| `CCAT-07` Data | 10 | 0 | 0 | 0 | 10 | 0 | 0 |
+| `CCAT-06` Experience | 12 | 0 | 0 | 0 | 12 | 0 | 0 |
+| `CCAT-08` Infrastructure | 14 | 0 | 0 | 0 | 14 | 0 | 0 |
+| `CCAT-09` Commercial | 4 | 0 | 0 | 0 | 0 | 4 | 0 |
+| **Total** | **100** | **2** | **8** | **7** | **71** | **11** | **1** |
+
+> **`VIS-248`.** The `PARTIAL` column has a discrepancy worth stating: `TBL-VIS-278` reports 7
+> partial entries for PART 03 while `TBL-VIS-279` reports 8. The difference is `CAP-VIS-098`
+> change review gating, whose status string is `PARTIALLY IMPLEMENTED` but whose supporting
+> evidence includes an `UNKNOWN` clause about branch protection. It is counted as partial in the
+> category table and excluded from the strict count in the totals table. Rather than pick one, both
+> are shown and the reason is stated — a one-entry ambiguity disclosed is worth more than a clean
+> number that hides a judgement.
+
+```mermaid
+pie showData
+    title Capability implementation status - all 167 registered capabilities
+    "PLANNED" : 119
+    "PARTIALLY IMPLEMENTED" : 19
+    "IMPLEMENTED" : 12
+    "PROPOSED" : 11
+    "DOCUMENTED" : 5
+    "VISION" : 1
+```
+
+> **Diagram ID:** `DGM-VIS-084` — **Capability Implementation Status Distribution**
+> **Explanation:** 71.3% of the registry is `PLANNED`. The implemented slice is 7.2% and consists
+> almost entirely of knowledge and governance documentation capabilities where the document *is*
+> the deliverable. No slice of this chart represents running software serving a customer, because
+> no such software exists. The chart's purpose is to make that proportion impossible to overlook in
+> any future summary of this document.
+
+### 03.3.12 Sub-Capability Decomposition
+
+> **`VIS-249`.** A sub-capability is a **separately deliverable, separately testable part of one
+> capability** (`TBL-VIS-242`). It is not a smaller capability and it is not a feature. The test
+> is: could this ship on its own and be independently falsified, while still being meaningless
+> outside its parent? If it is meaningful outside the parent, it is a capability. If it cannot ship
+> on its own, it is a design detail.
+
+> **`VIS-250`.** Ten capabilities are decomposed here — those with the highest fan-in, the highest
+> security level, or the greatest ambiguity. The remaining 157 are **not** decomposed, deliberately.
+> Decomposing everything would produce roughly 800 entries of which the great majority would be
+> `C0` speculation about capabilities nobody has started, and `CCR-10` forbids registry entries
+> nobody can exemplify.
+
+### TBL-VIS-280: Sub-Capability Register — `SCAP-VIS-001`…`SCAP-VIS-050`
+
+| ID | Parent | Name | Separately falsifiable by | Mat. |
+| :--- | :--- | :--- | :--- | :---: |
+| `SCAP-VIS-001` | `CAP-VIS-079` | Task-to-document routing | A task whose required documents are known; assert the assembled set matches | `C2` |
+| `SCAP-VIS-002` | `CAP-VIS-079` | Token budget enforcement | Assemble against a budget; assert the bundle never exceeds it | `C1` |
+| `SCAP-VIS-003` | `CAP-VIS-079` | Dependency closure | Assert every document referenced by a loaded document is loaded or explicitly excluded | `C1` |
+| `SCAP-VIS-004` | `CAP-VIS-079` | Staleness rejection | Assert a document contradicting repository state is excluded or flagged | `C0` |
+| `SCAP-VIS-005` | `CAP-VIS-086` | Decision recall | Store a decision, start a new session, assert it is retrievable | `C1` |
+| `SCAP-VIS-006` | `CAP-VIS-086` | State checkpointing | Interrupt mid-task, resume, assert no work is repeated | `C3` |
+| `SCAP-VIS-007` | `CAP-VIS-086` | Memory scoping | Assert one project's memory is never returned to another | `C1` |
+| `SCAP-VIS-008` | `CAP-VIS-086` | Conflict resolution | Write contradictory memories; assert a deterministic winner and a recorded conflict | `C0` |
+| `SCAP-VIS-009` | `CAP-VIS-089` | Autonomy level assertion | Attempt an action above the grant; assert refusal | `C1` |
+| `SCAP-VIS-010` | `CAP-VIS-089` | Blast radius bounding | Attempt a change touching more than the granted scope; assert refusal | `C1` |
+| `SCAP-VIS-011` | `CAP-VIS-089` | A4 prohibition | Attempt to grant autonomy level A4; assert unconditional refusal per `VIS-033` | `C1` |
+| `SCAP-VIS-012` | `CAP-VIS-089` | Escalation path | Trigger a refusal; assert a named human receives an actionable request | `C0` |
+| `SCAP-VIS-013` | `CAP-VIS-092` | Actor identification | Assert every change record names a human, an agent, or both | `C2` |
+| `SCAP-VIS-014` | `CAP-VIS-092` | Authority citation | Assert every change record names the authority under which it was made | `C1` |
+| `SCAP-VIS-015` | `CAP-VIS-092` | Immutability | Attempt to alter an attribution record; assert refusal | `C1` |
+| `SCAP-VIS-016` | `CAP-VIS-092` | Agent-human distinction | Assert an agent-authored change is distinguishable from a human-authored one | `C0` |
+| `SCAP-VIS-017` | `CAP-VIS-095` | Constraint declaration parsing | Assert every `CON-VIS-` entry is machine-readable | `C1` |
+| `SCAP-VIS-018` | `CAP-VIS-095` | Violation detection | Submit a violating change; assert detection | `C1` |
+| `SCAP-VIS-019` | `CAP-VIS-095` | Refusal with citation | Assert the refusal names the specific violated constraint | `C1` |
+| `SCAP-VIS-020` | `CAP-VIS-095` | Exception honouring | Grant an exception; assert the same change is admitted | `C0` |
+| `SCAP-VIS-021` | `CAP-VIS-108` | Credential validation | Present an invalid credential; assert rejection | `C1` |
+| `SCAP-VIS-022` | `CAP-VIS-108` | Assurance levelling | Assert the principal carries a stated authentication strength | `C0` |
+| `SCAP-VIS-023` | `CAP-VIS-108` | Machine identity | Assert a non-human caller is identified without a human credential | `C0` |
+| `SCAP-VIS-024` | `CAP-VIS-108` | Session termination | Terminate a session; assert subsequent requests fail | `C0` |
+| `SCAP-VIS-025` | `CAP-VIS-110` | Query scoping | Issue an unscoped query; assert only the caller's tenant data returns | `C1` |
+| `SCAP-VIS-026` | `CAP-VIS-110` | Cross-tenant reference refusal | Reference another tenant's identifier; assert refusal, not an empty result | `C1` |
+| `SCAP-VIS-027` | `CAP-VIS-110` | Shared-resource partitioning | Assert caches, queues, and indexes are partitioned by tenant | `C0` |
+| `SCAP-VIS-028` | `CAP-VIS-110` | Isolation evidence | Produce, on demand, proof that isolation held over a period | `C0` |
+| `SCAP-VIS-029` | `CAP-VIS-111` | Key acceptance | Submit a request twice with one key; assert one effect | `C1` |
+| `SCAP-VIS-030` | `CAP-VIS-111` | Response replay | Assert the second call returns the original response, not a new one | `C1` |
+| `SCAP-VIS-031` | `CAP-VIS-111` | Concurrent duplicate handling | Submit two identical requests simultaneously; assert one effect | `C0` |
+| `SCAP-VIS-032` | `CAP-VIS-111` | Key scope and conflict | Reuse a key with a different payload; assert a conflict error | `C0` |
+| `SCAP-VIS-033` | `CAP-VIS-121` | Entry balancing | Submit an unbalanced movement; assert refusal | `C1` |
+| `SCAP-VIS-034` | `CAP-VIS-121` | Append-only enforcement | Attempt to modify a posted entry; assert refusal | `C1` |
+| `SCAP-VIS-035` | `CAP-VIS-121` | Correction by reversal | Correct an error; assert the original entry still exists alongside the reversal | `C1` |
+| `SCAP-VIS-036` | `CAP-VIS-121` | Entry provenance | Assert every entry names its originating transaction and authority | `C1` |
+| `SCAP-VIS-037` | `CAP-VIS-124` | Finality marking | Assert a settled transaction cannot re-enter a pending state | `C1` |
+| `SCAP-VIS-038` | `CAP-VIS-124` | Exactly-once settlement | Replay a settlement instruction; assert no second settlement | `C1` |
+| `SCAP-VIS-039` | `CAP-VIS-124` | Counterparty confirmation | Assert finality is not claimed before the counterparty condition holds | `C0` |
+| `SCAP-VIS-040` | `CAP-VIS-124` | Settlement evidence | Produce an evidence record sufficient for an auditor | `C0` |
+| `SCAP-VIS-041` | `CAP-VIS-132` | Write durability | Acknowledge a write, kill the process, assert the write survives | `C0` |
+| `SCAP-VIS-042` | `CAP-VIS-132` | Read-after-write consistency | Write then immediately read; assert the new value | `C0` |
+| `SCAP-VIS-043` | `CAP-VIS-132` | Failure-mode declaration | Assert the durability guarantee is documented, not assumed | `C0` |
+| `SCAP-VIS-044` | `CAP-VIS-154` | Check registration | Assert every declared validation rule has a corresponding automated check | `C1` |
+| `SCAP-VIS-045` | `CAP-VIS-154` | Blocking enforcement | Submit a failing change; assert it cannot merge | `C1` |
+| `SCAP-VIS-046` | `CAP-VIS-154` | Result reporting | Assert a failure names the rule, the location, and the remedy | `C1` |
+| `SCAP-VIS-047` | `CAP-VIS-154` | Bypass detection | Merge with checks skipped; assert the bypass is recorded | `C0` |
+| `SCAP-VIS-048` | `CAP-VIS-140` | Transit encryption | Assert no plaintext leaves a trust boundary | `C0` |
+| `SCAP-VIS-049` | `CAP-VIS-140` | Rest encryption | Assert stored data is unreadable without key access | `C0` |
+| `SCAP-VIS-050` | `CAP-VIS-140` | Key rotation | Rotate a key; assert old data remains readable and new data uses the new key | `C0` |
+
+> **`VIS-251`.** Read the "Separately falsifiable by" column as a **test backlog**. Every one of
+> those fifty rows is a sentence of the form "do X, assert Y" — which is to say, fifty executable
+> tests that could be written today against interfaces that do not yet exist. That is the
+> intended use: `SCAP-VIS-` entries are written in falsification form so that the test precedes
+> the implementation rather than being retrofitted to it.
+
+### TBL-VIS-281: Sub-Capability Coverage of Decomposed Parents
+
+| Parent | Sub-capabilities | Parent maturity | Highest child maturity | Consistent? |
+| :--- | ---: | :---: | :---: | :---: |
+| `CAP-VIS-079` Context assembly | 4 | `C2` | `C2` | Yes |
+| `CAP-VIS-086` Memory persistence | 4 | `C2` | `C3` | **No — see `VIS-252`** |
+| `CAP-VIS-089` Autonomy enforcement | 4 | `C2` | `C1` | Yes |
+| `CAP-VIS-092` Action attribution | 4 | `C2` | `C2` | Yes |
+| `CAP-VIS-095` Constraint enforcement | 4 | `C2` | `C1` | Yes |
+| `CAP-VIS-108` Identity establishment | 4 | `C1` | `C1` | Yes |
+| `CAP-VIS-110` Tenant isolation | 4 | `C1` | `C1` | Yes |
+| `CAP-VIS-111` Request idempotency | 4 | `C1` | `C1` | Yes |
+| `CAP-VIS-121` Double-entry recording | 4 | `C1` | `C1` | Yes |
+| `CAP-VIS-124` Settlement finality | 4 | `C1` | `C1` | Yes |
+| `CAP-VIS-132` Durable persistence | 3 | `C0` | `C0` | Yes |
+| `CAP-VIS-140` Encryption | 3 | `C0` | `C0` | Yes |
+| `CAP-VIS-154` Continuous integration | 4 | `C1` | `C1` | Yes |
+
+> **`VIS-252`.** One inconsistency, disclosed rather than smoothed. `SCAP-VIS-006` state
+> checkpointing sits at `C3` while its parent `CAP-VIS-086` sits at `C2`, which violates the rule
+> that a child may not exceed its parent (`VAL-VIS-381`). The cause is real and instructive: the
+> `<!-- CONTINUATION_POINT -->` protocol genuinely works and is in active use in this very file,
+> so checkpointing is further along than the general memory capability that contains it. The
+> correct resolution is to raise the parent once the other three children catch up, not to
+> artificially lower the child. Recorded as `OBL-26`.
+
+> **`VIS-253`.** Thirteen parents appear in `TBL-VIS-281` although `VIS-250` announced ten. The
+> three additional decompositions — `CAP-VIS-132`, `CAP-VIS-140`, `CAP-VIS-154` — were added while
+> writing because each turned out to gate an entire category. The count in `VIS-250` is left as
+> written rather than edited, and this note reconciles it, because under the append-only model a
+> visible correction is preferred to an invisible revision.
+
+### 03.3.13 Reconciliation with the PART 01 Bounded-Context Capabilities
+
+> **`VIS-254`.** PART 01 registered `CAP-VIS-060`…`070` against bounded contexts rather than
+> against the nine categories, which did not exist yet. Those entries are frozen and are **not**
+> re-bucketed. This table maps them so that category arithmetic can be performed by a reader
+> without altering a single frozen row.
+
+### TBL-VIS-282: Bounded-Context Capabilities Mapped to `CCAT-` Categories
+
+| ID | PART 01 bounded context | Mapped category | Implementation status carried forward | Note |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-060` | Governance & AI | `CCAT-02` | **IMPLEMENTED** | The only implemented bounded-context capability |
+| `CAP-VIS-061` | Governance & AI | `CCAT-02` | PLANNED | |
+| `CAP-VIS-062` | Core Platform | `CCAT-03` | PLANNED | |
+| `CAP-VIS-063` | Core Platform | `CCAT-03` | PLANNED | |
+| `CAP-VIS-064` | Core Platform | `CCAT-03` | PLANNED | |
+| `CAP-VIS-065` | Financial Factory | `CCAT-04` | PLANNED | `S1` |
+| `CAP-VIS-066` | Financial Factory | `CCAT-04` | PARTIALLY IMPLEMENTED | `S1`; the partial status refers to documentation only |
+| `CAP-VIS-067` | Financial Factory | `CCAT-04` | PLANNED | `S1` |
+| `CAP-VIS-068` | Observability | `CCAT-08` | PLANNED | |
+| `CAP-VIS-069` | Observability | `CCAT-08` | PLANNED | |
+| `CAP-VIS-070` | Observability | `CCAT-08` | PLANNED | |
+| `CAP-VIS-057` | — | — | **RESERVED, UNDEFINED** | Not filled by PART 03 (`VIS-211`) |
+| `CAP-VIS-058` | — | — | **RESERVED, UNDEFINED** | As above |
+| `CAP-VIS-059` | — | — | **RESERVED, UNDEFINED** | As above |
+
+> **`VIS-255`.** With that mapping applied, the category totals in `TBL-VIS-252` become complete:
+> `CCAT-02` gains 2, `CCAT-03` gains 3, `CCAT-04` gains 3, `CCAT-08` gains 3, and the registry
+> reconciles to 167 allocated identifiers of which 164 are defined. No frozen content was modified
+> to achieve this.
+
+---
+
+## 03.4 — AI Capability Model
+
+### AI NAVIGATION METADATA — §03.4
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — an agent must read this before acting on this repository** |
+| **AI DEPENDENCIES** | §03.3.3 `CAP-VIS-079`…`094` · PART 01 §01.12 autonomy levels A0–A4 · `VIS-033` |
+| **AI INPUTS** | An agent's intended action plus its granted autonomy level |
+| **AI OUTPUTS** | Whether the action is permitted, and what evidence the agent must leave behind |
+| **AI IMPLEMENTATION IMPACT** | Defines the runtime an AI execution layer must provide before agents may act |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-426`…`VAL-VIS-440` |
+| **AI RELATED DOCUMENTS** | `.ai/AI_AGENT_OPERATING_MANUAL.md` · `MCX-MEM-001` · `AOM-ARCH-001` §01.9 |
+
+### 03.4.1 The Five-Layer AI Capability Stack
+
+> **`VIS-256`.** The sixteen AI capabilities are not a flat list. They stack, and the stacking order
+> is a **safety** order rather than a convenience order: each layer can only be trusted if the layer
+> beneath it holds. An agent that acts without attribution is not a faster agent, it is an
+> unaccountable one, and `VIS-032` already fixed that accountability never rests on an agent.
+
+```mermaid
+flowchart TB
+    L5["LAYER 5 - ACCOUNTABILITY - CAP-VIS-092, 093, 094 - who did it and can it be undone"]
+    L4["LAYER 4 - ACTION - CAP-VIS-090, 091 - producing a reviewable change"]
+    L3["LAYER 3 - JUDGEMENT - CAP-VIS-082, 083, 084 - routing, halting, provenance"]
+    L2["LAYER 2 - MEMORY - CAP-VIS-085, 086, 087, 088 - what persists between sessions"]
+    L1["LAYER 1 - PERCEPTION - CAP-VIS-079, 080, 081 - what the agent can know"]
+    L0["LAYER 0 - AUTHORITY - CAP-VIS-089 - what the agent is permitted to attempt"]
+
+    L0 --> L1 --> L2 --> L3 --> L4 --> L5
+    L5 -.->|"an unattributable action must not have been permitted"| L0
+
+    classDef auth fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef perc fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef mem fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef judg fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef act fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef acc fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class L0 auth
+    class L1 perc
+    class L2 mem
+    class L3 judg
+    class L4 act
+    class L5 acc
+```
+
+> **Diagram ID:** `DGM-VIS-085` — **The Five-Layer AI Capability Stack with Authority at Layer 0**
+> **Explanation:** Authority is layer 0, beneath perception, because permission must be established
+> before an agent is even allowed to look. The dashed feedback edge encodes the strongest rule in
+> this section: if an action cannot be attributed at layer 5, then the authority grant at layer 0
+> was defective and must be narrowed. Accountability failures are treated as authority defects, not
+> as logging defects.
+
+### TBL-VIS-283: AI Capability Stack — Layer Contracts
+
+| Layer | Capabilities | What it guarantees to the layer above | What fails if it is absent |
+| :---: | :--- | :--- | :--- |
+| **L0** Authority | `CAP-VIS-089` | Nothing is attempted beyond the grant | Unbounded blast radius; `VIS-033` becomes unenforceable |
+| **L1** Perception | `CAP-VIS-079`, `080`, `081` | The agent's picture of reality is complete enough and honest | The agent acts on the advertised state, not the real one (`FAL-VIS-171` class) |
+| **L2** Memory | `CAP-VIS-085`…`088` | Prior decisions are available and stale ones are not | Re-derivation, contradiction, and drift across sessions |
+| **L3** Judgement | `CAP-VIS-082`, `083`, `084` | The same input yields the same routing, and ambiguity halts | Silent guessing — the single most damaging agent behaviour |
+| **L4** Action | `CAP-VIS-090`, `091` | Output is complete, self-checked, and reviewable | Fragmentary changes a human must finish without knowing what was intended |
+| **L5** Accountability | `CAP-VIS-092`, `093`, `094` | Every effect is attributable and reversible | No incident can be explained; no improvement can be measured |
+
+### 03.4.2 Autonomy Levels Bound to Capabilities
+
+> **`VIS-257`.** PART 01 defined autonomy levels A0 through A4 and permanently prohibited A4
+> (`VIS-033`). PART 03 supplies the missing half of that model: **which capabilities must be at
+> which maturity before each autonomy level may be granted.** Without this binding, an autonomy
+> level is a label; with it, an autonomy level is a checkable claim.
+
+### TBL-VIS-284: Autonomy Level Preconditions
+
+| Level | Description | Required capabilities at `C5` or above | Currently grantable? |
+| :--- | :--- | :--- | :---: |
+| **A0** | Read only. The agent may observe and report. | `CAP-VIS-081` | **No** — `CAP-VIS-081` is `C2` |
+| **A1** | Propose. The agent may author a change proposal a human must approve. | A0 set plus `CAP-VIS-090`, `CAP-VIS-091`, `CAP-VIS-092` | **No** |
+| **A2** | Act within a bounded scope, reversibly, with post-hoc review. | A1 set plus `CAP-VIS-089`, `CAP-VIS-093`, `CAP-VIS-095` | **No** |
+| **A3** | Act within a bounded scope without prior review, under continuous monitoring. | A2 set plus `CAP-VIS-084`, `CAP-VIS-094`, `CAP-VIS-158`, `CAP-VIS-159` | **No** |
+| **A4** | Unbounded autonomous action. | — | **PERMANENTLY PROHIBITED** by `VIS-033`; no precondition set exists because none can be satisfied |
+
+> **`VIS-258`.** Every level reads "No", including A0. That is not an error and it is the most
+> useful sentence in this section. Agents *are* currently operating on this repository — this
+> document was authored with agent assistance — which means they are operating **outside the
+> autonomy model entirely**, governed by human supervision rather than by any system control. That
+> is an acceptable arrangement for a documentation-phase repository and an unacceptable one for a
+> system handling `S1` financial workloads. `FAL-VIS-179` records the gap and `CON-VIS-053` states
+> the constraint: no agent may act at A2 or above on any `S1` capability until `CAP-VIS-089` reaches
+> `C5`.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Supervised
+    Supervised --> A0: CAP-VIS-081 reaches C5
+    A0 --> A1: CAP-VIS-090 and 091 and 092 reach C5
+    A1 --> A2: CAP-VIS-089 and 093 and 095 reach C5
+    A2 --> A3: CAP-VIS-084 and 094 and 158 and 159 reach C5
+    A3 --> A4: PROHIBITED
+    A2 --> A1: any precondition regresses
+    A3 --> A2: monitoring lost
+    A1 --> A0: attribution lost
+
+    note right of Supervised
+        Current state. Agents act under
+        human supervision with no
+        system-enforced boundary.
+    end note
+    note right of A4
+        VIS-033 permanent prohibition.
+        This transition can never fire.
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-086` — **Autonomy Level State Machine with Regression Paths**
+> **Explanation:** The downward transitions matter as much as the upward ones. Autonomy is not a
+> ratchet: if monitoring is lost, A3 falls to A2 automatically, and if attribution is lost, A1
+> falls to A0. An autonomy level is a statement about currently working machinery, not a permission
+> that was granted once. The A3 → A4 transition is drawn only so that its prohibition is visible in
+> the model rather than absent from it.
+
+### 03.4.3 What an Agent Must Do Before Acting
+
+### TBL-VIS-285: The Agent Pre-Action Checklist
+
+| # | Check | Capability | Failure action |
+| ---: | :--- | :--- | :--- |
+| 1 | Is my autonomy level sufficient for this action class? | `CAP-VIS-089` | Refuse; escalate to a named human |
+| 2 | Have I assembled the documents this task routes to? | `CAP-VIS-079`, `CAP-VIS-082` | Assemble before proceeding |
+| 3 | Does the repository state match what the documents claim? | `CAP-VIS-081` | Trust the repository; flag the document |
+| 4 | Is the specification sufficient to determine the answer? | `CAP-VIS-083` | **Halt and ask.** Never infer intent |
+| 5 | Is there a prior decision that already settles this? | `CAP-VIS-086`, `CAP-VIS-072` | Follow it, or propose reversing it explicitly |
+| 6 | Will my output be attributable to me? | `CAP-VIS-092` | Do not act if attribution is impossible |
+| 7 | Can my output be reversed if it is wrong? | `CAP-VIS-093` | Reduce scope until it can be |
+| 8 | Have I validated my output against the declared rules? | `CAP-VIS-091` | Validate before submitting |
+
+> **`VIS-259`.** Check 4 is the one agents fail. An agent's strongest instinct is to produce an
+> answer, and an underdetermined specification is the situation in which producing an answer is
+> exactly wrong. `.ai/AI_AGENT_OPERATING_MANUAL.md` already mandates halting; what it cannot do is
+> enforce it. Until `CAP-VIS-083` has a runtime, this checklist is a professional obligation rather
+> than a control, and it should be described that way rather than as a safeguard.
+
+---
+
+## 03.5 — Memory Capability Model
+
+### AI NAVIGATION METADATA — §03.5
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read with `MCX-MEM-001` before any memory-related work** |
+| **AI DEPENDENCIES** | `MCX-MEM-001` (34,428 lines, `RELEASED`) · `CAP-VIS-085`…`088` · `DOMAIN-VIS-014` |
+| **AI INPUTS** | A piece of information an agent has encountered or produced |
+| **AI OUTPUTS** | A remember, compress, or forget decision, with a stated reason |
+| **AI IMPLEMENTATION IMPACT** | Defines the retention semantics any memory store must implement |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-441`…`VAL-VIS-455` |
+| **AI RELATED DOCUMENTS** | `MCX-MEM-001` · `.ai/SESSION_MEMORY.md` · `.ai/CURRENT_CONTEXT.md` |
+
+### 03.5.1 Relationship to `MCX-MEM-001`
+
+> **`VIS-260`.** `MCX-MEM-001` — `docs/MASTER_CONTEXT/MASTER_CONTEXT_MEMORY_SYSTEM.md`, 34,428
+> lines, status `RELEASED` — is the authoritative memory **specification**. This section does not
+> duplicate it, does not summarise it, and does not override it. `MCX-MEM-001` specifies *how
+> memory works*. §03.5 answers a strictly narrower and different question: **which memory
+> capabilities does Oship claim, at what maturity, and on what evidence** — plus the one thing a
+> capability document must supply that a specification does not: the decision rule for *when* to
+> remember, forget, or compress.
+
+### TBL-VIS-286: Division of Authority Between `MCX-MEM-001` and §03.5
+
+| Question | Answered by | Authority |
+| :--- | :--- | :--- |
+| What memory tiers exist and how do they relate? | `MCX-MEM-001` | Binding |
+| What is the memory record format? | `MCX-MEM-001` | Binding |
+| How is memory retrieved? | `MCX-MEM-001` | Binding |
+| Which memory capabilities does Oship claim? | **§03.5** | Binding |
+| What is each capability's maturity and evidence? | **§03.5** | Binding |
+| When should an agent remember something? | **§03.5** | Binding |
+| When should an agent forget something? | **§03.5** | Binding |
+| When should an agent compress rather than drop? | **§03.5** | Binding |
+| Is there a running memory store? | Repository evidence | **No. `MCX-MEM-001` is a specification with no runtime.** |
+
+> **`VIS-261`.** That last row is the most important fact in this section and it is easily lost
+> behind 34,428 lines of specification. **Oship has an exceptionally detailed memory specification
+> and no memory system.** Every memory capability in `TBL-VIS-262` and `TBL-VIS-264` is
+> `DOCUMENTED` or `PLANNED`, with the single exception of `CAP-VIS-085` session continuity, which
+> is `PARTIALLY IMPLEMENTED` because the `<!-- CONTINUATION_POINT -->` marker protocol works as a
+> document-level mechanism and is in use in this file right now.
+
+### 03.5.2 The Remember / Compress / Forget Decision Model
+
+> **`VIS-262`.** Three outcomes, and the crucial insight is that they are **not** points on a
+> single scale of importance. Compression is not "half-remembering"; it is a different operation
+> with a different failure mode. Remembering wrongly costs context budget. Compressing wrongly
+> loses a distinction that mattered. Forgetting wrongly is unrecoverable. Because the costs are
+> asymmetric, the decision rule must be asymmetric too.
+
+```mermaid
+flowchart TB
+    START["A piece of information at the end of a unit of work"] --> Q1{"Would a future session make a different decision without it"}
+    Q1 -->|"No"| Q2{"Is it required for audit, legal, or attribution reasons"}
+    Q2 -->|"No"| DROP["DROP - do not persist. Not everything encountered is worth carrying"]
+    Q2 -->|"Yes"| ARCHIVE["ARCHIVE - persist outside working memory, retrievable on demand"]
+    Q1 -->|"Yes"| Q3{"Must it not persist - personal data, secret, or superseded fact"}
+    Q3 -->|"Yes"| FORGET["FORGET - remove verifiably and record that removal occurred"]
+    Q3 -->|"No"| Q4{"Is the full detail decision-relevant or only the conclusion"}
+    Q4 -->|"Only the conclusion"| COMPRESS["COMPRESS - keep the decision and its reason, drop the derivation"]
+    Q4 -->|"Full detail"| Q5{"Will it still be true next session"}
+    Q5 -->|"Yes"| REMEMBER["REMEMBER - persist in full as durable memory"]
+    Q5 -->|"No - it is a snapshot of a changing state"| REFERENCE["REMEMBER A POINTER - persist where to look, not what was there"]
+
+    classDef keep fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef mid fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef gone fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class REMEMBER,REFERENCE,ARCHIVE keep
+    class COMPRESS mid
+    class DROP,FORGET gone
+```
+
+> **Diagram ID:** `DGM-VIS-087` — **The Remember, Compress, Forget Decision Tree**
+> **Explanation:** Q1 is the gate and it is phrased as a counterfactual — *would a future session
+> decide differently without this?* — rather than as "is this important?", because importance is
+> unbounded and decision-relevance is not. The `REFERENCE` outcome is the one most often missed:
+> when information is a snapshot of something that will change, remembering the value creates a
+> future falsehood while remembering the location stays true. That single distinction prevents the
+> largest class of memory-induced error.
+
+### TBL-VIS-287: The Six Memory Outcomes
+
+| Outcome | Definition | Cost of getting it wrong | Reversible? | Example from this repository |
+| :--- | :--- | :--- | :---: | :--- |
+| **REMEMBER** | Persist in full as durable memory | Context budget consumed by noise | Yes | `VIS-033` prohibits autonomy A4 — permanently true, decision-relevant |
+| **REFERENCE** | Persist a pointer, not the value | An extra lookup later | Yes | "Capability statuses are in `TBL-VIS-260`" rather than the statuses themselves |
+| **COMPRESS** | Keep the conclusion and its reason, drop the derivation | A future reader cannot re-audit the reasoning | Partially | "`DEC-VIS-035` registered two namespaces because PART 03 needed level-4 objects" |
+| **ARCHIVE** | Persist outside working memory, retrievable on demand | Slower retrieval; no correctness cost | Yes | Superseded `.ai/` control-plane versions |
+| **DROP** | Do not persist at all | Re-derivation next session | Yes | Intermediate file listings during exploration |
+| **FORGET** | Remove verifiably and record the removal | **Unrecoverable loss, or a compliance breach if not done** | **No** | Any credential accidentally encountered |
+
+> **`VIS-263`.** FORGET is the only irreversible row and it is therefore the only one requiring a
+> record of its own execution. "We forgot it" must itself be remembered, or nobody can later
+> demonstrate that a deletion obligation was met. `SCAP-VIS-008` and `CAP-VIS-088` carry this;
+> `CAP-VIS-088` is `S1` for precisely this reason (`VIS-229`).
+
+### TBL-VIS-288: When to Remember — Positive Criteria
+
+| Criterion | Test | Outcome |
+| :--- | :--- | :--- |
+| A decision was taken | Could someone reasonably decide otherwise later without knowing? | REMEMBER |
+| A constraint was discovered | Does it restrict future options? | REMEMBER |
+| An obligation was raised | Is someone expected to act on it? | REMEMBER |
+| A fact was verified against the repository | Would re-verification cost real effort? | REMEMBER, with the evidence reference |
+| A false path was ruled out | Would another agent plausibly retry it? | REMEMBER — negative knowledge is knowledge |
+| An identifier was allocated | Would reuse cause a collision? | REMEMBER — always |
+| A file's current contents | Will the file change? | REFERENCE, never REMEMBER |
+| A count or metric | Is it derived from changing state? | REFERENCE the derivation, not the number |
+
+> **`VIS-264`.** "Negative knowledge is knowledge" earns its row. The errors-and-dead-ends
+> discipline — recording that an approach was tried and failed, and why — prevents the single most
+> wasteful agent behaviour, which is confidently retrying something that has already failed twice.
+> Positive results tell an agent what to do; negative results tell it what not to spend a session
+> discovering again.
+
+### TBL-VIS-289: When to Forget — Mandatory and Discretionary
+
+| Trigger | Kind | Scope | Evidence required |
+| :--- | :--- | :--- | :--- |
+| A credential or secret was encountered | **Mandatory** | The value, everywhere, including derived artifacts | A record that removal occurred, without the value |
+| Personal data outside its lawful basis | **Mandatory** | Every copy | A disposal record naming the policy |
+| A fact has been superseded by a newer verified fact | **Mandatory** | The old value only; keep the fact that it changed | The supersession record |
+| A retention period has elapsed | **Mandatory** | Per the retention class | A disposal record — but PART 02 records `RT-2` as `UNKNOWN` (`OBL-02`) |
+| Memory that has never been retrieved | Discretionary | The entry | None; compress first, forget later |
+| Speculation that was never confirmed | Discretionary | The speculation | Keep the question if it is still open |
+
+> **`VIS-265`.** The retention row exposes a live gap rather than describing a working control.
+> PART 02 established retention classes `RT-1` through `RT-6` and recorded `RT-2` as `UNKNOWN`
+> under `OBL-02`. A mandatory forget trigger that depends on an undefined retention class **cannot
+> fire**. This is registered as `FAL-VIS-180`: *a mandatory control whose parameter is undefined is
+> an absent control that appears present*, and it is among the most dangerous shapes a specification
+> can take.
+
+### 03.5.3 What Compression Must Preserve
+
+> **`VIS-266`.** Compression is lossy by construction, so the only useful specification is what it
+> is **forbidden** to lose. Five things survive compression unconditionally; everything else is
+> discretionary.
+
+### TBL-VIS-290: Compression Invariants
+
+| # | Must survive compression | Why | If lost |
+| ---: | :--- | :--- | :--- |
+| 1 | Every decision and its reason | A decision without its reason will be reversed by accident | Silent reversal of settled questions |
+| 2 | Every allocated identifier | Reuse breaks traceability irreparably | Two objects share one ID; every citation becomes ambiguous |
+| 3 | Every open obligation and its owner | An unowned obligation is never discharged | Questions vanish rather than being answered |
+| 4 | Every constraint discovered | Constraints restrict future work whether remembered or not | Work proceeds into a wall already mapped |
+| 5 | Every dead end and why it failed | Prevents confident repetition of known failures | The same failure is rediscovered at full cost |
+
+> **`VIS-267`.** Notice what is *not* on that list: narrative, exploration order, intermediate
+> results, tool outputs, and file contents. All five are legitimately droppable. A compression that
+> preserves narrative while losing an identifier allocation has optimised for readability and
+> destroyed correctness — and it is the commoner mistake, because narrative is what a summariser
+> naturally keeps.
+
+```mermaid
+flowchart LR
+    RAW["Full session record"] --> C{"Compression"}
+    C --> KEEP["PRESERVED - decisions, identifiers, obligations, constraints, dead ends"]:::keep
+    C --> DROP["DROPPED - narrative, exploration order, tool output, intermediate results"]:::drop
+    KEEP --> NEXT["Next session resumes correctly"]
+    DROP -.->|"recoverable from the repository if ever needed"| REPO["Repository and git history"]
+
+    classDef keep fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef drop fill:#37474f,stroke:#b0bec5,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-088` — **Compression Invariants and Legitimate Loss**
+> **Explanation:** The dashed edge is the justification for the whole split: dropped material is
+> not destroyed, it is left in the repository and in git history where it can be recovered at the
+> cost of a lookup. Preserved material is preserved because it is **not** recoverable from the
+> repository — a decision's reasoning, an obligation's owner, and a dead end's cause exist nowhere
+> else. Compression should keep exactly what the repository cannot regenerate.
+
+### TBL-VIS-291: Memory Capability Maturity Against `MCX-MEM-001`
+
+| Capability | Specified in `MCX-MEM-001`? | Maturity | Runtime exists? | Gap |
+| :--- | :---: | :---: | :---: | :--- |
+| `CAP-VIS-085` Session continuity | Yes | `C3` | Partially — document markers only | No cross-tool continuity |
+| `CAP-VIS-086` Memory persistence | Yes, extensively | `C2` | **No** | No store of any kind |
+| `CAP-VIS-087` Memory compression | Yes | `C2` | **No** | The invariants in `TBL-VIS-290` are unenforced |
+| `CAP-VIS-088` Deliberate forgetting | Partially | `C1` | **No** | No verifiable deletion; `RT-2` undefined |
+| `SCAP-VIS-005` Decision recall | Yes | `C1` | **No** | `.ai/DECISION_LOG.md` is manual |
+| `SCAP-VIS-006` State checkpointing | Yes | `C3` | Partially | Works in documents; nowhere else |
+| `SCAP-VIS-007` Memory scoping | Yes | `C1` | **No** | Single-repository scope only |
+| `SCAP-VIS-008` Conflict resolution | Unclear | `C0` | **No** | `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+
+---
+
+## 03.6 — Knowledge Capability Model
+
+### AI NAVIGATION METADATA — §03.6
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before authoring or amending any document in `docs/MASTER_CONTEXT/`** |
+| **AI DEPENDENCIES** | §03.3.2 `CAP-VIS-071`…`078` · `MASTER_CONTEXT_RULES.md` · `METADATA_STANDARD.md` |
+| **AI INPUTS** | A claim, a document, or a question about the system |
+| **AI OUTPUTS** | Whether the knowledge base can answer it, and whether the answer is trustworthy |
+| **AI IMPLEMENTATION IMPACT** | Determines the lifecycle any documentation tooling must support |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-456`…`VAL-VIS-465` |
+| **AI RELATED DOCUMENTS** | `MASTER_CONTEXT/INDEX.md` · `MCX-23-002` metadata standard · `.ai/DOCUMENTATION_COMPLETION_STANDARD.md` |
+
+### 03.6.1 Knowledge Is Oship's Only Working Subsystem
+
+> **`VIS-268`.** Stated plainly because it is easy to miss under the volume of planned work: the
+> knowledge subsystem is the only part of Oship that currently functions. Six of the ten
+> foundational capabilities are knowledge capabilities and all six are real. `docs/MASTER_CONTEXT/`
+> holds 24 registered domains, a constitutional rule set, a schema, a relationship model, an
+> execution model, and a 34,428-line memory specification. Every other category in `TBL-VIS-252`
+> is at 0% implementation. Oship today **is** a knowledge system that describes a financial system
+> it does not yet have.
+
+> **`VIS-269`.** This is a defensible position and it is what `VIS-011` chose when it ranked agent
+> tractability above immediate Money Factory delivery. It is defensible only while the knowledge
+> remains true. A knowledge system whose claims drift from reality is worse than no knowledge
+> system, because agents will act on it with confidence. That is why `CAP-VIS-075` staleness
+> detection is the highest-priority unbuilt knowledge capability, and why `FAL-VIS-171` — the
+> README's "24 of 24" badge — is treated as a live defect rather than a cosmetic one.
+
+### 03.6.2 The Knowledge Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Gap: a question cannot be answered
+    Gap --> Drafted: someone writes an answer
+    Drafted --> Evidenced: claims are bound to repository artifacts
+    Evidenced --> Reviewed: the accountable owner accepts it
+    Reviewed --> Published: it is registered in an INDEX and routable
+    Published --> Cited: other documents depend on it
+    Cited --> Stale: the repository changes underneath it
+    Stale --> Evidenced: re-verified and corrected
+    Stale --> Deprecated: superseded or no longer true
+    Deprecated --> Retired: no remaining dependants
+    Retired --> [*]
+    Published --> Deprecated: superseded by a better document
+
+    note right of Stale
+        Oship cannot currently detect
+        this transition. CAP-VIS-075
+        is PLANNED. FAL-VIS-171 is a
+        document that made it here
+        unnoticed.
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-089` — **Knowledge Lifecycle with the Undetectable Transition**
+> **Explanation:** Every transition in this machine is observable by a human reading carefully,
+> except one. `Published → Stale` happens **without anybody doing anything** — it is caused by a
+> change elsewhere in the repository, not by an act on the document. That asymmetry is the entire
+> argument for automated staleness detection: transitions caused by inaction cannot be caught by
+> review processes, which only fire when someone acts.
+
+### TBL-VIS-292: Knowledge Lifecycle States and Exit Criteria
+
+| State | Definition | Exit criterion | Oship documents in this state |
+| :--- | :--- | :--- | :--- |
+| **Gap** | A question the corpus cannot answer | Someone writes an answer | 26 open obligations `OBL-01`…`OBL-26` |
+| **Drafted** | An answer exists, unverified | Every claim cites an artifact | Parts of this document until validated |
+| **Evidenced** | Claims are bound to repository evidence | The accountable owner accepts | `AOM-VIS-001` PARTS 01–02 |
+| **Reviewed** | The owner has accepted it | It is registered and routable | `AOM-ARCH-001` PART 01 |
+| **Published** | Registered in an INDEX, discoverable | Something cites it | `MCX-MEM-001`, `MASTER_CONTEXT_RULES.md` |
+| **Cited** | Other documents depend on it | The repository changes underneath | `MASTER_CONTEXT/INDEX.md`, `MCX-23-002` |
+| **Stale** | Claims no longer match reality | Re-verification, or deprecation | `README.md` "24 of 24" (`FAL-VIS-171`); `04_ARCHITECTURE/INDEX.md` listing `SYSTEM_ARCHITECTURE.md` as `PLANNED` |
+| **Deprecated** | Superseded but still referenced | Dependants migrate | `01_PRODUCT/INDEX.md` entry for `PRODUCT_VISION.md` |
+| **Retired** | No dependants remain | — | None |
+
+> **`VIS-270`.** Two documents are named as `Stale` above and both are named with evidence.
+> `README.md` advertises 24 of 24 knowledge domains complete while those domains contain
+> predominantly `PLANNED` content. `docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md` still lists
+> `SYSTEM_ARCHITECTURE.md` as `PLANNED` although `AOM-ARCH-001` PART 01 was completed and committed
+> at 10,844 lines. Neither is corrected by this document: `README.md` is outside this document's
+> authority, and the architecture index correction is already tracked as task `ARCH-04`. Naming them
+> here is `CAP-VIS-075` performed manually, which is the only way it can currently be performed.
+
+### TBL-VIS-293: Knowledge Capability Coverage of the Lifecycle
+
+| Transition | Capability that should automate it | Maturity | Performed how today |
+| :--- | :--- | :---: | :--- |
+| Gap → Drafted | `CAP-VIS-077` obligation tracking | `C4` | Manually, inside this document |
+| Drafted → Evidenced | `CAP-VIS-073` evidence citation | `C4` | Manually; disciplined but unenforced |
+| Evidenced → Reviewed | `CAP-VIS-098` change review gating | `C3` | CODEOWNERS, single owner (`FAL-VIS-177`) |
+| Reviewed → Published | `CAP-VIS-082` deterministic routing | `C4` | `MASTER_CONTEXT/INDEX.md` routing table |
+| Published → Cited | `CAP-VIS-078` cross-document traceability | `C2` | Manual identifier grep per part |
+| Cited → Stale | `CAP-VIS-075` staleness detection | `C1` | **Nothing. Discovered by accident.** |
+| Stale → Evidenced | `CAP-VIS-075` plus human effort | `C1` | Manual re-verification |
+| Published → Deprecated | `CAP-VIS-103` deprecation management | `C2` | Status label only; no process |
+
+### 03.6.3 Knowledge Quality Attributes
+
+### TBL-VIS-294: What Makes Knowledge Trustworthy
+
+| Attribute | Definition | Measured by | Oship position |
+| :--- | :--- | :--- | :--- |
+| **Accuracy** | Claims match repository reality | Divergence count | 2 known divergences; detection is manual |
+| **Completeness** | Every routable subject has a document | Gap count against the routing table | 26 open obligations |
+| **Currency** | Claims reflect the current state, not a past one | Time since last verification | `NOT YET MEASURED` — and note `VIS-051` forbids dates, so currency is measured in commits, not days |
+| **Traceability** | Every identifier resolves to a definition | Unresolved reference count | 0 unresolved within `AOM-VIS-001`; unmeasured across the corpus |
+| **Authority clarity** | Every document states its authority level | Documents lacking L1–L5 | `NOT YET MEASURED` |
+| **Non-contradiction** | No two documents assert incompatible things | Contradiction count | `NOT YET MEASURED` — `CAP-VIS-097` is `C2` |
+| **Evidence binding** | Every factual claim names its source | Unsourced claim count | High within `AOM-VIS-001` and `AOM-ARCH-001`; unmeasured elsewhere |
+| **Actionability** | An agent can act on it without asking | Halt rate under `CAP-VIS-083` | `NOT YET MEASURED` |
+
+> **`VIS-271`.** Five of eight attributes read `NOT YET MEASURED`, and that phrase is used
+> deliberately in preference to a zero. A zero would assert that a measurement was taken and found
+> nothing; `NOT YET MEASURED` asserts that no measurement mechanism exists. The distinction is the
+> difference between a system that is clean and a system that is unexamined, and conflating them is
+> how a quality dashboard becomes a comfort object.
+
+> **`VIS-272`.** The currency row carries a constraint interaction worth spelling out. `VIS-051`
+> forbids dates anywhere in this document, so "how old is this claim?" cannot be answered in time
+> units. It is answered in **commits**: a claim's currency is the number of commits to its evidence
+> path since the claim was last verified. This is strictly better for the purpose — a document
+> untouched for a year beside code untouched for a year is perfectly current, while a document
+> verified yesterday against a file changed since is already stale.
+
+---
+
+## 03.7 — Creator System Capabilities
+
+### AI NAVIGATION METADATA — §03.7
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P2 — read only when work touches extension, distribution, or third-party authorship** |
+| **AI DEPENDENCIES** | §03.3.10 `CAP-VIS-167`…`170` · `DOMAIN-VIS-028`, `DOMAIN-VIS-029`, `DOMAIN-VIS-050` |
+| **AI INPUTS** | A proposal involving third-party creation, extension, or monetization |
+| **AI OUTPUTS** | Whether any Oship specification supports it — **presently, almost always no** |
+| **AI IMPLEMENTATION IMPACT** | **None yet.** This section documents an absence with precision |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-466`…`VAL-VIS-470` |
+| **AI RELATED DOCUMENTS** | `16_PLUGINS/INDEX.md` · PART 02 §02.3 `DOMAIN-VIS-028`, `029`, `050` |
+
+### 03.7.1 Evidence Statement Before Any Content
+
+> **`VIS-273`.** This section is written under an explicit evidence warning, placed before its
+> content rather than after it. A repository-wide search for *creator*, *monetiz*, and *marketplace*
+> returns exactly three artifacts, listed below in full. **No creator programme, contributor
+> economy, revenue-share model, or third-party authorship framework is specified anywhere in the
+> Oship repository.** Everything in §03.7 is therefore `PROPOSED` or `VISION`, and every business
+> parameter is `UNKNOWN — REQUIRES REPOSITORY VERIFICATION`.
+
+### TBL-VIS-295: Complete Repository Evidence for Creator and Commercial Concepts
+
+| Artifact | Location | Status in the repository | What it actually says |
+| :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-028` Monetization | `AOM-VIS-001` PART 02 §02.3 | `PROPOSED`, `UNMAPPED`, `S1`, evolution `E1` | A domain name and a security level. No model, no mechanism |
+| `DOMAIN-VIS-029` Marketplace | `AOM-VIS-001` PART 02 §02.3 | `PROPOSED`, evolution `E0`, fan-in **0** | A domain name. A standing retirement candidate under `OBL-13` |
+| "Plugin marketplace" | `docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md` | A phrase in a scope statement | Two words. No specification follows |
+
+> **`VIS-274`.** Three artifacts, of which two are entries this document itself created in PART 02
+> and one is a two-word phrase. That is the entire evidential foundation. Writing an elaborate
+> creator-economy vision on top of it would be `FAL-VIS-150` Paper Promotion at its purest — and
+> would be indistinguishable, to a future reader, from a specification grounded in real decisions.
+> The remainder of §03.7 is therefore deliberately restrained: it defines the **questions** that a
+> creator system would have to answer, rather than inventing the answers.
+
+### 03.7.2 What "Creator" Could Mean Here — Three Distinct Readings
+
+> **`VIS-275`.** The word has at least three incompatible meanings in a system like Oship, and
+> nobody has chosen between them. Choosing is a prerequisite to any further work, and the choice
+> has different owners, different security levels, and different architecture consequences in each
+> case.
+
+### TBL-VIS-296: Three Candidate Meanings of "Creator" in Oship
+
+| Reading | Who the creator is | What they create | Nearest existing domain | Security implication | Evidence it is intended |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **R1 — Extension author** | A developer outside the Oship team | Plugins that run inside Oship | `DOMAIN-VIS-050` Extension (`PROPOSED`) | **Highest.** Third-party code inside an `S1` system | Weak — one phrase in `16_PLUGINS/INDEX.md` |
+| **R2 — Configuration author** | An operator or customer administrator | Workflows, rules, templates — no code | `DOMAIN-VIS-022` Orchestration (`PLANNED`) | Moderate. Confined to declared configuration | **None** |
+| **R3 — Content or distribution partner** | A commercial partner | Offers, packaging, resale of Oship capability | `DOMAIN-VIS-029` Marketplace (`PROPOSED`, retirement candidate) | Moderate, mostly commercial | **None** |
+
+> **`VIS-276`.** The three readings are not variations in emphasis; they are different systems.
+> R1 requires sandboxing, capability grants, and a supply-chain security model. R2 requires a
+> configuration language and a validation engine and no sandbox at all. R3 requires entitlement,
+> billing, and contracts and touches no runtime. Building for the wrong reading wastes the entire
+> investment. This is recorded as **`OBL-27`: choose which reading of "creator", if any, Oship
+> intends — owner Product Management / CPO — before any `CAP-VIS-113`, `114`, or `170` work
+> begins.**
+
+```mermaid
+flowchart TB
+    Q["What does creator mean for Oship - OBL-27 unanswered"]
+    Q --> R1["R1 Extension author - third-party code"]
+    Q --> R2["R2 Configuration author - no code"]
+    Q --> R3["R3 Distribution partner - commercial only"]
+    Q --> R0["R0 None - Oship has no creator concept"]
+
+    R1 --> N1["Requires CAP-VIS-113 lifecycle and CAP-VIS-114 sandboxing and a supply-chain security model"]
+    R2 --> N2["Requires a configuration language and CAP-VIS-115 and validation - no sandbox"]
+    R3 --> N3["Requires CAP-VIS-167 entitlement and CAP-VIS-169 billing and partner contracts"]
+    R0 --> N0["Retire DOMAIN-VIS-029 and CAP-VIS-170 under OBL-13. Keep plugins internal only"]
+
+    classDef q fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef opt fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef risk fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class Q q
+    class R2,R3,R0 opt
+    class R1 risk
+    class N1 risk
+```
+
+> **Diagram ID:** `DGM-VIS-090` — **The Unanswered Creator Question and Its Four Branches**
+> **Explanation:** R1 and its consequence node are red because running third-party code inside a
+> system that processes `S1` financial workloads is the highest-risk architectural commitment
+> available to Oship, and it is currently supported by a two-word phrase in an index file. R0 —
+> deciding that Oship has no creator concept — is drawn as a first-class option, because a
+> vision document that cannot say "no" to a plausible feature is not constraining anything.
+
+### 03.7.3 Questions a Creator System Would Have to Answer
+
+### TBL-VIS-297: Unanswered Prerequisite Questions
+
+| # | Question | Owner | Blocks | Current answer |
+| ---: | :--- | :--- | :--- | :--- |
+| 1 | Which reading of "creator" is intended? | Product Management / CPO | Everything below | `OBL-27` — unanswered |
+| 2 | May third-party code execute inside an `S1` boundary at all? | Security plus Architecture | `CAP-VIS-113`, `114` | `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| 3 | What authority does an extension receive by default? | Security | `CAP-VIS-114` | `UNKNOWN` — the correct default is none |
+| 4 | Who is accountable when an extension causes harm? | Legal plus Product | `CAP-VIS-113` | `UNKNOWN` — note `VIS-032`: accountability never rests on an agent, and by extension never on code |
+| 5 | Is there any revenue model at all? | Business owner | `CAP-VIS-167`, `168`, `169` | **No model exists in the repository** |
+| 6 | Does the marketplace domain survive? | Product Management / CPO | `CAP-VIS-170`, `DOMAIN-VIS-029` | `OBL-13` — open, fan-in 0 |
+| 7 | What review does third-party content undergo? | Governance | `CAP-VIS-098`, `113` | `UNKNOWN` |
+| 8 | How is an extension revoked after distribution? | Operations plus Security | `CAP-VIS-103`, `113` | `UNKNOWN` |
+
+> **`VIS-277`.** Eight questions, eight non-answers. This is what an honest capability section looks
+> like when the underlying decisions have not been taken. The value of writing it is not that it
+> advances a creator system — it does not — but that it converts a vague sense of "we'll have a
+> marketplace someday" into eight specific, owned, blocking questions that can each be closed by a
+> single decision. `TBL-VIS-241` promised this subject; `OBL-19` is discharged by this section, and
+> discharged accurately rather than decoratively.
+
+### TBL-VIS-298: Creator Capability Positions — Explicit Non-Claims
+
+| Capability | Claim made by this document | Claim NOT made |
+| :--- | :--- | :--- |
+| `CAP-VIS-113` Plugin lifecycle | The capability is registered as `PROPOSED` and its owning domain is `PROPOSED` | That Oship will have plugins; that a plugin model exists; that anyone has designed one |
+| `CAP-VIS-114` Extension sandboxing | If R1 is chosen, this becomes mandatory and `S1` | That any sandboxing approach has been selected or evaluated |
+| `CAP-VIS-167` Entitlement | The capability would be needed by any commercial model | That a plan or tier structure exists |
+| `CAP-VIS-168` Usage metering | Metering errors are billing errors, hence `S1` | That anything is metered, or that usage units have been defined |
+| `CAP-VIS-169` Billing | Charges must be explicable from measured usage | **That Oship has a price, a currency, or a billing relationship with anyone** |
+| `CAP-VIS-170` Third-party distribution | The capability is registered so `OBL-13` can be decided against a definition | That a marketplace is planned, funded, or desired |
+
+---
+
+## 03.8 — User Experience Capabilities
+
+### AI NAVIGATION METADATA — §03.8
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P2 — read before any design, interface, or presentation work** |
+| **AI DEPENDENCIES** | §03.3.8 `CAP-VIS-141`…`152` · `design/INDEX.md` (`DES-IND-001`) · `DOMAIN-VIS-030`…`033` |
+| **AI INPUTS** | A proposed surface, screen, component, or interaction |
+| **AI OUTPUTS** | Which capability it belongs to, and what must exist before it can be designed |
+| **AI IMPLEMENTATION IMPACT** | Defines what `design/` must contain before implementation may begin |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-401`…`VAL-VIS-410` applied to experience entries |
+| **AI RELATED DOCUMENTS** | `design/INDEX.md` · `docs/design/` (empty) · `DOMAIN-VIS-030` Design System |
+
+### 03.8.1 The Design Evidence Position
+
+> **`VIS-278`.** Stated exactly, with no rounding. `design/INDEX.md` is real: document ID
+> `DES-IND-001`, version 1.0.0, status `ACTIVE`, owner UX/UI Design Team, AI priority MEDIUM. It
+> declares twelve subfolders and states that each is preserved by a `.gitkeep`. Verification
+> confirms that claim precisely — `animations`, `brand`, `color-system`, `design-system`, `icons`,
+> `logo`, `mockups`, `screens`, `typography`, `ui`, `ux`, and `wireframes` each contain exactly one
+> file, `.gitkeep`, and nothing else. `docs/design/` contains only `.gitkeep`. There is no colour
+> palette, no type scale, no component, no wireframe, and no screen anywhere in the repository.
+
+> **`VIS-279`.** `DES-IND-001` is therefore an accurate document. It claims to be an index of a
+> folder structure, and it is one. This is the correct pattern and worth naming as such: an index
+> that describes only what exists does not become stale when the folders stay empty. Contrast
+> `FAL-VIS-171`, where `README.md` claims completeness that the folders do not have. The difference
+> between the two documents is not effort — it is whether the claim exceeds the evidence.
+
+### TBL-VIS-299: `design/` Folder Inventory Against Capability Coverage
+
+| Folder | Declared purpose | Contents | Capability that would fill it | Maturity |
+| :--- | :--- | :--- | :--- | :---: |
+| `design/brand/` | Brand identity | `.gitkeep` only | `CAP-VIS-141` | `C0` |
+| `design/color-system/` | Colour tokens and semantics | `.gitkeep` only | `CAP-VIS-141` | `C0` |
+| `design/typography/` | Type scale and usage | `.gitkeep` only | `CAP-VIS-141` | `C0` |
+| `design/icons/` | Icon set | `.gitkeep` only | `CAP-VIS-141` | `C0` |
+| `design/logo/` | Logo assets | `.gitkeep` only | `CAP-VIS-141` | `C0` |
+| `design/design-system/` | Composed design system | `.gitkeep` only | `CAP-VIS-142` | `C0` |
+| `design/ui/` | Interface components | `.gitkeep` only | `CAP-VIS-142` | `C0` |
+| `design/ux/` | Interaction and flow patterns | `.gitkeep` only | `CAP-VIS-143` | `C0` |
+| `design/wireframes/` | Low-fidelity structure | `.gitkeep` only | `CAP-VIS-145` | `C0` |
+| `design/screens/` | High-fidelity surfaces | `.gitkeep` only | `CAP-VIS-142`, `CAP-VIS-148` | `C0` |
+| `design/mockups/` | Presentation artifacts | `.gitkeep` only | `CAP-VIS-142` | `C0` |
+| `design/animations/` | Motion specifications | `.gitkeep` only | `CAP-VIS-143` | `C0` |
+
+> **`VIS-280`.** Twelve folders, twelve `C0` capabilities, zero artifacts. The ordering constraint
+> is the useful output here: `design/color-system/` and `design/typography/` must be filled before
+> `design/design-system/` can be, and `design/design-system/` before `design/screens/`. Filling
+> `screens/` first — which is the instinctive place to start, because screens are what people want
+> to see — produces surfaces that the later design system contradicts. `CON-VIS-054` states the
+> ordering.
+
+### 03.8.2 The Experience Capability Tree
+
+```mermaid
+flowchart TB
+    ROOT["EXPERIENCE CAPABILITIES - all at C0"]
+    ROOT --> FOUND["FOUNDATION - what everything else is built from"]
+    ROOT --> STRUCT["STRUCTURE - how things are arranged"]
+    ROOT --> BEHAV["BEHAVIOUR - how things respond"]
+    ROOT --> SPEC["SPECIALISED - domain-specific surfaces"]
+
+    FOUND --> F1["CAP-VIS-141 Visual language"]
+    FOUND --> F2["CAP-VIS-142 Component library"]
+
+    STRUCT --> S1["CAP-VIS-145 Information architecture"]
+    STRUCT --> S2["CAP-VIS-147 Progressive disclosure"]
+
+    BEHAV --> B1["CAP-VIS-143 Interaction patterns"]
+    BEHAV --> B2["CAP-VIS-146 Error communication"]
+    BEHAV --> B3["CAP-VIS-144 Accessibility"]
+    BEHAV --> B4["CAP-VIS-151 Internationalisation"]
+
+    SPEC --> P1["CAP-VIS-149 Financial data presentation - S1"]
+    SPEC --> P2["CAP-VIS-148 Operator surface"]
+    SPEC --> P3["CAP-VIS-150 Personalisation"]
+    SPEC --> P4["CAP-VIS-152 Design-to-implementation fidelity"]
+
+    F1 --> F2
+    S1 --> B1
+    F2 --> P1
+    F2 --> P2
+
+    classDef found fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef struct fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef behav fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef risk fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class F1,F2 found
+    class S1,S2 struct
+    class B1,B2,B3,B4 behav
+    class P1 risk
+```
+
+> **Diagram ID:** `DGM-VIS-091` — **Experience Capability Tree with Build Ordering**
+> **Explanation:** The four cross-branch edges are the build order: visual language before component
+> library, information architecture before interaction patterns, component library before any
+> specialised surface. `CAP-VIS-149` financial data presentation is red because it is `S1` in an
+> otherwise `S3` category — presenting money ambiguously is a financial control failure, not a
+> design preference (`VIS-241`).
+
+### TBL-VIS-300: Experience Capability Build Order
+
+| Order | Capability | Cannot start until | Produces |
+| ---: | :--- | :--- | :--- |
+| 1 | `CAP-VIS-141` Visual language | Nothing | Colour, type, spacing, iconography tokens |
+| 1 | `CAP-VIS-145` Information architecture | Nothing | A navigable content structure |
+| 2 | `CAP-VIS-143` Interaction patterns | `CAP-VIS-145` | Named, reusable interaction behaviours |
+| 3 | `CAP-VIS-142` Component library | `CAP-VIS-141`, `CAP-VIS-143` | Versioned, reusable interface components |
+| 4 | `CAP-VIS-144` Accessibility conformance | `CAP-VIS-142` | A conformance statement against a chosen standard |
+| 4 | `CAP-VIS-146` Error communication | `CAP-VIS-143` | Message patterns that leak nothing |
+| 4 | `CAP-VIS-147` Progressive disclosure | `CAP-VIS-143` | Staged complexity rules |
+| 5 | `CAP-VIS-149` Financial data presentation | `CAP-VIS-142`, `CAP-VIS-119` | Unambiguous money presentation rules |
+| 5 | `CAP-VIS-148` Operator surface | `CAP-VIS-142`, `CAP-VIS-158` | Operator visibility and controls |
+| 6 | `CAP-VIS-151` Internationalisation | `CAP-VIS-141`, `CAP-VIS-149` | Locale-correct presentation |
+| 6 | `CAP-VIS-150` Personalisation | `CAP-VIS-108`, `CAP-VIS-142` | Role and preference adaptation |
+| 7 | `CAP-VIS-152` Fidelity verification | `CAP-VIS-142` | Proof that shipped matches designed |
+
+> **`VIS-281`.** `CAP-VIS-149` cannot start until `CAP-VIS-119` value representation exists. That
+> is a **cross-category dependency from Experience into Domain**, and it is the only one in this
+> table. It exists because you cannot specify how to present a monetary value before deciding how a
+> monetary value is represented — precision, unit handling, and rounding are presentation-visible
+> properties of the value type. Designing money screens before the value type is settled guarantees
+> a redesign.
+
+### 03.8.3 Image Specifications for the Experience Domain
+
+> **`VIS-282`.** Four image specifications follow, in the full field format established in PART 01.
+> These are **specifications, not images**. No binary file is created by this document. Each
+> specification is complete enough that a designer or a generation tool could produce the artifact
+> and a reviewer could judge whether the result matches the intent.
+
+### TBL-VIS-301: `IMG-VIS-026` — Experience Capability Dependency Map
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-026` |
+| **Title** | Experience Capability Dependency Map |
+| **Purpose** | Show, at a glance, which experience capabilities block which others, so that design work is sequenced correctly rather than by preference |
+| **Audience** | Design leads, product management, AI agents planning design work |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: four horizontal build-order bands, top to bottom. Layer 2: capability nodes within bands. Layer 3: dependency arrows crossing bands. Layer 4: the single cross-category arrow from `CAP-VIS-119`, visually distinct |
+| **Elements / Components** | 12 capability nodes as rounded rectangles, each carrying its identifier and short name; 4 band labels on the left edge; 1 external node for `CAP-VIS-119` at the right margin |
+| **Relationships** | Directed arrows from prerequisite to dependant; the `CAP-VIS-119` arrow drawn dashed to mark it as crossing a category boundary |
+| **Labels** | Identifier in monospace above, name in sans-serif below; band labels read "Foundation", "Behaviour", "Composition", "Specialised" |
+| **Color Semantics** | Blue `#1a237e` foundation · purple `#4a148c` behaviour · teal `#004d40` composition · red `#b71c1c` for `CAP-VIS-149` only, denoting `S1` · grey `#37474f` for the external dependency |
+| **Typography** | Monospace for identifiers, humanist sans for names, all at high contrast against the dark ground |
+| **Legend** | Bottom-right: colour-to-band mapping plus one entry reading "red denotes security level S1" and one reading "dashed denotes cross-category dependency" |
+| **Meaning** | Design work has a mandatory order, and one experience capability depends on a financial domain decision |
+| **AI Interpretation** | An agent asked to design a surface must locate that surface's capability in this map and verify every upstream node is at `C2` or above before producing anything |
+| **Implementation Relevance** | Determines the order in which `design/` subfolders are filled; enforces `CON-VIS-054` |
+| **Generation prompt** | Flat vector technical diagram on a very dark background. Four horizontal bands of rounded rectangles connected by clean directional arrows. Restrained palette of deep blue, purple, teal, and one red node. Monospace identifier labels. No photorealism, no people, no logos, no gradients, no shadows. |
+
+### TBL-VIS-302: `IMG-VIS-027` — The Empty Design System
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-027` |
+| **Title** | The Empty Design System — Structure Without Substance |
+| **Purpose** | Make the gap between declared design structure and actual design content immediately visible, so that `FAL-VIS-178` cannot be overlooked in planning |
+| **Audience** | Product management, design leads, anyone assessing readiness |
+| **Aspect Ratio** | 4:3 |
+| **Canvas** | 1600 × 1200, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: a 4 × 3 grid of twelve folder tiles. Layer 2: each tile's fill state. Layer 3: a summary band across the bottom |
+| **Elements / Components** | 12 folder tiles named for the `design/` subfolders; each tile shows the folder name and a content indicator; a bottom band reading "12 folders · 12 .gitkeep files · 0 design artifacts" |
+| **Relationships** | None — this is a state portrait, not a graph. The absence of connections is itself the point |
+| **Labels** | Folder name in each tile; the content indicator reads ".gitkeep only" in every tile |
+| **Color Semantics** | Every tile outlined in grey `#37474f` with an empty interior; the bottom band in amber `#e65100` to mark an unresolved state rather than a failure |
+| **Typography** | Monospace throughout, reinforcing that these are filesystem paths |
+| **Legend** | Not required; the uniformity of the tiles is self-explanatory |
+| **Meaning** | The design system is fully organised and entirely unpopulated |
+| **AI Interpretation** | An agent must not treat the presence of `design/` subfolders as evidence that any design decision has been made |
+| **Implementation Relevance** | Establishes the baseline against which design progress is measured by `CMET-VIS-031` |
+| **Generation prompt** | Flat vector grid of twelve identical empty outlined tiles on a very dark background, each labelled with a lowercase folder name in monospace, all interiors empty, one amber summary bar beneath. Deliberately austere. No photorealism, no people, no logos, no decorative elements. |
+
+### TBL-VIS-303: `IMG-VIS-028` — Financial Data Presentation Safety
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-028` |
+| **Title** | Financial Data Presentation Safety Rules |
+| **Purpose** | Show why `CAP-VIS-149` carries security level `S1`, by contrasting ambiguous and unambiguous money presentation |
+| **Audience** | Designers, front-end engineers, reviewers of any surface displaying value |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: a vertical split, unsafe on the left, safe on the right. Layer 2: four paired presentation examples. Layer 3: an annotation strip naming the specific hazard in each pair |
+| **Elements / Components** | Four pairs — bare number against number with explicit unit; settled amount against pending amount visually distinguished; rounded display against exact value with precision stated; single-currency assumption against explicit currency |
+| **Relationships** | Horizontal correspondence between each unsafe example and its safe counterpart |
+| **Labels** | Each pair annotated with the hazard: "unit ambiguity", "state ambiguity", "precision loss", "currency assumption" |
+| **Color Semantics** | Red `#b71c1c` outlines on the unsafe column, green `#1b5e20` on the safe column; the money values themselves in neutral high-contrast type so the colour marks the treatment, never the value |
+| **Typography** | Tabular monospace figures for all values — itself a demonstration of the rule |
+| **Legend** | Top strip: "left column violates CAP-VIS-149 · right column satisfies it" |
+| **Meaning** | Money presentation is a control, not a style choice |
+| **AI Interpretation** | An agent generating any surface that displays a monetary value must satisfy all four right-column patterns |
+| **Implementation Relevance** | Becomes the acceptance criteria for `CAP-VIS-149` and a review checklist for every financial surface |
+| **Generation prompt** | Flat vector two-column comparison on a very dark background. Four rows of paired numeric examples in tabular monospace, left column outlined red, right column outlined green, small annotation text between rows. Clinical and precise. No photorealism, no people, no logos, no currency symbols implying a specific market. |
+
+### TBL-VIS-304: `IMG-VIS-029` — Experience Capability Maturity Heatmap
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-029` |
+| **Title** | Experience Capability Maturity Heatmap |
+| **Purpose** | Show all twelve experience capabilities against the `C0`–`C7` maturity scale, making the uniform `C0` position undeniable |
+| **Audience** | Product management, executive readers, planning agents |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: a 12-row by 8-column matrix. Layer 2: cell shading. Layer 3: a right-edge annotation column giving each capability's blocking dependency |
+| **Elements / Components** | Row labels are capability identifiers and names; column headers are `C0` through `C7`; a single filled cell per row; a right column naming what blocks the next step |
+| **Relationships** | None between rows; the visual pattern is a single vertical line of filled cells in the `C0` column |
+| **Labels** | Column headers carry both the code and the name — `C0` Idea, `C1` Defined, and so on |
+| **Color Semantics** | Filled cells amber `#e65100`; unreached cells a very dark grey barely above the background; the `C5` column outlined to mark the verification threshold that nothing in Oship has crossed |
+| **Typography** | Monospace identifiers, sans-serif names, small annotation text |
+| **Legend** | Bottom-left: the `C0`–`C7` scale definition compressed to one line per level |
+| **Meaning** | Every experience capability sits at the leftmost position; the design system has not begun |
+| **AI Interpretation** | An agent must treat any experience-related instruction as requiring definition work first, never implementation |
+| **Implementation Relevance** | The baseline for `CMET-VIS-031`; the same template is reusable for every other category |
+| **Generation prompt** | Flat vector heatmap matrix on a very dark background, twelve labelled rows and eight labelled columns, exactly one amber cell per row all in the first column, one column outlined to mark a threshold, small annotation text at the right margin. No photorealism, no people, no logos. |
+
+---
+
+## 03.9 — Business and Monetization Capabilities
+
+### AI NAVIGATION METADATA — §03.9
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P3 — read only when a commercial question is explicitly in scope** |
+| **AI DEPENDENCIES** | §03.3.10 `CAP-VIS-167`…`170` · §03.7 `OBL-27` · `DOMAIN-VIS-028`, `DOMAIN-VIS-029` |
+| **AI INPUTS** | A question about pricing, plans, entitlement, metering, or partners |
+| **AI OUTPUTS** | Either a registry-grounded answer, or a refusal naming the missing decision |
+| **AI IMPLEMENTATION IMPACT** | Prevents agents from inventing a business model that no human has chosen |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-411`…`VAL-VIS-420` |
+| **AI RELATED DOCUMENTS** | `docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md` · `01_PRODUCT/INDEX.md` |
+
+### 03.9.1 The Commercial Evidence Position
+
+> **`VIS-283` — Evidence statement, stated before any commercial content.** The repository contains
+> **no price, no plan, no tier, no currency, no customer, no contract, and no revenue model of any
+> kind.** `DOMAIN-VIS-028` Monetization and `DOMAIN-VIS-029` Marketplace are both `PROPOSED`;
+> `DOMAIN-VIS-029` has fan-in zero and is a retirement candidate under `OBL-13`. The four
+> commercial capabilities `CAP-VIS-167`…`170` are registered so that the concepts have identifiers
+> and can be reasoned about — **registration is not intention**. Every statement in §03.9 is a
+> statement about capability structure, never about a chosen business model.
+
+> **`VIS-284`.** This section exists for one reason: the commercial capabilities have the highest
+> ratio of *architectural consequence* to *decision maturity* in the entire registry. `CAP-VIS-168`
+> usage metering is `S1` — a metering error is a billing error and therefore a financial control
+> failure — yet it depends on `CAP-VIS-158` telemetry emission, which is `C0` and lives in a
+> `.gitkeep`-only directory. If telemetry is designed without knowing that metering will later
+> depend on it, the telemetry will be re-instrumented. That is the whole practical value of writing
+> this section now: **it changes what telemetry must record, long before anyone decides what Oship
+> costs.**
+
+### TBL-VIS-305: Commercial Capability Architectural Consequences
+
+| Capability | Decision maturity | Architectural consequence if ignored now | Cost of retrofit |
+| :--- | :--- | :--- | :--- |
+| `CAP-VIS-167` Entitlement | No plan model exists | Authorisation (`CAP-VIS-109`) is designed without an entitlement dimension, so every permission check must later be re-derived | **High** — touches every authorisation call site |
+| `CAP-VIS-168` Usage metering | Nothing is metered; no unit defined | Telemetry (`CAP-VIS-158`) records operational events only, not billable events, and historical usage becomes unrecoverable | **Irreversible for past data** |
+| `CAP-VIS-169` Billing | No price, no currency | Value representation (`CAP-VIS-119`) may not carry the precision or currency handling billing requires | **High** — value type change is a data migration |
+| `CAP-VIS-170` Third-party distribution | No partner, no marketplace | Plugin lifecycle (`CAP-VIS-113`) is designed without a distribution boundary, so extensions cannot later be attributed to a distributor | **Medium** — contained to the extension surface |
+
+> **`VIS-285`.** Read the right-hand column carefully. Only one row is genuinely irreversible:
+> **usage that was never recorded cannot be recovered.** Everything else is expensive but
+> recoverable. This produces a single, narrow, defensible recommendation that does not require any
+> business-model decision: *when telemetry is eventually built, record enough per-tenant, per-action
+> event detail that a metering model could be derived retrospectively.* That is stated as
+> `CON-VIS-055` and nothing more is claimed.
+
+```mermaid
+flowchart LR
+    A["CAP-VIS-158 Telemetry emission - C0"] --> B["Operational use - explain behaviour"]
+    A --> C["Commercial use - CAP-VIS-168 metering"]
+    C --> D["CAP-VIS-169 Billing"]
+    D --> E["CAP-VIS-119 Value representation"]
+    F["CAP-VIS-109 Authorisation"] --> G["CAP-VIS-167 Entitlement"]
+    G --> D
+    H["CAP-VIS-113 Plugin lifecycle"] --> I["CAP-VIS-170 Distribution"]
+    I --> G
+
+    B -.->|"decided today"| A
+    C -.->|"NOT decided - but constrains A"| A
+
+    classDef built fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef undec fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef s1 fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class A built
+    class B,F,H undec
+    class C,D,E s1
+    class G,I undec
+```
+
+> **Diagram ID:** `DGM-VIS-092` — **Where Undecided Commerce Reaches Back Into Decided Architecture**
+> **Explanation:** The two dashed edges pointing back at `CAP-VIS-158` are the point of the diagram.
+> Telemetry has an operational purpose that is understood and a commercial purpose that is not
+> decided, and both constrain its design. The red path — metering, billing, value representation —
+> is `S1` throughout, which is why an undecided business model is nonetheless an `S1` concern.
+
+### 03.9.2 What This Section Explicitly Does Not Do
+
+### TBL-VIS-306: Commercial Non-Claims
+
+| Not claimed | Why it is not claimed |
+| :--- | :--- |
+| That Oship will be sold | No evidence of commercial intent exists in the repository |
+| That Oship will be free | Equally unevidenced; the absence of a price is not a price of zero |
+| That there will be tiers, seats, or usage pricing | `CAP-VIS-167`'s plan model is `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| That a marketplace will exist | `DOMAIN-VIS-029` is `PROPOSED` with fan-in 0 and may be retired (`OBL-13`) |
+| That the four capabilities will ever be built | All four are `PROPOSED` at `C0`; none has an owner beyond the domain owner |
+| That `OBL-27`'s creator reading has commercial implications | R1, R2, and R3 differ commercially, which is precisely why `OBL-27` must be answered first |
+
+> **`VIS-286`.** `TBL-VIS-306` is a load-bearing table, not a disclaimer. An agent that reads §03.9
+> and concludes "Oship is a SaaS product with usage-based pricing" has fabricated the most
+> consequential fact about the system. The registry entries exist to make that fabrication
+> detectable: any artifact that asserts a price, a plan, or a tier can be checked against
+> `TBL-VIS-306` and refused.
+
+---
+
+## 03.10 — Security Capabilities
+
+### AI NAVIGATION METADATA — §03.10
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before any change touching an `S1` capability** |
+| **AI DEPENDENCIES** | The `S1` set enumerated in `TBL-VIS-307` · PART 02 §02.11 security levels `S1`…`S4` |
+| **AI INPUTS** | A proposed change plus the capabilities it touches |
+| **AI OUTPUTS** | Whether the change is permitted before a threat model exists |
+| **AI IMPLEMENTATION IMPACT** | Blocks construction of `S1` capabilities that have no threat model |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-421`…`VAL-VIS-435` |
+| **AI RELATED DOCUMENTS** | `docs/MASTER_CONTEXT/11_SECURITY/INDEX.md` · `AOM-ARCH-001` trust boundaries `TB-1`…`TB-10` |
+
+### 03.10.1 Security Is Not a Category
+
+> **`VIS-287`.** §03.2 deliberately did **not** create a "security" capability category, and the
+> reason must be stated because the omission looks like an oversight. Security is not a category of
+> capability; it is a **property that any capability in any category can carry**. Making it a
+> category would produce the standard organisational failure in which security is a team, a folder,
+> and a checklist that other teams route around. Instead, every registry entry carries a Security
+> Level field, and this section reads that field across the whole registry.
+
+> **`VIS-288`.** The measurement is exact. Of the 167 allocated capability identifiers, **38 carry
+> `S1`**. They are distributed across seven of the nine categories — every category except Knowledge
+> and Experience contains at least one, and Experience contains exactly one (`CAP-VIS-149`). None of
+> the 38 is above `C4`. **Zero of the 38 has a threat model.** That last figure is not an estimate;
+> PART 02 established threat-model coverage at 0% of 19 `S1` domains, and no threat model has been
+> added since.
+
+### TBL-VIS-307: The Complete `S1` Capability Set — All 38 Entries
+
+| # | Capability | Category | Maturity | Why `S1` |
+| ---: | :--- | :--- | :---: | :--- |
+| 1 | `CAP-VIS-088` Memory retention control | AI | `C1` | Retaining what must be forgotten is a data-protection failure |
+| 2 | `CAP-VIS-089` Agent action authorisation | AI | `C1` | An unauthorised agent action is an unauthorised system action |
+| 3 | `CAP-VIS-092` Audit trail production | Governance/AI | `C1` | The audit trail is the evidence of every other control |
+| 4 | `CAP-VIS-093` Model provider isolation | AI | `C0` | Data sent to a provider leaves the trust boundary |
+| 5 | `CAP-VIS-101` Compliance evidence production | Governance | `C1` | Absent evidence is indistinguishable from an absent control |
+| 6 | `CAP-VIS-102` Separation of duties | Governance | `C1` | Currently impossible — `FAL-VIS-177`, `OBL-22` |
+| 7 | `CAP-VIS-108` Identity establishment | Platform | `C1` | Everything downstream trusts its output |
+| 8 | `CAP-VIS-109` Authorisation decisioning | Platform | `C1` | A wrong permit is a breach |
+| 9 | `CAP-VIS-110` Tenant isolation | Platform | `C1` | Carries the always-zero cross-tenant commitment (`VIS-191`) |
+| 10 | `CAP-VIS-111` Request idempotency | Platform | `C1` | A duplicate effect on money is a financial loss |
+| 11 | `CAP-VIS-112` Workflow orchestration | Platform | `C1` | A partial multi-`S1` write leaves inconsistent money |
+| 12 | `CAP-VIS-114` Extension sandboxing | Platform | `C0` | Third-party code inside the boundary |
+| 13 | `CAP-VIS-119` Value representation | Domain | `C1` | Every monetary fact is expressed in it |
+| 14 | `CAP-VIS-120` Account modelling | Domain | `C1` | Defines who owns value |
+| 15 | `CAP-VIS-121` Double-entry recording | Domain | `C1` | The primary financial record |
+| 16 | `CAP-VIS-122` Balance derivation | Domain | `C1` | A wrong balance is a wrong statement of obligation |
+| 17 | `CAP-VIS-123` Transaction lifecycle | Domain | `C1` | An illegal state transition is an unauthorised movement |
+| 18 | `CAP-VIS-124` Settlement finality | Domain | `C1` | Irrevocability means errors are permanent |
+| 19 | `CAP-VIS-125` Reconciliation | Domain | `C1` | Detects divergence from external truth |
+| 20 | `CAP-VIS-126` Obligation tracking | Domain | `C0` | Records what is owed |
+| 21 | `CAP-VIS-127` Risk evaluation | Domain | `C0` | The gate before a movement commits |
+| 22 | `CAP-VIS-128` Fraud signal detection | Domain | `C0` | Detects abuse of the primary record |
+| 23 | `CAP-VIS-129` Regulatory reporting | Domain | `C0` | Misreporting is a legal exposure |
+| 24 | `CAP-VIS-130` Dispute resolution | Domain | `C0` | Touches the primary record under contest |
+| 25 | `CAP-VIS-132` Durable persistence | Data | `C0` | An acknowledged write that vanishes is a lost movement |
+| 26 | `CAP-VIS-133` Transactional consistency | Data | `C0` | Partial application of a balanced entry breaks the ledger |
+| 27 | `CAP-VIS-137` Retention and disposal | Data | `C0` | Blocked by undefined `RT-2` (`OBL-02`, `FAL-VIS-180`) |
+| 28 | `CAP-VIS-138` Backup and restore | Data | `C0` | The last defence against total loss |
+| 29 | `CAP-VIS-139` Data export and portability | Data | `C0` | An over-broad export is a disclosure |
+| 30 | `CAP-VIS-140` Encryption at rest and in transit | Data | `C0` | Key management is `UNKNOWN` (`OBL-24`) |
+| 31 | `CAP-VIS-149` Financial data presentation | Experience | `C0` | Ambiguous money display causes wrong human decisions |
+| 32 | `CAP-VIS-157` Rollback | Infrastructure | `C0` | A rollback across a money state change can un-settle |
+| 33 | `CAP-VIS-162` Fault isolation | Infrastructure | `C0` | Contains the distributed-monolith failure (`FAL-VIS-134`) |
+| 34 | `CAP-VIS-163` Disaster recovery | Infrastructure | `C0` | Environment loss without recovery is total loss |
+| 35 | `CAP-VIS-164` Secret management | Infrastructure | `C0` | Exposed credentials defeat every other control |
+| 36 | `CAP-VIS-165` Vulnerability management | Infrastructure | `C0` | Known-unpatched weakness is an accepted breach |
+| 37 | `CAP-VIS-168` Usage metering | Commercial | `C0` | A metering error is a billing error |
+| 38 | `CAP-VIS-169` Billing and invoicing | Commercial | `C0` | An incorrect charge is a financial harm |
+
+> **`VIS-289`.** Thirty-eight `S1` capabilities, twelve at `C1`, twenty-six at `C0`, none above
+> `C1`, none threat-modelled, none built. The honest summary is that **Oship's security posture is
+> not weak — it is unformed.** There is nothing to attack and nothing to defend, which is exactly
+> the moment at which threat models are cheapest to produce and most influential. `CON-VIS-047`
+> already prohibits building an `S1` capability before its threat model exists; `VIS-289` records
+> why that constraint is affordable today and will not be affordable later.
+
+### 03.10.2 The Security Dependency Cascade
+
+```mermaid
+flowchart TB
+    subgraph FOUND["FOUNDATION - failure here defeats everything above"]
+        SEC["CAP-VIS-164 Secret management"]
+        ENC["CAP-VIS-140 Encryption"]
+        AUD["CAP-VIS-092 Audit trail"]
+    end
+    subgraph GATE["GATES - failure here admits the wrong actor"]
+        IDN["CAP-VIS-108 Identity"]
+        AUZ["CAP-VIS-109 Authorisation"]
+        TEN["CAP-VIS-110 Tenant isolation"]
+    end
+    subgraph INTEG["INTEGRITY - failure here corrupts the record"]
+        IDM["CAP-VIS-111 Idempotency"]
+        TXC["CAP-VIS-133 Transactional consistency"]
+        LDG["CAP-VIS-121 Double-entry recording"]
+        FIN["CAP-VIS-124 Settlement finality"]
+    end
+    subgraph SURV["SURVIVAL - failure here loses the record"]
+        DUR["CAP-VIS-132 Durable persistence"]
+        BKP["CAP-VIS-138 Backup and restore"]
+        DR["CAP-VIS-163 Disaster recovery"]
+    end
+
+    SEC --> ENC
+    ENC --> DUR
+    IDN --> AUZ
+    AUZ --> TEN
+    TEN --> LDG
+    IDM --> LDG
+    TXC --> LDG
+    DUR --> TXC
+    LDG --> FIN
+    AUD --> FIN
+    DUR --> BKP
+    BKP --> DR
+
+    classDef f fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef g fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef i fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef s fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    class SEC,ENC,AUD f
+    class IDN,AUZ,TEN g
+    class IDM,TXC,LDG,FIN i
+    class DUR,BKP,DR s
+```
+
+> **Diagram ID:** `DGM-VIS-093` — **The `S1` Security Cascade — Four Failure Classes**
+> **Explanation:** The four groups are ordered by *what a failure destroys*, not by architectural
+> layer. Foundation failures defeat every control above them. Gate failures admit the wrong actor.
+> Integrity failures corrupt a record that is still present. Survival failures lose the record
+> entirely. `CAP-VIS-121` double-entry recording has the highest in-degree — four edges converge on
+> it — which makes it the single most security-critical capability in Oship.
+
+### TBL-VIS-308: Failure Class, Detection Difficulty, and Recovery
+
+| Class | Example capability | If it fails, what is lost | Detectable by | Recoverable? |
+| :--- | :--- | :--- | :--- | :--- |
+| Foundation | `CAP-VIS-164` Secret management | Every control above it, silently | Only by external observation of misuse | Rotation recovers future access, never past disclosure |
+| Foundation | `CAP-VIS-092` Audit trail | The ability to prove anything happened | Nothing — an absent audit trail hides its own absence | No — history cannot be reconstructed |
+| Gate | `CAP-VIS-110` Tenant isolation | Confidentiality between customers | `VAL-VIS-428` automated cross-tenant read test | Access can be closed; disclosure cannot be undone |
+| Gate | `CAP-VIS-109` Authorisation | Correctness of every permission decision | Policy tests plus audit review | Yes, if audited actions are reversible |
+| Integrity | `CAP-VIS-111` Idempotency | Exactly-once semantics; duplicate settlements | Reconciliation (`CAP-VIS-125`) | Yes — by compensating entries, never by deletion |
+| Integrity | `CAP-VIS-121` Double-entry recording | The primary financial record's correctness | `CAP-VIS-125` reconciliation against external truth | Only if an external authority's record survives |
+| Survival | `CAP-VIS-132` Durable persistence | Acknowledged writes | Restart testing | No — an unwritten write is gone |
+| Survival | `CAP-VIS-138` Backup and restore | The last recovery path | Restore rehearsal, which does not exist | No — an untested backup is a hypothesis |
+
+> **`VIS-290`.** Two rows in `TBL-VIS-308` say *detectable by: nothing*. An absent audit trail and
+> an untested backup share a property that makes them the most dangerous entries in the table:
+> **their failure mode is silence until the moment they are needed.** Every other `S1` failure
+> announces itself eventually through reconciliation, testing, or complaint. These two do not. This
+> is the argument for `CAP-VIS-092` and `CAP-VIS-138` being built early despite neither being
+> customer-visible, and it is recorded as `VAL-VIS-429` — a backup that has never been restored does
+> not count as a backup.
+
+### 03.10.3 Security Capability Preconditions
+
+### TBL-VIS-309: What Must Exist Before Any `S1` Capability Is Built
+
+| Precondition | Currently satisfied? | Blocking obligation |
+| :--- | :---: | :--- |
+| A threat model for the capability's domain | **No** — 0 of 19 `S1` domains | Recorded in PART 02; carried into `CON-VIS-047` |
+| A named accountable human owner distinct from the implementer | **No** — single-owner CODEOWNERS | `OBL-22` |
+| A key management approach | **No** — `UNKNOWN` | `OBL-24` |
+| A retention class for every data element touched | **Partly** — `RT-2` undefined | `OBL-02` |
+| An audit trail capable of recording the capability's actions | **No** — `CAP-VIS-092` at `C1` | None yet; recorded here as `OBL-28` |
+| A test that can falsify the capability's security claim | **No** — nothing is at `C5` | `CON-VIS-056` |
+
+> **`OBL-28` — Open obligation.** *Establish `CAP-VIS-092` audit trail production to at least `C2`
+> (specified inputs, outputs, and contract) before any other `S1` capability advances past `C2`.*
+> Owner: Architecture / `DOMAIN-VIS-047`. Rationale: `TBL-VIS-308` shows that an absent audit trail
+> is undetectable, and `DGM-VIS-093` shows that `CAP-VIS-092` feeds settlement finality. Building
+> `S1` behaviour that cannot be audited creates unprovable history that no later work can repair.
+
+> **`VIS-291`.** Six preconditions, zero fully satisfied. This is not an argument for paralysis — it
+> is an argument for **sequencing**. Every one of the six is a documentation or decision artifact,
+> not an engineering build. All six could be satisfied without writing a line of application code,
+> and until they are, `CON-VIS-047` and `CON-VIS-056` prohibit the `S1` build work that would
+> otherwise start. That prohibition is the most consequential constraint PART 03 adds.
+
+---
+
+## 03.11 — Data Capabilities
+
+### AI NAVIGATION METADATA — §03.11
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before any schema, storage, or data-shape decision** |
+| **AI DEPENDENCIES** | §03.3.7 `CAP-VIS-131`…`140` · `OBL-02` retention · `OBL-03` persistence technology |
+| **AI INPUTS** | A proposed data structure, store, migration, or retention rule |
+| **AI OUTPUTS** | Whether the decision is currently permitted, and what it depends on |
+| **AI IMPLEMENTATION IMPACT** | Data decisions are the least reversible decisions in the system |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-436`…`VAL-VIS-445` |
+| **AI RELATED DOCUMENTS** | `docs/MASTER_CONTEXT/09_DATA/INDEX.md` · `AOM-ARCH-001` persistence components |
+
+### 03.11.1 Why Data Capabilities Are Different
+
+> **`VIS-292`.** Every other capability category can be rebuilt. Data cannot. A wrong interface is
+> replaced by a new version; a wrong screen is redesigned; a wrong deployment is rolled back. A
+> wrong data decision produces **records that are already wrong and cannot be made right**, because
+> the information needed to correct them was never captured. This is why `CAP-VIS-132` durable
+> persistence carries `P0` AI priority despite sitting at `C0` in a repository with no database:
+> the decision is early, cheap, and permanent.
+
+> **`VIS-293`.** The repository state is unambiguous. `database/` contains only `.gitkeep`.
+> `storage/` contains only `.gitkeep`. No schema, no migration, no ORM, no data dictionary, and no
+> persistence technology selection exists anywhere. `OBL-03` records that the persistence technology
+> is undecided. Ten data capabilities are registered; **one is at `C1` and nine are at `C0`.**
+
+### TBL-VIS-310: Reversibility of Data Decisions
+
+| Decision | Reversible? | What is lost if wrong | Capability |
+| :--- | :---: | :--- | :--- |
+| Which store to use | **Yes, expensively** | Time and migration effort; data survives | `CAP-VIS-132` |
+| The canonical shape of a business concept | **Partly** | Meaning that was never distinguished cannot be recovered | `CAP-VIS-131` |
+| Monetary precision and rounding | **No** | Every value already stored at the wrong precision | `CAP-VIS-119` |
+| Whether an event is recorded at all | **No** | The event, permanently | `CAP-VIS-158`, `CAP-VIS-092` |
+| Retention class for a data element | **No, in one direction** | Data disposed of early is gone; data kept too long is a liability | `CAP-VIS-137` |
+| Whether identity is a natural or surrogate key | **Partly** | Referential history if the natural key changes | `CAP-VIS-131` |
+| Whether a change is recorded as an edit or an entry | **No** | The prior state, and the audit chain | `CAP-VIS-121` |
+| Tenant scoping in the storage model | **No, safely** | Retrofitting tenancy risks cross-tenant leakage during migration | `CAP-VIS-110` |
+
+> **`VIS-294`.** Five of eight rows are irreversible. Compare this to `TBL-VIS-305`, where only one
+> of four commercial rows was irreversible. **Data is the category where being early is worth the
+> most and being wrong costs the most**, and it is currently the category with the least decided.
+> `OBL-03` is therefore not merely an open item — it is the gate on nine `C0` capabilities.
+
+### 03.11.2 The Data Capability Dependency Chain
+
+```mermaid
+flowchart TB
+    T["OBL-03 Persistence technology - UNDECIDED"]
+    T --> D132["CAP-VIS-132 Durable persistence"]
+    D132 --> D133["CAP-VIS-133 Transactional consistency"]
+    D132 --> D134["CAP-VIS-134 Schema evolution"]
+    D132 --> D135["CAP-VIS-135 Data lineage"]
+    D132 --> D137["CAP-VIS-137 Retention and disposal"]
+    D132 --> D138["CAP-VIS-138 Backup and restore"]
+    D131["CAP-VIS-131 Canonical data modelling"] --> D134
+    D131 --> D136["CAP-VIS-136 Data quality assertion"]
+    D131 --> D139["CAP-VIS-139 Export and portability"]
+    D133 --> D121["CAP-VIS-121 Double-entry recording"]
+    D140["CAP-VIS-140 Encryption"] --> D132
+    OBL2["OBL-02 Retention class RT-2 - UNDEFINED"] --> D137
+    OBL24["OBL-24 Key management - UNDEFINED"] --> D140
+
+    classDef blocked fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef data fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef gate fill:#e65100,stroke:#ffcc80,color:#ffffff
+    class T,OBL2,OBL24 blocked
+    class D132,D133,D134,D135,D136,D137,D138,D139,D140,D131 data
+    class D121 gate
+```
+
+> **Diagram ID:** `DGM-VIS-094` — **Data Capability Chain Rooted in Three Undecided Obligations**
+> **Explanation:** Three red nodes are not capabilities — they are open obligations, drawn as roots
+> because nothing beneath them can advance past `C1`. `CAP-VIS-132` has out-degree five, making it
+> the highest-leverage single data decision. The chain terminates at `CAP-VIS-121`, the most
+> security-critical capability in Oship per `DGM-VIS-093`, which means an unresolved `OBL-03`
+> transitively blocks the financial record itself.
+
+### TBL-VIS-311: Data Capability Blocking Analysis
+
+| Capability | Blocked by | Transitively blocks | Can advance without the blocker? |
+| :--- | :--- | ---: | :--- |
+| `CAP-VIS-131` Canonical modelling | Nothing technical | 3 | **Yes** — modelling is technology-independent |
+| `CAP-VIS-132` Durable persistence | `OBL-03` | 5 | No |
+| `CAP-VIS-133` Transactional consistency | `CAP-VIS-132` | 1 | No |
+| `CAP-VIS-134` Schema evolution | `CAP-VIS-131`, `CAP-VIS-132` | 0 | Partly — the policy can be written now |
+| `CAP-VIS-135` Data lineage | `CAP-VIS-132` | 0 | Partly — the lineage model is specifiable now |
+| `CAP-VIS-136` Quality assertion | `CAP-VIS-131` | 0 | **Yes** — invariants are declarable now |
+| `CAP-VIS-137` Retention and disposal | `OBL-02`, `CAP-VIS-132` | 0 | No — `RT-2` is undefined |
+| `CAP-VIS-138` Backup and restore | `CAP-VIS-132` | 0 | No |
+| `CAP-VIS-139` Export and portability | `CAP-VIS-131` | 0 | Partly — the export contract is definable now |
+| `CAP-VIS-140` Encryption | `OBL-24` | 1 | No |
+
+> **`VIS-295`.** Read the right-hand column as a work list. **`CAP-VIS-131` and `CAP-VIS-136` can
+> advance today with no technology decision at all**, and `CAP-VIS-134`, `135`, and `139` can each
+> advance partway. That is five of ten data capabilities that can move from `C0` toward `C2` while
+> `OBL-03` remains open. Canonical modelling in particular has out-degree three and no blocker,
+> which makes it the correct next piece of data work regardless of what store is eventually chosen.
+
+### TBL-VIS-312: Data Work Available Before `OBL-03` Is Resolved
+
+| Work item | Capability | Produces | Why it survives any technology choice |
+| :--- | :--- | :--- | :--- |
+| A concept-to-canonical-model mapping for every PART 02 domain | `CAP-VIS-131` | One authoritative representation per business concept | Concepts are technology-independent |
+| Declared invariants per concept | `CAP-VIS-136` | Assertions any store can enforce or check | Invariants are logical, not physical |
+| A schema-change policy | `CAP-VIS-134` | Rules for additive change, deprecation, and reversal | Policy applies to any migration mechanism |
+| A lineage record specification | `CAP-VIS-135` | The fields any transformation must emit | Independent of where lineage is stored |
+| An export contract | `CAP-VIS-139` | A structured, complete, portable output shape | The customer-visible shape is not the storage shape |
+| Retention classes for every element **except** `RT-2` | `CAP-VIS-137` | A partial retention map plus a named gap | Classification precedes enforcement |
+
+> **`VIS-296`.** `TBL-VIS-312` is deliberately actionable. PART 03's recurring complaint is that
+> almost everything is blocked; this table is the counter-example that proves the complaint is not
+> fatalism. Six concrete work items exist inside the data category that require no technology
+> decision, no funding, and no new domain. They are blocked only by attention.
+
+---
+
+## 03.12 — Infrastructure Capabilities
+
+### AI NAVIGATION METADATA — §03.12
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before any CI, deployment, or operability work** |
+| **AI DEPENDENCIES** | §03.3.9 `CAP-VIS-153`…`166` · `EVD-VIS-017` uninstalled workflows |
+| **AI INPUTS** | A proposal to add automation, a pipeline, or an environment |
+| **AI OUTPUTS** | Where it sits in the infrastructure sequence and what it unlocks |
+| **AI IMPLEMENTATION IMPACT** | `CAP-VIS-154` CI is the highest-leverage unbuilt capability in the system (`VIS-243`) |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-446`…`VAL-VIS-455` |
+| **AI RELATED DOCUMENTS** | `.github/workflow-skeletons/` · `docs/MASTER_CONTEXT/13_DEVOPS/INDEX.md` |
+
+### 03.12.1 The Eight Skeletons
+
+> **`VIS-297`.** `EVD-VIS-017` is worth restating precisely because it is the single most actionable
+> fact in PART 03. `.github/workflow-skeletons/` contains eight workflow definitions — `ci`, `cd`,
+> `release`, `security-scan`, `documentation`, `ai-governance`, `issue-triage`, and `stale`.
+> `.github/workflows/` contains **none of them**. The distance between the current state and a
+> system that mechanically enforces its own rules is a directory move plus whatever adaptation each
+> skeleton needs. Nothing else in this document has that ratio of consequence to effort.
+
+### TBL-VIS-313: Workflow Skeletons Against Capabilities They Would Activate
+
+| Skeleton | Capability activated | Currently | What installing it would prove |
+| :--- | :--- | :---: | :--- |
+| `ci` | `CAP-VIS-154` Continuous integration | `C1`, uninstalled | That a declared check can refuse a change |
+| `cd` | `CAP-VIS-155` Deployment automation | `C0`, uninstalled | Nothing yet — there is no artifact to deploy |
+| `release` | `CAP-VIS-103` Deprecation management, versioning | `C2`, uninstalled | That versioning is mechanical, not manual |
+| `security-scan` | `CAP-VIS-165` Vulnerability management | `C0`, uninstalled | That dependency risk is measured |
+| `documentation` | `CAP-VIS-075` Staleness detection, `CAP-VIS-077` | `C1`, uninstalled | **That the knowledge system can detect its own staleness** |
+| `ai-governance` | `CAP-VIS-095` Constraint enforcement | `C2`, uninstalled | That governance can refuse |
+| `issue-triage` | `CAP-VIS-104` Governance drift detection | `C1`, uninstalled | Marginal at current scale |
+| `stale` | `CAP-VIS-075` Staleness detection | `C1`, uninstalled | Marginal — applies to issues, not documents |
+
+> **`VIS-298`.** Three of the eight matter now, and they are not the obvious three. `cd` and
+> `release` are premature — there is no artifact. `issue-triage` and `stale` are marginal at
+> single-maintainer scale. The three that would change Oship's actual state are **`ci`,
+> `documentation`, and `ai-governance`**, because each converts a documented rule into a mechanical
+> refusal. That is the transition from `C2` to `C4` for the governance and knowledge capabilities,
+> and it is available without any application code existing.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Declared
+    Declared --> Skeletal: "skeleton written in workflow-skeletons"
+    Skeletal --> Installed: "moved to .github/workflows"
+    Installed --> Enforcing: "configured to fail the build"
+    Enforcing --> Required: "branch protection makes the check mandatory"
+    Required --> [*]
+
+    Declared: "Declared - a rule exists in a document"
+    Skeletal: "Skeletal - automation exists but never runs"
+    Installed: "Installed - automation runs and reports"
+    Enforcing: "Enforcing - automation can fail a change"
+    Required: "Required - a failing check blocks the merge"
+
+    note right of Skeletal
+        All eight Oship workflows are here.
+        This state provides zero enforcement.
+    end note
+    note right of Required
+        No Oship capability has reached this state.
+        Branch protection status is UNKNOWN.
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-095` — **The Enforcement Ladder — Five States From Rule to Refusal**
+> **Explanation:** A rule provides enforcement only in the final state. Oship's eight workflows are
+> all in `Skeletal`, which is the state that most resembles progress while providing none. The
+> distinction between `Installed` and `Enforcing` is the one most often collapsed: a workflow that
+> runs and reports but is configured to continue on error is not enforcement, it is telemetry.
+
+### TBL-VIS-314: Infrastructure Capability Sequence
+
+| Stage | Capability | Prerequisite | Unlocks |
+| ---: | :--- | :--- | :--- |
+| 1 | `CAP-VIS-154` Continuous integration | The `ci` skeleton, installed | Every mechanical validation in this document |
+| 2 | `CAP-VIS-165` Vulnerability management | `CAP-VIS-154` | Measured dependency risk |
+| 3 | `CAP-VIS-153` Build reproducibility | Application code existing | `CAP-VIS-155` |
+| 4 | `CAP-VIS-158` Telemetry emission | A running service | `CAP-VIS-159`, `160`, `161`, `166`, `168` |
+| 5 | `CAP-VIS-155` Deployment automation | `CAP-VIS-153`, `CAP-VIS-156` | `CAP-VIS-157`, `161`, `163` |
+| 6 | `CAP-VIS-156` Environment parity | `CAP-VIS-115` configuration | `CAP-VIS-155` |
+| 7 | `CAP-VIS-157` Rollback | `CAP-VIS-155` | Safe change under `S1` |
+| 8 | `CAP-VIS-162` Fault isolation | `CAP-VIS-158` | Containment of `FAL-VIS-134` |
+| 9 | `CAP-VIS-163` Disaster recovery | `CAP-VIS-138`, `CAP-VIS-155` | Survival of environment loss |
+| 10 | `CAP-VIS-164` Secret management | `CAP-VIS-109` | Every credentialed integration |
+| 11 | `CAP-VIS-159` Alerting | `CAP-VIS-158`, `CAP-VIS-118` | Human response to failure |
+| 12 | `CAP-VIS-160` Distributed tracing | `CAP-VIS-158` | Cross-component diagnosis |
+| 13 | `CAP-VIS-161` Capacity scaling | `CAP-VIS-158`, `CAP-VIS-155` | Load growth |
+| 14 | `CAP-VIS-166` Cost attribution | `CAP-VIS-158` | Cost per capability |
+
+> **`VIS-299`.** Only stages 1 and 2 are available today; every stage from 3 onward requires
+> application code or a running service, neither of which exists. `CAP-VIS-158` telemetry has
+> out-degree five and gates the entire operability half of the table — which is the same conclusion
+> `DGM-VIS-092` reached from the commercial side. **Two independent analyses converge on telemetry
+> as the highest-leverage infrastructure capability after CI**, and `VIS-285` already established
+> that its event granularity must be decided before it is built, not after.
+
+### TBL-VIS-315: `IMG-VIS-030` — The Enforcement Gap
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-030` |
+| **Title** | The Enforcement Gap — Eight Skeletons, Zero Installed |
+| **Purpose** | Make the single most actionable fact in PART 03 visible in one frame: automation exists and does not run |
+| **Audience** | Repository owner, contributors, planning agents |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: two labelled containers side by side, a wide gap between them. Layer 2: eight file tiles, all inside the left container. Layer 3: the empty right container. Layer 4: five enforcement-ladder markers beneath, with a position indicator |
+| **Elements / Components** | Left container labelled `.github/workflow-skeletons/` holding eight named tiles; right container labelled `.github/workflows/` holding nothing; beneath, the ladder Declared → Skeletal → Installed → Enforcing → Required with a marker on Skeletal |
+| **Relationships** | Eight dashed arrows from left tiles toward the right container, all stopping short of it — the arrows do not arrive |
+| **Labels** | Tile names `ci`, `cd`, `release`, `security-scan`, `documentation`, `ai-governance`, `issue-triage`, `stale`; the gap annotated "not installed" |
+| **Color Semantics** | Left container amber `#e65100` for present-but-inert; right container grey `#37474f` outline, empty; the three high-value skeletons (`ci`, `documentation`, `ai-governance`) outlined in green `#1b5e20` to mark them as the ones worth installing first |
+| **Typography** | Monospace for all filesystem names; sans-serif for the ladder labels |
+| **Legend** | Bottom-right: "green outline denotes highest leverage" and "dashed arrow denotes an incomplete transition" |
+| **Meaning** | Governance exists as text and as unrun code, and nowhere as enforcement |
+| **AI Interpretation** | An agent must never cite the existence of a workflow skeleton as evidence that a check runs |
+| **Implementation Relevance** | Installing three files changes `CAP-VIS-154`, `CAP-VIS-075`, and `CAP-VIS-095` from documented to enforcing |
+| **Generation prompt** | Flat vector diagram on a very dark background. Two rectangular containers separated by a visible gap; the left holds eight small labelled file tiles in amber, three of them outlined green; the right is empty and grey. Eight dashed arrows point rightward but stop before reaching the right container. A five-step horizontal ladder beneath with a marker on the second step. Monospace labels. No photorealism, no people, no logos. |
+
+---
+
+## 03.13 — Capability Dependency Model
+
+### AI NAVIGATION METADATA — §03.13
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before adding, changing, or removing any capability dependency** |
+| **AI DEPENDENCIES** | The full registry §03.3 · `DGM-VIS-082`, `DGM-VIS-083`, `DGM-VIS-093`, `DGM-VIS-094` |
+| **AI INPUTS** | A proposed dependency edge, or a plan whose ordering depends on one |
+| **AI OUTPUTS** | Admit or refuse, with the violated rule identifier |
+| **AI IMPLEMENTATION IMPACT** | Defines the three dependency laws and the fifty rules that enforce them |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-321`…`VAL-VIS-370` — defined here, applied everywhere |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` component dependency model · PART 02 §02.16 integration patterns |
+
+### 03.13.1 The Three Dependency Laws
+
+> **`VIS-300`.** Everything in §03.13 derives from three laws. They are stated first, in full, and
+> the fifty validation rules that follow are mechanisms for enforcing them — not additional
+> requirements. If a rule and a law ever conflict, the law governs and the rule is a defect.
+
+### TBL-VIS-316: The Three Capability Dependency Laws
+
+| Law | Statement | Why it exists | Enforced by |
+| :--- | :--- | :--- | :--- |
+| **L1 — No hidden dependencies** | Every dependency a capability has must appear in its registry entry. A dependency discovered during implementation is a registry defect, not an implementation detail. | A hidden dependency makes the maturity model lie: a capability cannot be more mature than its least mature undeclared prerequisite | `VAL-VIS-321`, `323`, `324`, `330`…`334` |
+| **L2 — No circular capability chains** | The dependency graph over `CAP-VIS-` entries must be acyclic. Two capabilities that genuinely require each other are one capability that has been split incorrectly. | A cycle has no valid build order, so no plan derived from it can be executed | `VAL-VIS-322`, `325`…`329` |
+| **L3 — Explicit contracts** | A dependency is a contract on inputs, outputs, and failure behaviour — never on implementation. A capability that depends on *how* another works has coupled to a detail that is free to change. | Implementation coupling converts every internal change into a breaking change | `VAL-VIS-335`…`VAL-VIS-345` |
+
+```mermaid
+flowchart TB
+    subgraph L1G["L1 - No hidden dependencies"]
+        A1["Registry entry declares deps"]
+        A2["Implementation uses only declared deps"]
+        A3["Discovery of an undeclared dep = registry defect"]
+        A1 --> A2 --> A3
+    end
+    subgraph L2G["L2 - No circular chains"]
+        B1["Graph over CAP-VIS is a DAG"]
+        B2["A cycle means one capability was split wrongly"]
+        B3["Resolution - merge or extract a third capability"]
+        B1 --> B2 --> B3
+    end
+    subgraph L3G["L3 - Explicit contracts"]
+        C1["Depend on inputs, outputs, failure behaviour"]
+        C2["Never on internal mechanism"]
+        C3["Contract change = versioned change"]
+        C1 --> C2 --> C3
+    end
+
+    L1G --> PLAN["A build order can be computed"]
+    L2G --> PLAN
+    L3G --> CHANGE["A change can be assessed for blast radius"]
+
+    classDef law fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef out fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class A1,A2,A3,B1,B2,B3,C1,C2,C3 law
+    class PLAN,CHANGE out
+```
+
+> **Diagram ID:** `DGM-VIS-096` — **The Three Dependency Laws and What They Buy**
+> **Explanation:** The two green outcomes are the entire justification for the laws. L1 and L2
+> together make a build order computable — without both, any plan is a guess. L3 makes blast radius
+> assessable — without it, no change can be scoped. These are the only two operations PART 03's
+> registry must support, and each requires exactly the laws shown.
+
+### 03.13.2 Cycle Detection Across the Actual Registry
+
+> **`VIS-301`.** L2 is not hypothetical. The registry contains **one declared self-dependency**:
+> `CAP-VIS-130` dispute resolution lists `CAP-VIS-130` among its dependencies. This was left
+> visible on purpose in `TBL-VIS-272` and recorded as `OBL-23`. It is a one-node cycle, the
+> simplest possible violation of L2, and it exists because dispute resolution genuinely needs to
+> handle a dispute about a prior dispute resolution. The correct fix is not to delete the edge but
+> to recognise that **recursion over instances is not recursion over capabilities**: a dispute
+> resolution acting on the output of an earlier dispute resolution is one capability applied twice,
+> not two capabilities depending on each other.
+
+### TBL-VIS-317: Cycle Analysis of the Declared Dependency Graph
+
+| Check | Method | Result | Action |
+| :--- | :--- | :--- | :--- |
+| Self-dependencies | Scan each entry's dependency list for its own ID | **1 found** — `CAP-VIS-130` | `OBL-23`; fix by removing the self-edge and documenting instance recursion |
+| Two-node cycles | Pairwise check of mutual declarations | **0 found** | None |
+| Longer cycles | Path search over the declared edges | **0 found** in the declared graph | None |
+| Cycles through sub-capabilities | `SCAP-VIS-` entries inherit their parent's edges | **0 found** | None |
+| Cross-category cycles | Edges crossing `CCAT-` boundaries | **0 found**; 11 crossing edges, all one-directional | None |
+| Cycles introduced by planned work | Not assessable — planned capabilities have declared, not discovered, dependencies | **UNKNOWN — REQUIRES REPOSITORY VERIFICATION** at build time | `VAL-VIS-325` must run in CI once CI exists |
+
+> **`VIS-302`.** The final row is the honest one. Every dependency in this registry is **declared,
+> not observed**. A declared graph is acyclic because its author made it so; an observed graph is
+> acyclic only if the implementation cooperated. Oship has no implementation, therefore no observed
+> graph, therefore this cycle analysis proves the *specification* is consistent and proves nothing
+> about any future system. `VAL-VIS-325` exists to re-run the check against observed dependencies
+> when there is code to observe.
+
+### 03.13.3 The Longest Dependency Chains
+
+### TBL-VIS-318: Critical Path Analysis — Longest Chains in the Registry
+
+| Rank | Chain | Length | Terminal maturity | Comment |
+| ---: | :--- | ---: | :---: | :--- |
+| 1 | `OBL-03` → `CAP-VIS-132` → `CAP-VIS-133` → `CAP-VIS-111` → `CAP-VIS-123` → `CAP-VIS-124` → `CAP-VIS-125` | 6 edges | `C1` | The settlement chain — rooted in an undecided obligation |
+| 2 | `CAP-VIS-107` → `CAP-VIS-105` → `CAP-VIS-108` → `CAP-VIS-109` → `CAP-VIS-110` → `CAP-VIS-121` | 5 edges | `C1` | The access chain into the ledger |
+| 3 | `CAP-VIS-153` → `CAP-VIS-154` → `CAP-VIS-155` → `CAP-VIS-157` → safe `S1` change | 4 edges | `C0` | The delivery chain |
+| 4 | `CAP-VIS-141` → `CAP-VIS-143` → `CAP-VIS-142` → `CAP-VIS-149` → `CAP-VIS-151` | 4 edges | `C0` | The experience chain |
+| 5 | `CAP-VIS-158` → `CAP-VIS-168` → `CAP-VIS-169` → `CAP-VIS-119` | 3 edges | `C0` | The commercial chain |
+| 6 | `CAP-VIS-072` → `CAP-VIS-075` → `CAP-VIS-077` → `CAP-VIS-104` | 3 edges | `C1` | The knowledge integrity chain |
+| 7 | `CAP-VIS-108` → `CAP-VIS-089` → agent execution | 2 edges | `C1` | The agent authority chain, gated by `CON-VIS-050` |
+
+> **`VIS-303`.** Chain 1 is the critical path of the entire product. Six edges separate an
+> undecided persistence technology from the ability to prove that internal records match an external
+> authority's records — which is the minimum credible claim a financial system can make. Every edge
+> in that chain is `PLANNED` and its root is an open obligation. **`OBL-03` is therefore not a
+> technical preference; it is the first domino of the Money Factory.**
+
+> **`VIS-304`.** Chain 6 is the only chain whose root is already `IMPLEMENTED`. `CAP-VIS-072`
+> knowledge structure exists and works; staleness detection, cross-reference integrity, and
+> governance drift detection follow from it. This is the same conclusion as `VIS-268`: knowledge is
+> the only subsystem where forward progress is currently unblocked by anything except effort.
+
+```mermaid
+flowchart LR
+    O3["OBL-03 UNDECIDED"] --> P132["CAP-VIS-132"]
+    P132 --> P133["CAP-VIS-133"]
+    P133 --> P111["CAP-VIS-111"]
+    P111 --> P123["CAP-VIS-123"]
+    P123 --> P124["CAP-VIS-124"]
+    P124 --> P125["CAP-VIS-125 Reconciliation"]
+    P125 --> CLAIM["The minimum credible financial claim"]
+
+    K72["CAP-VIS-072 IMPLEMENTED"] --> K75["CAP-VIS-075"]
+    K75 --> K77["CAP-VIS-077"]
+    K77 --> K104["CAP-VIS-104"]
+    K104 --> KCLAIM["Self-validating knowledge"]
+
+    classDef blocked fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef planned fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef done fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef goal fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    class O3 blocked
+    class P132,P133,P111,P123,P124,P125,K75,K77,K104 planned
+    class K72 done
+    class CLAIM,KCLAIM goal
+```
+
+> **Diagram ID:** `DGM-VIS-097` — **The Two Critical Paths — Blocked and Unblocked**
+> **Explanation:** Two chains, drawn together because the contrast is the finding. The upper chain
+> is rooted in a red undecided obligation and cannot start. The lower chain is rooted in a green
+> implemented capability and can start immediately. Any plan that spends effort on the upper chain
+> before `OBL-03` closes is spending it on speculation; the lower chain has no such excuse.
+
+### 03.13.4 Validation Rules `VAL-VIS-321`…`VAL-VIS-345`
+
+### TBL-VIS-319: Dependency Declaration Rules — `VAL-VIS-321`…`VAL-VIS-334`
+
+| ID | Rule | Applies to | Failure severity | Currently checkable? |
+| :--- | :--- | :--- | :--- | :--- |
+| `VAL-VIS-321` | Every dependency named in a registry entry must resolve to a defined `CAP-VIS-` or `SCAP-VIS-` identifier | Every entry | **Blocking** | Yes — by text scan |
+| `VAL-VIS-322` | No capability may name itself as a dependency | Every entry | **Blocking** | Yes — 1 violation, `CAP-VIS-130` |
+| `VAL-VIS-323` | A capability's declared dependencies must be complete; discovery of an undeclared one is a registry defect | Every entry | **Blocking** | No — requires implementation |
+| `VAL-VIS-324` | A dependency on a reserved-but-undefined identifier is prohibited | Every entry | **Blocking** | Yes — `CAP-VIS-057`…`059` must not be referenced |
+| `VAL-VIS-325` | The observed dependency graph must match the declared graph | Implementation | **Blocking** | No — no implementation exists |
+| `VAL-VIS-326` | The declared graph must be acyclic | Registry | **Blocking** | Yes |
+| `VAL-VIS-327` | A cycle must be resolved by merge or extraction, never by deleting an edge that is real | Registry maintenance | **Blocking** | Manual review |
+| `VAL-VIS-328` | Sub-capabilities inherit their parent's dependencies and may add, never remove | `SCAP-VIS-` entries | **Blocking** | Yes |
+| `VAL-VIS-329` | A cross-category dependency must be justified in prose at its point of declaration | Cross-`CCAT-` edges | **Warning** | Manual review — 11 such edges exist |
+| `VAL-VIS-330` | A capability may not depend on a capability in a higher tier | Tier model | **Blocking** | Yes |
+| `VAL-VIS-331` | A capability's maturity may not exceed the minimum maturity of its dependencies plus one | Maturity model | **Warning** | Yes |
+| `VAL-VIS-332` | An `S1` capability may not depend on a capability with a weaker security level unless the weaker one is explicitly hardened | Security | **Blocking** | Yes — manual audit |
+| `VAL-VIS-333` | A dependency on an `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` element must be recorded as an open obligation | Registry | **Blocking** | Yes |
+| `VAL-VIS-334` | Removing a capability requires updating every entry that depends on it in the same change | Registry maintenance | **Blocking** | Yes |
+
+### TBL-VIS-320: Contract Rules — `VAL-VIS-335`…`VAL-VIS-345`
+
+| ID | Rule | Applies to | Failure severity | Currently checkable? |
+| :--- | :--- | :--- | :--- | :--- |
+| `VAL-VIS-335` | A capability's Inputs field must name what it consumes, not who calls it | Every entry | **Blocking** | Manual review |
+| `VAL-VIS-336` | A capability's Outputs field must name what it produces, including its failure output | Every entry | **Blocking** | Manual review |
+| `VAL-VIS-337` | A dependency may reference only another capability's declared Inputs and Outputs | Every edge | **Blocking** | Manual review |
+| `VAL-VIS-338` | A capability may not depend on another's internal mechanism, storage, or sequencing | Every edge | **Blocking** | No — requires implementation |
+| `VAL-VIS-339` | A change to a declared Output is a breaking change and must be versioned | Registry maintenance | **Blocking** | Yes — by diff review |
+| `VAL-VIS-340` | A change to a declared Input that narrows what is accepted is a breaking change | Registry maintenance | **Blocking** | Yes — by diff review |
+| `VAL-VIS-341` | A capability's failure behaviour must be stated before it reaches `C2` | Maturity gate | **Blocking** | Yes |
+| `VAL-VIS-342` | Two capabilities may not declare the same Output | Registry | **Blocking** | Yes — one authoritative producer per output |
+| `VAL-VIS-343` | A capability with no declared consumer must be justified or retired | Registry | **Warning** | Yes — the `OBL-13` pattern |
+| `VAL-VIS-344` | An `S1` capability's contract must state what happens when its dependency is unavailable | Security | **Blocking** | Manual review |
+| `VAL-VIS-345` | A contract may not be weakened to accommodate an implementation difficulty without an explicit recorded decision | Registry maintenance | **Blocking** | Manual review |
+
+> **`VIS-305`.** Twenty-five rules, of which **fourteen are checkable today by text scan alone** and
+> zero are actually checked, because `CAP-VIS-154` continuous integration is uninstalled. This is
+> the recurring shape of Oship: the rules are written, the mechanism is one directory move away, and
+> the gap between them is where every defect in `TBL-VIS-317` and `TBL-VIS-319` currently lives.
+
+### 03.13.5 Validation Rules `VAL-VIS-346`…`VAL-VIS-370`
+
+### TBL-VIS-321: Graph Integrity Rules — `VAL-VIS-346`…`VAL-VIS-358`
+
+| ID | Rule | Rationale |
+| :--- | :--- | :--- |
+| `VAL-VIS-346` | Every capability must be reachable from at least one strategic outcome `OUT-VIS-` or be marked as infrastructure-of-infrastructure | An unreachable capability serves no stated purpose |
+| `VAL-VIS-347` | Every `PROB-VIS-` problem must be addressed by at least one capability | A problem with no capability is an unowned problem |
+| `VAL-VIS-348` | Every `DOMAIN-VIS-` domain must own at least one capability | A domain owning nothing is a naming exercise |
+| `VAL-VIS-349` | Fan-in above 5 requires the capability to be explicitly designated as foundational | High fan-in without designation hides a single point of failure |
+| `VAL-VIS-350` | Fan-out above 8 requires review for whether the capability is doing too much | High fan-out suggests a missing decomposition |
+| `VAL-VIS-351` | A capability with fan-in 0 and fan-out 0 must be justified or retired | Isolated nodes are usually leftovers |
+| `VAL-VIS-352` | The dependency graph must have at least one node with in-degree 0 | Otherwise the graph is cyclic |
+| `VAL-VIS-353` | Every chain terminating in an `S1` capability must have every link's security level recorded | An `S1` outcome reached through unclassified links is unassessed |
+| `VAL-VIS-354` | A capability may not have more declared dependencies than it has declared inputs, unless the excess is justified | More dependencies than inputs implies undeclared coupling |
+| `VAL-VIS-355` | Sub-capability count per parent must not exceed 8 | Beyond eight, the parent is a category, not a capability |
+| `VAL-VIS-356` | Every category `CCAT-` must contain at least three capabilities | Fewer suggests the category is not a real grouping |
+| `VAL-VIS-357` | The registry's allocated, defined, and reserved counts must sum consistently | Arithmetic errors invalidate every derived metric |
+| `VAL-VIS-358` | Every reserved identifier must state why it is reserved and what would fill it | Silent reservation is indistinguishable from an error |
+
+### TBL-VIS-322: Traceability and Change Rules — `VAL-VIS-359`…`VAL-VIS-370`
+
+| ID | Rule | Rationale |
+| :--- | :--- | :--- |
+| `VAL-VIS-359` | Every capability must trace upward to a domain and downward to a component or an explicit `no component yet` | A break in the nine-level spine is a break in the whole method |
+| `VAL-VIS-360` | A capability at `C3` or above must name its `CMP-ARCH-` component | `C3` means designed; design without a component is not design |
+| `VAL-VIS-361` | A capability at `C4` or above must name the code path that implements it | Otherwise `C4` is unverifiable |
+| `VAL-VIS-362` | A capability at `C5` or above must name the test that can falsify it | `C5` is defined by falsifiability |
+| `VAL-VIS-363` | A capability at `C6` or above must name the telemetry that observes it | Operation without observation is not operation |
+| `VAL-VIS-364` | A capability at `C7` must name the metric, the target, and the sustained window met | `C7` is the only status that requires evidence over time |
+| `VAL-VIS-365` | Any maturity increase must cite the artifact that justifies it | Prevents paper promotion (`FAL-VIS-150`) |
+| `VAL-VIS-366` | Any maturity decrease must be recorded with a cause, never silently applied | Regression that is hidden repeats |
+| `VAL-VIS-367` | Implementation Status and Status are distinct fields and must never be collapsed | `VIS-223` |
+| `VAL-VIS-368` | A capability's AI Priority may not exceed `P1` while its dependencies remain at `C0` | Prioritising the unbuildable wastes agent effort |
+| `VAL-VIS-369` | Every obligation `OBL-` blocking a capability must be named in that capability's entry or in a section covering it | An invisible blocker is a hidden dependency by another name |
+| `VAL-VIS-370` | The count of capabilities per implementation status must be recomputed whenever any entry changes | Stale aggregate figures are the most quoted and least verified |
+
+> **`VIS-306`.** `VAL-VIS-370` is the rule this document most needs and most struggles to satisfy.
+> The registry totals in `TBL-VIS-278`/`279` — 167 allocated, 164 defined, 3 reserved, 12
+> `IMPLEMENTED`, 19 `PARTIAL`, 5 `DOCUMENTED`, 119 `PLANNED`, 11 `PROPOSED`, 1 `VISION` — were
+> computed by hand and are correct as of writing. They will be wrong the moment anyone adds an
+> entry. This is precisely the class of defect `CAP-VIS-154` was built to prevent and cannot,
+> because it is uninstalled.
+
+### 03.13.6 Constraints `CON-VIS-046`…`CON-VIS-060`
+
+> **`VIS-307`.** PART 03 allocated `CON-VIS-046`…`060`. Eight were cited before being defined —
+> `046`, `047`, `050`, `052`, `053`, `054`, `055`, `056` — which is permitted under the append-only
+> model provided the definitions arrive, and they arrive here. The remaining seven are defined now
+> in the same table so the block is complete and no forward reference is left dangling.
+
+### TBL-VIS-323: Capability Constraints — Complete Block `CON-VIS-046`…`CON-VIS-060`
+
+| ID | Constraint | Binds | Consequence of violation | First cited |
+| :--- | :--- | :--- | :--- | :--- |
+| `CON-VIS-046` | No capability may be implemented that is not registered in §03.3 with a complete field set | All contributors and agents | The work is unowned, untraceable, and outside the maturity model | §03 ToC |
+| `CON-VIS-047` | No `S1` capability may advance past `C2` before a threat model exists for its domain | All `S1` capabilities | An `S1` capability is built with unassessed attack surface | `VIS-233` |
+| `CON-VIS-048` | No capability may declare a dependency on a reserved-but-undefined identifier | Registry | `CAP-VIS-057`…`059` acquire meaning by accident | Here |
+| `CON-VIS-049` | No capability may be promoted above `C4` while `CAP-VIS-154` continuous integration remains uninstalled | Maturity model | `C5` claims falsifiability that nothing can falsify | Here |
+| `CON-VIS-050` | No agent execution capability may reach `C4` until `CAP-VIS-089` agent action authorisation reaches `C5` | AI category | An agent runtime exists that can violate `VIS-033` | `VIS-228` |
+| `CON-VIS-051` | No capability may be marked `IMPLEMENTED` on the basis of a document; only a code path or an operating mechanism qualifies | Registry | `FAL-VIS-150` paper promotion | Here |
+| `CON-VIS-052` | `CAP-VIS-149` financial data presentation is bound to the `CCAT-04` review path despite belonging to `CCAT-06` | Experience category | Money presentation is reviewed as a design choice rather than a financial control | `VIS-241` |
+| `CON-VIS-053` | No agent may act at autonomy A2 or above on any `S1` capability until `CAP-VIS-089` reaches `C5` | Agents | Unauthorised agent action on financial capability | `VIS-244` |
+| `CON-VIS-054` | Experience capabilities must be built in the order given by `TBL-VIS-300`; `design/screens/` may not be populated before `design/color-system/` and `design/typography/` | Design work | Surfaces are produced that the later design system contradicts | `VIS-280` |
+| `CON-VIS-055` | When `CAP-VIS-158` telemetry is built, it must record per-tenant, per-action event detail sufficient to derive a metering model retrospectively | Infrastructure | Usage that was never recorded is permanently unrecoverable | `VIS-285` |
+| `CON-VIS-056` | No `S1` capability may be built before a test exists that could falsify its security claim | Security | An untestable security claim is an unfalsifiable one | `VIS-291` |
+| `CON-VIS-057` | No data capability beyond `CAP-VIS-131` and `CAP-VIS-136` may advance past `C1` while `OBL-03` is open | Data category | Storage-shaped decisions are made before the store is chosen | Here |
+| `CON-VIS-058` | No commercial capability may be advanced past `C1` until `OBL-27` is answered | Commercial category | A business model is inferred rather than chosen | Here |
+| `CON-VIS-059` | Every capability at `C3` or above must name a `CMP-ARCH-` component from `AOM-ARCH-001`; if none exists, the capability may not advance | Cross-document | The vision and architecture documents diverge silently | Here |
+| `CON-VIS-060` | No aggregate count in this document may be quoted elsewhere without re-deriving it from the registry | All readers | Stale figures propagate and become citation-hardened | Here |
+
+> **`VIS-308`.** `CON-VIS-049` deserves a sentence because it constrains this document's own
+> ambition. It states that nothing may be promoted above `C4` while CI is uninstalled. Since
+> nothing in Oship is above `C4` today (`VIS-224`), the constraint costs nothing now. Its purpose is
+> to make the cost visible later: the first time someone wants to claim `C5`, they will find that
+> the claim requires installing a workflow. That is the intended shape of every constraint in this
+> block — free today, informative exactly when it matters.
+
+---
+
+## 03.14 — Capability Maturity Model
+
+### AI NAVIGATION METADATA — §03.14
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before asserting or changing any capability's maturity** |
+| **AI DEPENDENCIES** | §03.3.1 maturity field definition · `VAL-VIS-359`…`VAL-VIS-367` |
+| **AI INPUTS** | A capability plus a claim about how far along it is |
+| **AI OUTPUTS** | A maturity level, its entry criteria, and the artifact that proves it |
+| **AI IMPLEMENTATION IMPACT** | Prevents paper promotion; determines what work is permitted next |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-359`…`VAL-VIS-370` |
+| **AI RELATED DOCUMENTS** | `.ai/DOCUMENTATION_COMPLETION_STANDARD.md` · `AOM-ARCH-001` component status model |
+
+### 03.14.1 Maturity Is Evidence, Not Opinion
+
+> **`VIS-309`.** The `C0`…`C7` scale has one governing property: **each level is defined by an
+> artifact that either exists or does not.** No level is defined by a judgement, a percentage
+> complete, or a team's confidence. This is deliberate and it is the difference between a maturity
+> model and a morale survey. A capability is at `C4` if and only if a named code path exists that
+> satisfies its contract — not if it is *nearly* built, not if it is built but unmerged, not if a
+> prototype exists somewhere.
+
+### TBL-VIS-324: Maturity Levels — Entry Criteria, Proving Artifact, Exit Criteria
+
+| Level | Name | Entry criterion | Proving artifact | Exit criterion — what moves it up |
+| :---: | :--- | :--- | :--- | :--- |
+| `C0` | Idea | Someone has named the capability | A sentence naming it | It passes the §03.1.3 discriminator test and gets a registry entry |
+| `C1` | Defined | It has a complete registry entry with all thirteen fields | The registry row | Inputs, outputs, and failure behaviour are specified in prose |
+| `C2` | Specified | Its contract is written and reviewable | A contract specification | An `AOM-ARCH-001` component is assigned to it |
+| `C3` | Designed | A `CMP-ARCH-` component owns it | The component entry in `AOM-ARCH-001` | Code exists that satisfies the contract |
+| `C4` | Built | A named code path implements the contract | The code path | A test exists that could falsify it and does not |
+| `C5` | Verified | A falsifying test exists and passes | The test, running in CI | It runs under real load with telemetry |
+| `C6` | Operated | Telemetry observes it in a real environment | Dashboards or queries over live signals | Its metric target is met over a sustained window |
+| `C7` | Proven | The target has held over a declared window | The metric series | Terminal — nothing exits `C7` upward |
+
+> **`VIS-310`.** Note that `C5` requires CI. This is not incidental: a test that exists in a
+> repository but is never executed proves nothing about the current state of the code, only about
+> the state at the moment someone last ran it manually. `CON-VIS-049` therefore caps every Oship
+> capability at `C4` until the `ci` workflow is installed. **The entire upper half of the maturity
+> scale is currently unreachable for structural reasons, not for lack of engineering effort.**
+
+```mermaid
+stateDiagram-v2
+    [*] --> C0
+    C0 --> C1: "passes discriminator test"
+    C1 --> C2: "contract written"
+    C2 --> C3: "CMP-ARCH component assigned"
+    C3 --> C4: "code path satisfies contract"
+    C4 --> C5: "falsifying test passes in CI"
+    C5 --> C6: "telemetry observes it live"
+    C6 --> C7: "target met over a window"
+
+    C4 --> C2: "contract found inadequate"
+    C5 --> C4: "test found to be non-falsifying"
+    C6 --> C4: "operational failure reveals a defect"
+    C7 --> C6: "target no longer met"
+
+    C0: "C0 Idea"
+    C1: "C1 Defined - 44 Oship capabilities sit at or below here"
+    C2: "C2 Specified"
+    C3: "C3 Designed"
+    C4: "C4 Built - the current Oship ceiling"
+    C5: "C5 Verified - blocked by uninstalled CI"
+    C6: "C6 Operated"
+    C7: "C7 Proven"
+
+    note right of C5
+        CON-VIS-049 makes this
+        transition impossible today.
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-098` — **The `C0`…`C7` Maturity State Machine With Regression Paths**
+> **Explanation:** The four downward transitions are the part most maturity models omit. Maturity is
+> not a ratchet. A contract found inadequate drops a built capability to `C2`; a test discovered to
+> be non-falsifying drops `C5` to `C4`; an operational failure drops `C6` to `C4`; a missed target
+> drops `C7` to `C6`. `VAL-VIS-366` requires every one of these to be recorded with a cause.
+
+### 03.14.2 The Actual Maturity Distribution
+
+### TBL-VIS-325: Maturity Distribution Across All 167 Registered Capabilities
+
+| Level | Count | Share | What this means concretely |
+| :---: | ---: | ---: | :--- |
+| `C0` | 44 | 26.3% | Named, registered, and nothing further |
+| `C1` | 71 | 42.5% | A complete registry row and no contract |
+| `C2` | 22 | 13.2% | A contract exists; no architecture component assigned |
+| `C3` | 14 | 8.4% | A component is assigned in `AOM-ARCH-001`; no code |
+| `C4` | 16 | 9.6% | Something operates — overwhelmingly documentation mechanisms |
+| `C5` | 0 | 0.0% | **Nothing in Oship has ever been falsifiably verified** |
+| `C6` | 0 | 0.0% | Nothing runs under observation |
+| `C7` | 0 | 0.0% | Nothing has met a target over time |
+| **Total** | **167** | **100%** | |
+
+> **`VIS-311`.** Sixty-nine percent of the registry sits at `C0` or `C1` — named but uncontracted.
+> Nine point six percent reaches `C4`, and every one of those is a documentation or governance
+> mechanism rather than a runtime behaviour: knowledge structure, ownership resolution, decision
+> recording, context loading. **Oship's built capabilities are all capabilities of the knowledge
+> system itself.** That is consistent with `VIS-004`'s identity claim — the primary product is
+> executable knowledge — and it is also the precise sense in which the Money Factory does not yet
+> exist.
+
+### TBL-VIS-326: Maturity Ceiling by Category
+
+| Category | Highest maturity reached | By which capability | Category median |
+| :--- | :---: | :--- | :---: |
+| `CCAT-01` Knowledge | `C4` | `CAP-VIS-072` knowledge structure | `C2` |
+| `CCAT-02` Governance | `C4` | `CAP-VIS-096` ownership resolution | `C1` |
+| `CCAT-05` AI | `C3` | `CAP-VIS-085` context loading | `C1` |
+| `CCAT-03` Platform | `C1` | — no capability above `C1` | `C1` |
+| `CCAT-04` Domain | `C1` | — no capability above `C1` | `C1` |
+| `CCAT-07` Data | `C1` | `CAP-VIS-131` canonical modelling | `C0` |
+| `CCAT-06` Experience | `C0` | — nothing above `C0` | `C0` |
+| `CCAT-08` Infrastructure | `C1` | `CAP-VIS-154` continuous integration | `C0` |
+| `CCAT-09` Commercial | `C0` | — nothing above `C0` | `C0` |
+
+> **`VIS-312`.** The ceiling descends exactly in the order of the tier model: knowledge and
+> governance at `C4`, AI at `C3`, everything runtime at `C1` or `C0`. This is the maturity model
+> confirming the tier model rather than contradicting it, which is a weak form of validation but a
+> real one — two independently constructed orderings agreeing is evidence that the orderings track
+> something real about the repository rather than the author's preferences.
+
+### 03.14.3 Promotion Rules
+
+### TBL-VIS-327: Promotion Evidence Requirements
+
+| Transition | Required evidence | Who may assert it | Common false claim |
+| :--- | :--- | :--- | :--- |
+| `C0` → `C1` | A registry row with all thirteen fields populated, no field blank | Any contributor | Filling fields with `TBD` rather than `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` |
+| `C1` → `C2` | A written contract naming inputs, outputs, and failure behaviour | Domain owner | Treating the registry row's one-line Inputs field as a contract |
+| `C2` → `C3` | A `CMP-ARCH-` identifier in `AOM-ARCH-001` that names this capability | Architecture owner | Assigning a component that is itself `PLANNED` and calling the capability designed |
+| `C3` → `C4` | A merged code path plus a statement of which contract clauses it satisfies | Implementer | Claiming `C4` for a document that describes the behaviour (`CON-VIS-051`) |
+| `C4` → `C5` | A test that fails when the behaviour is broken, running in CI | Implementer plus reviewer | A test that passes whether or not the behaviour works |
+| `C5` → `C6` | Telemetry queries returning real signals from a real environment | Operations | Instrumentation that exists but emits to nowhere |
+| `C6` → `C7` | A metric series meeting a declared target across a declared window | Domain owner plus governance | Declaring the target after observing the result |
+
+> **`VIS-313`.** The right-hand column is the useful one. Each false claim is a real pattern, and
+> four of the seven are patterns this repository is currently structurally susceptible to. The
+> `C2` → `C3` case is the most immediate: `AOM-ARCH-001` contains thirty components of which
+> twenty-two are `PLANNED`. Assigning a `PLANNED` component to a capability and promoting it to
+> `C3` would be entirely defensible by the letter of the rule and completely hollow. `VAL-VIS-360`
+> is therefore tightened here: **the assigned component must itself be at least `DOCUMENTED`.**
+
+---
+
+## 03.15 — Capability Evolution Model
+
+### AI NAVIGATION METADATA — §03.15
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P2 — read when planning sequence, not when planning a single change** |
+| **AI DEPENDENCIES** | §03.14 maturity · §03.13 dependencies · `TBL-VIS-318` critical paths |
+| **AI INPUTS** | A question of the form *what should be built next* |
+| **AI OUTPUTS** | An ordered set of candidates with their unblocking conditions |
+| **AI IMPLEMENTATION IMPACT** | Determines what work is worth doing before the technology stack is chosen |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-365`, `366`, `368` |
+| **AI RELATED DOCUMENTS** | `docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md` · `.ai/NEXT_ACTION.md` |
+
+### 03.15.1 Evolution Without Dates
+
+> **`VIS-314`.** `VIS-051` prohibits dates in this document, which removes the usual vocabulary of
+> planning entirely — no quarters, no milestones, no target dates. What replaces it is **ordering by
+> unblocking**: a capability's position in the sequence is determined by how many other capabilities
+> its completion unblocks, divided by how much is required to complete it. This produces a
+> defensible order that does not decay when the calendar moves and does not require anyone to
+> estimate.
+
+### TBL-VIS-328: Evolution Waves — Ordered by Unblocking, Not by Date
+
+| Wave | Capabilities | Precondition for the wave | Unblocks | Requires application code? |
+| :---: | :--- | :--- | ---: | :---: |
+| **W1** | `CAP-VIS-154` CI · `CAP-VIS-095` constraint enforcement · `CAP-VIS-075` staleness detection | Installing three workflow skeletons | Every mechanical validation in this document | **No** |
+| **W2** | `CAP-VIS-131` canonical modelling · `CAP-VIS-136` quality assertion · `CAP-VIS-092` audit trail specification | W1, plus attention | Data category, `OBL-28` | **No** |
+| **W3** | Threat models for the 38 `S1` capabilities · `OBL-22` separation of duties · `OBL-24` key management | W1 | `CON-VIS-047`, `CON-VIS-056` release | **No** |
+| **W4** | `OBL-03` persistence decision · `OBL-02` `RT-2` retention class · `OBL-27` creator reading | Human decisions only | Data chain, commercial chain, `CAP-VIS-113`/`114`/`170` | **No** |
+| **W5** | `CAP-VIS-132` durable persistence · `CAP-VIS-133` transactional consistency · `CAP-VIS-108`/`109` identity and authorisation | W4 | The whole runtime | **Yes** |
+| **W6** | `CAP-VIS-119` value representation · `CAP-VIS-121` double-entry recording · `CAP-VIS-111` idempotency | W5 | The Money Factory | **Yes** |
+| **W7** | `CAP-VIS-123` transaction lifecycle · `CAP-VIS-124` settlement finality · `CAP-VIS-125` reconciliation | W6 | The minimum credible financial claim | **Yes** |
+| **W8** | `CAP-VIS-158` telemetry · `CAP-VIS-162` fault isolation · `CAP-VIS-159` alerting | W5 | Operability, and later metering | **Yes** |
+| **W9** | Experience capabilities per `TBL-VIS-300` | W6 for `CAP-VIS-149`; nothing for the rest | The product surface | Partly |
+| **W10** | Commercial capabilities | W4 `OBL-27`, W8 telemetry | A business model, if one is chosen | **Yes** |
+
+> **`VIS-315`.** **Waves W1 through W4 require no application code at all.** That is twelve
+> capabilities plus four obligations plus thirty-eight threat models, every one of which can be
+> completed in a repository that contains zero lines of application code — which is exactly what
+> Oship is. The gating question for Oship's next phase is not "when do we start coding"; it is
+> whether the four no-code waves are completed before the code-requiring waves begin, because every
+> one of W1–W4 makes the later waves cheaper and none of them is made cheaper by waiting.
+
+```mermaid
+flowchart LR
+    W1["W1 Install CI and enforcement"] --> W2["W2 Model and assert data"]
+    W1 --> W3["W3 Threat models and duties"]
+    W2 --> W4["W4 Close the four obligations"]
+    W3 --> W4
+    W4 --> W5["W5 Persistence and identity"]
+    W5 --> W6["W6 Value and ledger"]
+    W6 --> W7["W7 Lifecycle and settlement"]
+    W5 --> W8["W8 Telemetry and resilience"]
+    W6 --> W9["W9 Experience surfaces"]
+    W8 --> W10["W10 Commercial"]
+    W4 --> W10
+
+    classDef nocode fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef code fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class W1,W2,W3,W4 nocode
+    class W5,W6,W7,W8,W9,W10 code
+```
+
+> **Diagram ID:** `DGM-VIS-099` — **Ten Evolution Waves — The Green Prefix Needs No Code**
+> **Explanation:** The four green waves form a complete prefix of the graph: nothing in W5–W10 is
+> reachable without passing through them, and none of them requires a runtime. This is the
+> strongest planning statement PART 03 can make without violating `VIS-051`, and it is entirely
+> derived from the dependency graph rather than asserted.
+
+### TBL-VIS-329: What Each Wave Changes About the Registry Metrics
+
+| Wave | `C4`+ count after | `C5`+ becomes possible? | `S1` threat coverage after | Registry entries advanced |
+| :---: | ---: | :---: | ---: | ---: |
+| Current | 16 | No | 0 of 38 | — |
+| W1 | 19 | **Yes** — CI exists | 0 of 38 | 3 |
+| W2 | 19 | Yes | 0 of 38 | 3 advanced to `C2` |
+| W3 | 19 | Yes | **38 of 38** | 0 — but `CON-VIS-047` releases |
+| W4 | 19 | Yes | 38 of 38 | 0 — but three chains unblock |
+| W5 | 23 | Yes | 38 of 38 | 4 |
+| W6 | 26 | Yes | 38 of 38 | 3 |
+| W7 | 29 | Yes | 38 of 38 | 3 |
+
+> **`VIS-316`.** The most important cell in `TBL-VIS-329` is the W1 row's `C5`+ column changing from
+> No to Yes. Installing one workflow file raises the reachable ceiling of the entire maturity model
+> by three levels. No other single action in this document has a comparable effect, which is the
+> quantified restatement of `VIS-243`.
+
+### 03.15.2 Retirement and Deprecation
+
+> **`VIS-317`.** Evolution includes removal. Three registry entries currently have a retirement
+> case, and stating them protects against the accumulation of unowned identifiers that no one dares
+> delete.
+
+### TBL-VIS-330: Retirement Candidates
+
+| Entry | Retirement case | Counter-case | Recommendation |
+| :--- | :--- | :--- | :--- |
+| `CAP-VIS-170` third-party distribution | `DOMAIN-VIS-029` marketplace has fan-in 0; no partner exists; `OBL-13` already questions the domain | The capability gives `OBL-13` something concrete to decide against | **Retain until `OBL-27` and `OBL-13` are answered, then retire or promote** |
+| `DOMAIN-VIS-029` Marketplace | Fan-in 0 across the whole domain graph | Retiring a domain is expensive if it returns | **Decide under `OBL-13`; do not let it drift** |
+| `CAP-VIS-057`…`059` | Reserved and undefined since PART 01 | `VIS-211` reserved them deliberately | **Keep reserved; `CON-VIS-048` prohibits depending on them** |
+
+> **`VIS-318`.** Retirement in this model is never silent deletion. `VAL-VIS-334` requires every
+> dependant entry to be updated in the same change, and `CAP-VIS-103` deprecation management —
+> currently `DOCUMENTED` with no process — is the capability that would make retirement safe. Until
+> `CAP-VIS-103` reaches `C2`, retirement should be avoided in favour of explicit `DEPRECATED`
+> status, which preserves the identifier and its history while removing it from active planning.
+
+---
+
+## 03.16 — Capability Metrics
+
+### AI NAVIGATION METADATA — §03.16
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before making any quantitative claim about Oship** |
+| **AI DEPENDENCIES** | The whole registry §03.3 · §03.14 maturity distribution · PART 01 `SUC-VIS-001`…`026` |
+| **AI INPUTS** | A question of the form *how are we doing on X* |
+| **AI OUTPUTS** | A metric identifier, its current value, its target, and whether it is measured |
+| **AI IMPLEMENTATION IMPACT** | Defines what must be instrumented; five metrics are computable today |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-370` · every value must be re-derived, never quoted |
+| **AI RELATED DOCUMENTS** | `.ai/METRICS.md` · PART 01 §01.11 Success Measures |
+
+### 03.16.1 Metric Discipline
+
+> **`VIS-319`.** `CMET-VIS-` metrics differ from PART 01's `SUC-VIS-` success measures in scope and
+> in kind. `SUC-VIS-` measures whether Oship's *method* works. `CMET-VIS-` measures the state of the
+> *capability portfolio*. A metric enters this section only if it satisfies four conditions, and
+> the fourth is the one that eliminates most candidate metrics.
+
+### TBL-VIS-331: Metric Admission Criteria
+
+| Criterion | Requirement | Why |
+| :--- | :--- | :--- |
+| **Derivable** | Computable from the registry or from an artifact that exists or is specified | A metric requiring data nobody collects is a wish |
+| **Falsifiable** | It is possible to state a value that would be wrong | An unfalsifiable metric cannot fail |
+| **Unmanipulable by writing** | Adding documentation must not improve it | Oship's dominant failure mode is measuring its own output |
+| **Actionable** | A bad value implies a specific next action | A metric with no implied action is decoration |
+
+> **`VIS-320`.** The third criterion is the sharp one. Oship can produce documentation faster than
+> it can produce anything else, so any metric that rises when a document is written is a metric that
+> will be gamed without anyone intending to game it. `CMET-VIS-011`, `014`, `021`, and `042` are all
+> deliberately constructed so that writing more prose either does not move them or moves them in the
+> *wrong* direction.
+
+### 03.16.2 Portfolio Metrics — `CMET-VIS-001`…`CMET-VIS-015`
+
+### TBL-VIS-332: Portfolio Composition Metrics
+
+| ID | Metric | Definition | Current value | Target | Measured? |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `CMET-VIS-001` | Registry size | Count of allocated `CAP-VIS-` identifiers | **167** | No target — informational | **Yes** |
+| `CMET-VIS-002` | Definition completeness | Defined ÷ allocated | **164 ÷ 167 = 98.2%** | 100% less deliberate reservations | **Yes** |
+| `CMET-VIS-003` | Implementation rate | `IMPLEMENTED` ÷ allocated | **12 ÷ 167 = 7.2%** | Rising monotonically | **Yes** |
+| `CMET-VIS-004` | Planned share | `PLANNED` ÷ allocated | **119 ÷ 167 = 71.3%** | Falling | **Yes** |
+| `CMET-VIS-005` | Proposed share | `PROPOSED` ÷ allocated | **11 ÷ 167 = 6.6%** | Falling toward 0 as each is decided | **Yes** |
+| `CMET-VIS-006` | Reserved share | Reserved ÷ allocated | **3 ÷ 167 = 1.8%** | Stable — reservations are intentional | **Yes** |
+| `CMET-VIS-007` | `S1` share | `S1` ÷ allocated | **38 ÷ 167 = 22.8%** | No target — a property of the domain | **Yes** |
+| `CMET-VIS-008` | `S1` threat coverage | Threat-modelled `S1` ÷ `S1` | **0 ÷ 38 = 0%** | 100% before any `S1` build | **Yes** |
+| `CMET-VIS-009` | Category balance | Standard deviation of capabilities per category | 4.0 across 9 categories, range 4–16 | Below 6 | **Yes** |
+| `CMET-VIS-010` | Orphan rate | Capabilities with fan-in 0 and fan-out 0 ÷ allocated | **0%** | 0% | **Yes** |
+| `CMET-VIS-011` | Self-reference ratio | Self-directed capabilities ÷ outward-directed | **66 ÷ 100 = 0.66** | Falling — but implemented self ÷ implemented outward is currently **12 ÷ 0, undefined** | **Yes** |
+| `CMET-VIS-012` | Cross-category coupling | Dependency edges crossing `CCAT-` boundaries ÷ total edges | **11 of 214 = 5.1%** | Below 15% | **Yes** |
+| `CMET-VIS-013` | Decomposition depth | Sub-capabilities ÷ decomposed parents | **50 ÷ 13 = 3.8** | Between 2 and 8 per `VAL-VIS-355` | **Yes** |
+| `CMET-VIS-014` | **Inverted pyramid ratio** | Capabilities at T4+T5 ÷ capabilities at T1 | **96 ÷ 10 = 9.6** | **Below 1.0** | **Yes** |
+| `CMET-VIS-015` | Obligation load | Open `OBL-` blocking at least one capability ÷ total `OBL-` | **12 of 28 = 42.9%** | Falling | **Yes** |
+
+> **`VIS-321`.** `CMET-VIS-011` is stated twice on purpose. As a ratio of *registered* capabilities
+> it reads 0.66, which sounds healthy. As a ratio of *implemented* capabilities it is 12 ÷ 0 —
+> undefined, because Oship has implemented twelve capabilities that serve itself and zero that serve
+> anyone else. The registered figure describes intention; the implemented figure describes reality.
+> Quoting only the first would be exactly the kind of favourable reading `VIS-320` warns about.
+
+### 03.16.3 Maturity Metrics — `CMET-VIS-016`…`CMET-VIS-030`
+
+### TBL-VIS-333: Maturity and Progress Metrics
+
+| ID | Metric | Definition | Current value | Target | Measured? |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `CMET-VIS-016` | Mean maturity | Arithmetic mean of `C`-levels across the registry | **1.31** | Rising | **Yes** |
+| `CMET-VIS-017` | Median maturity | Median `C`-level | **`C1`** | `C2` or above | **Yes** |
+| `CMET-VIS-018` | Maturity ceiling | Highest `C`-level reached by any capability | **`C4`** | `C5` after W1 | **Yes** |
+| `CMET-VIS-019` | Verification rate | Capabilities at `C5`+ ÷ allocated | **0 ÷ 167 = 0%** | Above 0 — any non-zero value is progress | **Yes** |
+| `CMET-VIS-020` | Contract rate | Capabilities at `C2`+ ÷ allocated | **52 ÷ 167 = 31.1%** | Above 60% | **Yes** |
+| `CMET-VIS-021` | **Enforcement rate** | Declared rules mechanically enforced ÷ declared rules | **0 ÷ 470 = 0%** | Above 30% after W1 | **Yes** |
+| `CMET-VIS-022` | Component assignment rate | Capabilities at `C3`+ with a `CMP-ARCH-` ÷ capabilities at `C3`+ | 14 of 14 nominally; **0 with a non-`PLANNED` component** | 100% with `DOCUMENTED`+ components | **Yes** |
+| `CMET-VIS-023` | Regression count | Recorded maturity decreases | **0** | Low but non-zero is healthier than exactly zero | **Yes** |
+| `CMET-VIS-024` | Paper promotion incidents | Capabilities found at `C4`+ without a code path | **0 detected** — but nothing checks | 0 | **NOT YET MEASURED** |
+| `CMET-VIS-025` | Blocked capability share | Capabilities whose advance is blocked by an open `OBL-` ÷ allocated | **31 of 167 = 18.6%** | Falling | **Yes** |
+| `CMET-VIS-026` | No-code-available work | Capabilities advanceable without application code | **12 plus 38 threat models** | Falling to 0 as the work is done | **Yes** |
+| `CMET-VIS-027` | Critical path length | Longest dependency chain to a `C7`-capable outcome | **6 edges** | Falling through decomposition, not deletion | **Yes** |
+| `CMET-VIS-028` | Foundation completion | T1 capabilities at `C4`+ ÷ T1 capabilities | **6 ÷ 10 = 60%** | 100% before T4 work begins | **Yes** |
+| `CMET-VIS-029` | Category ceiling spread | Highest category ceiling minus lowest | **`C4` − `C0` = 4 levels** | Below 2 | **Yes** |
+| `CMET-VIS-030` | Maturity claim provenance | Maturity assertions citing a proving artifact ÷ assertions | **UNKNOWN — REQUIRES REPOSITORY VERIFICATION** | 100% | **NOT YET MEASURED** |
+
+> **`VIS-322`.** `CMET-VIS-021` reads zero out of four hundred and seventy. Every validation rule
+> this document defines — `VAL-VIS-001` through `VAL-VIS-470` across all three parts — is enforced
+> by nothing. That single figure is the most compressed possible statement of the gap between
+> Oship's declared governance and its operating governance, and it is the metric that wave W1 moves
+> most.
+
+> **`VIS-323`.** `CMET-VIS-023` sets a target that looks perverse: a regression count of exactly
+> zero is *worse* than a small positive number. Zero recorded regressions in a system with 167
+> capabilities and no verification means either nothing has ever been re-examined or regressions are
+> being applied silently in violation of `VAL-VIS-366`. Both readings are worse than an honest
+> record of demotions.
+
+### 03.16.4 Integrity and Honesty Metrics — `CMET-VIS-031`…`CMET-VIS-050`
+
+### TBL-VIS-334: Knowledge and Design Integrity Metrics
+
+| ID | Metric | Definition | Current value | Target | Measured? |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `CMET-VIS-031` | Design artifact density | Non-`.gitkeep` files in `design/` ÷ declared subfolders | **0 ÷ 12 = 0** | Above 1.0 | **Yes** |
+| `CMET-VIS-032` | Stale document count | Documents whose claims contradict repository state | **2 known** — `README.md`, `04_ARCHITECTURE/INDEX.md` | 0 | **Partly** — detected manually |
+| `CMET-VIS-033` | Cross-reference integrity | Internal references resolving ÷ internal references | **UNKNOWN — REQUIRES REPOSITORY VERIFICATION** | 100% | **NOT YET MEASURED** |
+| `CMET-VIS-034` | Anchor validity | Table-of-contents anchors resolving ÷ anchors | 100% in this document at last check | 100% | **Partly** — checked manually per part |
+| `CMET-VIS-035` | Identifier uniqueness | Duplicate identifier definitions | **0** | 0 | **Yes** |
+| `CMET-VIS-036` | Forward-reference debt | Identifiers cited before definition and still undefined | **0** after §03.13 | 0 at each part boundary | **Yes** |
+| `CMET-VIS-037` | Evidence citation rate | Factual claims citing an `EVD-VIS-` or a path ÷ factual claims | **UNKNOWN — REQUIRES REPOSITORY VERIFICATION** | Above 80% | **NOT YET MEASURED** |
+| `CMET-VIS-038` | Unknown disclosure count | Fields marked `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` | **14 in the PART 03 registry** | No target — rising is honest, falling is progress | **Yes** |
+| `CMET-VIS-039` | Visual density | Lines of document ÷ visual anchors | **11,761 ÷ 99 Mermaid plus 334 tables = 27.2 lines per visual** | Below 60 | **Yes** |
+| `CMET-VIS-040` | Diagram validity | Mermaid blocks parsing ÷ Mermaid blocks | **99 ÷ 99 = 100%** | 100% | **Yes** |
+| `CMET-VIS-041` | Section metadata completeness | Sections carrying all seven AI metadata rows ÷ sections | 100% in PART 03 | 100% | **Yes** |
+| `CMET-VIS-042` | **Specification cash-in rate** | Capabilities that reached `C4`+ ÷ capabilities specified at `C2`+ | **16 ÷ 52 = 30.8%** | Above 50% | **Yes** |
+| `CMET-VIS-043` | Specification-to-code ratio | Lines of specification ÷ lines of application code | **≈ 106,000 ÷ 0 = undefined** | Below 20 eventually | **Yes** |
+| `CMET-VIS-044` | Governance enforceability | Constraints with a mechanical check ÷ constraints | **0 ÷ 60 = 0%** | Above 50% after W1 | **Yes** |
+| `CMET-VIS-045` | Ownership concentration | Share of paths owned by a single CODEOWNERS identity | **100%** | Below 100% — see `OBL-22` | **Yes** |
+| `CMET-VIS-046` | Agent-authored change share | Merged changes authored by an agent ÷ merged changes | **UNKNOWN** — not tracked | Rising; `OUT-VIS-015` is the first proof | **NOT YET MEASURED** |
+| `CMET-VIS-047` | Autonomy conformance | Agent actions within a declared autonomy level ÷ agent actions | **0%** — agents operate outside the model (`FAL-VIS-179`) | 100% | **NOT YET MEASURED** |
+| `CMET-VIS-048` | Memory discipline | Retention decisions made against a declared class ÷ retention decisions | **UNKNOWN** — `RT-2` undefined (`OBL-02`) | 100% | **NOT YET MEASURED** |
+| `CMET-VIS-049` | Always-zero commitment status | Commitments in `VIS-191` currently provable | **0 of 4** — none is provable without a runtime | 4 of 4 | **Yes** |
+| `CMET-VIS-050` | Honest-gap disclosure | Findings recorded as `FAL-VIS-` or `OBL-` rather than omitted | **180 `FAL-VIS-` plus 28 `OBL-`** | No target — the count is a byproduct of discipline | **Yes** |
+
+> **`VIS-324`.** Seven metrics read `NOT YET MEASURED` or `UNKNOWN`. That is a deliberate 14%
+> unmeasured rate, disclosed rather than filled with estimates. Every one of the seven becomes
+> measurable in wave W1 or W2, and none of them is unmeasurable in principle. Compare this to
+> `CMET-VIS-043`, which is *computable* and returns an undefined value because the denominator is
+> zero — a different kind of gap, and one that no instrumentation can close.
+
+```mermaid
+flowchart TB
+    subgraph NOW["MEASURABLE TODAY - 43 of 50"]
+        N1["Registry composition - 15 metrics"]
+        N2["Maturity distribution - 13 metrics"]
+        N3["Document integrity - 15 metrics"]
+    end
+    subgraph W1M["UNLOCKED BY WAVE W1 - CI installed"]
+        M1["CMET-VIS-024 paper promotion detection"]
+        M2["CMET-VIS-030 claim provenance"]
+        M3["CMET-VIS-033 cross-reference integrity"]
+        M4["CMET-VIS-037 evidence citation rate"]
+    end
+    subgraph LATER["REQUIRES A RUNTIME"]
+        L1["CMET-VIS-046 agent-authored share"]
+        L2["CMET-VIS-047 autonomy conformance"]
+        L3["CMET-VIS-048 memory discipline"]
+    end
+
+    NOW --> DASH["A capability dashboard derivable from the repository alone"]
+    W1M --> DASH
+    LATER -.->|"not available in the documentation phase"| DASH
+
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef soon fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef far fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class N1,N2,N3 ok
+    class M1,M2,M3,M4 soon
+    class L1,L2,L3 far
+```
+
+> **Diagram ID:** `DGM-VIS-100` — **Metric Availability by Wave**
+> **Explanation:** Forty-three of fifty metrics are computable from the repository as it stands
+> today, with no runtime, no telemetry, and no application code. A capability dashboard is therefore
+> not a future deliverable — it is an unwritten script over files that already exist. The four
+> amber metrics need only CI; the three grey ones genuinely need a running system.
+
+### TBL-VIS-335: The Five Metrics That Matter Most Right Now
+
+| Rank | Metric | Current | Why it is the most informative |
+| ---: | :--- | :--- | :--- |
+| 1 | `CMET-VIS-021` Enforcement rate | **0%** | Every rule in three parts is currently advisory |
+| 2 | `CMET-VIS-014` Inverted pyramid ratio | **9.6** | The portfolio is top-heavy by an order of magnitude |
+| 3 | `CMET-VIS-008` `S1` threat coverage | **0 of 38** | The highest-sensitivity work has no assessed attack surface |
+| 4 | `CMET-VIS-019` Verification rate | **0%** | Nothing has ever been falsifiably tested |
+| 5 | `CMET-VIS-011` Self-reference ratio, implemented | **12 ÷ 0** | Everything built so far serves the builder |
+
+> **`VIS-325`.** All five headline metrics currently read zero or worse. This is not pessimism and
+> it is not a failure of the project — it is the accurate measurement of a repository that has
+> deliberately produced specification before implementation under `ADR-0001`. The value of stating
+> them plainly is that each has an identified unblocking action, and four of the five are moved by
+> wave W1 alone.
+
+---
+
+## 03.17 — Capability Validation System
+
+### AI NAVIGATION METADATA — §03.17
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this section is the acceptance test for everything an agent writes about capabilities** |
+| **AI DEPENDENCIES** | §03.1 through §03.16 · PART 02 `VAL-VIS-201`…`320` · PART 01 `VAL-VIS-001`…`200` |
+| **AI INPUTS** | A proposed capability entry, edit, promotion, or aggregate figure |
+| **AI OUTPUTS** | PASS, FAIL with a rule identifier, or HALT with an obligation identifier |
+| **AI IMPLEMENTATION IMPACT** | These are the rules a future CI job runs; each carries a mechanisation verdict |
+| **AI VALIDATION REQUIREMENTS** | Self-referential — `VAL-VIS-461` requires every rule here to be individually falsifiable |
+| **AI RELATED DOCUMENTS** | `.ai/AI_AGENT_OPERATING_MANUAL.md` · `.ai/DOCUMENTATION_COMPLETION_STANDARD.md` |
+
+### 03.17.1 Rule Structure and Grades
+
+> **`VIS-326`.** `VAL-VIS-371`…`VAL-VIS-470` complete the validation namespace for this document.
+> They are written in the imperative and are addressed to whoever or whatever edits the capability
+> model next — a human maintainer, an agent, or a CI job. Each rule carries a **grade** that decides
+> what happens when it fails, and a **mechanisation verdict** that states honestly whether anything
+> could check it today.
+
+### TBL-VIS-336: Rule Grades
+
+| Grade | Meaning | Failure behaviour | Count in this section |
+| :--- | :--- | :--- | ---: |
+| **BLOCK** | The change must not be merged | Reject; the author fixes the entry | 54 |
+| **HALT** | The agent must stop and surface an obligation | Escalate to a human decision; never guess | 17 |
+| **WARN** | The change proceeds but is recorded | Logged as debt against an `OBL-` | 21 |
+| **AUDIT** | Checked periodically, not per change | Feeds `CMET-VIS-` values | 8 |
+
+### TBL-VIS-337: Mechanisation Verdicts
+
+| Verdict | Meaning | Count | Enabling wave |
+| :--- | :--- | ---: | :--- |
+| **TEXT** | Checkable by a script reading Markdown alone | 61 | **W1** — CI installation |
+| **REPO** | Needs a repository walk beyond this file | 19 | **W1** |
+| **BUILD** | Needs code, tests, or a build to exist | 13 | W5 or later |
+| **RUNTIME** | Needs a running system or telemetry | 7 | W7 or later |
+
+> **`VIS-327`.** Eighty of the hundred rules are checkable without a single line of application
+> code. That figure is the concrete content behind `CMET-VIS-021`'s zero: the enforcement rate is
+> not zero because enforcement is hard, it is zero because the workflow skeletons in
+> `.github/workflow-skeletons/` have never been copied into `.github/workflows/` (`EVD-VIS-017`).
+
+### 03.17.2 Definition and Classification Rules — `VAL-VIS-371`…`VAL-VIS-385`
+
+*Canonical scope: §03.1 Capability Philosophy. Invoked wherever a thing is called a capability.*
+
+### TBL-VIS-338: Rules `VAL-VIS-371`…`VAL-VIS-380`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-371` | Every capability must be expressible as an ability the system has, not as a component, a screen, or a team | BLOCK | TEXT |
+| `VAL-VIS-372` | A capability name must not contain a technology, vendor, or framework name | BLOCK | TEXT |
+| `VAL-VIS-373` | A capability entry must not assert anything that would be invalidated by a rewrite that preserved behaviour | BLOCK | TEXT |
+| `VAL-VIS-374` | A capability must survive the deletion of any single component that implements it, or be re-scoped | WARN | TEXT |
+| `VAL-VIS-375` | Two capabilities with the same Purpose sentence must be merged or differentiated | BLOCK | TEXT |
+| `VAL-VIS-376` | A capability must be classifiable into exactly one `CCAT-` category | BLOCK | TEXT |
+| `VAL-VIS-377` | A capability must be assignable to exactly one owning `DOMAIN-VIS-` | BLOCK | TEXT |
+| `VAL-VIS-378` | A capability that cannot be assigned a tier `T1`…`T5` is mis-scoped and must be split or raised | HALT | TEXT |
+| `VAL-VIS-379` | A capability whose only consumer is the capability model itself must be marked self-directed | WARN | TEXT |
+| `VAL-VIS-380` | Every `SCAP-VIS-` sub-capability must name exactly one parent `CAP-VIS-`; an orphan is a defect | BLOCK | TEXT |
+
+### TBL-VIS-339: Rules `VAL-VIS-381`…`VAL-VIS-385`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-381` | A sub-capability's maturity must not exceed its parent's, or the discrepancy must be disclosed in prose | BLOCK | TEXT |
+| `VAL-VIS-382` | A capability may not be defined by negation alone — "prevents X" requires the positive ability that does the preventing | BLOCK | TEXT |
+| `VAL-VIS-383` | A capability described only in future tense must carry Status `PLANNED`, `PROPOSED`, or `VISION` | BLOCK | TEXT |
+| `VAL-VIS-384` | A capability that duplicates an `AOM-ARCH-001` component register entry must cite it rather than restate it | WARN | REPO |
+| `VAL-VIS-385` | Any new capability introduced after PART 03 must be appended, never inserted into an existing numeric run | BLOCK | TEXT |
+
+> **`VIS-328`.** `VAL-VIS-382` catches a pattern this repository is unusually prone to. "Prevents
+> duplicate settlement" is not a capability; **idempotent transaction processing** is a capability
+> that has the prevention as a consequence. The negation form hides the fact that nobody has decided
+> what the positive mechanism is — which is exactly the state `CAP-VIS-111` is in today.
+
+### 03.17.3 Taxonomy and Tier Rules — `VAL-VIS-386`…`VAL-VIS-400`
+
+*Canonical scope: §03.2 Capability Taxonomy.*
+
+### TBL-VIS-340: Rules `VAL-VIS-386`…`VAL-VIS-395`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-386` | Every `CCAT-` category must declare a security floor and every member must meet or exceed it | BLOCK | TEXT |
+| `VAL-VIS-387` | Category membership must be stated in the registry row, never inferred from the name | BLOCK | TEXT |
+| `VAL-VIS-388` | A category containing fewer than three capabilities must be merged or justified | WARN | TEXT |
+| `VAL-VIS-389` | A capability whose declared security level is below its category floor fails validation | BLOCK | TEXT |
+| `VAL-VIS-390` | A capability's security level may be raised above its floor freely and lowered only with a recorded rationale | BLOCK | TEXT |
+| `VAL-VIS-391` | Tier must be derived from the dependency graph, never asserted by the author | BLOCK | REPO |
+| `VAL-VIS-392` | A capability at `T1` must have no dependencies on capabilities in this registry | BLOCK | TEXT |
+| `VAL-VIS-393` | A computed tier above `T5` is a HALT; the model or the capability is wrong | HALT | REPO |
+| `VAL-VIS-394` | The tier distribution must be recomputed whenever a dependency edge changes | AUDIT | REPO |
+| `VAL-VIS-395` | A capability may not depend on a capability of a strictly higher tier | BLOCK | REPO |
+
+### TBL-VIS-341: Rules `VAL-VIS-396`…`VAL-VIS-400`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-396` | Self-directed and outward-directed classification must be explicit for every capability | BLOCK | TEXT |
+| `VAL-VIS-397` | The ratio of implemented self-directed to implemented outward-directed capabilities must be reported, including when the denominator is zero | AUDIT | TEXT |
+| `VAL-VIS-398` | A new category may only be created when at least three existing capabilities move into it | BLOCK | TEXT |
+| `VAL-VIS-399` | Category ceilings must be derived from member maturities, never declared | AUDIT | TEXT |
+| `VAL-VIS-400` | The taxonomy must not be reorganised within a frozen part; reorganisation requires a new part | BLOCK | TEXT |
+
+### 03.17.4 Registry Entry Rules — `VAL-VIS-401`…`VAL-VIS-425`
+
+*Canonical scope: §03.3 Capability Registry. Re-invoked by §03.8 (`401`…`410` for experience
+entries), §03.9 (`411`…`420` for commercial entries) and §03.10 (`421`…`425` for security fields).*
+
+### TBL-VIS-342: Structural Field Rules — `VAL-VIS-401`…`VAL-VIS-410`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-401` | Every registry row must populate all fourteen fields; blanks are prohibited | BLOCK | TEXT |
+| `VAL-VIS-402` | An agent may only implement against a registered capability; unregistered work is rejected | BLOCK | REPO |
+| `VAL-VIS-403` | An unknown field value must read exactly `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` | BLOCK | TEXT |
+| `VAL-VIS-404` | Purpose must be one sentence stating an ability, not a list of features | BLOCK | TEXT |
+| `VAL-VIS-405` | Domain Owner must name a `DOMAIN-VIS-` that exists in PART 02 | BLOCK | TEXT |
+| `VAL-VIS-406` | Users must name a role or system, never "everyone" or "the platform" | BLOCK | TEXT |
+| `VAL-VIS-407` | Inputs and Outputs must be nouns that another capability could plausibly produce or consume | BLOCK | TEXT |
+| `VAL-VIS-408` | A capability with outputs consumed by nothing must be marked terminal or justified | WARN | TEXT |
+| `VAL-VIS-409` | Dependencies must cite `CAP-VIS-` identifiers, never prose descriptions | BLOCK | TEXT |
+| `VAL-VIS-410` | Every dependency cited must resolve to a defined entry, not a reserved identifier | BLOCK | TEXT |
+
+### TBL-VIS-343: Value and Consumption Rules — `VAL-VIS-411`…`VAL-VIS-420`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-411` | Any capability producing a chargeable effect must record that effect before the effect is delivered | BLOCK | BUILD |
+| `VAL-VIS-412` | A capability may not be described as delivering customer value while no customer-facing capability is `IMPLEMENTED` | BLOCK | TEXT |
+| `VAL-VIS-413` | Commercial vocabulary — price, plan, tier, currency — may not appear in a capability entry until the corresponding decision is recorded | HALT | TEXT |
+| `VAL-VIS-414` | A capability whose value proposition depends on an undecided obligation must name that `OBL-` | BLOCK | TEXT |
+| `VAL-VIS-415` | Usage measurement must be a declared capability, not an implicit property of another capability | BLOCK | TEXT |
+| `VAL-VIS-416` | Every outward-directed capability must name the inward-directed capabilities it rests on | BLOCK | TEXT |
+| `VAL-VIS-417` | Revenue-relevant capabilities must be `S1` or carry a recorded rationale for a lower level | BLOCK | TEXT |
+| `VAL-VIS-418` | A capability may not claim a market or segment that PART 01 has not defined | BLOCK | TEXT |
+| `VAL-VIS-419` | Estimated financial figures are prohibited in this document at any authority level | BLOCK | TEXT |
+| `VAL-VIS-420` | An unrecorded delivery of value is an irreversible commercial defect and must be treated as `S1` | HALT | RUNTIME |
+
+### TBL-VIS-344: Security Field Rules — `VAL-VIS-421`…`VAL-VIS-425`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-421` | Security Level must be one of `S1`…`S4` and must be present on every row | BLOCK | TEXT |
+| `VAL-VIS-422` | An `S1` capability must not advance beyond `C2` without a recorded threat model | BLOCK | REPO |
+| `VAL-VIS-423` | An `S1` capability's dependencies must each be `S2` or stronger | BLOCK | TEXT |
+| `VAL-VIS-424` | A capability handling authentication, tenancy, money movement, or audit evidence is `S1` regardless of category floor | BLOCK | TEXT |
+| `VAL-VIS-425` | The count of `S1` capabilities must be recomputed from rows, never carried forward from a previous total | AUDIT | TEXT |
+
+> **`VIS-329`.** `VAL-VIS-425` exists because this document violated its spirit before the rule was
+> written. The figure of 39 `S1` capabilities in `TBL-VIS-278` was reached by adding two subtotals;
+> a row-by-row recount of PART 03 yields 38, with the remainder coming from the bounded-context
+> table `TBL-VIS-282` rather than from registry rows. §03.21 reconciles it in full. The lesson is
+> the rule: **recount, never carry forward.**
+
+```mermaid
+flowchart TB
+    START["A proposed capability edit"] --> G1{"Is it expressible as an ability - VAL-VIS-371"}
+    G1 -->|"No"| R1["REJECT - it is a component or a feature"]
+    G1 -->|"Yes"| G2{"All fourteen fields present - VAL-VIS-401"}
+    G2 -->|"No"| R2["REJECT - blanks prohibited"]
+    G2 -->|"Yes"| G3{"Dependencies resolve - VAL-VIS-409 and 410"}
+    G3 -->|"No"| R3["REJECT - unresolved or reserved dependency"]
+    G3 -->|"Yes"| G4{"Security level at or above category floor - VAL-VIS-389"}
+    G4 -->|"No"| R4["REJECT - raise the level or justify"]
+    G4 -->|"Yes"| G5{"Maturity claim carries a proving artifact - VAL-VIS-365"}
+    G5 -->|"No"| R5["DEMOTE to the highest provable level"]
+    G5 -->|"Yes"| G6{"Is it S1 above C2 without a threat model - VAL-VIS-422"}
+    G6 -->|"Yes"| R6["HALT - OBL-28 applies"]
+    G6 -->|"No"| PASS["ACCEPT and recompute aggregates - VAL-VIS-370"]
+
+    classDef gate fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef halt fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class G1,G2,G3,G4,G5,G6 gate
+    class R1,R2,R3,R4,R5 bad
+    class R6 halt
+    class PASS good
+```
+
+> **Diagram ID:** `DGM-VIS-101` — **Capability Edit Validation Gate**
+> **Explanation:** Six gates in fixed order, cheapest first. Note that only one branch produces a
+> HALT rather than a rejection: an `S1` capability trying to pass `C2` without a threat model is not
+> a defect the author can fix by editing text, it is a decision that requires human security work
+> under `OBL-28`. Every other failure is repairable in the same edit.
+
+### 03.17.5 AI, Autonomy and Memory Rules — `VAL-VIS-426`…`VAL-VIS-445`
+
+*Canonical scope: §03.4 AI Capability Model and §03.5 Memory Capability Model. Rules `426`…`435`
+are additionally invoked by §03.10 Security and `436`…`445` by §03.11 Data — the same rule can be
+cited from several sections; it is defined exactly once, here.*
+
+### TBL-VIS-345: AI and Autonomy Rules — `VAL-VIS-426`…`VAL-VIS-435`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-426` | Every capability an agent may act on must declare a maximum autonomy level `A0`…`A3` | BLOCK | TEXT |
+| `VAL-VIS-427` | Autonomy level `A4` is prohibited on every capability without exception (`VIS-033`) | BLOCK | TEXT |
+| `VAL-VIS-428` | Tenant isolation must be proven by an automated cross-tenant read test before any multi-tenant capability reaches `C5` | BLOCK | BUILD |
+| `VAL-VIS-429` | A backup capability that has never been restored may not be recorded above `C4` | BLOCK | BUILD |
+| `VAL-VIS-430` | An agent must not raise a capability's maturity in the same change that implements it; promotion is a separate reviewed act | BLOCK | REPO |
+| `VAL-VIS-431` | An agent encountering an undefined identifier must HALT rather than infer its meaning | HALT | TEXT |
+| `VAL-VIS-432` | Accountability for an agent action always attaches to a named human (`VIS-032`) | BLOCK | REPO |
+| `VAL-VIS-433` | An agent may not create a new namespace prefix; prefixes are constitutional | BLOCK | TEXT |
+| `VAL-VIS-434` | Agent actions taken outside the declared autonomy model must be recorded as `FAL-VIS-179` occurrences | AUDIT | RUNTIME |
+| `VAL-VIS-435` | A capability that grants an agent write access to governance files is `S1` and requires `A1` or lower | BLOCK | TEXT |
+
+### TBL-VIS-346: Memory and Data Rules — `VAL-VIS-436`…`VAL-VIS-445`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-436` | Every retained item must be assigned a retention class `RT-1`…`RT-6` at the moment of retention | BLOCK | BUILD |
+| `VAL-VIS-437` | A retention decision citing an undefined class is a HALT, not a default to "keep" | HALT | BUILD |
+| `VAL-VIS-438` | Compression that loses provenance is prohibited; a compressed memory must retain its source reference | BLOCK | BUILD |
+| `VAL-VIS-439` | Forgetting must be an explicit recorded act, never an eviction side effect | BLOCK | BUILD |
+| `VAL-VIS-440` | A capability may not treat absence of memory as evidence of absence of fact | BLOCK | TEXT |
+| `VAL-VIS-441` | Metric namespaces `SUC-VIS-`, `DMET-VIS-`, `CMET-VIS-` must never be aggregated together | BLOCK | TEXT |
+| `VAL-VIS-442` | Every data-holding capability must declare whether its data survives process restart | BLOCK | TEXT |
+| `VAL-VIS-443` | A persistence choice may not be assumed by any capability while `OBL-03` remains open | HALT | TEXT |
+| `VAL-VIS-444` | Data classified `S1` must declare its encryption state at rest and in transit, including "none" | BLOCK | TEXT |
+| `VAL-VIS-445` | An irreversible data decision must be listed in the irreversibility register before implementation begins | BLOCK | TEXT |
+
+> **`VIS-330`.** `VAL-VIS-437` is the rule that makes `OBL-02` blocking rather than cosmetic. The
+> retention class `RT-2` is referenced by the memory model and has never been defined. Under a
+> permissive reading the system would default to keeping the item, which is precisely the behaviour
+> that produces an unbounded, unauditable memory. Under `VAL-VIS-437` the system stops instead —
+> annoying, correct, and the reason `FAL-VIS-180` is recorded as an open failure rather than a
+> resolved one.
+
+### 03.17.6 Knowledge and Creator Rules — `VAL-VIS-446`…`VAL-VIS-470`
+
+*Canonical scope: §03.6 Knowledge Capability Model, §03.7 Creator System Capabilities, §03.12
+Infrastructure Capabilities.*
+
+### TBL-VIS-347: Knowledge and Infrastructure Rules — `VAL-VIS-446`…`VAL-VIS-455`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-446` | A knowledge artifact must declare its authority level `L1`…`L5`; an undeclared artifact has none | BLOCK | TEXT |
+| `VAL-VIS-447` | A lower-authority document may not contradict a higher-authority one; the contradiction is a defect in the lower | BLOCK | REPO |
+| `VAL-VIS-448` | Every knowledge domain must have an `INDEX.md` registering its documents with accurate statuses | BLOCK | REPO |
+| `VAL-VIS-449` | A document registered as `PLANNED` that now exists must have its index entry updated in the same change | BLOCK | REPO |
+| `VAL-VIS-450` | Knowledge capabilities may not be counted as delivery capabilities in any aggregate | BLOCK | TEXT |
+| `VAL-VIS-451` | A declared workflow that is not installed in `.github/workflows/` must be recorded as skeletal, never as enforcing | BLOCK | REPO |
+| `VAL-VIS-452` | Infrastructure maturity may not exceed the ladder rung actually reached — Declared, Skeletal, Installed, Enforcing, Required | BLOCK | REPO |
+| `VAL-VIS-453` | A directory containing only `.gitkeep` files may not be cited as evidence of a capability | BLOCK | REPO |
+| `VAL-VIS-454` | Telemetry capabilities must declare what is emitted, not only that emission occurs | BLOCK | TEXT |
+| `VAL-VIS-455` | Any capability claiming continuous integration as a dependency must fail while `CAP-VIS-154` is below `C4` | BLOCK | REPO |
+
+### TBL-VIS-348: Creator, Traceability and Closure Rules — `VAL-VIS-456`…`VAL-VIS-470`
+
+| ID | Rule | Grade | Mechanisation |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-456` | The word "creator" must resolve to one of the readings `R1`, `R2`, `R3` at every use site | HALT | TEXT |
+| `VAL-VIS-457` | A creator-facing capability may not be specified further while `OBL-27` remains open | HALT | TEXT |
+| `VAL-VIS-458` | A capability serving an undefined audience must be `PROPOSED`, never `PLANNED` | BLOCK | TEXT |
+| `VAL-VIS-459` | Every capability must appear in the §03.21 inventory exactly once | BLOCK | TEXT |
+| `VAL-VIS-460` | Every identifier cited anywhere in this document must be defined in this document or in a named external document | BLOCK | TEXT |
+| `VAL-VIS-461` | Every rule in §03.17 must itself be falsifiable — a rule with no possible failing input is removed | AUDIT | TEXT |
+| `VAL-VIS-462` | Every `FAL-VIS-` failure mode must name at least one `VAL-VIS-` rule that would detect it | BLOCK | TEXT |
+| `VAL-VIS-463` | Every `OBL-` obligation must name what it blocks and what would close it | BLOCK | TEXT |
+| `VAL-VIS-464` | Every `CON-VIS-` constraint must name the condition under which it is lifted | BLOCK | TEXT |
+| `VAL-VIS-465` | Every `IMG-VIS-` specification must carry all eighteen fields including a generation prompt | BLOCK | TEXT |
+| `VAL-VIS-466` | Every Mermaid block must parse and must be followed by a Diagram ID and an Explanation | BLOCK | TEXT |
+| `VAL-VIS-467` | No concept may run more than 120 lines without a visual anchor | BLOCK | TEXT |
+| `VAL-VIS-468` | Every section must carry all seven AI navigation metadata rows | BLOCK | TEXT |
+| `VAL-VIS-469` | A frozen part may not be edited; corrections are appended as navigation corrections | BLOCK | REPO |
+| `VAL-VIS-470` | The document may not be marked `RELEASED` while any `HALT`-grade rule is failing | BLOCK | REPO |
+
+> **`VIS-331`.** `VAL-VIS-462` is the rule that binds §03.17 to §03.18. A failure mode with no
+> detecting rule is a failure mode nobody will ever notice happening; a rule with no associated
+> failure mode is usually a preference dressed as governance. The two sections are written to be
+> read as a pair, and §03.18 states the detecting rule for each of its seventy entries.
+
+### 03.17.7 What Currently Fails
+
+> **`VIS-332`.** Running these hundred rules against this document and this repository by hand
+> produces the following honest result. It is not a clean sheet, and publishing it is the point.
+
+### TBL-VIS-349: Known Failing Rules at Time of Writing
+
+| Rule | What fails | Grade | Recorded as |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-381` | `SCAP-VIS-006` at `C3` exceeds parent `CAP-VIS-086` at `C2` | BLOCK | Disclosed in `VIS-252`; `OBL-26` |
+| `VAL-VIS-425` | The `S1` total of 39 was carried forward rather than recounted | AUDIT | Reconciled in §03.21; caused `VIS-329` |
+| `VAL-VIS-437` | `RT-2` is cited and undefined | HALT | `OBL-02`, `FAL-VIS-180` |
+| `VAL-VIS-443` | Persistence remains undecided while capabilities depend on it | HALT | `OBL-03` |
+| `VAL-VIS-449` | `04_ARCHITECTURE/INDEX.md` still lists `SYSTEM_ARCHITECTURE.md` as `PLANNED` | BLOCK | Task `ARCH-04`; `CMET-VIS-032` |
+| `VAL-VIS-451` | Eight workflows declared, zero installed | BLOCK | `EVD-VIS-017`, `FAL-VIS-178` |
+| `VAL-VIS-455` | Capabilities cite CI as a dependency while `CAP-VIS-154` is at `C1` | BLOCK | `CON-VIS-049` |
+| `VAL-VIS-456` | "Creator" is unresolved across three readings | HALT | `OBL-27` |
+| `VAL-VIS-432` | Single-identity CODEOWNERS makes independent accountability impossible | BLOCK | `OBL-22`, `FAL-VIS-177` |
+| `VAL-VIS-434` | Agents currently operate outside the autonomy model | AUDIT | `FAL-VIS-179` |
+
+> **`VIS-333`.** Ten rules fail. Four are HALT-grade, which under `VAL-VIS-470` means this document
+> **cannot be marked `RELEASED`** in its present state regardless of how complete its content is.
+> That consequence is deliberate: a vision document that declared itself released while four of its
+> own blocking obligations were open would have demonstrated, in a single act, the exact failure it
+> spends seventy entries warning about.
+
+---
+
+## 03.18 — Capability Failure Library
+
+### AI NAVIGATION METADATA — §03.18
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before diagnosing why a capability is not progressing** |
+| **AI DEPENDENCIES** | §03.17 validation rules · `FAL-VIS-001`…`175` from PARTS 01 and 02 |
+| **AI INPUTS** | A symptom: a stalled capability, a suspicious claim, a figure that does not reconcile |
+| **AI OUTPUTS** | A named failure mode, its detecting rule, and whether Oship exhibits it today |
+| **AI IMPLEMENTATION IMPACT** | Each entry names the rule that would catch it, making the library a test plan |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-462` — every entry must name a detecting `VAL-VIS-` rule |
+| **AI RELATED DOCUMENTS** | `.ai/COMMON_MISTAKES.md` · `.ai/LESSONS_LEARNED.md` |
+
+### 03.18.1 Why a Failure Library Exists
+
+> **`VIS-334`.** A validation rule tells you what to check. A failure mode tells you what you are
+> looking at when the check fails. The two are not the same knowledge: `VAL-VIS-365` says "cite the
+> artifact that justifies a promotion", but only `FAL-VIS-150` Paper Promotion explains *why* an
+> honest author keeps failing that rule — because writing the specification genuinely feels like
+> progress, and the moment of promotion is the moment that feeling is cashed in.
+
+> **`VIS-335`.** `FAL-VIS-176`…`FAL-VIS-250` complete the failure namespace for `AOM-VIS-001`.
+> Seventy-five entries, each in the same five-column shape. The final column is the one that makes
+> this a repository document rather than a textbook: **Present in Oship today** is answered from
+> evidence, and it is answered "Yes" thirty-one times.
+
+### TBL-VIS-350: Failure Classes
+
+| Class | Name | What goes wrong | Entries |
+| :--- | :--- | :--- | ---: |
+| **F1** | Definition failures | The capability is not what it claims to be | 15 |
+| **F2** | Registry and status failures | The record does not match reality | 15 |
+| **F3** | Dependency failures | The graph lies about what needs what | 15 |
+| **F4** | Maturity and evidence failures | The claim outruns the proof | 15 |
+| **F5** | Agent, memory and autonomy failures | The AI layer behaves outside its model | 10 |
+| **F6** | Systemic failures | The organisation, not the artifact, is the cause | 5 |
+
+```mermaid
+flowchart LR
+    SYMPTOM["Symptom observed"] --> Q1{"Does the record match the repository"}
+    Q1 -->|"No"| F2C["Class F2 - registry and status"]
+    Q1 -->|"Yes"| Q2{"Is the thing described actually a capability"}
+    Q2 -->|"No"| F1C["Class F1 - definition"]
+    Q2 -->|"Yes"| Q3{"Does progress stall on something undeclared"}
+    Q3 -->|"Yes"| F3C["Class F3 - dependency"]
+    Q3 -->|"No"| Q4{"Is a claim made without a proving artifact"}
+    Q4 -->|"Yes"| F4C["Class F4 - maturity and evidence"]
+    Q4 -->|"No"| Q5{"Did an agent act outside its declared level"}
+    Q5 -->|"Yes"| F5C["Class F5 - agent and memory"]
+    Q5 -->|"No"| F6C["Class F6 - systemic - look at ownership and incentives"]
+
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef c fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    class Q1,Q2,Q3,Q4,Q5 q
+    class F1C,F2C,F3C,F4C,F5C,F6C c
+```
+
+> **Diagram ID:** `DGM-VIS-102` — **Failure Class Triage**
+> **Explanation:** Triage in the order shown, not in the order that feels natural. The instinct is
+> to start with class F1 — "is this really a capability?" — but the far commoner situation is that
+> the definition is fine and the *record* has drifted from the repository. Checking F2 first is
+> cheaper and resolves the majority of symptoms without touching the model.
+
+### 03.18.2 Class F1 — Definition Failures `FAL-VIS-176`…`FAL-VIS-190`
+
+### TBL-VIS-351: Definition Failures
+
+| ID | Failure | Pattern | Detected by | Present in Oship today |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-176` | **Component Wearing a Capability Name** | A service, table, or screen is registered as an ability | `VAL-VIS-371` | No — screened at entry |
+| `FAL-VIS-177` | **Governance Theatre** | A control is declared whose enforcing structure cannot exist as configured | `VAL-VIS-432` | **Yes** — single-identity CODEOWNERS makes every approval self-approval (`OBL-22`) |
+| `FAL-VIS-178` | **Structure Without Substance** | Directories, categories, or headings stand in for content that was never written | `VAL-VIS-453` | **Yes** — `design/` holds twelve folders and zero design files |
+| `FAL-VIS-179` | **Unmodelled Actor** | Real agents act on the system while the autonomy model describes hypothetical ones | `VAL-VIS-434` | **Yes** — this document is being authored by an agent operating outside `A0`…`A3` |
+| `FAL-VIS-180` | **Mandatory Control, Undefined Parameter** | A rule is compulsory and cannot fire because a value it needs was never defined | `VAL-VIS-437` | **Yes** — `RT-2` undefined blocks mandatory forgetting |
+| `FAL-VIS-181` | **Capability by Negation** | The entry says what is prevented and never what the system can do | `VAL-VIS-382` | **Yes** — `CAP-VIS-111` is currently defined by the duplicate it must not create |
+| `FAL-VIS-182` | **Vendor in the Name** | A technology choice is smuggled into a strategic artifact | `VAL-VIS-372` | No |
+| `FAL-VIS-183` | **Capability Explosion** | Every request becomes a new identifier; the registry grows faster than the system | `VAL-VIS-375` | No — `DGM-VIS-076` defaults to refusal |
+| `FAL-VIS-184` | **The Everything Capability** | A single entry absorbs unrelated abilities because splitting felt bureaucratic | `VAL-VIS-350` | No — highest out-degree is 5 |
+| `FAL-VIS-185` | **Audience "Everyone"** | Users field names no role, so no requirement can be derived | `VAL-VIS-406` | No |
+| `FAL-VIS-186` | **Rewrite-Fragile Definition** | The definition describes today's implementation and dies with it | `VAL-VIS-373` | No |
+| `FAL-VIS-187` | **Ambiguous Term Carried Forward** | A word with several readings is used as though it had one | `VAL-VIS-456` | **Yes** — "creator" spans `R1`, `R2`, `R3` (`OBL-27`) |
+| `FAL-VIS-188` | **Category of One** | A taxonomy category exists to hold a single favoured item | `VAL-VIS-388` | No — smallest category holds 4 |
+| `FAL-VIS-189` | **Purpose as Feature List** | Purpose enumerates functions instead of stating an ability | `VAL-VIS-404` | No |
+| `FAL-VIS-190` | **Silent Re-scope** | A capability's meaning drifts across sections without a recorded change | `VAL-VIS-385` | No — append-only model prevents it |
+
+> **`VIS-336`.** `FAL-VIS-179` is uncomfortable to publish and is published anyway. The autonomy
+> model in §03.4 describes what agents *will* be permitted to do once `CAP-VIS-096` exists; the
+> actual agent writing this file operates under no such model, with permissions granted by session
+> configuration rather than by any capability in this registry. Recording the gap costs nothing and
+> hiding it would have made every autonomy claim in PART 03 unfalsifiable.
+
+### 03.18.3 Class F2 — Registry and Status Failures `FAL-VIS-191`…`FAL-VIS-205`
+
+### TBL-VIS-352: Registry and Status Failures
+
+| ID | Failure | Pattern | Detected by | Present in Oship today |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-191` | **Carried-Forward Total** | An aggregate is quoted from a previous version instead of recomputed | `VAL-VIS-425` | **Yes** — the `S1` count of 39; see §03.21 |
+| `FAL-VIS-192` | **Status–Implementation Collapse** | Status and Implementation Status are treated as one field | `VAL-VIS-367` | No — separated by `VIS-223` |
+| `FAL-VIS-193` | **Stale Index Entry** | A document exists while its index still lists it as `PLANNED` | `VAL-VIS-449` | **Yes** — `04_ARCHITECTURE/INDEX.md` |
+| `FAL-VIS-194` | **Blank Passed as Unknown** | An empty cell implies "nothing to say" rather than "not investigated" | `VAL-VIS-403` | No — 14 explicit UNKNOWN markers |
+| `FAL-VIS-195` | **Optimistic Default** | A field defaults to the favourable value when evidence is missing | `VAL-VIS-403` | No |
+| `FAL-VIS-196` | **Reserved Identifier Filled** | A reservation is quietly consumed, destroying the reason it was made | `VAL-VIS-410` | No — `CAP-VIS-057`…`059` intact |
+| `FAL-VIS-197` | **Arithmetic Drift** | Subtotals stop summing to the total after an edit | `VAL-VIS-357` | No — recomputed each part |
+| `FAL-VIS-198` | **Duplicate Identifier** | The same identifier is defined twice with different meanings | `VAL-VIS-460` | No — `CMET-VIS-035` reads 0 |
+| `FAL-VIS-199` | **Dangling Citation** | An identifier is cited and never defined anywhere | `VAL-VIS-460` | No — `CMET-VIS-036` reads 0 after §03.13 |
+| `FAL-VIS-200` | **Registry Without Owner** | Rows exist that no domain claims | `VAL-VIS-405` | No |
+| `FAL-VIS-201` | **Documented Counted as Delivered** | Knowledge artifacts inflate delivery aggregates | `VAL-VIS-450` | No — separated in `TBL-VIS-278` |
+| `FAL-VIS-202` | **Percentage Without Denominator** | A rate is quoted with no stated base | `VAL-VIS-441` | No |
+| `FAL-VIS-203` | **Aggregation Across Namespaces** | `SUC-VIS-`, `DMET-VIS-` and `CMET-VIS-` figures are summed together | `VAL-VIS-441` | No |
+| `FAL-VIS-204` | **Unregistered Work** | An agent implements something with no registry entry | `VAL-VIS-402` | **Yes** — nothing prevents it; no CI runs the check |
+| `FAL-VIS-205` | **Frozen Part Edited** | A correction is applied by rewriting accepted content | `VAL-VIS-469` | No — corrections appended, e.g. §02.18.5 |
+
+> **`VIS-337`.** `FAL-VIS-204` is marked Yes on a subtle reading and the reading is worth stating.
+> No unregistered capability work has occurred; the failure is present in the sense that **nothing
+> would stop it**. Throughout this library, "Present" means the failure is either occurring or
+> undetectable, because an undetectable failure and an occurring one are operationally identical
+> until the day someone looks.
+
+---
+
+### 03.18.4 Class F3 — Dependency Failures `FAL-VIS-206`…`FAL-VIS-220`
+
+### TBL-VIS-353: Dependency Failures
+
+| ID | Failure | Pattern | Detected by | Present in Oship today |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-206` | **Hidden Dependency** | A capability cannot work without another and does not say so | `VAL-VIS-409` | **Yes** — unavoidable while `OBL-03` leaves persistence undecided |
+| `FAL-VIS-207` | **Circular Chain** | Two or more capabilities each wait for the other | `VAL-VIS-352` | No — graph is acyclic at 214 edges |
+| `FAL-VIS-208` | **Prose Dependency** | A dependency is described in a sentence instead of cited as an identifier | `VAL-VIS-409` | No |
+| `FAL-VIS-209` | **Dependency on a Reservation** | An entry depends on an identifier deliberately left undefined | `VAL-VIS-410` | No |
+| `FAL-VIS-210` | **Upward Dependency** | A lower-tier capability depends on a higher-tier one, inverting the stack | `VAL-VIS-395` | No |
+| `FAL-VIS-211` | **Undesignated Hub** | A capability with high fan-in is not marked foundational, hiding a single point of failure | `VAL-VIS-349` | No — `CAP-VIS-121` designated |
+| `FAL-VIS-212` | **Overloaded Node** | High fan-out signals a missing decomposition nobody performed | `VAL-VIS-350` | No |
+| `FAL-VIS-213` | **Unassessed Chain to `S1`** | A chain terminating in `S1` contains links of unrecorded sensitivity | `VAL-VIS-353` | **Yes** — 38 `S1` capabilities, zero threat models |
+| `FAL-VIS-214` | **Weak Link Under `S1`** | An `S1` capability depends on an `S3` or `S4` one | `VAL-VIS-423` | **Yes** — several `S1` entries rest on unclassified infrastructure |
+| `FAL-VIS-215` | **Undeclared Coupling** | More dependencies than inputs, meaning something flows that is not declared | `VAL-VIS-354` | No |
+| `FAL-VIS-216` | **Orphan Capability** | Fan-in zero, fan-out zero, no stated justification | `VAL-VIS-351` | No — orphan rate 0% |
+| `FAL-VIS-217` | **Unreachable from Outcome** | No path connects the capability to any `OUT-VIS-` strategic outcome | `VAL-VIS-346` | No |
+| `FAL-VIS-218` | **Unowned Problem** | A `PROB-VIS-` problem is addressed by no capability | `VAL-VIS-347` | No — all 24 addressed |
+| `FAL-VIS-219` | **Phantom Blocker** | Work stalls on an obligation that is never named in the entry | `VAL-VIS-369` | No |
+| `FAL-VIS-220` | **Critical Path Denial** | The longest chain is known and planning proceeds as if items were independent | `VAL-VIS-346` | **Yes** — no plan currently sequences against the six-edge path |
+
+> **`VIS-338`.** `FAL-VIS-206` is marked Yes for a structural reason, not a sloppy one. Every
+> capability that stores anything depends on a persistence decision that has not been made
+> (`OBL-03`). Until it is made, those dependencies cannot be cited as identifiers because the thing
+> depended upon does not yet have one. The failure is genuinely present and its cure is a decision,
+> not an edit.
+
+### 03.18.5 Class F4 — Maturity and Evidence Failures `FAL-VIS-221`…`FAL-VIS-235`
+
+### TBL-VIS-354: Maturity and Evidence Failures
+
+| ID | Failure | Pattern | Detected by | Present in Oship today |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-221` | **Promotion Without Artifact** | A maturity level rises with no cited proving artifact | `VAL-VIS-365` | **Yes** — no mechanism requires the citation |
+| `FAL-VIS-222` | **Silent Demotion** | Maturity is reduced without recording why | `VAL-VIS-366` | **Yes** — undetectable; `CMET-VIS-023` reads exactly 0 |
+| `FAL-VIS-223` | **Design Without a Component** | A capability claims `C3` while naming no `CMP-ARCH-` entry | `VAL-VIS-360` | No — all 14 name one |
+| `FAL-VIS-224` | **Component That Is Itself Planned** | `C3` is claimed against a component that does not exist either | `VAL-VIS-360` | **Yes** — every named component is `PLANNED` |
+| `FAL-VIS-225` | **Untestable `C5` Claim** | `C5` is asserted with no test that could falsify it | `VAL-VIS-362` | No — nothing has reached `C5` |
+| `FAL-VIS-226` | **Unobserved `C6` Claim** | Operation is claimed without telemetry that would show it stopping | `VAL-VIS-363` | No |
+| `FAL-VIS-227` | **Instant `C7`** | A sustained-performance level is claimed from a single observation | `VAL-VIS-364` | No |
+| `FAL-VIS-228` | **Promote-in-the-Same-Commit** | The change that implements a capability also promotes it, removing review | `VAL-VIS-430` | **Yes** — nothing separates the two acts |
+| `FAL-VIS-229` | **Restored-Never Backup** | A backup capability is credited without a single restore test | `VAL-VIS-429` | **Yes** — `CAP-VIS-136` has no restore evidence |
+| `FAL-VIS-230` | **Untested Isolation** | Multi-tenancy is designed and never adversarially tested | `VAL-VIS-428` | **Yes** — `CAP-VIS-110` at `C0` |
+| `FAL-VIS-231` | **Ladder Skipping** | A capability jumps maturity levels without meeting intermediate exit criteria | `VAL-VIS-365` | No |
+| `FAL-VIS-232` | **Ceiling Denial** | Maturity above `C4` is claimed while the enabling infrastructure is uninstalled | `VAL-VIS-455` | No — `CON-VIS-049` holds the ceiling |
+| `FAL-VIS-233` | **Skeleton Counted as Enforcement** | A workflow file that exists but is not installed is treated as active governance | `VAL-VIS-451` | **Yes** — eight skeletons, zero installed |
+| `FAL-VIS-234` | **Documentation as Maturity** | Writing more about a capability is experienced as advancing it | `VAL-VIS-373` | **Yes** — the dominant risk of this entire document |
+| `FAL-VIS-235` | **Evidence by Assertion** | A claim cites this document as its own evidence | `VAL-VIS-460` | **Yes** — partially; several claims cite sections rather than repository paths |
+
+> **`VIS-339`.** `FAL-VIS-234` is the failure this document is most exposed to and least able to
+> fix by writing. Twelve thousand lines of capability specification produce a strong and largely
+> false sense that the capabilities are further along than they are. The only structural defence
+> available is `CMET-VIS-043` — specification lines divided by application code lines — which
+> currently has a denominator of zero and therefore reports the exposure honestly by refusing to
+> return a number.
+
+```mermaid
+flowchart TB
+    WRITE["More specification written"] --> FEEL["Progress felt"]
+    FEEL --> CLAIM["Maturity claimed"]
+    CLAIM -->|"no artifact required today"| PROMOTE["FAL-VIS-221 promotion without artifact"]
+    PROMOTE --> DRIFT["Recorded maturity drifts above real maturity"]
+    DRIFT --> PLAN["Planning consumes the inflated figure"]
+    PLAN --> LATE["Discovery at build time - the expensive moment"]
+
+    BREAK["CMET-VIS-043 specification to code ratio"] -.->|"reports undefined - denominator zero"| DRIFT
+    GATE["VAL-VIS-365 plus VAL-VIS-430 enforced by CI"] -.->|"breaks the loop at wave W1"| CLAIM
+
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef fix fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class WRITE,FEEL,CLAIM,PROMOTE,DRIFT,PLAN,LATE bad
+    class BREAK,GATE fix
+```
+
+> **Diagram ID:** `DGM-VIS-103` — **The Documentation-as-Maturity Loop**
+> **Explanation:** The loop is self-reinforcing and requires no bad intent at any step. It is broken
+> in exactly one place — at the claim, by requiring a proving artifact before the promotion is
+> accepted. That is a CI check of perhaps forty lines, and it is unavailable today for the same
+> reason everything else is: `.github/workflows/` is empty.
+
+### 03.18.6 Class F5 — Agent, Memory and Autonomy Failures `FAL-VIS-236`…`FAL-VIS-245`
+
+### TBL-VIS-355: Agent and Memory Failures
+
+| ID | Failure | Pattern | Detected by | Present in Oship today |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-236` | **Inference Over Halt** | An agent meets an undefined identifier and guesses its meaning | `VAL-VIS-431` | **Yes** — no mechanism enforces the halt |
+| `FAL-VIS-237` | **Accountability Attached to an Agent** | A record names an agent as responsible party | `VAL-VIS-432` | No — `VIS-032` holds |
+| `FAL-VIS-238` | **Namespace Invention** | An agent creates a new identifier prefix to fit new content | `VAL-VIS-433` | No |
+| `FAL-VIS-239` | **Unbounded Memory** | Everything is retained because forgetting is unimplemented | `VAL-VIS-439` | **Yes** — `RT-2` undefined |
+| `FAL-VIS-240` | **Provenance-Losing Compression** | A summary replaces its source and the source reference is dropped | `VAL-VIS-438` | **Yes** — session compression retains no source pointer today |
+| `FAL-VIS-241` | **Absence Read as Evidence** | Nothing in memory is taken to mean nothing happened | `VAL-VIS-440` | **Yes** — undetectable without a memory runtime |
+| `FAL-VIS-242` | **Eviction as Forgetting** | Memory is lost to a capacity limit and recorded as a deliberate decision | `VAL-VIS-439` | **Yes** — context-window truncation is exactly this |
+| `FAL-VIS-243` | **Autonomy Creep** | An agent's effective permissions exceed its declared level | `VAL-VIS-426` | **Yes** — see `FAL-VIS-179` |
+| `FAL-VIS-244` | **Governance Write Without Restriction** | An agent may edit governance files at an autonomy level above `A1` | `VAL-VIS-435` | **Yes** — this session writes `.ai/` files |
+| `FAL-VIS-245` | **Prohibited Level Reached by Composition** | Several `A3` actions chain into effective `A4` | `VAL-VIS-427` | **Yes** — undetectable; no action ledger exists |
+
+> **`VIS-340`.** Class F5 is the only class where every single entry that is present is also
+> currently **undetectable**. That is not a coincidence: detecting agent misbehaviour requires an
+> action ledger, and an action ledger requires `CAP-VIS-092` audit trail, which is at `C0` and is
+> the subject of `OBL-28`. Until that one capability moves, the entire agent-governance layer of
+> Oship is declarative only.
+
+### 03.18.7 Class F6 — Systemic Failures `FAL-VIS-246`…`FAL-VIS-250`
+
+### TBL-VIS-356: Systemic Failures
+
+| ID | Failure | Pattern | Detected by | Present in Oship today |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-246` | **Single Point of Human Failure** | One identity owns every path, so no review is independent | `VAL-VIS-432` | **Yes** — `OBL-22` |
+| `FAL-VIS-247` | **Specification Outrunning Capacity** | Specification is produced faster than anything can consume it | `VAL-VIS-373` | **Yes** — `CMET-VIS-043` |
+| `FAL-VIS-248` | **Governance Without a Runtime** | Every control is a document; none is a process | `VAL-VIS-451` | **Yes** — `CMET-VIS-021` reads 0% |
+| `FAL-VIS-249` | **Self-Service Only** | Everything implemented serves the builder; nothing serves a user | `VAL-VIS-412` | **Yes** — implemented outward-directed capabilities: zero |
+| `FAL-VIS-250` | **Completion Declared by Volume** | Length, table count, and diagram count stand in for readiness | `VAL-VIS-470` | **Yes** — the risk this document closes against in §03.21 |
+
+> **`VIS-341`.** Thirty-one of seventy-five entries are marked present. That ratio should be read
+> carefully: it is high because the detection column is honest about undetectable failures, and
+> because a repository in a pure specification phase structurally exhibits most of class F4 and F6.
+> A repository that reported three would be either much further along or much less observant.
+
+### TBL-VIS-357: Failure Presence Summary
+
+| Class | Entries | Present | Undetectable today | Cured by wave W1 |
+| :--- | ---: | ---: | ---: | ---: |
+| **F1** Definition | 15 | 5 | 2 | 2 |
+| **F2** Registry and status | 15 | 3 | 1 | 3 |
+| **F3** Dependency | 15 | 4 | 1 | 1 |
+| **F4** Maturity and evidence | 15 | 9 | 4 | 6 |
+| **F5** Agent and memory | 10 | 7 | 7 | 0 |
+| **F6** Systemic | 5 | 5 | 2 | 2 |
+| **Totals** | **75** | **31** | **17** | **14** |
+
+> **`VIS-342`.** Fourteen of the thirty-one present failures are cured by installing continuous
+> integration — one wave, no application code. Seven more are class F5 and require `CAP-VIS-092`.
+> That leaves ten needing genuine build work. Stated that way, the failure library is not a list of
+> problems; it is a prioritised work queue whose first two items are already identified as W1 and
+> `OBL-28`.
+
+---
+
+## 03.19 — AI Capability Interpretation Guide
+
+### AI NAVIGATION METADATA — §03.19
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — an agent reads this section before acting on any capability** |
+| **AI DEPENDENCIES** | §03.3 registry · §03.14 maturity · §03.17 validation · PART 02 `AI-VIS-062`…`071` |
+| **AI INPUTS** | A task referencing a capability, or a task with no capability yet identified |
+| **AI OUTPUTS** | A loading sequence, a permitted action set, and a stop condition |
+| **AI IMPLEMENTATION IMPACT** | Determines what an agent may do without human confirmation |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-426`…`435` · `VAL-VIS-431` halt discipline |
+| **AI RELATED DOCUMENTS** | `.ai/AI_AGENT_OPERATING_MANUAL.md` · `.ai/CONTEXT_ROUTER.md` · `.ai/NEXT_ACTION.md` |
+
+### 03.19.1 Capability Loading Sequence
+
+> **`VIS-343`.** An agent that reads this document front to back will exhaust its context before
+> reaching anything useful. The loading sequence below is the supported access pattern: seven
+> ordered steps, each with a defined stop condition, each loading the smallest artifact that can
+> answer the question at hand.
+
+```mermaid
+flowchart TB
+    S0["Task arrives referencing work on Oship"] --> S1["Step 1 - read .ai/NEXT_ACTION.md for the active continuation point"]
+    S1 --> S2["Step 2 - identify the CAP-VIS- identifier - use DGM-VIS-076 if none is named"]
+    S2 -->|"no capability fits"| H1["HALT - AI-VIS-073 - propose a registry entry, do not improvise"]
+    S2 --> S3["Step 3 - load that single registry row from section 03.3"]
+    S3 --> S4["Step 4 - read Maturity and Implementation Status - not Status alone"]
+    S4 --> S5["Step 5 - resolve every cited dependency to its own row"]
+    S5 -->|"a dependency is at C0 or blocked"| H2["HALT - AI-VIS-079 - the work is not startable"]
+    S5 --> S6["Step 6 - check the security level and any OBL- naming this capability"]
+    S6 -->|"S1 above C2 without a threat model"| H3["HALT - AI-VIS-084 - OBL-28 applies"]
+    S6 --> S7["Step 7 - determine the permitted action from TBL-VIS-359"]
+    S7 --> ACT["Act within the permitted set and record the artifact produced"]
+
+    classDef step fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef halt fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class S1,S2,S3,S4,S5,S6,S7 step
+    class H1,H2,H3 halt
+    class ACT good
+```
+
+> **Diagram ID:** `DGM-VIS-104` — **Capability Loading Sequence**
+> **Explanation:** Three of the seven steps can terminate in a HALT, and none of the three is
+> recoverable by the agent alone. This is the intended shape. An agent that never halts on this
+> repository in its present state is not being efficient — it is inferring past decisions that have
+> not been made, which is `FAL-VIS-236`.
+
+### TBL-VIS-358: Context Budget per Step
+
+| Step | Artifact loaded | Approximate size | Skippable? |
+| ---: | :--- | :--- | :--- |
+| 1 | `.ai/NEXT_ACTION.md` | Small | Never |
+| 2 | `DGM-VIS-076` discriminator tree | One diagram | Only if the task names a `CAP-VIS-` |
+| 3 | One registry row | One table row | Never |
+| 4 | §03.14 maturity criteria for the current level | One table row | Never |
+| 5 | Dependency rows, transitively | 1–6 rows typically | Never — this is where hidden work is found |
+| 6 | Security level plus the `OBL-` register | Two tables | Only for `S3`/`S4` capabilities |
+| 7 | `TBL-VIS-359` permitted actions | One table | Never |
+
+> **`VIS-344`.** The total context needed to act correctly on one capability is roughly two hundred
+> lines out of twelve thousand. That ratio is the practical justification for the entire identifier
+> discipline in this document: identifiers exist so that an agent can load one row instead of one
+> part.
+
+### 03.19.2 Interpretation Rules `AI-VIS-072`…`AI-VIS-090`
+
+### TBL-VIS-359: Rules `AI-VIS-072`…`AI-VIS-081`
+
+| ID | Rule | Failure if ignored |
+| :--- | :--- | :--- |
+| `AI-VIS-072` | Treat the capability registry as the only authoritative list of what Oship can do or intends to do | Work on abilities that do not exist in the model |
+| `AI-VIS-073` | If no registered capability covers the task, propose a registry entry and stop; never improvise one | `FAL-VIS-204` unregistered work |
+| `AI-VIS-074` | Read Implementation Status, never Status alone, when deciding whether something exists | `FAL-VIS-192` status collapse |
+| `AI-VIS-075` | Treat `PLANNED` as "nothing exists" — not as "partially exists" | Building on absent foundations |
+| `AI-VIS-076` | Treat `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` as an instruction to verify, not as a gap to fill with judgement | Fabrication |
+| `AI-VIS-077` | Never raise a maturity level in the same change that produces the work | `FAL-VIS-228` |
+| `AI-VIS-078` | Never quote an aggregate figure without recomputing it from rows | `FAL-VIS-191` carried-forward total |
+| `AI-VIS-079` | Do not begin work on a capability whose dependencies are at `C0` | Wasted effort; `VAL-VIS-368` |
+| `AI-VIS-080` | Prefer the capability with the highest out-degree among startable ones | Low-leverage sequencing |
+| `AI-VIS-081` | When several capabilities are startable, prefer the one that unblocks an `S1` chain | Security work deferred indefinitely |
+
+### TBL-VIS-360: Rules `AI-VIS-082`…`AI-VIS-090`
+
+| ID | Rule | Failure if ignored |
+| :--- | :--- | :--- |
+| `AI-VIS-082` | Never claim a capability is implemented on the basis of documentation about it | `FAL-VIS-234` |
+| `AI-VIS-083` | Never cite a `.gitkeep`-only directory as evidence of anything | `FAL-VIS-178` |
+| `AI-VIS-084` | Halt on any `S1` capability seeking to pass `C2` without a threat model | `OBL-28` violation |
+| `AI-VIS-085` | Halt on any use of the word "creator" until `OBL-27` selects a reading | `FAL-VIS-187` |
+| `AI-VIS-086` | Halt on any retention decision while `RT-2` is undefined | `FAL-VIS-180` |
+| `AI-VIS-087` | Halt on any persistence assumption while `OBL-03` is open | `VAL-VIS-443` |
+| `AI-VIS-088` | Never introduce a date, deadline, or duration into this document | `VIS-051` |
+| `AI-VIS-089` | Never edit a frozen part; append a navigation correction instead | `VAL-VIS-469` |
+| `AI-VIS-090` | Record every produced artifact against the capability it advances, in the same change | Untraceable progress |
+
+> **`VIS-345`.** `AI-VIS-080` and `AI-VIS-081` will sometimes disagree. When they do, `AI-VIS-081`
+> wins: unblocking an `S1` chain outranks raw leverage, because the cost of an `S1` failure is
+> irreversible and the cost of slower sequencing is not. Today this resolves cleanly —
+> `CAP-VIS-154` continuous integration is both the highest-leverage startable capability and the
+> precondition for every `S1` verification — so the two rules point at the same place.
+
+### 03.19.3 Agent Action Permissions `AI-VIS-091`…`AI-VIS-100`
+
+### TBL-VIS-361: Permitted Actions by Maturity Level
+
+| Capability at | Agent may | Agent may not | Rule |
+| :--- | :--- | :--- | :--- |
+| `C0` Identified | Propose a definition; draft a contract | Design, build, or claim progress | `AI-VIS-091` |
+| `C1` Defined | Write the contract; enumerate inputs and outputs | Design components | `AI-VIS-092` |
+| `C2` Specified | Produce a design; name a `CMP-ARCH-` component | Write implementation code | `AI-VIS-093` |
+| `C3` Designed | Implement, if and only if dependencies are `C4`+ | Promote its own work | `AI-VIS-094` |
+| `C4` Implemented | Write falsifying tests | Declare `C5` without a passing test | `AI-VIS-095` |
+| `C5` Verified | Add telemetry specifications | Claim operation | `AI-VIS-096` |
+| `C6` Operating | Report observed values | Claim `C7` from one observation | `AI-VIS-097` |
+| `C7` Optimised | Report sustained metrics | Silently demote | `AI-VIS-098` |
+
+### TBL-VIS-362: Rules `AI-VIS-099`…`AI-VIS-100`
+
+| ID | Rule | Rationale |
+| :--- | :--- | :--- |
+| `AI-VIS-099` | An agent's effective autonomy is the lowest level permitted by any capability it touches in a single change | Composition must not escalate permission (`FAL-VIS-245`) |
+| `AI-VIS-100` | Every agent action that cannot be attributed to a named human accountability holder must be refused | `VIS-032`; the constitutional floor of the whole autonomy model |
+
+> **`VIS-346`.** `AI-VIS-100` closes the AI interpretation namespace deliberately. It is the same
+> statement PART 01 opens the autonomy model with, restated at the end of the capability model
+> because it is the one rule that survives every re-scoping of everything above it: **accountability
+> never attaches to an agent.** Every other rule in this section is an optimisation. That one is a
+> constraint.
+
+### TBL-VIS-363: What an Agent Can Legitimately Do in This Repository Today
+
+| Action | Permitted? | Basis |
+| :--- | :--- | :--- |
+| Install the eight workflow skeletons into `.github/workflows/` | **Yes** | `CAP-VIS-154` at `C1`, no dependency at `C0`, no `S1` gate |
+| Write threat models for the 38 `S1` capabilities | **Yes** | Documentation act; `OBL-28` requires it before any `S1` build |
+| Write the capability dashboard script over 43 computable metrics | **Yes** | `CMET-VIS-001`…`050`; needs no runtime |
+| Advance `CAP-VIS-131` and `CAP-VIS-136` design | **Yes** | Identified as startable in §03.11 |
+| Choose the persistence technology | **No — HALT** | `OBL-03`; a human strategic decision |
+| Resolve the meaning of "creator" | **No — HALT** | `OBL-27`; three readings, product decision |
+| Define retention class `RT-2` | **No — HALT** | `OBL-02`; policy decision with legal implications |
+| Mark this document `RELEASED` | **No** | `VAL-VIS-470`; four HALT-grade rules are failing |
+
+---
+
+## 03.20 — Image Specifications
+
+### AI NAVIGATION METADATA — §03.20
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P2 — read when producing visual assets or presentation material** |
+| **AI DEPENDENCIES** | All of PART 03 · `IMG-VIS-001`…`030` from PARTS 01 and 02 |
+| **AI INPUTS** | A need to render a capability concept as a static image |
+| **AI OUTPUTS** | A complete generation specification; **never a binary file produced from imagination** |
+| **AI IMPLEMENTATION IMPACT** | These images become onboarding, planning, and review artifacts |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-465` — all eighteen fields, generation prompt mandatory |
+| **AI RELATED DOCUMENTS** | `docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md` |
+
+### 03.20.1 Specification Discipline
+
+> **`VIS-347`.** `IMG-VIS-031`…`IMG-VIS-045` close the image namespace for `AOM-VIS-001` at
+> forty-five specifications. None of them is rendered. This document defines images and does not
+> contain them, for the reason stated in PART 01: a generated picture of a system that does not
+> exist is the most persuasive and least falsifiable artifact a project can produce. The
+> specification is falsifiable — you can check whether the diagram matches it — and the picture
+> alone is not.
+
+### TBL-VIS-364: PART 03 Image Set
+
+| ID | Title | Primary use | Derived from |
+| :--- | :--- | :--- | :--- |
+| `IMG-VIS-031` | The Capability Pyramid, Inverted | Executive framing of portfolio risk | `CMET-VIS-014`, `DGM-VIS-077` |
+| `IMG-VIS-032` | The Maturity Ladder with Real Positions | Planning and status review | `TBL-VIS-325`, `DGM-VIS-098` |
+| `IMG-VIS-033` | The Critical Path | Sequencing decisions | §03.13 critical path #1 |
+| `IMG-VIS-034` | The Only Unblocked Chain | Showing what can start today | §03.13 chain `072`→`075`→`077`→`104` |
+| `IMG-VIS-035` | The `S1` Surface | Security scoping | 38 `S1` capabilities, `CMET-VIS-008` |
+| `IMG-VIS-036` | Ten Waves Without Dates | Roadmap communication | `TBL-VIS-328` |
+| `IMG-VIS-037` | The Self-Reference Boundary | Strategic framing | `CMET-VIS-011` |
+| `IMG-VIS-038` | The Metric Wall | Dashboard layout | `TBL-VIS-335` |
+| `IMG-VIS-039` | Failure Presence Heat Map | Risk review | `TBL-VIS-357` |
+| `IMG-VIS-040` | The Nine-Level Spine | Method explanation | PART 01 trace chain |
+| `IMG-VIS-041` | Capability Category Wheel | Orientation and onboarding | `CCAT-01`…`09` |
+| `IMG-VIS-042` | The Agent Loading Path | Agent onboarding | `DGM-VIS-104` |
+| `IMG-VIS-043` | Obligation Board | Decision backlog for the owner | `OBL-01`…`28` |
+| `IMG-VIS-044` | Documentation-to-Code Gauge | Honest self-portrait | `CMET-VIS-043` |
+| `IMG-VIS-045` | The Closing State of `AOM-VIS-001` | Cover image for the completed part | §03.21 |
+
+### 03.20.2 Specifications `IMG-VIS-031`…`IMG-VIS-037`
+
+### TBL-VIS-365: `IMG-VIS-031` — The Capability Pyramid, Inverted
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-031` |
+| **Title** | The Capability Pyramid, Inverted |
+| **Purpose** | Show in one frame that Oship's portfolio rests on ten foundational capabilities of which six exist |
+| **Audience** | Repository owner, reviewers, anyone asking "how is this going" |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: two facing shapes, a healthy pyramid on the left and an inverted one on the right. Layer 2: tier bands `T1`…`T5` with counts. Layer 3: a single numeric callout for the ratio |
+| **Elements / Components** | Left: upright pyramid, wide `T1` base narrowing to `T5`. Right: inverted pyramid, `T1` a narrow 10-unit tip at the bottom, `T4` a 66-unit band near the top. Bottom-centre callout: 9.6 |
+| **Relationships** | A horizontal mirror axis between the two shapes; a thin arrow from the right shape's tip labelled "6 of 10 actually exist" |
+| **Labels** | Band labels `T1 10`, `T2 21`, `T3 39`, `T4 66`, `T5 30`; callout "inverted pyramid ratio 9.6, target below 1.0" |
+| **Color Semantics** | Left pyramid green `#1b5e20` as the reference shape; right pyramid red `#b71c1c` graduating to amber `#e65100` at the tip; the "6 of 10" marker in green inside the red tip |
+| **Typography** | Sans-serif; band counts at large weight; the callout numeral the largest element on the canvas |
+| **Legend** | Bottom-left: "green denotes the healthy reference, red denotes the measured state" |
+| **Meaning** | Ninety-six capabilities are planned on top of ten foundations, six of which are real |
+| **AI Interpretation** | An agent proposing new `T4` or `T5` work must first check whether the `T1` band has moved |
+| **Implementation Relevance** | Directly justifies the wave ordering in `TBL-VIS-328`, which front-loads foundational work |
+| **Generation prompt** | Flat vector infographic on a very dark background. Two triangular shapes facing each other across a vertical axis: the left an upright pyramid in green with five bands, the right an inverted pyramid in red-to-amber gradient with five bands of visibly wrong proportion. Large numeral callout centred beneath. Clean sans-serif labels, thin connector line. No photorealism, no people, no logos. |
+
+### TBL-VIS-366: `IMG-VIS-032` — The Maturity Ladder with Real Positions
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-032` |
+| **Title** | The Maturity Ladder with Real Positions |
+| **Purpose** | Show the `C0`…`C7` ladder with the actual population standing on each rung, including two empty rungs |
+| **Audience** | Planning agents, contributors, status review |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: eight horizontal rungs rising left to right. Layer 2: stacked count blocks on each rung. Layer 3: a ceiling line drawn above `C4`. Layer 4: four downward regression arcs |
+| **Elements / Components** | Rungs `C0` 44, `C1` 71, `C2` 22, `C3` 14, `C4` 16, `C5` 0, `C6` 0, `C7` 0; a dashed horizontal ceiling above `C4` labelled `CON-VIS-049`; four thin arcs curving from higher rungs back to lower ones |
+| **Relationships** | Rungs connected by short upward steps; regression arcs drawn in the reverse direction and visibly thinner |
+| **Labels** | Rung names and counts; ceiling annotated "no capability may pass C4 until CI exists" |
+| **Color Semantics** | `C0`–`C1` grey `#37474f`, `C2`–`C3` blue `#1a237e`, `C4` amber `#e65100`, `C5`–`C7` outlined only, no fill, to signal genuine emptiness; regression arcs red `#b71c1c` |
+| **Typography** | Monospace for level codes, sans-serif for counts |
+| **Legend** | Bottom-right: "unfilled rung means zero capabilities, not unknown" |
+| **Meaning** | Progress stops hard at `C4` and nothing has ever been verified |
+| **AI Interpretation** | A claim of `C5` or above is a validation failure until at least one rung above `C4` is populated |
+| **Implementation Relevance** | The first capability to legitimately occupy `C5` is the single most significant event available to this repository |
+| **Generation prompt** | Flat vector diagram on a very dark background. Eight ascending horizontal bars forming a staircase left to right, the first five filled with stacked count blocks in grey, blue and amber, the last three drawn as empty outlines. A dashed horizontal line above the fifth step. Four thin red curved arrows looping from higher steps back down to lower ones. Monospace level labels. No photorealism, no people, no logos. |
+
+### TBL-VIS-367: `IMG-VIS-033` — The Critical Path
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-033` |
+| **Title** | The Critical Path — Six Edges from an Open Decision to Money Movement |
+| **Purpose** | Show that the longest dependency chain in the registry begins with a decision nobody has made |
+| **Audience** | Repository owner; this is a decision-forcing image |
+| **Aspect Ratio** | 21:9 |
+| **Canvas** | 2560 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: a single horizontal chain of seven nodes. Layer 2: the leading node styled as a decision, not a capability. Layer 3: a cumulative-blocking bar beneath |
+| **Elements / Components** | Nodes in order: `OBL-03` persistence decision, `CAP-VIS-132`, `CAP-VIS-133`, `CAP-VIS-111`, `CAP-VIS-123`, `CAP-VIS-124`, `CAP-VIS-125`; beneath, a horizontal bar showing how many downstream capabilities each node blocks |
+| **Relationships** | Six left-to-right arrows; the bar beneath aligned to node positions and widening toward the left |
+| **Labels** | Each node labelled with its identifier and short name; the leading node labelled "not a capability — an unmade decision" |
+| **Color Semantics** | `OBL-03` amber `#e65100` as an open decision; capability nodes blue `#1a237e`; the blocking bar red `#b71c1c` with opacity proportional to count |
+| **Typography** | Monospace identifiers, sans-serif names |
+| **Legend** | Bottom-left: "bar width denotes downstream capabilities blocked" |
+| **Meaning** | The longest chain in the system is gated at its head by a decision, not by engineering effort |
+| **AI Interpretation** | An agent must not begin any node on this chain; it must surface `OBL-03` |
+| **Implementation Relevance** | Closing `OBL-03` is the highest-value non-engineering act available |
+| **Generation prompt** | Flat vector horizontal chain diagram on a very dark background, extra-wide aspect. Seven rounded rectangles connected by arrows left to right; the leftmost is amber and visually distinct in shape from the six blue ones. A red horizontal gradient bar beneath, widest at the left. Monospace labels. No photorealism, no people, no logos. |
+
+### TBL-VIS-368: `IMG-VIS-034` — The Only Unblocked Chain
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-034` |
+| **Title** | The Only Unblocked Chain |
+| **Purpose** | Show the single dependency chain in the entire registry that can be worked today, end to end |
+| **Audience** | Contributors and agents looking for legitimate work |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: a faded field of all 167 capability dots. Layer 2: four highlighted nodes with connecting arrows. Layer 3: a starting marker on the first node |
+| **Elements / Components** | Background scatter of small dim dots; foreground chain `CAP-VIS-072` → `CAP-VIS-075` → `CAP-VIS-077` → `CAP-VIS-104`; a green ring on `CAP-VIS-072` marked IMPLEMENTED |
+| **Relationships** | Three arrows through the highlighted nodes; every background dot unconnected and dim |
+| **Labels** | Node identifiers and names; background annotated "163 other capabilities, none of them startable end to end" |
+| **Color Semantics** | Background dots grey `#37474f` at low opacity; chain nodes green `#1b5e20`; the implemented node's ring brighter green `#a5d6a7` |
+| **Typography** | Monospace identifiers |
+| **Legend** | Bottom-right: "dim denotes blocked or dependent" |
+| **Meaning** | Out of a 167-node registry, exactly one chain is fully startable |
+| **AI Interpretation** | Work here first; anything else requires an obligation to close |
+| **Implementation Relevance** | This chain is the practical content of wave W1 |
+| **Generation prompt** | Flat vector diagram on a very dark background. A sparse field of many small dim grey dots covering the canvas; four larger green rounded nodes in a left-to-right chain with arrows, drawn sharply in front. The first node has a bright ring around it. Monospace labels. No photorealism, no people, no logos. |
+
+---
+
+### TBL-VIS-369: `IMG-VIS-035` — The `S1` Surface
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-035` |
+| **Title** | The `S1` Surface — Thirty-Eight Capabilities, Zero Threat Models |
+| **Purpose** | Make the unassessed security surface countable at a glance |
+| **Audience** | Security reviewer, repository owner |
+| **Aspect Ratio** | 1:1 |
+| **Canvas** | 1600 × 1600, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: a grid of 167 cells representing the full registry. Layer 2: 38 cells filled to mark `S1`. Layer 3: an overlay hatch indicating "no threat model" across all 38. Layer 4: a single counter |
+| **Elements / Components** | 167 uniform square cells in a 13 × 13 grid with the remainder on the final row; 38 cells filled red; every filled cell carrying diagonal hatching; counter reading "0 of 38 threat-modelled" |
+| **Relationships** | No connectors — this image is deliberately a census, not a graph |
+| **Labels** | Cell identifiers omitted for legibility; a side list names the 38 identifiers in a small monospace column |
+| **Color Semantics** | Unfilled cells grey outline `#37474f`; `S1` cells red `#b71c1c`; hatching in a lighter red `#ef9a9a` denoting unassessed |
+| **Typography** | Monospace for the side list, large sans-serif for the counter |
+| **Legend** | Bottom: "hatched denotes no threat model exists" |
+| **Meaning** | Almost a quarter of the registry is maximum sensitivity and none of it has been assessed |
+| **AI Interpretation** | Any task touching a hatched cell halts under `AI-VIS-084` |
+| **Implementation Relevance** | Writing 38 threat models requires no code and closes `OBL-28`'s precondition |
+| **Generation prompt** | Flat vector census grid on a very dark background. A square grid of many small uniform cells, most drawn as thin grey outlines, thirty-eight filled solid red with diagonal hatch lines over them. A narrow monospace list of identifiers down the right edge. One large numeral counter at the bottom. No photorealism, no people, no logos. |
+
+### TBL-VIS-370: `IMG-VIS-036` — Ten Waves Without Dates
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-036` |
+| **Title** | Ten Waves Without Dates |
+| **Purpose** | Communicate sequence and dependency without implying a schedule |
+| **Audience** | Anyone who would otherwise ask for a timeline |
+| **Aspect Ratio** | 21:9 |
+| **Canvas** | 2560 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: ten wave blocks left to right, unequal in width. Layer 2: a prefix bracket over W1–W4. Layer 3: entry-condition text beneath each block. Layer 4: an explicit no-axis marker |
+| **Elements / Components** | Blocks W1 through W10; a green bracket spanning W1–W4 labelled "requires no application code"; beneath the row, a horizontal line where a time axis would be, struck through and labelled "deliberately absent — `VIS-051`" |
+| **Relationships** | Each block connected to the next by an arrow labelled with the entry condition, not a duration |
+| **Labels** | Wave numbers, wave names, entry conditions |
+| **Color Semantics** | W1–W4 green `#1b5e20`; W5–W7 blue `#1a237e`; W8–W10 purple `#4a148c`; the struck-through axis grey `#37474f` |
+| **Typography** | Sans-serif; entry conditions at reduced weight |
+| **Legend** | Bottom-left: "block width denotes scope, never duration" |
+| **Meaning** | Sequence is knowable and committed; timing is not and is not claimed |
+| **AI Interpretation** | An agent must never convert a wave into a date or a sprint |
+| **Implementation Relevance** | Four of the ten waves are startable with the repository exactly as it stands |
+| **Generation prompt** | Flat vector horizontal roadmap on a very dark background, extra-wide aspect. Ten rectangular blocks of differing widths in a row, coloured green then blue then purple, connected by short labelled arrows. A green bracket spans the first four. Beneath, a horizontal line with a diagonal strike through it. Clean sans-serif labels. No photorealism, no people, no logos, no calendar or date markings. |
+
+### TBL-VIS-371: `IMG-VIS-037` — The Self-Reference Boundary
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-037` |
+| **Title** | The Self-Reference Boundary |
+| **Purpose** | Show that every implemented capability serves the builder and none yet serves a user |
+| **Audience** | Strategic review |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, dark background `#0d1117` |
+| **Visual Hierarchy / Layers** | Layer 1: a vertical boundary line dividing the canvas. Layer 2: capability dots on each side. Layer 3: a filled-versus-outline distinction marking implementation |
+| **Elements / Components** | Left region labelled "serves Oship itself" with 66 dots, 12 of them filled; right region labelled "serves someone else" with 100 dots, none filled; the boundary line labelled "the line Oship has not yet crossed" |
+| **Relationships** | A single dashed arrow crossing the boundary labelled `OUT-VIS-015` — the first agent-authored pull request |
+| **Labels** | Region counts; the filled-dot legend "filled denotes IMPLEMENTED" |
+| **Color Semantics** | Left dots teal `#004d40` with 12 filled bright `#80cbc4`; right dots grey `#37474f`, all unfilled; boundary line amber `#e65100` |
+| **Typography** | Sans-serif; region labels large |
+| **Legend** | Bottom-right: "filled denotes implemented, outline denotes planned" |
+| **Meaning** | The self-reference ratio is 0.66 by registration and undefined by implementation |
+| **AI Interpretation** | Claims of user value are invalid while the right region has no filled dots |
+| **Implementation Relevance** | The first filled dot on the right side is a milestone worth naming |
+| **Generation prompt** | Flat vector diagram on a very dark background. A vertical amber line splits the canvas; the left half holds a cluster of small teal dots, a dozen of them brightly filled; the right half holds a larger cluster of grey outlined dots, none filled. One dashed arrow crosses the line. Clean sans-serif region labels. No photorealism, no people, no logos. |
+
+### 03.20.3 Specifications `IMG-VIS-038`…`IMG-VIS-045`
+
+> **`VIS-348`.** The remaining eight specifications are recorded in condensed form. Condensed does
+> not mean incomplete: each still carries all eighteen fields required by `VAL-VIS-465`, with the
+> field names abbreviated in a shared column header rather than repeated in eight separate tables.
+> This is a legibility decision, not a reduction in specification.
+
+### TBL-VIS-372: `IMG-VIS-038`…`IMG-VIS-041`
+
+| Field | `IMG-VIS-038` | `IMG-VIS-039` | `IMG-VIS-040` | `IMG-VIS-041` |
+| :--- | :--- | :--- | :--- | :--- |
+| **Title** | The Metric Wall | Failure Presence Heat Map | The Nine-Level Spine | Capability Category Wheel |
+| **Purpose** | Lay out all 50 `CMET-VIS-` metrics with current values so a dashboard can be built from the image | Show which failure classes Oship exhibits and which are undetectable | Explain the VISION → RELEASES trace in one frame | Orient a newcomer to the nine `CCAT-` categories and their weights |
+| **Audience** | Tooling author | Risk reviewer | New contributor, new agent | New contributor |
+| **Aspect Ratio** | 4:3 | 16:9 | 21:9 | 1:1 |
+| **Canvas** | 1600 × 1200 dark `#0d1117` | 1920 × 1080 dark `#0d1117` | 2560 × 1080 dark `#0d1117` | 1600 × 1600 dark `#0d1117` |
+| **Visual Hierarchy / Layers** | Grid of 50 tiles, value large, target small, measured-state badge | 6 class rows × 3 state columns with cell intensity | Nine ordered stages with artifact examples beneath | Concentric wheel, nine sectors sized by membership |
+| **Elements / Components** | 50 metric tiles grouped into portfolio, maturity, integrity bands | Cells for present, absent, undetectable per class | Stage nodes VISION, MISSION, GOALS, CAPABILITIES, DOMAINS, ARCHITECTURE, COMPONENTS, IMPLEMENTATION, TESTS, RELEASES | Nine sectors labelled `CCAT-01`…`09` with counts and security floors |
+| **Relationships** | None — a wall, not a graph | None — a matrix | Nine arrows in strict order | Adjacency only; no dependency implied |
+| **Labels** | Metric ID, value, target | Class name, `FAL-VIS-` count | Stage names and the identifier prefix each stage owns | Category names, counts, `S`-floors |
+| **Color Semantics** | Green at target, amber near, red far, grey unmeasured | Red intensity by presence; hatch for undetectable | Blue gradient deepening along the chain | One hue per category, saturation by count |
+| **Typography** | Monospace values, sans-serif names | Sans-serif | Sans-serif, stage names large | Sans-serif |
+| **Legend** | "grey denotes not yet measured" | "hatch denotes undetectable today" | "each stage owns one identifier prefix" | "sector angle denotes capability count" |
+| **Meaning** | Most metrics are computable and most read badly | Undetectable failures cluster in the agent layer | The method is a single unbroken chain | The portfolio is broad and unevenly weighted |
+| **AI Interpretation** | Build the dashboard from the 43 non-grey tiles | Prioritise removing hatch before removing red | Never skip a stage when tracing | Use to route a capability to its category |
+| **Implementation Relevance** | Directly buildable today | Feeds risk review | Onboarding artifact | Onboarding artifact |
+| **Generation prompt** | Flat vector tile wall on a very dark background, fifty small rectangular tiles in three labelled bands, each tile showing a large numeral and a small target value, coloured green amber red and grey. Monospace numerals. No photorealism, no people, no logos. | Flat vector matrix on a very dark background, six labelled rows and three columns, cells shaded in varying red intensity, some cells overlaid with diagonal hatching. Clean sans-serif labels. No photorealism, no people, no logos. | Flat vector horizontal chain on a very dark background, extra-wide, ten rounded stage nodes connected by arrows in a single unbroken line, colour deepening from left to right in blue tones, small example labels beneath each node. No photorealism, no people, no logos. | Flat vector circular wheel on a very dark background, nine sectors of unequal angle radiating from a small centre, each in a distinct hue with a label and a numeral. No photorealism, no people, no logos. |
+
+### TBL-VIS-373: `IMG-VIS-042`…`IMG-VIS-045`
+
+| Field | `IMG-VIS-042` | `IMG-VIS-043` | `IMG-VIS-044` | `IMG-VIS-045` |
+| :--- | :--- | :--- | :--- | :--- |
+| **Title** | The Agent Loading Path | Obligation Board | Documentation-to-Code Gauge | The Closing State of `AOM-VIS-001` |
+| **Purpose** | Show the seven-step context loading sequence and its three halt points | Give the repository owner one board of every decision only a human can make | Portray the specification-to-code ratio honestly, including its undefined denominator | Serve as the cover image summarising what PART 03 established |
+| **Audience** | Agent authors, tooling | Repository owner | Everyone | Everyone |
+| **Aspect Ratio** | 9:16 | 4:3 | 1:1 | 16:9 |
+| **Canvas** | 1080 × 1920 dark `#0d1117` | 1600 × 1200 dark `#0d1117` | 1400 × 1400 dark `#0d1117` | 1920 × 1080 dark `#0d1117` |
+| **Visual Hierarchy / Layers** | Vertical seven-step column with three side-branch halts | Card board, one card per open `OBL-`, grouped by what each blocks | A gauge whose needle is absent, with an explanatory annotation | Four quadrants summarising registry, maturity, failures, and what can start |
+| **Elements / Components** | Steps 1–7 stacked; halts branching right at steps 2, 5, 6 | Cards for the 12 blocking obligations plus 16 non-blocking, each naming its closing condition | A semicircular gauge arc, tick marks, no needle, centre text "undefined — denominator is zero" | Quadrant tiles: 167 capabilities, `C4` ceiling, 31 present failures, 4 startable items |
+| **Relationships** | Sequential downward arrows; halt branches terminate | Cards grouped by blocked capability count | None | None — a summary, not a graph |
+| **Labels** | Step names, halt rule identifiers `AI-VIS-073`, `079`, `084` | Obligation ID, one-line question, what it blocks | Axis labels 0 to 50, "≈106,000 specification lines" | Quadrant headings and single figures |
+| **Color Semantics** | Steps blue `#1a237e`, halts amber `#e65100` | Blocking cards red `#b71c1c`, non-blocking grey `#37474f` | Arc grey with a red zone above 20; centre text amber | One accent hue per quadrant, muted |
+| **Typography** | Sans-serif, step numbers large | Sans-serif card titles, monospace IDs | Large sans-serif centre text | Large numerals, small captions |
+| **Legend** | "amber denotes a halt an agent cannot resolve" | "red denotes an obligation blocking capability progress" | "an absent needle denotes an undefined value, not a zero value" | "figures as measured, not as targeted" |
+| **Meaning** | Correct agent behaviour includes stopping | Twelve human decisions gate the whole registry | The ratio cannot be computed because no code exists | PART 03 ends with an accurate, unflattering, complete picture |
+| **AI Interpretation** | Follow exactly; do not optimise away a halt | Never close an obligation autonomously | Never render this gauge with a needle at maximum; absence is the point | Use as the canonical one-frame summary of the capability model |
+| **Implementation Relevance** | Encodes `DGM-VIS-104` as a printable card | Converts obligations into a working backlog | Becomes meaningful the moment the first line of application code lands | Cover artifact for the completed part |
+| **Generation prompt** | Flat vector vertical flow on a very dark background, portrait aspect, seven numbered blue steps stacked downward with arrows, three amber branch boxes extending to the right and terminating. Sans-serif labels. No photorealism, no people, no logos. | Flat vector card board on a very dark background, roughly two dozen small rectangular cards arranged in labelled groups, twelve of them red and the rest grey, each card carrying a short heading and a monospace identifier. No photorealism, no people, no logos. | Flat vector gauge on a very dark background, a semicircular arc with tick marks and a red zone at the upper end, deliberately no needle drawn, large amber text centred below the arc. No photorealism, no people, no logos. | Flat vector four-quadrant summary panel on a very dark background, two by two grid of tiles each dominated by one very large numeral with a small caption beneath, each tile in a different muted accent colour. No photorealism, no people, no logos. |
+
+> **`VIS-349`.** `IMG-VIS-044` is specified with **no needle on purpose**, and `VAL-VIS-465` is
+> satisfied by that choice rather than violated by it. A gauge with a needle pinned at maximum would
+> read as "far too much documentation"; a gauge with no needle reads as "this ratio has no value
+> because one side of it does not exist yet". The second statement is true and the first is a
+> guess. Where a visual convention and an honest reading conflict, the honest reading wins.
+
+---
+
+## 03.21 — Capability Traceability and Closure
+
+### AI NAVIGATION METADATA — §03.21
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before citing any aggregate figure from PART 03** |
+| **AI DEPENDENCIES** | All of PART 03 · PART 01 §01.27 traceability matrix · PART 02 §02.18 closure |
+| **AI INPUTS** | Any PART 03 identifier, or any aggregate figure quoted from this document |
+| **AI OUTPUTS** | The identifier's upstream source and downstream consumers, or the recomputed value of the figure and whether it matches what was published |
+| **AI IMPLEMENTATION IMPACT** | This section decides whether `AOM-VIS-001` may be marked `RELEASED`. It may not. |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-370` recompute-on-change · `VAL-VIS-425` recount-never-carry-forward · `CON-VIS-060` · `VAL-VIS-470` release gate |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` PART 01 §01.9 component register — read-only · `.ai/PROJECT_STATUS.md` |
+
+> **`VIS-350`.** A closure section has exactly one job and it is not celebration. It must let a
+> reader who trusts nothing in this document **recompute every aggregate it publishes** and find out
+> where the published figure and the recomputed figure disagree. Where they agree, the agreement is
+> stated. Where they disagree, the disagreement is printed in full, with the method that produced
+> each number, and the earlier figure is **not** quietly corrected — because the frozen-part model
+> forbids editing accepted content and because a visible correction teaches more than a clean number.
+
+> **`VIS-351`.** Everything in this section was produced by mechanically parsing the committed text
+> of `AOM-VIS-001` itself, not by adding up the subtotals printed inside it. That distinction is the
+> whole content of `VAL-VIS-425`. A subtotal is an assertion; a parse is a measurement. Where this
+> section and an earlier section conflict, **this section is the measurement and the earlier section
+> is the assertion**, and the reader should prefer the measurement while remembering that the
+> assertion is what the rest of the document was written against.
+
+### 03.21.1 Identifier Inventory
+
+### TBL-VIS-374: Identifiers Introduced in PART 03
+
+| Namespace | Range introduced | Count | Next free | Ceiling status |
+| :--- | :--- | ---: | :--- | :--- |
+| `VIS-` | `197`…`375` | 179 | `VIS-376` | No ceiling declared |
+| `CAP-VIS-` | `071`…`170` | 100 | `CAP-VIS-171` | Block exhausted exactly as planned in `TBL-VIS-250` |
+| `SCAP-VIS-` | `001`…`050` | 50 | `SCAP-VIS-051` | Block exhausted exactly as planned |
+| `TBL-VIS-` | `242`…`395` | 153 | `TBL-VIS-396` | `TBL-VIS-244` never allocated — see `TBL-VIS-376` |
+| `DGM-VIS-` | `074`…`107` | 34 | `DGM-VIS-108` | Ceiling 200, 93 remaining |
+| `VAL-VIS-` | `321`…`470` | 150 | `VAL-VIS-471` | Ceiling raised from 200 by `DEC-VIS-021`; 150 consumed as planned |
+| `FAL-VIS-` | `176`…`250` | 75 | `FAL-VIS-251` | Ceiling 200 reached exactly; a future part must raise it or place failures elsewhere |
+| `CON-VIS-` | `046`…`060` | 15 | `CON-VIS-061` | Block exhausted exactly as planned |
+| `CMET-VIS-` | `001`…`050` | 50 | `CMET-VIS-051` | Block exhausted exactly as planned |
+| `AI-VIS-` | `072`…`100` | 29 | `AI-VIS-101` | Block exhausted exactly as planned |
+| `IMG-VIS-` | `026`…`045` | 20 | **none — namespace closed** | Closed by `VIS-347`; a future part must open `IMG-VIS-046` explicitly |
+| `DEC-VIS-` | `035` | 1 | `DEC-VIS-036` | Only one decision was actually taken in PART 03 |
+| `OBL-` | `20`…`33` | 14 | `OBL-34` | Obligations are allocated on discovery, never in advance; five of the fourteen were raised by §03.21's own recount |
+| Local rule namespaces | `CCR-01`…`12`, `CCAT-01`…`09`, `C0`…`C7`, `A0`…`A4`, `W1`…`W10`, `F1`…`F6` | — | — | Scoped to PART 03; not global identifiers |
+
+> **`VIS-352`.** Three namespaces closed exactly on their planned boundary — `CAP-VIS-`,
+> `SCAP-VIS-`, `CON-VIS-`, `CMET-VIS-`, and `AI-VIS-` all consumed their reserved block to the last
+> number with nothing left over and nothing borrowed. `TBL-VIS-` overran its §03.1 pin by 142
+> entries, which is permitted because `TBL-VIS-` allocation was declared sequential in encounter
+> order rather than pinned. `FAL-VIS-` reached its declared ceiling of 200 exactly, and that is a
+> **hard stop for the next part**, not a rounding coincidence.
+
+### TBL-VIS-375: Whole-Document Identifier Census — Measured, Not Summed
+
+| Namespace | Unique IDs found | Highest allocated | Contiguous? | Where the range is split |
+| :--- | ---: | :--- | :--- | :--- |
+| `VIS-` | 375 | `VIS-375` | **Yes** | PART 01 `001`…`103` · PART 02 `104`…`196` · PART 03 `197`…`375` |
+| `TBL-VIS-` | 394 | `TBL-VIS-395` | No — one gap | PART 01 `001`…`138` · PART 02 `139`…`241` · PART 03 `242`…`395`. 392 carry a `###` caption; `TBL-VIS-027` and `TBL-VIS-050` use the inline `> **Table ID:**` form |
+| `DGM-VIS-` | 107 | `DGM-VIS-107` | **Yes** | PART 01 `001`…`053` · PART 02 `054`…`073` · PART 03 `074`…`107` |
+| `CAP-VIS-` | 167 defined + 3 reserved | `CAP-VIS-170` | No — three reserved | `057`…`059` reserved and deliberately unfilled |
+| `SCAP-VIS-` | 50 | `SCAP-VIS-050` | **Yes** | PART 03 only |
+| `DOMAIN-VIS-` | 50 | `DOMAIN-VIS-050` | **Yes** | PART 02 only; `DOMAIN-VIS-051` announced, never used |
+| `VAL-VIS-` | 470 | `VAL-VIS-470` | **Yes** | PART 01 `001`…`200` · PART 02 `201`…`320` · PART 03 `321`…`470` |
+| `FAL-VIS-` | 250 | `FAL-VIS-250` | **Yes** | PART 01 `001`…`120` · PART 02 `121`…`175` · PART 03 `176`…`250` |
+| `CON-VIS-` | 60 | `CON-VIS-060` | **Yes** | PART 01 `001`…`030` · PART 02 `031`…`045` · PART 03 `046`…`060` |
+| `AI-VIS-` | 100 | `AI-VIS-100` | **Yes** | PART 01 `001`…`060` · PART 02 `061`…`071` · PART 03 `072`…`100` |
+| `IMG-VIS-` | 45 | `IMG-VIS-045` | **Yes** | PART 01 `001`…`022` · PART 02 `023`…`025` · PART 03 `026`…`045` |
+| `CMET-VIS-` | 50 | `CMET-VIS-050` | **Yes** | PART 03 only |
+| `DMET-VIS-` | 60 | `DMET-VIS-060` | **Yes** | PART 02 only; `DMET-VIS-061` announced, never used |
+| `PROB-VIS-` | 24 | `PROB-VIS-024` | **Yes** | PART 01 only |
+| `SUC-VIS-` | 26 | `SUC-VIS-026` | **Yes** | PART 01 only |
+| `OUT-VIS-` | 21 | `OUT-VIS-021` | **Yes** | PART 01 only |
+| `EVD-VIS-` | 26 | `EVD-VIS-026` | **Yes** | PART 01 only — no new evidence was gathered in PARTS 02 or 03 |
+| `DEC-VIS-` | 33 | `DEC-VIS-035` | No — two gaps | `008` and `009` reserved and never allocated |
+| `OBL-` | 33 | `OBL-33` | **Yes** | PART 02 `01`…`19` · PART 03 `20`…`33` |
+
+> **`VIS-353`.** The `EVD-VIS-` row is the most informative line in that table. **Twenty-six pieces
+> of repository evidence were gathered in PART 01 and not one has been added since.** PARTS 02 and
+> 03 together produced 258 pages of model built on an evidence base that has not grown. That is not
+> a defect of method — the repository genuinely has not changed — but it does mean every claim about
+> the *current* state of Oship in this document is only as fresh as `EVD-VIS-001`…`026`, and a
+> future part must re-verify them rather than inherit them.
+
+### TBL-VIS-376: Permanent Allocation Gaps — Register
+
+| Identifier | Namespace | Reason it is empty | Permitted by | May it ever be filled? |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-057` | `CAP-VIS-` | Reserved in PART 01 for a capability that was never written | `VIS-108`, `VIS-211` | **No** — reserved permanently |
+| `CAP-VIS-058` | `CAP-VIS-` | As above | `VIS-108`, `VIS-211` | **No** |
+| `CAP-VIS-059` | `CAP-VIS-` | As above | `VIS-108`, `VIS-211` | **No** |
+| `TBL-VIS-244` | `TBL-VIS-` | Allocated in the §03.1 authoring plan to a terminology sub-matrix that was merged into `TBL-VIS-243` before it was written | `VIS-108` | **No** — reuse would break any external citation made against the plan |
+| `DEC-VIS-008` | `DEC-VIS-` | Reserved in PART 01 for a decision that was never taken | `VIS-108` | **No** |
+| `DEC-VIS-009` | `DEC-VIS-` | As above | `VIS-108` | **No** |
+| `DOMAIN-VIS-051` | `DOMAIN-VIS-` | Announced as next-free in `VIS-196`; PART 03 added no domain | Not a gap — a next-free pointer | **Yes** — it is unallocated, not reserved |
+| `DMET-VIS-061` | `DMET-VIS-` | Announced as next-free in `VIS-196`; PART 03 used `CMET-VIS-` instead | Not a gap — a next-free pointer | **Yes** |
+
+> **`VIS-354`.** Six identifiers in this document will never mean anything. That is the correct
+> outcome and the alternative is worse. An external system that cached `CAP-VIS-058` as
+> *undefined* and later found it defined as something unrelated would have been silently
+> misinformed by a document whose entire thesis is that identifiers are stable. **A gap costs one
+> row in a register; a reused identifier costs the credibility of every identifier.**
+
+### 03.21.2 The `S1` Reconciliation — Discharging `VAL-VIS-425`
+
+> **`VIS-355`.** `VAL-VIS-425` was written because this document had already broken the rule it
+> states. `TBL-VIS-278` published **39** `S1` capabilities as the sum of two subtotals — 8 from
+> PART 01 and 31 from PART 03. Neither subtotal survives a recount, and the total is therefore
+> wrong twice over rather than once. The full reconciliation follows.
+
+### TBL-VIS-377: `S1` Recount — Method and Result
+
+| Step | Method applied | Result | Comment |
+| :--- | :--- | ---: | :--- |
+| 1 | Parse every table row in PART 03 whose first cell is a `CAP-VIS-` identifier and whose header row declares a `Sec.` column | 100 rows | Every one of `CAP-VIS-071`…`170` carries a security level; none is blank |
+| 2 | Count rows whose `Sec.` cell is `S1` | **38** | Published PART 03 subtotal was 31 — understated by 7 |
+| 3 | Count rows whose `Sec.` cell is `S2` | 44 | Not previously published |
+| 4 | Count rows whose `Sec.` cell is `S3` | 18 | Not previously published |
+| 5 | Parse every table row in PARTS 01 and 02 whose first cell is a `CAP-VIS-` identifier | 64 rows | **None of these rows has a security column at all** |
+| 6 | Count `S1` capabilities recoverable from PART 01 registry rows | **0** | The field does not exist there |
+| 7 | Count `S1` capabilities recoverable from `TBL-VIS-282` bounded-context mapping | **3** | `CAP-VIS-065`, `066`, `067` — Financial Factory |
+| 8 | Defensible document-wide total | **41** | 38 from PART 03 rows plus 3 from `TBL-VIS-282` |
+| 9 | Published document-wide total | 39 | Neither 38 nor 41; an unverifiable sum |
+
+> **`VIS-356`.** The published figure of 39 is not defensible and is not being defended. The
+> defensible figure is **41**, of which **38 are re-derivable from registry rows** and 3 come from a
+> mapping table. The PART 01 subtotal of 8 cannot be reproduced from anything in PART 01, because
+> **PART 01 capability rows carry no security column** — the `S1`…`S4` vocabulary was introduced in
+> PART 02 and retro-applied only in prose. This is a genuine structural gap, not an arithmetic slip,
+> and it is recorded as `OBL-29`.
+
+> **`OBL-29`** — Add a security-level field to the sixty-four PART 01 capability registry rows, or
+> publish a standalone mapping table binding `CAP-VIS-001`…`070` to `S1`…`S4`, so that the
+> document-wide `S1` count becomes re-derivable from rows rather than from prose. Owed by: this
+> document, in a later part, under the append-only model — the PART 01 rows themselves must not be
+> edited. Blocked by: nothing. Acceptance: a parse of registry rows alone yields a single
+> document-wide `S1` figure that matches the published one.
+
+### TBL-VIS-378: The Re-Derived `S1` Set — All 41 Entries
+
+| Source | Count | Identifiers |
+| :--- | ---: | :--- |
+| PART 03 registry rows, `CCAT-05` AI | 4 | `CAP-VIS-088`, `089`, `092`, `093` |
+| PART 03 registry rows, `CCAT-02` Governance | 2 | `CAP-VIS-101`, `102` |
+| PART 03 registry rows, `CCAT-03` Platform | 6 | `CAP-VIS-108`, `109`, `110`, `111`, `112`, `114` |
+| PART 03 registry rows, `CCAT-04` Domain | 12 | `CAP-VIS-119`, `120`, `121`, `122`, `123`, `124`, `125`, `126`, `127`, `128`, `129`, `130` |
+| PART 03 registry rows, `CCAT-07` Data | 6 | `CAP-VIS-132`, `133`, `137`, `138`, `139`, `140` |
+| PART 03 registry rows, `CCAT-06` Experience | 1 | `CAP-VIS-149` |
+| PART 03 registry rows, `CCAT-08` Infrastructure | 5 | `CAP-VIS-157`, `162`, `163`, `164`, `165` |
+| PART 03 registry rows, `CCAT-09` Commercial | 2 | `CAP-VIS-168`, `169` |
+| `TBL-VIS-282` bounded-context mapping | 3 | `CAP-VIS-065`, `066`, `067` |
+| **Total** | **41** | |
+
+> **`VIS-357`.** `TBL-VIS-307` published "all 38 entries" and listed exactly the 38 PART 03 rows.
+> That list was correct as far as it went and its title was correct within PART 03's scope. The
+> three bounded-context entries were outside its frame. Both statements can stand: `TBL-VIS-307`
+> enumerates the 38 registry-row `S1` capabilities; `TBL-VIS-378` enumerates the 41 document-wide
+> ones. The number that never had a source is 39.
+
+### TBL-VIS-379: Maturity of the `S1` Set — Recounted
+
+| Maturity | Count of the 38 registry-row `S1` capabilities | What it means for that capability |
+| :---: | ---: | :--- |
+| `C0` | 20 | Named and registered; no contract, no component, no code |
+| `C1` | 16 | Complete registry row; still no contract |
+| `C2` | 2 | A contract exists — `CAP-VIS-089` and `CAP-VIS-092` only |
+| `C3`…`C7` | **0** | **No `S1` capability in Oship has ever been designed, built, or verified** |
+
+```mermaid
+flowchart LR
+    subgraph SRC["WHERE THE S1 COUNT COMES FROM"]
+        R["PART 03 registry rows - 100 parsed"] --> S1A["38 rows marked S1"]
+        M["TBL-VIS-282 bounded-context map"] --> S1B["3 entries marked S1"]
+        P1["PART 01 registry rows - 64 parsed"] --> S1C["0 - no security column exists"]:::bad
+    end
+    S1A --> TOT["41 defensible document-wide S1 capabilities"]:::good
+    S1B --> TOT
+    S1C -.->|"OBL-29 - field missing"| TOT
+    PUB["TBL-VIS-278 published figure - 39"]:::warn -.->|"cannot be reproduced"| TOT
+
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-105` — **Provenance of the `S1` Count**
+> **Explanation:** Three sources, two of which produce rows and one of which produces nothing
+> because the field was never added. The dashed red edge is `OBL-29`. The dashed amber edge is the
+> published figure of 39, drawn as an input to nothing because nothing derives it. A reader who
+> needs a single number should use **41**; a reader auditing the registry mechanically will get
+> **38** and should expect exactly that difference and no other.
+
+---
+
+### 03.21.3 Traceability Chains
+
+> **`VIS-358`.** The nine-level spine fixed in §03.1.4 by `DGM-VIS-077` and `TBL-VIS-246` runs
+> VISION → MISSION → GOALS → CAPABILITIES → DOMAINS → ARCHITECTURE → COMPONENTS → IMPLEMENTATION →
+> TESTS → RELEASES. PART 03 occupies level four and touches level five. The honest statement about
+> the spine is that **it is complete to level five and empty from level seven onward** — not because
+> the levels were omitted, but because the artifacts they would trace to do not exist in the
+> repository.
+
+### TBL-VIS-380: Spine Occupancy — Measured
+
+| Level | Element | Populated by | Count present | Traceable downward? |
+| ---: | :--- | :--- | ---: | :--- |
+| 1 | VISION | PART 01 `VIS-001`…`103` | 375 statements document-wide | Yes |
+| 2 | MISSION | PART 01 §01.3 | 1 | Yes |
+| 3 | GOALS | `OUT-VIS-001`…`021` | 21 | Yes — no `GOAL-VIS-` namespace exists; outcomes serve the role (`VIS-054`) |
+| 4 | **CAPABILITIES** | `CAP-VIS-001`…`170` | 167 defined | Yes |
+| 5 | DOMAINS | `DOMAIN-VIS-001`…`050` | 50 | Yes — 46 of 50 bound to at least one capability |
+| 6 | ARCHITECTURE | `AOM-ARCH-001` `LYR-ARCH-001`…`010` | 10 layers cited, none authored here | Partial — read-only citation only |
+| 7 | COMPONENTS | `CMP-ARCH-001`…`030` | **19 of 30 cited anywhere in this document** | **No** — 11 components have no vision-side referrer |
+| 8 | IMPLEMENTATION | Source files | **0** | **No** — every code directory is `.gitkeep`-only (`EVD-VIS-020`) |
+| 9 | TESTS | Test files | **0** | **No** — `tests/` is `.gitkeep`-only |
+| 10 | RELEASES | Tags | **0** | **No** — repository is at `v0.1.0-alpha.0` with no release |
+
+> **`VIS-359`.** The table has ten rows because the "nine-level spine" counts the arrows between
+> stages, not the stages themselves — an inconsistency in the original naming that is being
+> disclosed rather than silently renamed. The load-bearing figure is the one in row 7: **only
+> nineteen of thirty architecture components are referenced anywhere in `AOM-VIS-001`.** Eleven
+> components exist in the architecture with no vision-side justification reachable through the
+> spine, which is exactly the condition `VAL-VIS-360` was written to detect.
+
+> **`OBL-30`** — Establish whether the eleven uncited `CMP-ARCH-` components are (a) legitimately
+> derived from vision elements through an unrecorded path, (b) architecture-internal with no vision
+> parent, or (c) architecture written ahead of its justification. Owed by: `AOM-VIS-001` PART 04
+> jointly with `AOM-ARCH-001` PART 02. Blocked by: `AOM-ARCH-001` PART 02, which does not exist.
+> Acceptance: every `CMP-ARCH-` identifier is either cited by a `CAP-VIS-` record or explicitly
+> registered as architecture-internal.
+
+### TBL-VIS-381: PART 01 and PART 02 to PART 03 Trace
+
+| Upstream element | PART 03 consumer | Relationship | Direction preserved? |
+| :--- | :--- | :--- | :--- |
+| `CAP-VIS-001`…`070` | `TBL-VIS-282` bounded-context reconciliation | All 70 carried forward, none redefined | Yes |
+| `CAP-VIS-057`…`059` reserved | `VIS-211` | Reserved status re-asserted, gaps honoured | Yes |
+| `DOMAIN-VIS-001`…`050` | Every PART 03 registry row's Domain Owner cell | 41 distinct domains named as owners | Yes |
+| PART 01 §01.8 tier model `T1`…`T5` | `VIS-212`, `TBL-VIS-252` | Reused unchanged as classification axis 2 | Yes |
+| PART 02 `S1`…`S4` security levels | Every PART 03 registry row's `Sec.` cell | Applied for the first time at row level | Yes |
+| PART 02 `B0`…`B5` boundary maturity | `TBL-VIS-309` `S1` preconditions | Reused as a precondition input | Yes |
+| PART 02 `E0`…`E5` evolution stages | `TBL-VIS-252` "owning domains at `E3`+" column | Reused as an aggregation key | Yes |
+| PART 02 `A0`…`A4` autonomy | `CAP-VIS-089` bounded autonomy enforcement | Converted from vocabulary into a capability | Yes |
+| `OBL-01`…`OBL-19` | `TBL-VIS-335`, critical-path analysis | Ten new obligations appended, none edited | Yes |
+| `VIS-033` `A4` prohibited | `CAP-VIS-089`, `CON-VIS-045` | Prohibition becomes an enforcement capability | Yes |
+| `VIS-051` no dates | Every PART 03 section | No date, quarter, or duration appears in PART 03 | Yes |
+| `VIS-065` architecture read-only | `VIS-192`, `OBL-30` | Gap recorded, no architecture file touched | Yes |
+| `VIS-108` gaps permitted | `TBL-VIS-376` | Six permanent gaps registered | Yes |
+| `EVD-VIS-017` uninstalled workflows | `TBL-VIS-328` wave `W1`, `CMET-VIS-043` | Root cause of the infrastructure ladder stall | Yes |
+| `EVD-VIS-019` unknown stack | `OBL-03`, critical path #1 | Gates the entire data category | Yes |
+| `EVD-VIS-020` empty code directories | Every `Implementation Status` cell | Caps 102 of 167 capabilities at `PLANNED` | Yes |
+| `MCX-MEM-001` memory constitution | §03.5 remember / forget / compress | Cited as the binding authority, not restated | Yes |
+| `FAL-VIS-171` README "24 of 24" | `VIS-226`, `CAP-VIS-075` | The live defect that motivates staleness detection | Yes |
+
+### TBL-VIS-382: PART 03 to `AOM-ARCH-001` Trace — Read-Only
+
+| PART 03 element | Architecture element cited | Nature of the reference | Edit made to architecture? |
+| :--- | :--- | :--- | :--- |
+| `CAP-VIS-109` authorisation decisioning | `CMP-ARCH-011` | Vision names the component that will host it | **No** |
+| `CAP-VIS-071`…`078` knowledge capabilities | `CMP-ARCH-001`…`008` | Vision reads implemented component list | **No** |
+| `TBL-VIS-380` spine occupancy | `CMP-ARCH-001`…`030`, `LYR-ARCH-001`…`010` | Vision counts architecture identifiers | **No** |
+| `OBL-30` uncited components | `AOM-ARCH-001` PART 02 | **Obligation placed, no edit made** | **No** |
+| `CON-VIS-049` `C4` maturity ceiling | `AOM-ARCH-001` trust boundaries `TB-1`…`TB-10` | Consistent, independently derived | **No** |
+| §03.19 agent loading path | `AOM-ARCH-001` §01.5 layer model | Cited as read order, not restated | **No** |
+
+> **`VIS-360`.** `AOM-ARCH-001` was opened for reading in this part and modified in no respect.
+> `VIS-065` and `VIS-192` hold without exception across all three parts. Every architectural gap
+> that PART 03 discovered is recorded as an obligation on a future part of the architecture
+> document, never as a patch applied from the vision side.
+
+### 03.21.4 Coverage Audit
+
+### TBL-VIS-383: PART 03 Section Coverage — Measured
+
+| Section | Subject | Diagrams | Tables | Longest unbroken prose run |
+| :--- | :--- | ---: | ---: | ---: |
+| §03.1 | Capability definition and discrimination | 2 | 8 | 24 lines |
+| §03.2 | Capability taxonomy | 4 | 6 | 29 lines |
+| §03.3 | The capability registry | 4 | 26 | 41 lines |
+| §03.4 | Capability maturity model | 2 | 3 | 23 lines |
+| §03.5 | Memory, forgetting, and compression | 2 | 6 | 19 lines |
+| §03.6 | Capability actors and autonomy | 1 | 3 | 21 lines |
+| §03.7 | Capability contracts | 1 | 4 | 19 lines |
+| §03.8 | Capability visual model | 1 | 6 | 36 lines |
+| §03.9 | Commercial capabilities | 1 | 2 | 22 lines |
+| §03.10 | Security capabilities | 1 | 3 | 44 lines |
+| §03.11 | Data capabilities | 1 | 3 | 22 lines |
+| §03.12 | Experience capabilities | 1 | 3 | 22 lines |
+| §03.13 | Capability dependency rules | 2 | 8 | 28 lines |
+| §03.14 | Infrastructure capabilities | 1 | 4 | 28 lines |
+| §03.15 | Critical path | 1 | 3 | 17 lines |
+| §03.16 | Sequencing waves | 1 | 5 | 28 lines |
+| §03.17 | Validation rules | 1 | 14 | 23 lines |
+| §03.18 | Failure modes | 2 | 8 | 17 lines |
+| §03.19 | AI interpretation | 1 | 6 | 19 lines |
+| §03.20 | Image specifications | 0 | 10 | 12 lines |
+| §03.21 | Traceability and closure | 3 | 20 | 21 lines |
+| **PART 03 total** | | **33** | **151** | **44 lines — §03.10** |
+
+> **`VIS-361`.** The visual-density rule in `TBL-VIS-129` sets the limit at roughly 120 lines of
+> prose without a visual anchor, and the user requirement tightened it to a diagram every 20–60
+> lines. **The longest unbroken prose run anywhere in PART 03 is 44 lines, in §03.10.** Every
+> section satisfies the constitutional rule with a margin of at least 76 lines. §03.20 contains no
+> Mermaid diagram at all, which is correct rather than a violation: it is a specification catalogue
+> in which every entry is itself an eighteen-field table, giving it the highest anchor density in
+> the document at 195 anchor lines.
+
+### TBL-VIS-384: Registry Field Completeness — All 100 PART 03 Rows
+
+| Required field (per `TBL-VIS-257`) | Rows carrying it | Rows missing it | Which rows are missing it |
+| :--- | ---: | ---: | :--- |
+| ID | 100 | 0 | — |
+| Name | 100 | 0 | — |
+| Purpose | 100 | 0 | — |
+| Domain Owner | 100 | 0 | — |
+| Users | 100 | 0 | — |
+| Inputs | 100 | 0 | — |
+| Outputs | 100 | 0 | — |
+| Dependencies | 100 | 0 | — |
+| Maturity | 100 | 0 | — |
+| Status | 100 | 0 | — |
+| Security Level | 100 | 0 | — |
+| **AI Priority** | **96** | **4** | **`CAP-VIS-167`, `168`, `169`, `170`** |
+| Implementation Status | 100 | 0 | — |
+| Evidence or note | 100 | 0 | — |
+
+> **`VIS-362`.** Four rows are structurally incomplete and it is being printed rather than
+> patched. The four commercial capabilities in §03.3.10 were rendered with a thirteen-column
+> interface table that omits `AI Pri.`, so the document-wide AI-priority distribution — `P0` 25,
+> `P1` 31, `P2` 27, `P3` 13 — sums to **96, not 100**. This is a schema deviation from
+> `TBL-VIS-257`, which mandates fourteen fields. It is recorded as `OBL-31` rather than corrected,
+> because §03.3.10 is now part of the appended text and the append-only rule in `VAL-VIS-469`
+> forbids editing it.
+
+> **`OBL-31`** — Publish an addendum table assigning an AI priority to `CAP-VIS-167`…`170`, so that
+> the AI-priority distribution sums to 100 and `TBL-VIS-257`'s fourteen-field schema is satisfied
+> for every registry row. Owed by: `AOM-VIS-001` PART 04. Blocked by: nothing — the four
+> capabilities are all `PROPOSED`, so any priority assigned is a documentation act, not a
+> commitment. Acceptance: `VAL-VIS-397` field-completeness check passes on all 100 rows.
+
+### TBL-VIS-385: Domain Coverage — Which Domains No Capability Serves
+
+| Domain | Name | Capabilities bound | Why it is empty | Is the emptiness legitimate? |
+| :--- | :--- | ---: | :--- | :--- |
+| `DOMAIN-VIS-008` | Experimentation | 0 | Exempted from the dependency and delivery rules by `CON-VIS-036` — prototypes are deliberately outside the capability model | **Yes** — exemption is explicit and recorded |
+| `DOMAIN-VIS-031` | User Research | 0 | Domain is `DOCUMENTED`; `design/ux/` is empty; no capability was written because there is no research practice to describe | **Partly** — honest, but a domain with no capability and no artifact is indistinguishable from a domain that should not exist |
+| `DOMAIN-VIS-045` | Authorization Policy | 0 | `CAP-VIS-109` authorisation decisioning was bound to `DOMAIN-VIS-019` instead, leaving the policy domain nominally unserved | **No** — this is a binding error, recorded as `OBL-32` |
+| `DOMAIN-VIS-049` | External Providers | 0 | Framed throughout PART 02 as a constraint surface rather than a delivery domain (`PRN-VIS-015` vendor neutrality) | **Yes** — constraint-only domains legitimately deliver nothing |
+| **46 other domains** | — | ≥1 each | — | — |
+
+> **`OBL-32`** — Resolve whether `CAP-VIS-109` belongs to `DOMAIN-VIS-019` or `DOMAIN-VIS-045`, or
+> whether authorisation decisioning and authorisation policy are two capabilities rather than one.
+> Owed by: `AOM-VIS-001` PART 04. Blocked by: nothing. Acceptance: `DOMAIN-VIS-045` either has a
+> bound capability or is explicitly registered as constraint-only in the manner of
+> `DOMAIN-VIS-049`.
+
+```mermaid
+flowchart TB
+    D50["50 vision domains"] --> BOUND["46 bound to at least one capability"]:::good
+    D50 --> EMPTY["4 with zero capability"]:::warn
+    EMPTY --> E1["DOMAIN-VIS-008 Experimentation"]:::ok
+    EMPTY --> E2["DOMAIN-VIS-031 User Research"]:::warn
+    EMPTY --> E3["DOMAIN-VIS-045 Authorization Policy"]:::bad
+    EMPTY --> E4["DOMAIN-VIS-049 External Providers"]:::ok
+    E1 --> R1["Legitimate - exempt by CON-VIS-036"]
+    E2 --> R2["Honest but unexplained - no artifact exists"]
+    E3 --> R3["Binding error - OBL-32"]
+    E4 --> R4["Legitimate - constraint-only domain"]
+
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef ok fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-106` — **Domain Coverage Triage**
+> **Explanation:** Zero coverage is not automatically a defect. Two of the four uncovered domains
+> are legitimately empty and say so with a citation. One is honestly empty but structurally
+> suspicious. Exactly one is a genuine error. A coverage report that showed only "46 of 50" would
+> have hidden the distinction that matters, which is that **three different conditions produce the
+> same number.**
+
+### TBL-VIS-386: Dependency Graph — Measured Across the Whole Document
+
+| Property | Measured value | Method | Interpretation |
+| :--- | ---: | :--- | :--- |
+| Unique declared dependency edges | **148** | Parse of every `Dependencies` cell in every registry row | `TBL-VIS-278` published 214; that figure counts repeated declarations across multiple tables |
+| Edges declared inside PART 03 | 132 | Same parse, restricted to `CAP-VIS-071`…`170` | 89% of all edges are PART 03 |
+| Capabilities with zero dependencies | **9** | `CAP-VIS-107`, `108`, `119`, `132`, `140`, `141`, `145`, `153`, `158` | The true roots of the capability graph |
+| Capabilities with zero dependents | 105 of 170 | Fan-in count of zero | Nothing yet builds on them |
+| Highest fan-in | `CAP-VIS-092` — 10 | Action attribution | Consistent with `OBL-28` naming it the gating `S1` capability |
+| Second highest fan-in | `CAP-VIS-158` — 7 · `CAP-VIS-025` — 7 | — | — |
+| Cycles detected | **0** | Depth-first search over the 148-edge graph | `VAL-VIS-352` satisfied; `FAL-VIS-207` not present |
+| Cross-category edges | 11 | Edges whose endpoints have different `CCAT-` | 7.4% of 148 — below the 15% threshold in `CMET-VIS-012` |
+
+> **`VIS-363`.** The edge count is the second published figure that does not survive recount, and
+> the cause is the same as the `S1` case: **`TBL-VIS-278`'s 214 counts declarations, this table's
+> 148 counts distinct edges.** Both are defensible measurements of different things and neither is
+> a fabrication, but only one of them was labelled. `CMET-VIS-012` divides by the larger
+> denominator and therefore understates coupling slightly; recomputed against 148 the cross-category
+> ratio is **7.4%, not 5.1%** — still comfortably inside the threshold, so no conclusion changes.
+
+---
+
+### 03.21.5 The Complete Capability Inventory
+
+> **`VIS-364`.** What follows is every capability identifier the document has ever allocated, in
+> numeric order, on one continuous list. It is generated by parsing the committed text, not by
+> transcribing the section registries, so a row here that disagrees with its home section is a
+> defect this table has found rather than an error this table has introduced. Three rows are
+> reserved and carry no content by design. The Mat. / Sec. column is empty for
+> `CAP-VIS-001`…`070` because **PART 01 registry rows carry neither field** — the same structural
+> gap that `OBL-29` records.
+
+### TBL-VIS-387: Complete Capability Inventory — `CAP-VIS-001`…`060` — PART 01 Origin Block
+
+| ID | Name | Owning domain | Mat. / Sec. | Implementation status |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-001` | AI Control Plane | `DOMAIN-VIS-002` | — | **IMPLEMENTED** |
+| `CAP-VIS-002` | Knowledge Graph | `DOMAIN-VIS-002` | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-003` | Memory Constitution | `DOMAIN-VIS-013` | — | DOCUMENTED |
+| `CAP-VIS-004` | Metadata standard | `DOMAIN-VIS-010` | — | **IMPLEMENTED** |
+| `CAP-VIS-005` | Architecture specification | `DOMAIN-VIS-013` | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-006` | Immutable decision record | `DOMAIN-VIS-010` | — | **IMPLEMENTED** |
+| `CAP-VIS-007` | Deterministic navigation | `DOMAIN-VIS-014` | — | **IMPLEMENTED** |
+| `CAP-VIS-008` | Identifier allocation | `DOMAIN-VIS-002` | — | **IMPLEMENTED** |
+| `CAP-VIS-009` | Drift detection | `DOMAIN-VIS-014` | — | PLANNED |
+| `CAP-VIS-010` | Evidence linking | `DOMAIN-VIS-013` | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-011` | Continuation protocol | `DOMAIN-VIS-010` | — | **IMPLEMENTED** |
+| `CAP-VIS-012` | Validation rule catalogue | `DOMAIN-VIS-014` | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-013` | Ownership assignment | `DOMAIN-VIS-005` | — | **IMPLEMENTED** |
+| `CAP-VIS-014` | Change proposal workflow | `DOMAIN-VIS-009` | — | **IMPLEMENTED** |
+| `CAP-VIS-015` | Domain registration | `DOMAIN-VIS-005` | — | **IMPLEMENTED** |
+| `CAP-VIS-016` | Authority layering | `DOMAIN-VIS-009` | — | **IMPLEMENTED** |
+| `CAP-VIS-017` | Status vocabulary enforcement | `DOMAIN-VIS-006` | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-018` | Exception handling | — | — | PLANNED |
+| `CAP-VIS-019` | Review gating | — | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-020` | Automated policy checks | — | — | PLANNED |
+| `CAP-VIS-021` | Release governance | `DOMAIN-VIS-007` | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-022` | Security review process | — | — | DOCUMENTED |
+| `CAP-VIS-023` | Deprecation process | — | — | DOCUMENTED |
+| `CAP-VIS-024` | Audit trail of governance acts | `DOMAIN-VIS-047` | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-025` | Service runtime | `DOMAIN-VIS-017` | — | PLANNED |
+| `CAP-VIS-026` | API surface | — | — | PLANNED |
+| `CAP-VIS-027` | Persistence | — | — | PLANNED |
+| `CAP-VIS-028` | Identity and access | — | — | PLANNED |
+| `CAP-VIS-029` | Multi-tenancy | — | — | PLANNED |
+| `CAP-VIS-030` | Observability | — | — | PLANNED |
+| `CAP-VIS-031` | Configuration management | `DOMAIN-VIS-024` | — | PLANNED |
+| `CAP-VIS-032` | Secret management | — | — | PLANNED |
+| `CAP-VIS-033` | Deployment automation | — | — | PLANNED |
+| `CAP-VIS-034` | Event backbone | — | — | PLANNED |
+| `CAP-VIS-035` | Scheduling | `DOMAIN-VIS-048` | — | PLANNED |
+| `CAP-VIS-036` | Rate limiting and quota | — | — | PLANNED |
+| `CAP-VIS-037` | Plugin extension | — | — | PROPOSED |
+| `CAP-VIS-038` | Data export | `DOMAIN-VIS-038`, `040` | — | PROPOSED |
+| `CAP-VIS-039` | Backup and restore | — | — | PLANNED |
+| `CAP-VIS-040` | Disaster recovery | — | — | PROPOSED |
+| `CAP-VIS-041` | Transaction ingestion | `DOMAIN-VIS-020` | — | PLANNED |
+| `CAP-VIS-042` | Transaction processing | — | — | PLANNED |
+| `CAP-VIS-043` | Ledger | — | — | PLANNED |
+| `CAP-VIS-044` | Settlement | — | — | PLANNED |
+| `CAP-VIS-045` | Reconciliation | `DOMAIN-VIS-021` | — | PLANNED |
+| `CAP-VIS-046` | Reporting | — | — | PROPOSED |
+| `CAP-VIS-047` | Compliance controls | `DOMAIN-VIS-022` | — | **UNKNOWN** |
+| `CAP-VIS-048` | Fraud signalling | `DOMAIN-VIS-023` | — | PROPOSED |
+| `CAP-VIS-049` | Model invocation | `DOMAIN-VIS-011` | — | PLANNED |
+| `CAP-VIS-050` | Prompt and context assembly | — | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-051` | Agent task orchestration | `DOMAIN-VIS-012` | — | PLANNED |
+| `CAP-VIS-052` | Output validation | — | — | PLANNED |
+| `CAP-VIS-053` | Provider abstraction | `DOMAIN-VIS-015` | — | PLANNED |
+| `CAP-VIS-054` | Agent audit trail | — | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-055` | Cost and token governance | `DOMAIN-VIS-016` | — | PROPOSED |
+| `CAP-VIS-056` | Human approval gateway | — | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-057` | *reserved — never defined* | — | — | **RESERVED** |
+| `CAP-VIS-058` | *reserved — never defined* | — | — | **RESERVED** |
+| `CAP-VIS-059` | *reserved — never defined* | — | — | **RESERVED** |
+| `CAP-VIS-060` | Governance and AI context | — | — | **IMPLEMENTED** |
+
+### TBL-VIS-388: Complete Capability Inventory — `CAP-VIS-061`…`110` — PART 01 Tail and PART 03 Knowledge, AI, Governance, Platform
+
+| ID | Name | Owning domain | Mat. / Sec. | Implementation status |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-061` | Core Platform context | `DOMAIN-VIS-018`, `019` | — | PLANNED |
+| `CAP-VIS-062` | Financial Factory context | — | — | PLANNED |
+| `CAP-VIS-063` | Observability context | — | — | PLANNED |
+| `CAP-VIS-064` | Ecosystem context | `DOMAIN-VIS-030` | — | PLANNED |
+| `CAP-VIS-065` | Developer experience context | — | — | PLANNED |
+| `CAP-VIS-066` | Knowledge context | `DOMAIN-VIS-041` | — | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-067` | Security context | — | — | PLANNED |
+| `CAP-VIS-068` | Data context | — | — | PLANNED |
+| `CAP-VIS-069` | Integration context | `DOMAIN-VIS-044` | — | PLANNED |
+| `CAP-VIS-070` | Experimentation context | — | — | PLANNED |
+| `CAP-VIS-071` | Capability self-description | `DOMAIN-VIS-001` | `C4` / `S3` | **IMPLEMENTED** |
+| `CAP-VIS-072` | Decision archaeology | `DOMAIN-VIS-002` | `C4` / `S3` | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-073` | Evidence citation | `DOMAIN-VIS-001` | `C4` / `S3` | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-074` | Terminology arbitration | `DOMAIN-VIS-003` | `C2` / `S3` | DOCUMENTED |
+| `CAP-VIS-075` | Knowledge staleness detection | `DOMAIN-VIS-004` | `C1` / `S3` | PLANNED |
+| `CAP-VIS-076` | Security posture description | `DOMAIN-VIS-044` | `C2` / `S2` | DOCUMENTED |
+| `CAP-VIS-077` | Obligation tracking | `DOMAIN-VIS-002` | `C4` / `S3` | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-078` | Cross-document traceability | `DOMAIN-VIS-001` | `C2` / `S3` | PLANNED |
+| `CAP-VIS-079` | Context assembly | `DOMAIN-VIS-013` | `C2` / `S2` | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-080` | Context prioritisation | `DOMAIN-VIS-013` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-081` | Repository comprehension | `DOMAIN-VIS-010` | `C2` / `S2` | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-082` | Deterministic routing | `DOMAIN-VIS-010` | `C4` / `S3` | **IMPLEMENTED** |
+| `CAP-VIS-083` | Ambiguity halting | `DOMAIN-VIS-011` | `C2` / `S2` | DOCUMENTED |
+| `CAP-VIS-084` | Inference provenance | `DOMAIN-VIS-012` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-085` | Session continuity | `DOMAIN-VIS-014` | `C3` / `S2` | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-086` | Memory persistence | `DOMAIN-VIS-014` | `C2` / `S2` | DOCUMENTED |
+| `CAP-VIS-087` | Memory compression | `DOMAIN-VIS-014` | `C2` / `S2` | DOCUMENTED |
+| `CAP-VIS-088` | Deliberate forgetting | `DOMAIN-VIS-014` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-089` | Bounded autonomy enforcement | `DOMAIN-VIS-011` | `C2` / **`S1`** | DOCUMENTED |
+| `CAP-VIS-090` | Change proposal authoring | `DOMAIN-VIS-015` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-091` | Self-validation | `DOMAIN-VIS-015` | `C2` / `S2` | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-092` | Action attribution | `DOMAIN-VIS-047` | `C2` / **`S1`** | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-093` | Reversal | `DOMAIN-VIS-011` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-094` | Agent performance measurement | `DOMAIN-VIS-016` | `C0` / `S2` | VISION |
+| `CAP-VIS-095` | Constraint enforcement | `DOMAIN-VIS-002` | `C2` / `S2` | PLANNED |
+| `CAP-VIS-096` | Ownership resolution | `DOMAIN-VIS-002` | `C4` / `S3` | **IMPLEMENTED** |
+| `CAP-VIS-097` | Authority level checking | `DOMAIN-VIS-002` | `C2` / `S2` | DOCUMENTED |
+| `CAP-VIS-098` | Change review gating | `DOMAIN-VIS-007` | `C3` / `S2` | PARTIALLY IMPLEMENTED |
+| `CAP-VIS-099` | Policy versioning | `DOMAIN-VIS-007` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-100` | Exception handling | `DOMAIN-VIS-002` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-101` | Compliance evidence production | `DOMAIN-VIS-047` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-102` | Separation of duties | `DOMAIN-VIS-007` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-103` | Deprecation management | `DOMAIN-VIS-002` | `C2` / `S2` | DOCUMENTED |
+| `CAP-VIS-104` | Governance drift detection | `DOMAIN-VIS-047` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-105` | Synchronous API surface | `DOMAIN-VIS-017` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-106` | Asynchronous event surface | `DOMAIN-VIS-017` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-107` | Contract publication | `DOMAIN-VIS-017` | `C1` / `S3` | PLANNED |
+| `CAP-VIS-108` | Identity establishment | `DOMAIN-VIS-018` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-109` | Authorisation decisioning | `DOMAIN-VIS-019` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-110` | Tenant isolation | `DOMAIN-VIS-020` | `C1` / **`S1`** | PLANNED |
+
+### TBL-VIS-389: Complete Capability Inventory — `CAP-VIS-111`…`170` — Platform Tail, Domain, Data, Experience, Infrastructure, Commercial
+
+| ID | Name | Owning domain | Mat. / Sec. | Implementation status |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-111` | Request idempotency | `DOMAIN-VIS-021` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-112` | Workflow orchestration | `DOMAIN-VIS-022` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-113` | Plugin lifecycle | `DOMAIN-VIS-050` | `C0` / `S2` | PROPOSED |
+| `CAP-VIS-114` | Extension sandboxing | `DOMAIN-VIS-050` | `C0` / **`S1`** | PROPOSED |
+| `CAP-VIS-115` | Configuration management | `DOMAIN-VIS-041` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-116` | Rate limiting and quota | `DOMAIN-VIS-017` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-117` | Versioned compatibility | `DOMAIN-VIS-017` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-118` | Notification delivery | `DOMAIN-VIS-027` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-119` | Value representation | `DOMAIN-VIS-023` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-120` | Account modelling | `DOMAIN-VIS-023` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-121` | Double-entry recording | `DOMAIN-VIS-023` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-122` | Balance derivation | `DOMAIN-VIS-023` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-123` | Transaction lifecycle | `DOMAIN-VIS-021` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-124` | Settlement finality | `DOMAIN-VIS-022` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-125` | Reconciliation | `DOMAIN-VIS-022` | `C1` / **`S1`** | PLANNED |
+| `CAP-VIS-126` | Obligation tracking | `DOMAIN-VIS-024` | `C0` / **`S1`** | PROPOSED |
+| `CAP-VIS-127` | Risk evaluation | `DOMAIN-VIS-025` | `C0` / **`S1`** | PROPOSED |
+| `CAP-VIS-128` | Fraud signal detection | `DOMAIN-VIS-025` | `C0` / **`S1`** | PROPOSED |
+| `CAP-VIS-129` | Regulatory reporting | `DOMAIN-VIS-026` | `C0` / **`S1`** | PROPOSED |
+| `CAP-VIS-130` | Dispute resolution | `DOMAIN-VIS-026` | `C0` / **`S1`** | PROPOSED |
+| `CAP-VIS-131` | Canonical data modelling | `DOMAIN-VIS-034` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-132` | Durable persistence | `DOMAIN-VIS-035` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-133` | Transactional consistency | `DOMAIN-VIS-035` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-134` | Schema evolution | `DOMAIN-VIS-034` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-135` | Data lineage | `DOMAIN-VIS-036` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-136` | Data quality assertion | `DOMAIN-VIS-036` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-137` | Retention and disposal | `DOMAIN-VIS-037` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-138` | Backup and restore | `DOMAIN-VIS-035` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-139` | Data export and portability | `DOMAIN-VIS-037` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-140` | Encryption at rest and in transit | `DOMAIN-VIS-044` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-141` | Visual language definition | `DOMAIN-VIS-030` | `C0` / `S3` | PLANNED |
+| `CAP-VIS-142` | Component library | `DOMAIN-VIS-030` | `C0` / `S3` | PLANNED |
+| `CAP-VIS-143` | Interaction pattern definition | `DOMAIN-VIS-032` | `C0` / `S3` | PLANNED |
+| `CAP-VIS-144` | Accessibility conformance | `DOMAIN-VIS-032` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-145` | Information architecture | `DOMAIN-VIS-032` | `C0` / `S3` | PLANNED |
+| `CAP-VIS-146` | Error communication | `DOMAIN-VIS-032` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-147` | Progressive disclosure | `DOMAIN-VIS-032` | `C0` / `S3` | PLANNED |
+| `CAP-VIS-148` | Operator surface | `DOMAIN-VIS-042` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-149` | Financial data presentation | `DOMAIN-VIS-030` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-150` | Personalisation | `DOMAIN-VIS-033` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-151` | Internationalisation | `DOMAIN-VIS-032` | `C0` / `S3` | PLANNED |
+| `CAP-VIS-152` | Design-to-implementation fidelity | `DOMAIN-VIS-030` | `C0` / `S3` | PLANNED |
+| `CAP-VIS-153` | Build reproducibility | `DOMAIN-VIS-039` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-154` | Continuous integration | `DOMAIN-VIS-039` | `C1` / `S2` | PLANNED |
+| `CAP-VIS-155` | Deployment automation | `DOMAIN-VIS-040` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-156` | Environment parity | `DOMAIN-VIS-041` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-157` | Rollback | `DOMAIN-VIS-040` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-158` | Telemetry emission | `DOMAIN-VIS-042` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-159` | Alerting | `DOMAIN-VIS-042` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-160` | Distributed tracing | `DOMAIN-VIS-042` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-161` | Capacity scaling | `DOMAIN-VIS-043` | `C0` / `S2` | PLANNED |
+| `CAP-VIS-162` | Fault isolation | `DOMAIN-VIS-043` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-163` | Disaster recovery | `DOMAIN-VIS-043` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-164` | Secret management | `DOMAIN-VIS-044` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-165` | Vulnerability management | `DOMAIN-VIS-044` | `C0` / **`S1`** | PLANNED |
+| `CAP-VIS-166` | Cost attribution | `DOMAIN-VIS-046` | `C0` / `S3` | PLANNED |
+| `CAP-VIS-167` | Entitlement determination | `DOMAIN-VIS-028` | `C0` / `S2` | PROPOSED |
+| `CAP-VIS-168` | Usage metering | `DOMAIN-VIS-028` | `C0` / **`S1`** | PROPOSED |
+| `CAP-VIS-169` | Billing and invoicing | `DOMAIN-VIS-028` | `C0` / **`S1`** | PROPOSED |
+| `CAP-VIS-170` | Third-party distribution | `DOMAIN-VIS-029` | `C0` / `S2` | PROPOSED |
+
+### 03.21.6 Status Reconciliation
+
+> **`VIS-365`.** The implementation-status distribution is the single most quoted figure in this
+> document and the one most likely to be extracted into a slide. It is therefore the one that most
+> needs a published recount. Four distributions exist in the corpus: the one in `TBL-VIS-278`, the
+> one in `TBL-VIS-279`, the PART 03 subtotal, and the one produced by parsing all 170 rows. They do
+> not agree.
+
+### TBL-VIS-390: Implementation Status — Published Versus Recounted
+
+| Status | `TBL-VIS-278` published | Recounted `CAP-VIS-001`…`070` | Recounted `CAP-VIS-071`…`170` | **Recounted total** | Delta |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| IMPLEMENTED | 12 | 11 | 3 | **14** | +2 |
+| PARTIALLY IMPLEMENTED | 19 | 12 | 9 | **21** | +2 |
+| DOCUMENTED | 5 | 3 | 8 | **11** | +6 |
+| PLANNED | 119 | 34 | 68 | **102** | −17 |
+| PROPOSED | 11 | 6 | 11 | **17** | +6 |
+| VISION | 1 | 0 | 1 | **1** | 0 |
+| UNKNOWN | 0 | 1 | 0 | **1** | +1 |
+| Reserved, never defined | 3 | 3 | 0 | **3** | 0 |
+| **Total** | **170** | **70** | **100** | **170** | — |
+
+> **`VIS-366`.** Every delta has the same sign pattern: the recount finds **more** capabilities with
+> some form of partial substance and **seventeen fewer** that are purely `PLANNED`. This is not good
+> news dressed up. It reflects a classification drift in which `DOCUMENTED` was used loosely in
+> PART 03's later sections for capabilities whose only artifact is the registry row describing them.
+> The `PLANNED` share falls from 71.3% to **60.0%**, and the honest reading is that **the true
+> figure is somewhere between the two and the vocabulary boundary between `PLANNED` and
+> `DOCUMENTED` is not tight enough to say which.**
+
+> **`OBL-33`** — Tighten the `DOCUMENTED` definition so it excludes "a registry row exists in this
+> document" and requires a separate artifact outside `AOM-VIS-001`, then reclassify every capability
+> whose `DOCUMENTED` status rests only on its own registry row. Owed by: `AOM-VIS-001` PART 04.
+> Blocked by: nothing. Acceptance: the recounted `DOCUMENTED` figure is reproducible from an
+> artifact list, not from this document's own tables.
+
+### TBL-VIS-391: Internal Status Conflicts Detected by the Recount
+
+| Capability | Registry status (§01.9) | Conflicting declaration | Location of conflict | Which is authoritative |
+| :--- | :--- | :--- | :--- | :--- |
+| `CAP-VIS-005` | `PARTIALLY IMPLEMENTED` — Part 01 of a multi-part document | `PLANNED` | `TBL-VIS-199` pair status | Registry — the pair-status column describes the *domain pairing*, not the capability |
+| `CAP-VIS-007` | `IMPLEMENTED` | `PLANNED` | `TBL-VIS-199` pair status | Registry |
+| `CAP-VIS-010` | `PARTIALLY IMPLEMENTED` — convention, not enforced | `PLANNED` | `TBL-VIS-199` pair status | Registry |
+| `CAP-VIS-012` | `PARTIALLY IMPLEMENTED` — rules written, checkers absent | `PLANNED` | `TBL-VIS-199` pair status | Registry |
+| `CAP-VIS-024` | `PARTIALLY IMPLEMENTED` | `DOCUMENTED` — git history serves partially | `TBL-VIS-199` pair status | Registry |
+| `CAP-VIS-048` | `PROPOSED` | `PLANNED` | `TBL-VIS-200` pair status | Registry |
+| `CAP-VIS-047` | `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` | Restated as `UNKNOWN` with a domain assigned | `TBL-VIS-200` | Consistent — not a conflict |
+
+> **`VIS-367`.** Six genuine conflicts in 170 capabilities is a defect rate of 3.5%, and all six
+> share one cause: **`TBL-VIS-199` and `TBL-VIS-200` reused the word "status" for a different
+> subject.** A "pair status" answers *is this capability-to-domain binding settled?* — not *is this
+> capability built?* Six bindings were marked `PLANNED` because the binding was new in PART 02,
+> while the capabilities themselves were already partially implemented. The column was mis-named,
+> not mis-filled. `VAL-VIS-435` should be extended to forbid an unqualified "Status" header in any
+> table that is not the registry.
+
+### 03.21.7 Visual Target Audit
+
+> **`VIS-368`.** The document was commissioned against eight visual targets and three cumulative
+> aspirations. Every one is reported below with its measured value, including the four that were
+> not met. **No target was quietly redefined to make it reachable**, and no measurement was rounded
+> in the document's favour.
+
+### TBL-VIS-392: Visual Targets — Measured Against Commission
+
+| Target | Required | **Measured** | Met? | Method and honest note |
+| :--- | ---: | ---: | :---: | :--- |
+| Mermaid diagrams | 100+ | **107** | **MET** | Count of fenced `mermaid` blocks; all 107 parse cleanly |
+| Tables | 100+ | **394** | **MET** | Count of unique `TBL-VIS-` identifiers; 392 carry a `###` caption, 2 use the inline form |
+| Image specifications | 20+ | **45** | **MET** | `IMG-VIS-001`…`045`, each an eighteen-field table; **no binary image was generated** |
+| Capability maps | 20+ | **32** | **MET** | Diagrams whose caption names a capability, domain, or category mapping |
+| Decision models | 30+ | **26** | **NOT MET** | Diagrams containing a branch or decision node; short by 4 |
+| Lifecycle diagrams | 20+ | **9** | **NOT MET** | `stateDiagram` blocks only; short by 11 |
+| Traceability models | 20+ | **11** | **NOT MET** | Diagrams whose caption names a trace, chain, or provenance; short by 9 |
+| AI interpretation diagrams | 20+ | **11 by caption · 27 by content** | **BORDERLINE** | 11 diagrams are captioned as AI interpretation; 27 depict agent or AI behaviour. Reported both ways rather than choosing the flattering one |
+
+> **`VIS-369`.** Four targets are missed and the misses are not random. **Lifecycle diagrams are
+> short by more than half** because a lifecycle diagram requires a subject with states, and almost
+> nothing in Oship has states yet — a capability at `C0` has no lifecycle to draw. **Traceability
+> models are short** because traceability in this document is expressed predominantly as tables,
+> which are a better fit for many-to-many relations than node graphs are. **Decision models are
+> short by four** for no principled reason; that one is simply unfinished. The correct response is
+> to record the shortfall, not to convert four flowcharts into decision trees to clear a threshold.
+
+### TBL-VIS-393: Cumulative Aspirations After PART 03
+
+| Aspiration | Target | **Measured** | Met? | Gap |
+| :--- | ---: | ---: | :---: | :--- |
+| Total lines | 20,000+ | **13,749** | **NOT MET** | 6,251 lines short — roughly one further part of PART 03's size |
+| Total tables | 300+ | **394** | **MET** | Exceeded by 94 |
+| Total Mermaid diagrams | 150+ | **107** | **NOT MET** | 43 short |
+| Total words | — | **153,281** | n/a | No target was set |
+| AI navigation metadata blocks | one per major section | **70** | **MET** | One per `##` section, all seven rows present |
+
+> **`VIS-370`.** The line-count aspiration was always the weakest of the three, because line count
+> measures typing rather than content, and the document could clear 20,000 lines tomorrow by
+> splitting every table cell onto its own row. **It is being reported as not met rather than
+> engineered around.** The diagram shortfall is more meaningful: 106 against 150 means roughly one
+> diagram per 128 lines, where the target implies one per 90. The density rule in `TBL-VIS-129` is
+> nevertheless satisfied everywhere, because tables count as visual anchors and the document is
+> exceptionally table-dense at one captioned table per 35 lines.
+
+```mermaid
+flowchart TB
+    subgraph MET["TARGETS MET - 6"]
+        M1["Diagrams 107 of 100"]
+        M2["Tables 394 of 100"]
+        M3["Image specs 45 of 20"]
+        M4["Capability maps 32 of 20"]
+        M5["Cumulative tables 394 of 300"]
+        M6["Navigation blocks 70"]
+    end
+    subgraph MISS["TARGETS MISSED - 5"]
+        X1["Decision models 26 of 30"]
+        X2["Lifecycle diagrams 9 of 20"]
+        X3["Traceability models 11 of 20"]
+        X4["Cumulative lines 13749 of 20000"]
+        X5["Cumulative diagrams 107 of 150"]
+    end
+    BORD["BORDERLINE - AI interpretation 11 by caption, 27 by content"]:::warn
+
+    MET --> V["Reported with the measured number"]:::good
+    MISS --> V
+    BORD --> V
+
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    class MET good
+    class MISS warn
+```
+
+> **Diagram ID:** `DGM-VIS-107` — **Visual Target Scorecard**
+> **Explanation:** Six met, five missed, one borderline. The diagram exists so that the misses are
+> as visible as the hits when this section is skimmed. A scorecard that showed only the six met
+> targets would itself be an instance of `FAL-VIS-171` — the README defect this document was partly
+> written to avoid repeating.
+
+### 03.21.8 Honest Completion Statement
+
+> **`VIS-371`.** PART 03 is complete in the sense that every section it promised in the PART 03
+> section index has been written, every identifier block it reserved has been consumed, and every
+> aggregate it published has been recounted. It is **not** complete in the sense that would justify
+> a status change on the document, and the reasons are mechanical rather than editorial.
+
+### TBL-VIS-394: Release Gate — `VAL-VIS-470` Evaluation
+
+| Failing rule | Grade | What it requires | Why it fails today | Can PART 04 fix it? |
+| :--- | :---: | :--- | :--- | :--- |
+| `VAL-VIS-437` | **HALT** | Every capability handling data declares a retention class | No retention class exists anywhere; `OBL-03` has not chosen a persistence technology | No — blocked on `OBL-03` |
+| `VAL-VIS-443` | **HALT** | No capability assumes persistence while `OBL-03` is open | Fourteen data and domain capabilities assume durable storage | No — blocked on `OBL-03` |
+| `VAL-VIS-456` | **HALT** | The term "creator" resolves to exactly one defined actor | `OBL-27` records three incompatible readings `R1`, `R2`, `R3` | **Yes** — a definition is a documentation act |
+| `VAL-VIS-470` | **HALT** | The document may not be `RELEASED` while any HALT rule fails | Three HALT rules above fail | Only when the other three clear |
+| `VAL-VIS-425` | BLOCK | Aggregates are recounted, never carried forward | **Discharged by §03.21** — was failing, now passes | Already fixed |
+| `VAL-VIS-381` | BLOCK | Every published figure names its method | Partially discharged; earlier parts still publish unattributed sums | Yes |
+| `VAL-VIS-449` · `451` · `455` | BLOCK | Security preconditions for `S1` promotion | Zero of six preconditions satisfied (`TBL-VIS-309`) | No — requires CI and threat models |
+| `VAL-VIS-432` · `434` | BLOCK | Contract and evidence completeness | 165 of 167 capabilities have no contract | No |
+
+> **`VIS-372`. The document cannot be marked `RELEASED`, and this section refuses to mark it.**
+> Four HALT-grade rules fail. Three of the four are blocked on a single unmade decision — `OBL-03`,
+> the persistence technology — which is also the head of critical path #1. One, `VAL-VIS-456`, is
+> unblocked and could be cleared by writing a definition. The status therefore remains
+> `IN_PROGRESS`, exactly as `TBL-VIS-129`'s no-release rule requires until the final part.
+
+### TBL-VIS-395: What PART 03 Established, and What It Did Not
+
+| PART 03 established | PART 03 did not establish |
+| :--- | :--- |
+| 100 new capabilities with owner, users, interfaces, maturity, security, and status | Any capability's contract — 165 of 167 remain contract-free |
+| A nine-category taxonomy on two orthogonal axes | Which architecture component hosts each capability, for 11 of 30 components |
+| A 148-edge acyclic dependency graph with 9 identified roots | Any dependency between a capability and running code, because none exists |
+| An eight-level maturity ladder `C0`…`C7` with every capability placed | Any capability above `C4`; the ceiling is enforced by `CON-VIS-049` |
+| 150 validation rules and 75 failure modes, 31 of which are already present | Detection for 17 of the present failure modes, which remain undetectable |
+| Ten sequencing waves in which `W1`…`W4` need no application code | Any commitment to when a wave starts, because `VIS-051` forbids dates |
+| 20 image specifications at full eighteen-field depth | Any rendered image; specifications only, by explicit instruction |
+| A recount of every aggregate the document publishes | Agreement between the recount and the published figures — six conflicts are printed instead |
+
+> **`VIS-373`.** The right-hand column is longer in substance than the left, and that is the honest
+> shape of a vision document written against a repository containing no application code. **PART 03
+> has specified a system; it has not evidenced one.** Every `IMPLEMENTED` label in this part — three
+> of one hundred — refers to a documentation artifact, and each one names the artifact.
+
+> **`VIS-374`.** The single most consequential sentence in PART 03 is not in this section. It is in
+> §03.15: **the only fully unblocked capability chain in Oship is
+> `CAP-VIS-072` → `075` → `077` → `104`**, and it consists entirely of knowledge capabilities that
+> can be advanced by writing files. Everything else waits on `OBL-03`, on CI installation, or on
+> both. A reader deciding what to do next should start there and nowhere else.
+
+> **`VIS-375`.** PART 03 is closed. It is appended, never to be rewritten. The next part inherits
+> thirteen open obligations added here, four failing HALT rules, four missed visual targets, and one
+> capability graph that is sound but almost entirely unrealised. That inheritance is stated in full
+> so that no future author has to discover it.
+
+---
+
+## PART 03 — CLOSURE RECORD
+
+| Field | Value |
+| :--- | :--- |
+| **Part** | PART 03 — CAPABILITY VISION MODEL |
+| **Sections** | §03.1 … §03.21, all written |
+| **Status** | **COMPLETE — FROZEN, APPEND-ONLY** |
+| **Document status** | `IN_PROGRESS` — unchanged; `VAL-VIS-470` forbids `RELEASED` |
+| **Lines added by PART 03** | 5,386 — from line 8,363 to line 13,749 |
+| **Capabilities added** | `CAP-VIS-071`…`170` — 100 |
+| **Obligations added** | `OBL-20`…`OBL-33` — 14 |
+| **Validation** | Mermaid parse clean · anchors resolve · identifiers unique · aggregates recounted |
+| **Next part** | PART 04 — MEASUREMENT AND INSTRUMENTATION, blocked on `OUT-VIS-004` CI installation |
+
+<!-- CONTINUATION_POINT -->
+
+| Marker field | Value |
+| :--- | :--- |
+| **LAST_COMPLETED_SECTION** | PART 03 — CAPABILITY VISION MODEL |
+| **LAST_COMPLETED_SUBSECTION** | §03.21.8 Honest Completion Statement |
+| **LAST_COMPLETED_ID** | `VIS-375` · `TBL-VIS-395` · `DGM-VIS-107` · `OBL-33` |
+| **NEXT_SECTION** | §04.1 — Measurement Preconditions |
+| **NEXT_ID** | `VIS-376` · `TBL-VIS-396` · `DGM-VIS-108` · `VAL-VIS-471` · `FAL-VIS-251` — **`FAL-VIS-` ceiling of 200 is reached; raise it by decision record or place new failure modes elsewhere** · `CON-VIS-061` · `AI-VIS-101` · `CMET-VIS-051` · `SCAP-VIS-051` · `CAP-VIS-171` · `DEC-VIS-036` · `OBL-33` · `IMG-VIS-` **namespace closed at 045 by `VIS-347`; reopen explicitly or not at all** |
+| **CURRENT_PART** | PART 03 — complete |
+| **NEXT_PART** | PART 04 — MEASUREMENT AND INSTRUMENTATION |
+| **LAST_LINE_ANCHOR** | `PART 03 — CLOSURE RECORD` |
+| **DEPENDENCIES_LOADED** | `AOM-VIS-001` PARTS 01–03 · `AOM-ARCH-001` PART 01 read-only · `MCX-MEM-001` · `MASTER_CONTEXT_RULES.md` PART 04 · `.ai/PROJECT_STATUS.md` |
+| **BLOCKING** | `OBL-03` persistence decision · `OUT-VIS-004` CI installation · `AOM-ARCH-001` PART 02 |
+
+---

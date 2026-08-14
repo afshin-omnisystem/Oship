@@ -1,7 +1,7 @@
 ---
 File ID: AI-STAT-001
 Title: Enterprise Project Phase & Milestone Status
-Version: 1.5.0
+Version: 1.6.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -106,6 +106,7 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 
   - [x] Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (AOM-VIS-001) **PART 01 — System Identity and Vision Constitution** (VIS-01).
   - [x] Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (AOM-VIS-001) **PART 02 — Domain Vision Architecture** (VIS-02), appended after the Part 01 continuation point.
+  - [x] Author `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` (AOM-VIS-001) **PART 03 — Capability Vision Model** (VIS-03), §03.1–§03.21, appended after the Part 02 continuation point.
 
 ### Work-in-Progress Register — AOM-VIS-001 (Oship System Vision)
 
@@ -113,7 +114,7 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 | :--- | :--- |
 | **Document ID** | `AOM-VIS-001` |
 | **Path** | `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` |
-| **STATUS** | `IN_PROGRESS` — Parts 01 and 02 of a planned 6 complete |
+| **STATUS** | `IN_PROGRESS` — Parts 01, 02 and 03 of a planned 6 complete |
 | **VERSION** | `1.0.0` (unreleased) |
 | **Authority Level** | L1 — Strategic / Constitutional |
 | **Knowledge Domain** | `01_PRODUCT` (supersedes the `PLANNED` `PRODUCT_VISION.md` entry) |
@@ -130,3 +131,21 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 | **Release Status** | `NOT RELEASED` — no PR, merge, or tag until the FINAL part. Planned tag: `aom-vis-001-v1.0.0`. |
 | **Continuation** | The **last** `<!-- CONTINUATION_POINT -->` in the file is authoritative (the Part 01 marker is retained unmodified under the append-only model); `NEXT_SECTION: PART 03 — §03.1`, `NEXT_ID: VIS-197`. Next free: `TBL-VIS-242` · `DGM-VIS-074` · `VAL-VIS-321` · `FAL-VIS-176` · `CON-VIS-046` · `DMET-VIS-061` · `AI-VIS-072` · `IMG-VIS-026` · `DEC-VIS-035` · `DOMAIN-VIS-051`. |
 | **Next Objective** | PART 03 — appended after the last continuation point. Highest-value content owed: the six deferred subject areas of `TBL-VIS-241` (`OBL-19`) — AI as a domain, memory as a domain, knowledge circulation, experience ownership, security philosophy, and infrastructure/integration (the last blocked on `OBL-03`). |
+
+### PART 03 Completion Register — AOM-VIS-001 (Capability Vision Model)
+
+| Field | Value |
+| :--- | :--- |
+| **Part** | PART 03 — CAPABILITY VISION MODEL, §03.1 – §03.21 |
+| **Part status** | **COMPLETE — FROZEN, APPEND-ONLY** |
+| **Document status** | `IN_PROGRESS` — unchanged. `VAL-VIS-470` forbids `RELEASED` while any HALT rule fails; four do. |
+| **Part 03 Scope** | Capability definition and discrimination · nine-category taxonomy on two orthogonal axes · the 100-entry capability registry (`CAP-VIS-071`…`170`) with 50 sub-capabilities · the `C0`…`C7` maturity ladder · memory, forgetting and compression against `MCX-MEM-001` · actors and `A0`…`A4` autonomy · capability contracts · the capability visual model · commercial, security, data, experience and infrastructure capabilities · dependency rules · the critical path · ten sequencing waves `W1`…`W10` · 150 validation rules · 75 failure modes · AI interpretation · 20 image specifications · traceability and closure |
+| **Part 03 Metrics** | 5,386 lines · 64,823 words · 34 Mermaid diagrams · 153 identified tables · 179 vision statements · 100 capabilities · 50 sub-capabilities · 150 validation rules (`VAL-VIS-321`…`470`) · 75 failure modes (`FAL-VIS-176`…`250`) · 15 constraints (`CON-VIS-046`…`060`) · 50 capability metrics (`CMET-VIS-001`…`050`) · 29 AI directives · 20 image specifications (none produced) · 14 new obligations (`OBL-20`…`OBL-33`) |
+| **Cumulative Metrics** | **13,749 lines · 153,281 words · 107 Mermaid diagrams · 394 identified tables · 470 validation rules · 250 failure modes · 60 constraints · 167 capabilities defined (3 reserved) · 50 system domains · 45 image specifications (none produced) · 70 AI navigation metadata blocks** |
+| **Validation** | Mermaid `mermaid.parse()` — **107 blocks, 0 failures**. Anchors — 0 broken. Identifiers — no duplicate `TBL-VIS-`, `DGM-VIS-`, or `VIS-` captions. Cross-references — every identifier cited in §03.21 resolves to a definition or to a declared next-free pointer. Metadata — 70 seven-row AI navigation blocks, one per `##` section. Visual density — longest unbroken prose run in PART 03 is **44 lines** (§03.10), against a 120-line constitutional limit. |
+| **Honest Findings — Part 03** | Of 167 defined capabilities, a full recount gives **14 `IMPLEMENTED`, 21 `PARTIALLY IMPLEMENTED`, 11 `DOCUMENTED`, 102 `PLANNED`, 17 `PROPOSED`, 1 `VISION`, 1 `UNKNOWN`** — the published `TBL-VIS-278` distribution does not survive recount and the discrepancy is printed in `TBL-VIS-390` rather than corrected. Every `IMPLEMENTED` label refers to a documentation artifact; **zero application code exists**. 165 of 167 capabilities have no contract. No capability exceeds maturity `C4`; the `S1` set sits at `C0`/`C1` with two exceptions. The document-wide `S1` count is **41 defensible / 38 re-derivable from rows**, not the published 39 (`TBL-VIS-377`). Four registry rows (`CAP-VIS-167`…`170`) omit the mandatory `AI Pri.` field (`OBL-31`). Four of 50 domains have zero bound capability, one of which (`DOMAIN-VIS-045`) is a genuine binding error (`OBL-32`). Six capabilities carry conflicting status declarations, all traced to a mis-named "pair status" column (`TBL-VIS-391`). 11 of 30 `CMP-ARCH-` components have no vision-side referrer (`OBL-30`). |
+| **Unmet Targets — reported, not engineered around** | Cumulative lines **13,749 of 20,000+** (6,251 short) · cumulative diagrams **107 of 150+** (43 short) · decision models **26 of 30+** · lifecycle diagrams **9 of 20+** · traceability models **11 of 20+** · AI interpretation diagrams **11 by caption / 27 by content** (borderline). Met: diagrams 107 of 100+ · tables 394 of 100+ and of 300+ · image specifications 45 of 20+ · capability maps 32 of 20+. Full scorecard in `TBL-VIS-392` and `TBL-VIS-393`. |
+| **Release Gate** | **FAILS.** Four HALT-grade rules fail: `VAL-VIS-437` (no retention class defined anywhere), `VAL-VIS-443` (14 capabilities assume persistence while `OBL-03` is open), `VAL-VIS-456` (the term "creator" resolves three ways, `OBL-27`), and consequently `VAL-VIS-470`. Three of the four are blocked on the single unmade persistence decision `OBL-03`; only `VAL-VIS-456` is clearable by documentation alone. |
+| **Namespace Ceilings Reached** | `FAL-VIS-` has reached its declared ceiling of **200** — PART 04 must raise it by decision record or place new failure modes elsewhere. `IMG-VIS-` was **closed at 045** by `VIS-347` and must be reopened explicitly or not at all. |
+| **Continuation** | The **last** `<!-- CONTINUATION_POINT -->` in the file is authoritative. `NEXT_SECTION: §04.1 — Measurement Preconditions`, `NEXT_ID: VIS-376`. Next free: `TBL-VIS-396` · `DGM-VIS-108` · `CAP-VIS-171` · `SCAP-VIS-051` · `VAL-VIS-471` · `FAL-VIS-251` (ceiling) · `CON-VIS-061` · `CMET-VIS-051` · `AI-VIS-101` · `DEC-VIS-036` · `OBL-34` · `DOMAIN-VIS-051` · `DMET-VIS-061`. Permanent gaps that must never be filled: `CAP-VIS-057`…`059`, `TBL-VIS-244`, `DEC-VIS-008`…`009`. |
+| **Next Objective** | PART 04 — MEASUREMENT AND INSTRUMENTATION. **Blocked** on `OUT-VIS-004` (CI installation) for its instrumentation content; the unblocked portion is the measurement precondition model. The only fully unblocked capability chain in the repository is `CAP-VIS-072` → `075` → `077` → `104`. |
