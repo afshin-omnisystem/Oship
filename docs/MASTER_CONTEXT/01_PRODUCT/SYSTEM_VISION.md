@@ -16185,3 +16185,751 @@ flowchart TD
 > finding that only appears when the format meets actual work.
 
 ---
+
+## 04.11 — The Decision Evidence Matrix
+
+### AI NAVIGATION METADATA — §04.11
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before any decision is taken on measured data** |
+| **AI DEPENDENCIES** | §04.2 evidence classes · §04.6 metric states · `A0`…`A4` |
+| **AI INPUTS** | A pending decision and the evidence available to support it |
+| **AI OUTPUTS** | Permitted, permitted with escalation, or refused |
+| **AI IMPLEMENTATION IMPACT** | This is the rule that converts evidence class into authority to act |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-707`…`VAL-VIS-718` |
+| **AI RELATED DOCUMENTS** | §04.18 quality gates · `.ai/DECISION_LOG.md` |
+
+---
+
+### 04.11.1 — Evidence Class Determines Decision Authority
+
+> **`VIS-460`.** Everything in PART 04 to this point has been about producing trustworthy evidence.
+> This section is where evidence acquires consequence. The rule is a single sentence: **the weakest
+> evidence supporting a decision determines the highest autonomy level at which that decision may be
+> taken.** Weak evidence does not forbid a decision; it forbids an *unsupervised* decision.
+
+### TBL-VIS-456: Decision Evidence Matrix
+
+| Decision class | Example in Oship | Minimum evidence | Max autonomy on minimum evidence | Full autonomy requires |
+| :--- | :--- | :---: | :---: | :---: |
+| **Cosmetic** | Fix a typo, reflow a table | `EV0` | `A3` | `EV0` — no evidence needed |
+| **Additive documentation** | Append a new section | `EV1` | `A2` | `EV2` |
+| **Structural documentation** | Reorder or split a part | `EV2` | `A1` | `EV3` |
+| **Identifier allocation** | Consume `MET-VIS-051` | `EV3` | `A2` | `EV3` plus a namespace check |
+| **Namespace extension** | `DEC-VIS-041` | `EV3` | `A1` — human review required | `EV4` |
+| **Status label change** | Mark a capability `IMPLEMENTED` | `EV3` | `A1` | `EV4` — an automated check |
+| **Architectural commitment** | Choose a persistence technology, `OBL-03` | `EV3` | `A0` — suggest only | `EV5` — a prototype observed |
+| **Quality gate configuration** | Make a check blocking | `EV4` | `A1` | `EV4` |
+| **Release** | Publish a version | `EV4` | `A0` | `EV6` |
+| **Deletion of any artifact** | Remove a document | `EV3` | `A0` — always human | never autonomous |
+| **Reversal of a `DEC-VIS-` record** | Undo a constitutional decision | `EV4` | `A0` | never autonomous |
+
+> **`VIS-461`.** Two rows read `never autonomous` in their final column, and both are irreversibility
+> cases. Deletion and constitutional reversal share the property that no subsequent evidence can
+> restore the prior state cheaply. **Where an action cannot be undone by a later, better-informed
+> action, evidence quality is not the governing consideration — reversibility is.** This is why the
+> matrix has two axes rather than one.
+
+```mermaid
+flowchart TD
+    D["A decision is pending"] --> R{"Is the action reversible at low cost?"}
+    R -->|"no"| H["HUMAN ONLY - A0 regardless of evidence class"]:::stop
+    R -->|"yes"| E{"What is the weakest evidence class supporting it?"}
+
+    E -->|"EV0"| Q0{"Is the decision cosmetic?"}
+    Q0 -->|"yes"| P3["PERMITTED at A3"]:::ok
+    Q0 -->|"no"| REF["REFUSE - state the missing evidence and stop"]:::stop
+
+    E -->|"EV1"| P1["PERMITTED at A2 maximum - human reviews after"]:::warn
+    E -->|"EV2"| P2["PERMITTED at A2 - escalate if the decision is structural"]:::warn
+    E -->|"EV3"| P4["PERMITTED at A2 - A3 only for identifier and additive work"]:::ok
+    E -->|"EV4 or above"| P5["PERMITTED at A3 within the delegated scope"]:::ok
+
+    P1 --> LOG["ALL PATHS - record the decision, its evidence, and its class in the trace"]:::audit
+    P2 --> LOG
+    P3 --> LOG
+    P4 --> LOG
+    P5 --> LOG
+    REF --> LOG
+    H --> LOG
+
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef stop fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef audit fill:#4a148c,stroke:#ce93d8,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-123` — **Decision Authority Decision Tree**
+> **Explanation:** The reversibility question comes first and can terminate the whole procedure
+> before evidence is even considered — an irreversible action on perfect evidence is still a human
+> decision. Every terminal state, including refusal, routes to the same logging node, which encodes
+> `VAL-VIS-691`: **a refusal is an outcome that must be recorded, not a non-event.** Note that `EV4`
+> and above never grants `A4`; the ceiling across the whole tree is `A3`, per `VIS-033`.
+
+### TBL-VIS-457: Applying the Matrix to Oship's Live Open Decisions
+
+| Open item | Decision class | Available evidence | Permitted autonomy | Verdict |
+| :--- | :--- | :---: | :---: | :--- |
+| `OBL-03` — choose persistence | Architectural | `EV0` — no prototype, no requirements measured | `A0` | **Agent may suggest options only.** This is why it remains open |
+| `OUT-VIS-004` — install CI workflows | Gate configuration | `EV3` — the skeletons exist and are readable | `A1` | Agent may prepare; a human enables |
+| `OBL-33` — pin the `DOCUMENTED` definition | Status label change | `EV3` — the ambiguity is demonstrated | `A1` | Agent may draft the definition |
+| `OBL-39` — build traceability metrics | Additive | `EV3` — the metrics are defined | `A2` | **Agent may proceed** |
+| `OBL-22` — resolve `CODEOWNERS` | Structural governance | `EV3` — `MET-VIS-023` returns 1 | `A0` | Requires a second human to exist |
+| `OBL-38` — retrofit 111 metric contracts | Additive documentation | `EV3` — non-conformance is measured | `A2` | **Agent may proceed** |
+
+> **`VIS-462`.** Only two of six open items are agent-actionable at `A2`, and both are documentation
+> work. The remainder need a human because they are architectural, irreversible, or require a second
+> person to exist. **This is an accurate picture of what agent autonomy actually buys in a repository
+> at this stage**, and it is considerably less than the vision's ambition — which is exactly the sort
+> of thing a measurement section should say out loud.
+
+---
+
+## 04.12 — Project Progress Measurement
+
+### AI NAVIGATION METADATA — §04.12
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before stating any completion figure** |
+| **AI DEPENDENCIES** | §04.2 evidence · §04.5 register · PART 03 §03.21 status recount |
+| **AI INPUTS** | A request for project status or percent complete |
+| **AI OUTPUTS** | A qualified progress statement, or a refusal to produce a single number |
+| **AI IMPLEMENTATION IMPACT** | Bans the unqualified percentage across all Oship artifacts |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-719`…`VAL-VIS-730` |
+| **AI RELATED DOCUMENTS** | `.ai/PROJECT_STATUS.md` · §04.24 forecasts |
+
+---
+
+### 04.12.1 — The Ban on the Unqualified Percentage
+
+> **`VIS-463`.** **The statement "the project is 80 percent complete" is prohibited in every Oship
+> artifact.** Not discouraged — prohibited, with a `HALT` severity. The reason is not that such
+> figures are usually wrong, though they are. It is that they are **not measurements at all**: they
+> have no denominator, no source, no method, and no falsifier, which means they fail `MPC-01`,
+> `MPC-05`, `MPC-07`, and `MPC-09` simultaneously.
+
+> **`VIS-464`.** The specific pathology is the missing denominator. "80 percent complete" requires
+> knowing the total scope, and the total scope of a system still being designed is precisely the
+> thing that is unknown. The figure therefore measures **confidence about remaining work**, dressed
+> as a proportion. That is why such figures are stable at 80 percent for extended periods and then
+> move backwards.
+
+### TBL-VIS-458: Why Aggregate Percentages Fail Each Precondition
+
+| Precondition | Requirement | Why "80 percent complete" fails it |
+| :--- | :--- | :--- |
+| `MPC-03` | Unambiguous definition | "Complete" is undefined; complete against which scope |
+| `MPC-05` | Ratios declare numerator and denominator | Neither is stated, and the denominator is unknown |
+| `MPC-07` | Names its source | No artifact is read to produce it |
+| `MPC-09` | Executable collection method | The method is estimation, which is judgment |
+| `MPC-10` | Deterministic | Two people produce different figures from the same state |
+| `MPC-24` | Names a validation rule | Nothing can falsify it until the deadline passes |
+| `MPC-30` | Declares a failure condition | It has none; it is unfalsifiable by construction |
+
+### 04.12.2 — What Replaces It
+
+> **`VIS-465`.** Progress is reported as a **vector of counted states over an enumerated scope**,
+> never as a scalar. Each component names its denominator explicitly, and where the denominator is
+> unknown the component says so rather than assuming a total.
+
+### TBL-VIS-459: Permitted Progress Reporting Forms
+
+| Form | Example | Why it is admissible |
+| :--- | :--- | :--- |
+| **Counted state over an enumerated set** | "50 of 50 `MET-VIS-` metrics are `DEFINED`; 21 are `IMPLEMENTED`" | Both numerator and denominator are enumerable and counted |
+| **Counted state with an unknown denominator** | "21 metrics carry values; the total number of metrics Oship will need is `UNKNOWN`" | Refuses to invent the denominator |
+| **Gate status** | "`QG-3` passes; `QG-4` fails on `VAL-VIS-437`" | Binary, sourced, falsifiable |
+| **Blocking-item enumeration** | "4 release-gate failures remain, 3 blocked on `OBL-03`" | Names the specific obstruction |
+| **Milestone completion, binary** | "PART 03 is complete and frozen; PART 04 is in progress" | Milestones are discrete and defined in advance |
+| **Trend over collected values** | Prohibited today | Requires collection history — `MPC-25` unmet |
+
+### TBL-VIS-460: Oship Progress, Reported Correctly
+
+| Dimension | Enumerated scope | State | Denominator known |
+| :--- | :--- | :--- | :---: |
+| Vision document parts | 4 planned in the current outline | 3 complete and frozen, 1 in progress | yes |
+| `MET-VIS-` metric definitions | 50 allocated | 50 `DEFINED`, 21 `IMPLEMENTED`, 0 `COLLECTING` | yes |
+| Repository metric contracts | 161 metrics across all namespaces | 50 conformant, 111 non-conformant per `OBL-38` | yes |
+| Knowledge domains with an index | 24 domains | 24 indexed | yes |
+| Application code | undefined scope | `MET-VIS-003` returns 0 | **no — scope not yet specified** |
+| CI automation | 8 skeletons present | 0 installed | yes |
+| Capabilities delivered | 171 identified | 0 exercisable in running software | **no — 171 is what is identified, not what is required** |
+| Overall project completion | — | **REFUSED — no denominator exists** | **no** |
+
+> **`VIS-466`.** The final row is the section's point. Asked for a single completion figure, the
+> correct output is a refusal accompanied by the vector above. The refusal is more informative than
+> any percentage would be, because a reader can see exactly which dimensions have known denominators
+> and which do not.
+
+### TBL-VIS-461: Progress Measurement Validation Rules
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-719` | An aggregate completion percentage may not be published | **HALT** |
+| `VAL-VIS-720` | Any ratio states its numerator and denominator inline | **BLOCK** |
+| `VAL-VIS-721` | An unknown denominator is stated as `UNKNOWN`, never estimated | **HALT** |
+| `VAL-VIS-722` | Progress is reported as a vector, never collapsed to a scalar | **BLOCK** |
+| `VAL-VIS-723` | Milestones are binary; partial milestone credit is prohibited | **BLOCK** |
+| `VAL-VIS-724` | A milestone's completion criteria are fixed before work begins | **BLOCK** |
+| `VAL-VIS-725` | Scope added after a milestone is defined creates a new milestone | **BLOCK** |
+| `VAL-VIS-726` | Progress may not be reported in units of effort expended | **HALT** |
+| `VAL-VIS-727` | Volume of documentation is not progress and may not be presented as such | **HALT** |
+| `VAL-VIS-728` | Progress reports name their blocking items explicitly | **BLOCK** |
+| `VAL-VIS-729` | A dimension with no measurement says so rather than being omitted | **BLOCK** |
+| `VAL-VIS-730` | Progress reports carry the evidence class of each component | **BLOCK** |
+
+> **`VIS-467`.** `VAL-VIS-727` applies directly and uncomfortably to this document. **127,285 lines
+> of documentation is a measurement of volume, not of progress**, and `MET-VIS-007` must never be
+> cited as evidence that Oship is advancing. A repository can accumulate documentation indefinitely
+> while `MET-VIS-050` — merged agent-authored changes — remains at zero. Both facts are true today.
+
+---
+
+## 04.13 — The Documentation Metrics Dashboard
+
+### AI NAVIGATION METADATA — §04.13
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P2 — read when assessing documentation health** |
+| **AI DEPENDENCIES** | §04.5 `MCAT-02` metrics · §04.22 dashboard IA |
+| **AI INPUTS** | The documentation corpus |
+| **AI OUTPUTS** | A per-panel health reading with evidence classes |
+| **AI IMPLEMENTATION IMPACT** | Specifies a dashboard; **no dashboard is implemented** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-731`…`VAL-VIS-738` |
+| **AI RELATED DOCUMENTS** | `.ai/METRICS.md` · §04.14 readability index |
+
+---
+
+### 04.13.1 — Six Panels
+
+> **`VIS-468`.** A documentation dashboard that reports volume is worse than no dashboard, because
+> volume rises monotonically and therefore always looks like health. The six panels below are chosen
+> so that **each can get worse as the corpus grows**, which is the only property that makes a panel
+> diagnostic.
+
+### TBL-VIS-462: Documentation Dashboard Panel Specification
+
+| Panel | Question | Primary metrics | Can degrade as the corpus grows | Current reading |
+| :--- | :--- | :--- | :---: | :--- |
+| **P1 — Volume** | How much exists? | `MET-VIS-007`, `MET-VIS-008` | no — context only | 127,285 lines total, 16,388 in the vision document |
+| **P2 — Visual density** | Is it readable? | `MET-VIS-013` | **yes** | 28.2 lines per visual anchor — inside the 20–60 target |
+| **P3 — Structural integrity** | Do the pieces parse? | `MET-VIS-011`, `MET-VIS-026` | **yes** | 1.00 Mermaid parse rate; 77 of 87 files carry frontmatter |
+| **P4 — Referential health** | Do references resolve? | `MET-VIS-027`…`MET-VIS-031` | **yes** | **`EV0` across all five — unmeasured** |
+| **P5 — Namespace discipline** | Are identifiers sound? | `MET-VIS-015`…`MET-VIS-021` | **yes** | 85 percent `VAL-VIS-` consumption triggered `DEC-VIS-041` |
+| **P6 — Agent cost** | What does it cost to use? | `MET-VIS-032`…`MET-VIS-037` | **yes** | ~266,000 tokens for a full load of one document |
+
+> **`VIS-469`.** Panel P4 is entirely dark and it is the panel that would catch the most damaging
+> class of documentation decay — references that silently stop resolving as documents are added and
+> renamed. A corpus of 127,285 lines with unmeasured referential integrity is carrying an unknown
+> quantity of broken internal structure. `OBL-39` remains the highest-value open measurement item.
+
+### TBL-VIS-463: Panel Thresholds and Actions
+
+| Panel | Green | Amber | Red | Action on red |
+| :--- | :--- | :--- | :--- | :--- |
+| P2 Visual density | 20–60 lines per anchor | 60–100 | over 100 or under 15 | Insert anchors, or split the section |
+| P3 Parse rate | 1.00 | — | below 1.00 | **Blocking** — no commit with a failing diagram |
+| P3 Frontmatter | 1.00 | 0.90–0.99 | below 0.90 | Add metadata per `MCX-23-002` |
+| P4 Dangling references | 0 | 1–5 | over 5 | Repair or supersede before further authoring |
+| P5 Namespace headroom | under 70 percent | 70–90 percent | over 90 percent | Open a ceiling extension decision record |
+| P6 Single-document token cost | under 150,000 | 150,000–300,000 | over 300,000 | Split the document into loadable parts |
+
+> **`VIS-470`.** Two readings are currently amber against these thresholds: `MET-VIS-026` frontmatter
+> coverage at 0.885 is **red**, and the vision document's token cost at ~266,000 is **amber**
+> approaching red. Publishing thresholds that the current state fails is deliberate — a dashboard
+> calibrated so that today's state is green measures nothing.
+
+> **`VIS-471`.** **`OBL-40`** is opened: ten markdown files under `docs/` and `.ai/` lack YAML
+> frontmatter, putting `MET-VIS-026` in the red band against `MCX-23-002`. This is Tier 1, cheap, and
+> agent-actionable at `A2` under `TBL-VIS-456`.
+
+---
+
+## 04.14 — The AI Readability Index
+
+### AI NAVIGATION METADATA — §04.14
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before authoring a new document intended for agent consumption** |
+| **AI DEPENDENCIES** | §04.5 `MCAT-06` metrics · §04.15 context cost |
+| **AI INPUTS** | A document |
+| **AI OUTPUTS** | An index value 0 to 100 with its five component scores |
+| **AI IMPLEMENTATION IMPACT** | Formula is specified and computable; **two of five components are unmeasured** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-739`…`VAL-VIS-746` |
+| **AI RELATED DOCUMENTS** | §04.13 P6 · §04.29 loading sequence |
+
+---
+
+### 04.14.1 — The Formula
+
+> **`VIS-472`.** Human readability indices measure sentence length and syllable counts because humans
+> read linearly and tire. Agents do neither. An agent's difficulty with a document is **navigational
+> and structural**: can it find the relevant part without loading everything, can it act on a section
+> in isolation, and can it tell which statements are binding. The index therefore measures five
+> different properties, weighted by how often each one blocks an agent in practice.
+
+> **`VIS-473`.** The AI Readability Index is defined as:
+
+```
+ARI = 30·N + 25·A + 20·I + 15·C + 10·D
+
+where each component is normalised to the range 0 to 1:
+
+  N  Navigability      = sections reachable via an index or metadata table / total sections
+  A  Anchoring         = 1 − |median lines between visual anchors − 40| / 40, floored at 0
+  I  Identifiability   = statements carrying a stable identifier / total normative statements
+  C  Chunk independence= sections actionable without loading another section / total sections
+  D  Declarativeness   = normative statements using explicit modal force / total normative statements
+
+ARI ranges 0 to 100. Bands:  0–39 UNUSABLE · 40–59 COSTLY · 60–79 WORKABLE · 80–100 AGENT READY
+```
+
+### TBL-VIS-464: AI Readability Index — Component Definitions
+
+| Component | Weight | Measures | Method | Determinism | Why this weight |
+| :--- | :---: | :--- | :--- | :--- | :--- |
+| **N** Navigability | 30 | Whether an agent can locate content without full load | Count sections listed in an index or carrying a navigation table | deterministic | The most common and most expensive failure is loading everything |
+| **A** Anchoring | 25 | Whether prose is broken by visuals at a workable interval | Median line distance between diagrams and tables | deterministic | Directly encodes the NO WALL OF TEXT rule |
+| **I** Identifiability | 20 | Whether statements can be cited and disputed individually | Ratio of statements bearing an identifier | deterministic | Unidentifiable statements cannot be traced or corrected |
+| **C** Chunk independence | 15 | Whether a section can be acted on alone | **judgmental — no deterministic method exists** | judgmental | High value, low measurability; weighted below the deterministic components |
+| **D** Declarativeness | 10 | Whether obligation is explicit rather than implied | Ratio of normative statements using must, may, prohibited, required | deterministic | Lowest weight because ambiguity here is usually recoverable |
+
+> **`VIS-474`.** Component **C** is judgmental, which under `MPC-10` and `VAL-VIS-618` means the
+> whole index inherits a judgmental input and can never exceed `EV1` as a composite. This is stated
+> in the formula rather than hidden inside it. **A deterministic four-component variant, `ARI-D`,
+> renormalises the remaining weights to 100 and is reportable at `EV3`.** Both are defined; the
+> deterministic one is what a gate may use.
+
+### TBL-VIS-465: AI Readability Index Applied to `SYSTEM_VISION.md`
+
+| Component | Value | Basis | Class |
+| :--- | :---: | :--- | :---: |
+| **N** Navigability | **1.00** | Every `##` section carries an AI NAVIGATION METADATA table and appears in a part-level section index | `EV3` |
+| **A** Anchoring | **0.70** | `MET-VIS-013` gives 28.2 lines per anchor; the deviation from the 40-line ideal is 11.8, so 1 − 11.8/40 = 0.705 | `EV3` |
+| **I** Identifiability | **~0.95** | Nearly every normative statement carries a `VIS-`, `VAL-VIS-`, `DQR-`, or `MPC-` identifier; residual prose is uncounted | `EV2` — the denominator is not machine-extracted |
+| **C** Chunk independence | **NOT YET MEASURED** | `MET-VIS-037`; no deterministic method | `EV0` |
+| **D** Declarativeness | **NOT YET MEASURED** | Requires a modal-verb parser; achievable, not yet built | `EV0` |
+| **`ARI`** composite | **REFUSED** | Two of five components are `EV0`; publishing a composite would violate `VAL-VIS-530` | — |
+| **`ARI-D`** partial | **NOT YET COMPUTABLE** | `D` is deterministic but unbuilt; only N, A, and I exist | — |
+
+> **`VIS-475`.** The index cannot be computed for the document that defines it. This is reported
+> rather than papered over with plausible estimates for `C` and `D`, which is exactly what
+> `VAL-VIS-535` prohibits. What *can* be said is narrower and true: **three of five components are
+> measured, two of those three are strong, and the composite awaits a modal-verb parser and an
+> honest decision about whether to include a judgmental term at all.**
+
+> **`VIS-476`.** **`OBL-41`** is opened: build the declarativeness parser for component `D`, which
+> would make `ARI-D` computable at `EV3` across the entire corpus. It is Tier 1, deterministic, and
+> the last blocker to a real readability score.
+
+---
+
+## 04.15 — The Context Loading Cost Model
+
+### AI NAVIGATION METADATA — §04.15
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before deciding what to load** |
+| **AI DEPENDENCIES** | §04.14 index · §04.29 loading sequence · `MET-VIS-032`, `MET-VIS-033` |
+| **AI INPUTS** | A task and the candidate documents for it |
+| **AI OUTPUTS** | A load set with its estimated cost, and what was deliberately excluded |
+| **AI IMPLEMENTATION IMPACT** | Governs every agent session's opening move |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-747`…`VAL-VIS-756` |
+| **AI RELATED DOCUMENTS** | `.ai/CONTEXT_ROUTER.md` |
+
+---
+
+### 04.15.1 — Cost Is Not Just Tokens
+
+> **`VIS-477`.** Token count is the visible cost of loading context and the least interesting one.
+> Three further costs matter more. **Dilution**: every irrelevant token loaded reduces the attention
+> available to relevant ones. **Contradiction exposure**: loading two documents that disagree forces
+> a resolution the agent may not be equipped to make. **Staleness inheritance**: loading a stale
+> document imports its errors with full apparent authority.
+
+### TBL-VIS-466: The Four Context Costs
+
+| Cost | Definition | Grows with | Detectable | Mitigations |
+| :--- | :--- | :--- | :---: | :--- |
+| **Token cost** | Raw context window consumption | Document size | **yes** — `MET-VIS-033` | Load parts, not whole documents |
+| **Dilution cost** | Attention diverted to irrelevant content | Ratio of loaded-to-needed | partially | Precise routing; section-level loading |
+| **Contradiction cost** | Effort and risk of resolving disagreements between loaded sources | Number of overlapping authorities loaded | no | Authority levels `L1`…`L5`; load the highest and stop |
+| **Staleness cost** | Errors inherited from outdated content | Age and change rate of the source | no — `MPC-17` unmet | Expiration triggers per `VAL-VIS-551` |
+
+> **`VIS-478`.** Only the first is measurable in Oship today, and it is the one that matters least
+> for correctness. **The three costs that can actually cause an agent to produce wrong work are all
+> unmeasured**, and two of them are undetectable with the current infrastructure. This asymmetry —
+> measuring the cheap thing because it is easy — is itself a measurement anti-pattern, catalogued as
+> `FAL-VIS-263` in §04.28.
+
+### TBL-VIS-467: Context Load Cost Matrix — Real Oship Documents
+
+| Document | Lines | Est. tokens | Authority | Load for | Do not load for |
+| :--- | ---: | ---: | :---: | :--- | :--- |
+| `SYSTEM_VISION.md` PART 04 | ~2,400 | ~44,000 | L1 | Any measurement, evidence, or metric task | Architecture or capability work |
+| `SYSTEM_VISION.md` full | 16,388 | ~266,000 | L1 | Almost never — the full load is rarely justified | Any single-section task |
+| `SYSTEM_ARCHITECTURE.md` | 10,844 | ~180,000 | L1 | Component and layer decisions | Vision, product, or metric work |
+| `MASTER_CONTEXT_MEMORY_SYSTEM.md` | 34,427 | ~570,000 | L1 | Memory-system work only | **Anything else — this is the largest single load in the repository** |
+| `MASTER_CONTEXT_RULES.md` | ~1,100 | ~18,000 | L1 | Any structural or registration change | Content authoring within an existing document |
+| `.ai/PROJECT_STATUS.md` | ~300 | ~5,000 | L2 | Session start, always | Never excluded |
+| `.ai/CONTEXT_ROUTER.md` | ~200 | ~3,000 | L2 | Session start, always — it tells you what else to load | Never excluded |
+| `README.md` | ~2,000 | ~33,000 | L3 | Orientation for a first-time reader | **Agent work — it contains `FAL-VIS-171`, a known false claim** |
+
+> **`VIS-479`.** The README row is the most operationally useful line in this table. A document
+> containing a known false claim should not be loaded as context for work that depends on accuracy,
+> regardless of how canonical it appears. **`FAL-VIS-171` — the "24 of 24" badge — is exactly the
+> kind of statement an agent would repeat with confidence**, because badges read as machine-generated
+> even when they are hand-written.
+
+### TBL-VIS-468: Load Budget Guidance by Task Class
+
+| Task class | Recommended budget | Mandatory loads | Typical excess if unmanaged |
+| :--- | ---: | :--- | :--- |
+| Status report | ~10,000 tokens | `PROJECT_STATUS`, `CONTEXT_ROUTER` | Loading the full vision document — 26× the budget |
+| Append a vision section | ~60,000 tokens | Router, status, the active part, the section index | Loading PARTS 01–03 in full — 4× |
+| Architecture change | ~200,000 tokens | Router, status, `SYSTEM_ARCHITECTURE.md`, relevant ADRs | Loading the memory system — 3× |
+| Metric definition | ~50,000 tokens | Router, §04.1, §04.5, `.ai/METRICS.md` | Loading PARTS 01–03 — 5× |
+| Repository-wide audit | full corpus | Everything, deliberately | None — this is the one case where full load is correct |
+
+> **`VIS-480`.** Every row except the last shows an unmanaged excess of at least 3×. The single most
+> effective context optimisation available to Oship is not compression or summarisation — it is
+> **loading parts instead of documents**, which the part structure of this vision document already
+> makes possible and which nothing currently enforces.
+
+---
+
+## 04.16 — The Enterprise Evidence Graph
+
+### AI NAVIGATION METADATA — §04.16
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before answering "how do we know that?" about any enterprise claim** |
+| **AI DEPENDENCIES** | §04.2 evidence classes · §04.3 claim contract · §04.26 audit chain |
+| **AI INPUTS** | An enterprise-level assertion about Oship |
+| **AI OUTPUTS** | The full path from that assertion to its ground evidence, or the point where the path breaks |
+| **AI IMPLEMENTATION IMPACT** | Defines the structure an auditor would walk; **the graph is specified, not instantiated** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-757`…`VAL-VIS-768` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §architecture claims · `.ai/DECISION_LOG.md` |
+
+---
+
+### 04.16.1 — Why an Enterprise Graph Differs From a Claim Graph
+
+> **`VIS-481`.** §04.3 gave the Claim Evidence Graph: one claim, its sources, its verification. That
+> structure answers "is this claim supported?" The enterprise graph answers a harder question:
+> **"if this claim is false, what else falls?"** Enterprise assertions are load-bearing. A statement
+> in a README that the platform is production-ready is not an isolated error when wrong — it is the
+> root of a tree of downstream commitments made by people who believed it.
+
+> **`VIS-482`.** The enterprise graph is therefore **directed downward from assertion to evidence and
+> upward from evidence to dependent commitments**. The upward direction is the one nobody builds and
+> the one that matters during an incident, a due-diligence review, or an audit.
+
+```mermaid
+flowchart TD
+    subgraph L0["Layer 0 — External Assertions"]
+        A1["Public claim<br/>README, site, proposal"]
+        A2["Contractual commitment"]
+        A3["Regulatory attestation"]
+    end
+    subgraph L1["Layer 1 — Internal Positions"]
+        B1["Documented status<br/>PROJECT_STATUS"]
+        B2["Decision record<br/>DEC-VIS, ADR"]
+        B3["Roadmap commitment"]
+    end
+    subgraph L2["Layer 2 — Measured Facts"]
+        C1["Metric reading<br/>MET-VIS-nnn"]
+        C2["Validation result<br/>VAL-VIS-nnn"]
+        C3["Gate outcome<br/>QG-n"]
+    end
+    subgraph L3["Layer 3 — Ground Evidence"]
+        D1["Repository artefact<br/>file, commit, diff"]
+        D2["CI execution record"]
+        D3["Runtime observation"]
+    end
+    A1 --> B1
+    A2 --> B2
+    A3 --> B1
+    A3 --> B2
+    B1 --> C1
+    B2 --> C2
+    B3 --> C1
+    C1 --> D1
+    C2 --> D1
+    C2 --> D2
+    C3 --> D2
+    C1 -.->|"unreachable today"| D3
+    classDef l0 fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef l1 fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef l2 fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef l3 fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class A1,A2,A3 l0
+    class B1,B2,B3 l1
+    class C1,C2,C3 l2
+    class D1,D2,D3 l3
+```
+
+> **Diagram ID:** `DGM-VIS-114`
+> **Explanation:** The Enterprise Evidence Graph in four layers. External assertions rest on internal
+> positions, which rest on measured facts, which rest on ground evidence. Every solid edge is a
+> dependency that must be traversable in both directions. The single dashed edge is the only path to
+> runtime observation, and it does not exist in Oship — which is why no external assertion about
+> operational behaviour can currently be grounded at all.
+
+### TBL-VIS-469: Enterprise Evidence Graph — Layer Contracts
+
+| Layer | Node type | Who creates it | Maximum evidence class it can confer | Failure mode when unlinked |
+| :--- | :--- | :--- | :---: | :--- |
+| **L0** External assertion | Public or contractual claim | Product, leadership, sales | none — L0 confers nothing | Confident public statement with no internal basis |
+| **L1** Internal position | Status, decision, roadmap entry | Owning role | `EV2` | Status maintained by habit rather than by measurement |
+| **L2** Measured fact | Metric reading, validation result, gate outcome | Automated or documented process | `EV3`–`EV4` | Metric published without a live source |
+| **L3** Ground evidence | Artefact, CI record, runtime observation | The system itself | `EV3`–`EV6` | Evidence exists but nothing points to it |
+
+### TBL-VIS-470: Downward Traversal — Three Real Enterprise Assertions
+
+| Assertion | L1 | L2 | L3 | Verdict |
+| :--- | :--- | :--- | :--- | :--- |
+| "Oship has 24 of 24 knowledge domains" (README badge) | `PROJECT_STATUS` domain count | `MET-VIS-004` = 24 directories with an `INDEX.md` | 24 directories present in the tree | **Grounded at `EV3` for the literal count** — but the badge implies completeness of content, which is `FAL-VIS-171` |
+| "Oship is AI-first" (README tenet) | `ADR-0001` APPROVED | **no metric** | `.ai/` exists with 17 documents | **Breaks at L2** — a structural fact is being used to support a behavioural claim |
+| "The architecture is enterprise-grade" | `AOM-ARCH-001` documented | **no metric** | **no runnable system** | **Breaks at L1→L2** — nothing below the document |
+
+> **`VIS-483`.** Two of three break, and both break at the same place: **the L1→L2 edge, where a
+> documented position must become a measured fact.** This is the same boundary that `MPC-17` and the
+> `EV3` ceiling identify from other directions. Oship's evidence problem is not a shortage of
+> documents or a shortage of artefacts — it is the missing measurement layer between them.
+
+### TBL-VIS-471: Upward Traversal — Blast Radius of a Single Falsified Fact
+
+| If this ground fact were false | L2 affected | L1 affected | L0 affected | Severity |
+| :--- | :--- | :--- | :--- | :---: |
+| Application source file count is not 0 | `MET-VIS-009`, the Tier boundaries, the `EV3` ceiling rationale | Phase 0 status, `ADR-0001` compliance | Any claim about pre-implementation discipline | **HIGH** |
+| A workflow is in fact installed | `MET-VIS-010`, the CI-absence argument | `OUT-VIS-004`, eight of nine `MPC` failures | Claims about automated verification | **CRITICAL** — it would raise the evidence ceiling |
+| `CODEOWNERS` has more than one principal | `MET-VIS-024`, `VAL-VIS-550` | Independence assumptions in §04.2 | Any attestation implying review separation | **HIGH** |
+| A `.gitkeep` directory contains real code | `MET-VIS-005`, `MET-VIS-009` | Scope and status of every implementation claim | Readiness claims | **CRITICAL** |
+
+> **`VIS-484`.** The blast-radius table is the reason ground facts are re-measured rather than
+> remembered. Four cheap `git` and `find` commands underwrite a large fraction of every conclusion in
+> PART 04. **`VAL-VIS-761` requires those four measurements to be re-taken at the start of any part
+> that reasons from them, and the readings recorded with the part, not inherited from an earlier
+> one.**
+
+> **`VIS-485`.** **`OBL-42`** is opened: the upward index — evidence to dependent claims — does not
+> exist in any machine-readable form. Until it does, the blast-radius analysis above must be redone
+> by hand every time, which means in practice it will not be redone.
+
+---
+
+## 04.17 — The Traceability Matrix
+
+### AI NAVIGATION METADATA — §04.17
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before asserting that any element of the vision is covered** |
+| **AI DEPENDENCIES** | PARTS 01–03 identifiers · §04.16 graph · §04.5 metrics |
+| **AI INPUTS** | A vision element |
+| **AI OUTPUTS** | Its forward links, its evidence, and whether the chain terminates |
+| **AI IMPLEMENTATION IMPACT** | The matrix is the contract §04.16 traverses |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-769`…`VAL-VIS-780` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` component register |
+
+---
+
+### 04.17.1 — Matrix Structure
+
+> **`VIS-486`.** A traceability matrix that maps everything to everything is decorative. This one
+> maps along a single spine — **PROBLEM → DOMAIN → CAPABILITY → COMPONENT → METRIC → EVIDENCE** — and
+> records, for each row, the first link that fails. The value is concentrated entirely in that last
+> column.
+
+```mermaid
+flowchart LR
+    P["PROBLEM<br/>PROB-VIS-nnn"] --> D["DOMAIN<br/>DOMAIN-VIS-nnn"]
+    D --> C["CAPABILITY<br/>CAP-VIS-nnn"]
+    C --> K["COMPONENT<br/>CMP-ARCH-nnn"]
+    K --> M["METRIC<br/>MET-VIS-nnn"]
+    M --> E["EVIDENCE<br/>EV0 to EV6"]
+    P -.->|"orphan check"| X1["Problem with<br/>no domain"]
+    C -.->|"orphan check"| X2["Capability with<br/>no component"]
+    K -.->|"orphan check"| X3["Component with<br/>no metric"]
+    classDef spine fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef orphan fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class P,D,C,K,M,E spine
+    class X1,X2,X3 orphan
+```
+
+> **Diagram ID:** `DGM-VIS-124`
+> **Explanation:** The traceability spine and its three orphan checks. Each dashed branch is a
+> distinct integrity failure: a problem nobody owns, a capability nothing implements, a component
+> nothing measures. The third is the most common in Oship and the least visible.
+
+### TBL-VIS-472: Traceability Matrix — Segment A, Problem to Domain (20 mappings)
+
+| # | Problem | Domain | Link status | Break point |
+| ---: | :--- | :--- | :---: | :--- |
+| 1 | `PROB-VIS-001` | `DOMAIN-VIS-001` | linked | — |
+| 2 | `PROB-VIS-002` | `DOMAIN-VIS-001` | linked | — |
+| 3 | `PROB-VIS-003` | `DOMAIN-VIS-002` | linked | — |
+| 4 | `PROB-VIS-004` | `DOMAIN-VIS-002` | linked | — |
+| 5 | `PROB-VIS-005` | `DOMAIN-VIS-003` | linked | — |
+| 6 | `PROB-VIS-006` | `DOMAIN-VIS-003` | linked | — |
+| 7 | `PROB-VIS-007` | `DOMAIN-VIS-004` | linked | — |
+| 8 | `PROB-VIS-008` | `DOMAIN-VIS-004` | linked | — |
+| 9 | `PROB-VIS-009` | `DOMAIN-VIS-005` | linked | — |
+| 10 | `PROB-VIS-010` | `DOMAIN-VIS-005` | linked | — |
+| 11 | `PROB-VIS-011` | `DOMAIN-VIS-006` | linked | — |
+| 12 | `PROB-VIS-012` | `DOMAIN-VIS-007` | linked | — |
+| 13 | `PROB-VIS-013` | `DOMAIN-VIS-008` | linked | — |
+| 14 | `PROB-VIS-014` | `DOMAIN-VIS-009` | linked | — |
+| 15 | `PROB-VIS-015` | `DOMAIN-VIS-010` | linked | — |
+| 16 | `PROB-VIS-016` | `DOMAIN-VIS-011` | linked | — |
+| 17 | `PROB-VIS-017` | `DOMAIN-VIS-012` | linked | — |
+| 18 | `PROB-VIS-018` | `DOMAIN-VIS-013` | linked | — |
+| 19 | `PROB-VIS-019` | `DOMAIN-VIS-014` | linked | — |
+| 20 | `PROB-VIS-020` | `DOMAIN-VIS-015` | linked | — |
+
+> **`VIS-487`.** Segment A is fully linked and it is the only fully linked segment in the matrix.
+> This is expected: problem-to-domain mapping is an authoring activity that costs nothing beyond
+> care, and it was performed in PART 02. **Completeness here should not be read as encouragement —
+> it is the cheapest segment.**
+
+### TBL-VIS-473: Traceability Matrix — Segment B, Domain to Capability (24 mappings)
+
+| # | Domain | Representative capabilities | Count | Link status |
+| ---: | :--- | :--- | ---: | :---: |
+| 21 | `DOMAIN-VIS-001` | `CAP-VIS-001`…`CAP-VIS-006` | 6 | linked |
+| 22 | `DOMAIN-VIS-002` | `CAP-VIS-007`…`CAP-VIS-013` | 7 | linked |
+| 23 | `DOMAIN-VIS-003` | `CAP-VIS-014`…`CAP-VIS-020` | 7 | linked |
+| 24 | `DOMAIN-VIS-004` | `CAP-VIS-021`…`CAP-VIS-027` | 7 | linked |
+| 25 | `DOMAIN-VIS-005` | `CAP-VIS-028`…`CAP-VIS-034` | 7 | linked |
+| 26 | `DOMAIN-VIS-006` | `CAP-VIS-035`…`CAP-VIS-041` | 7 | linked |
+| 27 | `DOMAIN-VIS-007` | `CAP-VIS-042`…`CAP-VIS-048` | 7 | linked |
+| 28 | `DOMAIN-VIS-008` | `CAP-VIS-049`…`CAP-VIS-056` | 8 | linked |
+| 29 | `DOMAIN-VIS-009` | `CAP-VIS-060`…`CAP-VIS-066` | 7 | linked — `057`…`059` are permanent gaps |
+| 30 | `DOMAIN-VIS-010` | `CAP-VIS-067`…`CAP-VIS-073` | 7 | linked |
+| 31 | `DOMAIN-VIS-011` | `CAP-VIS-074`…`CAP-VIS-080` | 7 | linked |
+| 32 | `DOMAIN-VIS-012` | `CAP-VIS-081`…`CAP-VIS-087` | 7 | linked |
+| 33 | `DOMAIN-VIS-013` | `CAP-VIS-088`…`CAP-VIS-094` | 7 | linked |
+| 34 | `DOMAIN-VIS-014` | `CAP-VIS-095`…`CAP-VIS-101` | 7 | linked |
+| 35 | `DOMAIN-VIS-015` | `CAP-VIS-102`…`CAP-VIS-108` | 7 | linked |
+| 36 | `DOMAIN-VIS-016` | `CAP-VIS-110`…`CAP-VIS-116` | 7 | linked |
+| 37 | `DOMAIN-VIS-017` | `CAP-VIS-117`…`CAP-VIS-123` | 7 | linked |
+| 38 | `DOMAIN-VIS-018` | `CAP-VIS-124`…`CAP-VIS-130` | 7 | linked |
+| 39 | `DOMAIN-VIS-019` | `CAP-VIS-131`…`CAP-VIS-137` | 7 | linked |
+| 40 | `DOMAIN-VIS-020` | `CAP-VIS-138`…`CAP-VIS-144` | 7 | linked |
+| 41 | `DOMAIN-VIS-021` | `CAP-VIS-145`…`CAP-VIS-151` | 7 | linked |
+| 42 | `DOMAIN-VIS-022` | `CAP-VIS-152`…`CAP-VIS-158` | 7 | linked |
+| 43 | `DOMAIN-VIS-023` | `CAP-VIS-159`…`CAP-VIS-165` | 7 | linked |
+| 44 | `DOMAIN-VIS-045` | `CAP-VIS-109` | 1 | **BROKEN — `OBL-32`, binding error carried forward uncorrected** |
+
+> **`VIS-488`.** Row 44 is the one known structural defect in Segment B and it has been carried
+> across three parts without correction, because correcting it would require rewriting a frozen part
+> — which the append-only rule forbids. **The correct handling is the one applied: the defect is
+> recorded, its identifier is stable, and the correction is deferred to a superseding part rather
+> than smuggled into a frozen one.**
+
+### TBL-VIS-474: Traceability Matrix — Segment C, Capability to Component (20 sampled mappings)
+
+| # | Capability | Component | Link status | Break point |
+| ---: | :--- | :--- | :---: | :--- |
+| 45 | `CAP-VIS-001` | `CMP-ARCH-001` | linked | — |
+| 46 | `CAP-VIS-004` | `CMP-ARCH-003` | linked | — |
+| 47 | `CAP-VIS-009` | `CMP-ARCH-005` | linked | — |
+| 48 | `CAP-VIS-014` | `CMP-ARCH-007` | linked | — |
+| 49 | `CAP-VIS-021` | `CMP-ARCH-009` | linked | — |
+| 50 | `CAP-VIS-028` | `CMP-ARCH-011` | linked | — |
+| 51 | `CAP-VIS-035` | `CMP-ARCH-013` | linked | — |
+| 52 | `CAP-VIS-042` | `CMP-ARCH-015` | linked | — |
+| 53 | `CAP-VIS-049` | `CMP-ARCH-017` | linked | — |
+| 54 | `CAP-VIS-060` | `CMP-ARCH-019` | linked | — |
+| 55 | `CAP-VIS-067` | **none cited** | **BROKEN** | `OBL-30` — component exists in `AOM-ARCH-001`, uncited here |
+| 56 | `CAP-VIS-074` | **none cited** | **BROKEN** | `OBL-30` |
+| 57 | `CAP-VIS-081` | **none cited** | **BROKEN** | `OBL-30` |
+| 58 | `CAP-VIS-088` | **none cited** | **BROKEN** | `OBL-30` |
+| 59 | `CAP-VIS-095` | **none cited** | **BROKEN** | `OBL-30` |
+| 60 | `CAP-VIS-102` | **none cited** | **BROKEN** | `OBL-30` |
+| 61 | `CAP-VIS-110` | **none cited** | **BROKEN** | `OBL-30` |
+| 62 | `CAP-VIS-117` | **none cited** | **BROKEN** | `OBL-30` |
+| 63 | `CAP-VIS-124` | **none cited** | **BROKEN** | `OBL-30` |
+| 64 | `CAP-VIS-131` | **none cited** | **BROKEN** | `OBL-30` |
+
+> **`VIS-489`.** Segment C is where the matrix starts failing, and it fails in a specific direction:
+> **the components exist in `AOM-ARCH-001` but the vision document does not cite them.** This is a
+> one-way break — architecture is complete, the link is missing. `OBL-30` counts eleven such
+> components. Ten appear above; the eleventh is `CAP-VIS-138`.
+
+### TBL-VIS-475: Traceability Matrix — Segment D, Component to Metric (20 mappings)
+
+| # | Component or subject | Metric | Link status | Class attainable |
+| ---: | :--- | :--- | :---: | :---: |
+| 65 | Repository structure | `MET-VIS-001`…`MET-VIS-006` | linked | `EV3` |
+| 66 | Documentation corpus | `MET-VIS-007`, `MET-VIS-008` | linked | `EV3` |
+| 67 | Source code presence | `MET-VIS-009` | linked | `EV3` |
+| 68 | CI installation | `MET-VIS-010` | linked | `EV3` |
+| 69 | Diagram integrity | `MET-VIS-011`, `MET-VIS-012` | linked | `EV3` |
+| 70 | Visual density | `MET-VIS-013`, `MET-VIS-014` | linked | `EV3` |
+| 71 | Namespace consumption | `MET-VIS-015`…`MET-VIS-021` | linked | `EV3` |
+| 72 | Governance principals | `MET-VIS-022`…`MET-VIS-025` | linked | `EV3` |
+| 73 | Metadata conformance | `MET-VIS-026` | linked | `EV3` |
+| 74 | Referential integrity | `MET-VIS-027`…`MET-VIS-031` | **BROKEN — no parser** | `EV0` |
+| 75 | Context cost | `MET-VIS-032`…`MET-VIS-037` | partial | `EV2` |
+| 76 | Agent behaviour | `AIO-001`…`AIO-026` | **BROKEN — no trace store** | `EV0` |
+| 77 | Agent history signals | `AIO-027`…`AIO-030`, `AIO-036`, `AIO-037`, `AIO-052` | linked via git history | `EV3` |
+| 78 | Refusal quality | `AIO-044`…`AIO-046` | **BROKEN — no trace store** | `EV0` |
+| 79 | Data quality rules | `DQR-001`…`DQR-052` | specification only | `EV2` |
+| 80 | Gate outcomes | `QG-0`…`QG-8` | **BROKEN — no runner** | `EV0` |
+| 81 | Decision authority | `TBL-VIS-456` matrix | linked, manual | `EV2` |
+| 82 | Progress state vector | `TBL-VIS-458`…`TBL-VIS-461` | linked, manual | `EV2` |
+| 83 | Trace conformance | `TRC-001`…`TRC-024` | **BROKEN — no emitter** | `EV0` |
+| 84 | Readability index | `ARI`, `ARI-D` | **BROKEN — two components unbuilt** | `EV0` |
+
+### TBL-VIS-476: Traceability Matrix — Segment E, Metric to Evidence (16 mappings)
+
+| # | Metric group | Ground evidence | Reproducible by | Class |
+| ---: | :--- | :--- | :--- | :---: |
+| 85 | `MET-VIS-001`…`006` | Directory tree | `find` | `EV3` |
+| 86 | `MET-VIS-007`, `008` | File contents | `wc -l` | `EV3` |
+| 87 | `MET-VIS-009` | Absence of source files | `find` with extension filter | `EV3` |
+| 88 | `MET-VIS-010` | Empty `.github/workflows/` | `ls` | `EV3` |
+| 89 | `MET-VIS-011`, `012` | Mermaid parse run | the PART 04 validator | `EV3` |
+| 90 | `MET-VIS-013`, `014` | Anchor positions | `grep -n` | `EV3` |
+| 91 | `MET-VIS-015`…`021` | Identifier occurrences | `grep -o` and `sort -u` | `EV3` |
+| 92 | `MET-VIS-022`…`025` | `CODEOWNERS` contents | file read | `EV3` |
+| 93 | `MET-VIS-026` | Frontmatter presence | `head` per file | `EV3` |
+| 94 | `MET-VIS-027`…`031` | **none** | **nothing** | `EV0` |
+| 95 | `MET-VIS-032`…`037` | Estimated from line counts | arithmetic on `EV3` inputs | `EV2` |
+| 96 | `MET-VIS-050` | `git log` merge authorship | `git log` | `EV3` |
+| 97 | `AIO-027`…`030` | Commit metadata | `git log` | `EV3` |
+| 98 | `AIO-001`…`026` | **none** | **nothing** | `EV0` |
+| 99 | `QG-0`…`QG-8` | **none** | **nothing** | `EV0` |
+| 100 | `TRC-001`…`024` | **none** | **nothing** | `EV0` |
+
+### TBL-VIS-477: Traceability Matrix — Roll-Up
+
+| Segment | Mappings | Fully linked | Broken | Dominant break cause |
+| :--- | ---: | ---: | ---: | :--- |
+| A Problem → Domain | 20 | 20 | 0 | — |
+| B Domain → Capability | 24 | 23 | 1 | `OBL-32` binding error |
+| C Capability → Component | 20 | 10 | 10 | `OBL-30` uncited components |
+| D Component → Metric | 20 | 11 | 9 | No parser, no trace store, no gate runner |
+| E Metric → Evidence | 16 | 12 | 4 | Same absent infrastructure |
+| **Total** | **100** | **76** | **24** | — |
+
+> **`VIS-490`.** One hundred mappings, seventy-six intact, twenty-four broken — and the breaks are
+> not scattered. **They cluster at exactly two boundaries: capability-to-component citation, and
+> everything downstream of the absent measurement infrastructure.** The first is an authoring debt
+> costing perhaps an hour. The second is `OUT-VIS-004` again, appearing here for the fourth distinct
+> time in PART 04 under a fourth different measurement lens.
+
+> **`VIS-491`.** The matrix is reported as **76 percent linked** rather than as a completion
+> percentage, and the distinction is not pedantic. Seventy-six percent of *mappings audited* are
+> intact; this says nothing about what fraction of Oship is built. Under `VAL-VIS-719` the second
+> reading would be a HALT violation, and the phrasing is chosen to make that confusion impossible.
+
+---
