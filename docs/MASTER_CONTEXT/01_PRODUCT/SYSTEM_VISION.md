@@ -16933,3 +16933,726 @@ flowchart LR
 > reading would be a HALT violation, and the phrasing is chosen to make that confusion impossible.
 
 ---
+
+## 04.18 — Quality Gates
+
+### AI NAVIGATION METADATA — §04.18
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before declaring anything ready to advance** |
+| **AI DEPENDENCIES** | §04.2 evidence classes · §04.6 metric lifecycle · §04.17 traceability |
+| **AI INPUTS** | A candidate artefact and its claimed stage |
+| **AI OUTPUTS** | PASS, FAIL with the failing rule, or BLOCKED with the missing evidence |
+| **AI IMPLEMENTATION IMPACT** | **No gate runner exists.** Every gate below is evaluated by hand |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-781`…`VAL-VIS-800` under `DEC-VIS-042` |
+| **AI RELATED DOCUMENTS** | `ADR-0001` · `.ai/DOCUMENTATION_COMPLETION_STANDARD.md` |
+
+---
+
+### 04.18.0 — `DEC-VIS-042` — Second Extension of the `VAL-VIS-` Ceiling
+
+> **`VIS-492`.** The `VAL-VIS-` namespace ceiling raised by `DEC-VIS-041` to 780 is now exactly
+> consumed: §04.17 allocated `VAL-VIS-769`…`780`. Under `OBL-34` no namespace may be extended
+> without a decision record, and under `VIS-347` no identifier may be reused. §04.18 through §04.31
+> require validation rules. The ceiling must move or the remaining sections must be written without
+> validation rules, which would defeat their purpose.
+
+### TBL-VIS-478: `DEC-VIS-042` — `VAL-VIS-` Ceiling Raised to 1000
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-VIS-042` |
+| **Type** | Namespace ceiling extension |
+| **Status** | `ACCEPTED` |
+| **Previous ceiling** | 780, set by `DEC-VIS-041` |
+| **New ceiling** | **1000** |
+| **Consumed at decision time** | `VAL-VIS-001`…`VAL-VIS-780` — 100 percent of the previous ceiling |
+| **Remaining sections requiring rules** | §04.18, §04.19, §04.20, §04.21, §04.22, §04.23, §04.24, §04.25, §04.26, §04.27, §04.28, §04.29, §04.30, §04.31 — 14 sections |
+| **Sizing basis** | 14 sections × ~14 rules each = ~196 rules; 220 headroom allocated |
+| **Why not a new namespace** | A second validation namespace would fragment the release gate; every gate query would have to union two ranges |
+| **Why not unlimited** | An unbounded namespace removes the forcing function that makes each extension a reviewed act |
+| **Alternatives rejected** | Reusing retired identifiers — prohibited by `VIS-347`; sub-numbering such as `VAL-VIS-780a` — breaks sort order and machine extraction |
+| **Reversibility** | Irreversible in practice once identifiers are allocated |
+| **Evidence class of the consumption figure** | `EV3` — `grep -o` over the document |
+| **Consequence if wrong** | A third extension decision, at the same low cost |
+
+> **`VIS-493`.** This is the second ceiling extension in one part, which is itself a measurement.
+> **`MET-VIS-018` — `VAL-VIS-` namespace consumption rate — is the fastest-moving namespace metric in
+> the repository**, and the reason is structural: PART 04 is a part about rules, and rules are
+> validation identifiers. A part about capabilities consumes `CAP-VIS-`; a part about measurement
+> consumes `VAL-VIS-`. The rate is expected, not alarming, and recording it here prevents a future
+> reader from mistaking velocity for disorder.
+
+---
+
+### 04.18.1 — What a Gate Is and Is Not
+
+> **`VIS-494`.** A gate is **a named point at which advancement is refused unless stated evidence
+> exists.** Three properties are non-negotiable. A gate must be **binary** — pass or fail, never a
+> score. It must be **evidence-bound** — the pass condition names the evidence class required, not a
+> feeling of readiness. And it must be **refusable** — a gate that has never blocked anything is not
+> a gate, it is a checklist, and `FAL-VIS-256` catalogues the difference.
+
+> **`VIS-495`.** Oship has nine gates, `QG-0` through `QG-8`, spanning idea to optimisation. They are
+> not release gates only. **A gate sits between every pair of adjacent lifecycle stages**, so that
+> work cannot skip a stage silently — which is the failure the gate model exists to prevent.
+
+```mermaid
+stateDiagram-v2
+    [*] --> IDEA
+    IDEA --> SPECIFIED: QG-0 idea admitted
+    SPECIFIED --> DECIDED: QG-1 specification complete
+    DECIDED --> DESIGNED: QG-2 decision recorded
+    DESIGNED --> IMPLEMENTED: QG-3 design validated
+    IMPLEMENTED --> TESTED: QG-4 implementation verified
+    TESTED --> REVIEWED: QG-5 tests pass
+    REVIEWED --> RELEASED: QG-6 review independent
+    RELEASED --> OBSERVED: QG-7 release observable
+    OBSERVED --> OPTIMISED: QG-8 outcome measured
+    OPTIMISED --> [*]
+    SPECIFIED --> IDEA: rejected at QG-1
+    DESIGNED --> SPECIFIED: rejected at QG-3
+    IMPLEMENTED --> DESIGNED: rejected at QG-4
+    REVIEWED --> IMPLEMENTED: rejected at QG-6
+```
+
+> **Diagram ID:** `DGM-VIS-125`
+> **Explanation:** The nine-gate lifecycle as a state machine. Forward transitions each require their
+> gate to pass. Four reverse transitions are shown because rejection must return work to a specific
+> earlier state, not to an undefined "needs work" limbo. Oship today has artefacts in `SPECIFIED` and
+> `DECIDED`; **nothing in the repository has passed `QG-3`**, because passing it requires a design
+> validated against something executable.
+
+### TBL-VIS-479: Quality Gate Register `QG-0`…`QG-8`
+
+| Gate | Transition | Pass condition | Minimum evidence class | Owner role | Attainable in Oship today |
+| :--- | :--- | :--- | :---: | :--- | :---: |
+| **`QG-0`** | IDEA → SPECIFIED | The idea names a problem identifier and a target domain | `EV1` | Product | **yes** |
+| **`QG-1`** | SPECIFIED → DECIDED | Specification carries acceptance criteria and a named owner role | `EV2` | Product | **yes** |
+| **`QG-2`** | DECIDED → DESIGNED | A decision record exists with alternatives and reversibility | `EV2` | Architecture | **yes** |
+| **`QG-3`** | DESIGNED → IMPLEMENTED | Design validated: diagrams parse, identifiers resolve, no dangling references | `EV3` | Architecture | **partially — diagrams parse; references unverified per `OBL-39`** |
+| **`QG-4`** | IMPLEMENTED → TESTED | Automated build or check executed on the artefact | `EV4` | Engineering | **no — `OUT-VIS-004`, no CI** |
+| **`QG-5`** | TESTED → REVIEWED | Test results produced by an unattended run | `EV4` | Engineering | **no** |
+| **`QG-6`** | REVIEWED → RELEASED | Review by a principal distinct from the author | `EV4` | Governance | **no — single `CODEOWNERS` principal, `VAL-VIS-550`** |
+| **`QG-7`** | RELEASED → OBSERVED | The released artefact emits runtime signal | `EV5` | Operations | **no — nothing runs** |
+| **`QG-8`** | OBSERVED → OPTIMISED | Production outcome measured against the original claim | `EV6` | Product | **no** |
+
+> **`VIS-496`.** Three of nine gates are attainable, one partially, five not at all. **The cut is at
+> `QG-3`/`QG-4` — precisely the `EV3`-to-`EV4` boundary identified in §04.2 and reconfirmed in
+> §04.16.** Every structural analysis in PART 04 converges on the same wall from a different side,
+> which is the strongest available evidence that the wall is real and not an artefact of one
+> section's framing.
+
+### TBL-VIS-480: Gate Evidence Requirements in Detail
+
+| Gate | Required artefacts | Required measurements | Automatic on pass | Automatic on fail |
+| :--- | :--- | :--- | :--- | :--- |
+| `QG-0` | Problem statement with `PROB-VIS-` link | none | Record admitted idea | Discard with reason |
+| `QG-1` | Specification section, owner role, acceptance criteria | none | Advance to decision queue | Return to IDEA with the missing criterion named |
+| `QG-2` | `DEC-VIS-` or ADR record | none | Freeze the decision; open reversal cost | Return to SPECIFIED |
+| `QG-3` | Diagrams, identifier register, cross-references | `MET-VIS-011` parse rate = 1.00; `MET-VIS-027`…`031` dangling = 0 | Mark design validated | Return to DESIGNED with the failing identifiers listed |
+| `QG-4` | Build or check log from CI | `MET-VIS-010` workflows installed ≥ 1 | Attach the run URL as `EV4` evidence | Return to IMPLEMENTED |
+| `QG-5` | Test result artefact | Pass ratio = 1.00 for required suites | Advance | Return with failing tests named |
+| `QG-6` | Review record by a distinct principal | `MET-VIS-024` distinct principals ≥ 2 | Advance to release | Return to IMPLEMENTED |
+| `QG-7` | Deployment record and telemetry endpoint | Signal received within the freshness window | Advance to OBSERVED | Roll back |
+| `QG-8` | Outcome measurement against the original claim | Claim confirmed or refuted at `EV6` | Close the claim | Reopen the claim with the refuting reading |
+
+> **`VIS-497`.** Notice that `QG-3` is the first gate with a numeric pass condition and `QG-6` is the
+> first with a governance condition that no amount of authoring can satisfy. **A single-principal
+> repository cannot pass `QG-6` by writing better documents.** This is stated plainly because the
+> temptation, in a documentation-heavy project, is to believe every gate can be argued past.
+
+### TBL-VIS-481: Gate Application to the Six Live Open Items
+
+| Item | Current stage | Next gate | Blocked by | Gate verdict |
+| :--- | :--- | :--- | :--- | :---: |
+| `OBL-03` persistence decision | SPECIFIED | `QG-1` → `QG-2` | Awaiting a human decision on the persistence strategy | **BLOCKED — not agent-decidable** |
+| `OBL-30` uncited components | SPECIFIED | `QG-3` | Authoring only | **PASSABLE** |
+| `OBL-38` metric contract retrofit | SPECIFIED | `QG-3` | Authoring only | **PASSABLE** |
+| `OBL-39` traceability parser | DECIDED | `QG-3` then `QG-4` | `QG-4` needs CI | **PARTIAL — passes `QG-3`, stops at `QG-4`** |
+| `OBL-40` missing frontmatter | SPECIFIED | `QG-3` | Authoring only | **PASSABLE** |
+| `OBL-41` declarativeness parser | SPECIFIED | `QG-3` then `QG-4` | Same as `OBL-39` | **PARTIAL** |
+
+> **`VIS-498`.** Four of six items can clear their next gate with authoring effort alone. This is the
+> most actionable finding in §04.18 and it is deliberately concrete: **`OBL-30`, `OBL-38`, and
+> `OBL-40` are unblocked right now**, and the reason they remain open is sequencing, not obstruction.
+
+### TBL-VIS-482: Validation Rules — Quality Gates
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-781` | A gate outcome is binary; a percentage is not a gate outcome | **HALT** |
+| `VAL-VIS-782` | A gate pass must cite the evidence that satisfied it | **BLOCK** |
+| `VAL-VIS-783` | A gate may not be passed by the same principal who produced the artefact, at `QG-6` and above | **HALT** |
+| `VAL-VIS-784` | A stage may not be entered without passing the gate that precedes it | **HALT** |
+| `VAL-VIS-785` | A failing gate must name the specific failing condition, not a category | **BLOCK** |
+| `VAL-VIS-786` | A gate whose evidence class exceeds the repository ceiling is reported as UNATTAINABLE, never as failed | **BLOCK** |
+| `VAL-VIS-787` | Gate results expire when their underlying measurement expires | **WARN** |
+| `VAL-VIS-788` | A gate may not be redefined to admit work already rejected by it, without a decision record | **HALT** |
+| `VAL-VIS-789` | Reverse transitions must return work to a named earlier state | **BLOCK** |
+| `VAL-VIS-790` | A gate that has never rejected anything is flagged for review as possibly vestigial | **WARN** |
+| `VAL-VIS-791` | Gate evidence must be reproducible per §04.27 | **BLOCK** |
+| `VAL-VIS-792` | Manual gate evaluation is recorded as manual and capped at `EV2` | **BLOCK** |
+
+---
+
+## 04.19 — The Measurement Failure Library
+
+### AI NAVIGATION METADATA — §04.19
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read when a measurement looks wrong** |
+| **AI DEPENDENCIES** | `DEC-VIS-038` namespace reopening · §04.28 catalogue |
+| **AI INPUTS** | An anomalous or suspicious measurement |
+| **AI OUTPUTS** | A `FAL-VIS-` classification and its containment action |
+| **AI IMPLEMENTATION IMPACT** | Structure of the library; the entries themselves are allocated in §04.28 |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-793`…`VAL-VIS-800` |
+| **AI RELATED DOCUMENTS** | §04.20 correction lifecycle |
+
+---
+
+### 04.19.1 — Library Structure
+
+> **`VIS-499`.** `DEC-VIS-038` reopened `FAL-VIS-` to 300 for one reason stated at the time: none of
+> the 250 existing failure modes describe a failure of the *instrument* rather than the *system*.
+> §04.19 defines how instrument failures are organised; §04.28 allocates the forty entries
+> `FAL-VIS-251`…`290`. Splitting structure from content is deliberate — **the taxonomy must be
+> stable before entries are written into it**, or the entries determine the taxonomy and the
+> taxonomy stops being a classification.
+
+### TBL-VIS-483: Measurement Failure Classes
+
+| Class | Range | What fails | Detectable by | Typical containment |
+| :--- | :--- | :--- | :--- | :--- |
+| **MF-A Definition failure** | `FAL-VIS-251`…`258` | The metric means something different than intended | Reading the definition against the query | Redefine under a new metric identifier |
+| **MF-B Collection failure** | `FAL-VIS-259`…`266` | The value is gathered incorrectly or not at all | Re-running collection independently | Recollect; mark the interval missing |
+| **MF-C Interpretation failure** | `FAL-VIS-267`…`274` | The value is correct and the conclusion drawn from it is not | Tracing the conclusion back to the reading | Retract the conclusion, keep the reading |
+| **MF-D Presentation failure** | `FAL-VIS-275`…`282` | The value is correct and its display misleads | Independent reading of the presentation | Re-present; do not change the value |
+| **MF-E Governance failure** | `FAL-VIS-283`…`290` | The metric changed without authority or record | Comparing definition history | Restore, record, and open a decision |
+
+> **`VIS-500`.** The five classes are ordered by distance from the data. **Definition failures are the
+> most damaging and the hardest to see, because every downstream number is internally consistent —
+> the instrument is measuring exactly what it was built to measure, and what it was built to measure
+> is the wrong thing.** Presentation failures are the least damaging and by far the most common.
+
+### TBL-VIS-484: Failure Class Severity and Reach
+
+| Class | Corrupts the value | Corrupts the conclusion | Silent | Survives re-collection | Priority |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| MF-A Definition | no | **yes** | **yes** | **yes** | **1** |
+| MF-E Governance | maybe | **yes** | **yes** | maybe | **2** |
+| MF-B Collection | **yes** | **yes** | sometimes | no | 3 |
+| MF-C Interpretation | no | **yes** | sometimes | **yes** | 4 |
+| MF-D Presentation | no | **yes** | no | **yes** | 5 |
+
+> **`VIS-501`.** The "survives re-collection" column is the operationally important one. **Three of
+> five failure classes are not fixed by measuring again**, which is the reflex response to a
+> suspicious number. Re-collection only repairs MF-B. Applying it to MF-A produces the same wrong
+> answer with increased confidence, which is worse than the original failure.
+
+### TBL-VIS-485: Instrument Failures Observed in Oship So Far
+
+| Occurrence | Class | Description | Status |
+| :--- | :---: | :--- | :--- |
+| Capability-count divergence, `OBL-33` | **MF-A** | `TBL-VIS-278` and `TBL-VIS-390` count capability statuses under different definitions of "counted" | **Open — printed, not corrected** |
+| README "24 of 24" badge, `FAL-VIS-171` | **MF-D** | The count is literally correct; the badge presents it as completeness | **Open** |
+| `.github/workflow-skeletons/` | **MF-D** | Skeletons present as installed automation; nothing executes | **Documented in §04.1** |
+| `DMET-`/`CMET-` metrics predating the contract, `OBL-38` | **MF-A** | 111 metrics defined before the 21-field contract existed | **Open** |
+| Published line counts drifting from actual, twice | **MF-B** | Counts quoted from memory rather than re-measured | **Contained — `VAL-VIS-761` now requires re-measurement** |
+
+> **`VIS-502`.** Five instrument failures in a repository with no running software. **Four remain
+> open and three are class MF-A or MF-D — the silent classes.** The one that was contained, MF-B,
+> was contained precisely because it was noisy: a line count that disagrees with `wc -l` announces
+> itself. This is the empirical basis for the priority ordering in `TBL-VIS-484`.
+
+### TBL-VIS-486: Validation Rules — Measurement Failure Handling
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-793` | A suspicious measurement must be classified before it is corrected | **BLOCK** |
+| `VAL-VIS-794` | Re-collection may only be offered as a remedy for class MF-B | **BLOCK** |
+| `VAL-VIS-795` | A definition failure requires a new metric identifier; the old definition is not edited | **HALT** |
+| `VAL-VIS-796` | A presentation failure may not be fixed by altering the underlying value | **HALT** |
+| `VAL-VIS-797` | Every instrument failure is recorded with its class, even after containment | **BLOCK** |
+| `VAL-VIS-798` | An open instrument failure suppresses release-gate use of every metric it touches | **HALT** |
+| `VAL-VIS-799` | Governance failures require a decision record before restoration | **BLOCK** |
+| `VAL-VIS-800` | A failure discovered by an agent is reported, never silently repaired | **HALT** |
+
+> **`VIS-503`.** `VAL-VIS-800` is the rule most likely to be violated by a well-intentioned agent. An
+> agent that notices a wrong number and quietly fixes it has destroyed the evidence that the
+> instrument produced a wrong number, which is more valuable than the corrected value.
+
+---
+
+## 04.20 — The Measurement Correction Lifecycle
+
+### AI NAVIGATION METADATA — §04.20
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before changing any published number** |
+| **AI DEPENDENCIES** | §04.19 failure classes · §04.6 metric lifecycle |
+| **AI INPUTS** | A published measurement now believed to be wrong |
+| **AI OUTPUTS** | A correction record, or a refusal to correct |
+| **AI IMPLEMENTATION IMPACT** | Binding on every agent that touches a published figure |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-801`…`VAL-VIS-812` |
+| **AI RELATED DOCUMENTS** | `.ai/DECISION_LOG.md` · §04.26 audit chain |
+
+---
+
+### 04.20.1 — Correction Is Not Editing
+
+> **`VIS-504`.** The naive response to a wrong published number is to change it. That response
+> destroys three things simultaneously: the record that the number was once different, the record of
+> who relied on it, and the signal that the instrument producing it is unreliable. **A correction is
+> an append, not an overwrite.** The wrong value stays visible, marked, with its replacement adjacent
+> to it.
+
+> **`VIS-505`.** The `CORR-1`…`CORR-7` namespace created by `DEC-VIS-036` names the seven states a
+> correction passes through. Every published figure that changes must traverse all seven; there is
+> no fast path, because the fast path is exactly the overwrite the lifecycle exists to prevent.
+
+```mermaid
+stateDiagram-v2
+    [*] --> CORR1
+    CORR1: CORR-1 SUSPECTED
+    CORR2: CORR-2 CLASSIFIED
+    CORR3: CORR-3 IMPACT SCOPED
+    CORR4: CORR-4 CORRECTION PROPOSED
+    CORR5: CORR-5 CORRECTION AUTHORISED
+    CORR6: CORR-6 PUBLISHED WITH SUPERSESSION
+    CORR7: CORR-7 DOWNSTREAM NOTIFIED
+    CORR1 --> CORR2
+    CORR2 --> CORR3
+    CORR3 --> CORR4
+    CORR4 --> CORR5
+    CORR5 --> CORR6
+    CORR6 --> CORR7
+    CORR7 --> [*]
+    CORR2 --> [*]: not a failure, suspicion withdrawn
+    CORR4 --> CORR3: impact underestimated
+    CORR5 --> CORR4: authorisation refused
+```
+
+> **Diagram ID:** `DGM-VIS-126`
+> **Explanation:** The seven-state correction lifecycle. Two exits and two rebounds are shown. The
+> exit at `CORR-2` handles the common case where investigation shows the original number was right.
+> The rebound from `CORR-5` to `CORR-4` is the case where a correction is proposed and refused —
+> which must be recorded, because a refused correction is itself information about the instrument.
+
+### TBL-VIS-487: Correction Lifecycle State Contract
+
+| State | Entry condition | Required output | Who may perform | Agent autonomy |
+| :--- | :--- | :--- | :--- | :---: |
+| **`CORR-1` SUSPECTED** | Anyone observes a discrepancy | A written statement of the discrepancy with both values | anyone, including an agent | `A3` |
+| **`CORR-2` CLASSIFIED** | A suspicion exists | A `FAL-VIS-` class from `TBL-VIS-483` | measurement owner | `A2` |
+| **`CORR-3` IMPACT SCOPED** | A class is assigned | The list of every claim, gate, and decision that used the value | measurement owner | `A2` |
+| **`CORR-4` CORRECTION PROPOSED** | Impact is known | The replacement value with its collection method and evidence class | measurement owner | `A2` |
+| **`CORR-5` AUTHORISED** | A proposal exists | An authorisation record naming the authorising role | **human — `A1`** | `A1` |
+| **`CORR-6` PUBLISHED** | Authorisation exists | Both values visible, the old marked SUPERSEDED with a pointer | measurement owner | `A2` |
+| **`CORR-7` NOTIFIED** | Publication complete | Each impacted claim updated or explicitly reaffirmed | measurement owner | `A2` |
+
+> **`VIS-506`.** Only `CORR-5` requires a human, and it is the state that exists solely to require
+> one. Every other state is mechanical. **The authorisation step is not there to check the
+> arithmetic — it is there to ensure a person knows the record changed**, because the failure mode
+> being prevented is silent drift, not miscalculation.
+
+### TBL-VIS-488: Correction Applied — The `OBL-33` Capability-Count Divergence
+
+| State | Status | Detail |
+| :--- | :--- | :--- |
+| `CORR-1` SUSPECTED | **complete** | `TBL-VIS-278` publishes 12 / 19 / 5 / 119 / 11 / 1; `TBL-VIS-390` publishes 14 / 21 / 11 / 102 / 17 / 1 / 1 plus 3 reserved |
+| `CORR-2` CLASSIFIED | **complete** | Class **MF-A definition failure** — the two tables count under different definitions of the status set, not under different data |
+| `CORR-3` IMPACT SCOPED | **complete** | Both figures are quoted only within this document; no gate, external claim, or `.ai/` file depends on either |
+| `CORR-4` PROPOSED | **complete** | `TBL-VIS-390` is the correct reading: it enumerates all 170 identifiers including the 3 permanent gaps and the `UNKNOWN` entry, which `TBL-VIS-278` omitted |
+| `CORR-5` AUTHORISED | **NOT PERFORMED** | Requires a human authorisation that has not occurred |
+| `CORR-6` PUBLISHED | **NOT PERFORMED** | Blocked on `CORR-5` |
+| `CORR-7` NOTIFIED | **NOT PERFORMED** | Blocked on `CORR-6` |
+
+> **`VIS-507`.** `OBL-33` is stuck at `CORR-4` and this section explains precisely why: the append-only
+> rule prevents editing the frozen `TBL-VIS-278`, and the correction lifecycle prevents declaring
+> `TBL-VIS-390` authoritative without human authorisation. **Both constraints are correct and
+> together they produce a legitimate stall.** The resolution is a superseding table in a later part
+> plus a human authorisation — not a quiet edit to either frozen table.
+
+### TBL-VIS-489: Supersession Notation
+
+| Element | Required form | Example |
+| :--- | :--- | :--- |
+| Superseded value | Struck or explicitly labelled, never deleted | "12 IMPLEMENTED — **SUPERSEDED**, see `TBL-VIS-390`" |
+| Superseding value | Carries the identifier of what it replaces | "14 IMPLEMENTED — supersedes the figure in `TBL-VIS-278`" |
+| Correction record | Its own identifier, class, and authorising role | "`OBL-33`, class MF-A, authorised by Product Management" |
+| Reason | One sentence, causal, not apologetic | "The two tables counted different identifier sets" |
+| Effective point | The commit at which the correction takes effect | commit SHA |
+
+### TBL-VIS-490: Validation Rules — Correction
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-801` | A published value is never overwritten; it is superseded | **HALT** |
+| `VAL-VIS-802` | Every correction states its `FAL-VIS-` class | **BLOCK** |
+| `VAL-VIS-803` | Impact scoping precedes proposal | **BLOCK** |
+| `VAL-VIS-804` | Publication requires a recorded human authorisation | **HALT** |
+| `VAL-VIS-805` | A refused correction is recorded with its refusal reason | **BLOCK** |
+| `VAL-VIS-806` | Downstream claims are updated or explicitly reaffirmed, never left unmentioned | **BLOCK** |
+| `VAL-VIS-807` | A correction may not change a metric's definition; that requires a new metric | **HALT** |
+| `VAL-VIS-808` | Corrections carry the evidence class of the replacement value, not of the original | **BLOCK** |
+| `VAL-VIS-809` | An agent may reach `CORR-4` autonomously and no further | **HALT** |
+| `VAL-VIS-810` | A stalled correction is reported at its stalled state, not as resolved | **BLOCK** |
+| `VAL-VIS-811` | Frozen parts are corrected by supersession in a later part, never by edit | **HALT** |
+| `VAL-VIS-812` | The count of open corrections is itself a published metric | **WARN** |
+
+---
+
+## 04.21 — Metric Governance
+
+### AI NAVIGATION METADATA — §04.21
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before defining, changing, or retiring a metric** |
+| **AI DEPENDENCIES** | §04.5 metric contract · §04.6 lifecycle · §04.20 corrections |
+| **AI INPUTS** | A proposed metric change |
+| **AI OUTPUTS** | An authority determination and the required record |
+| **AI IMPLEMENTATION IMPACT** | Governance is documented; **no enforcement mechanism exists** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-813`…`VAL-VIS-824` |
+| **AI RELATED DOCUMENTS** | `.github/CODEOWNERS` · `.ai/DECISION_LOG.md` |
+
+---
+
+### 04.21.1 — The Governance Matrix
+
+> **`VIS-508`.** Metric governance answers four questions that are usually conflated: **who may
+> define** a metric, **who may change** its definition, **who may publish** its values, and **who may
+> retire** it. Conflating them produces the common enterprise failure in which the person who
+> publishes a number is also the person who chose what it means — a structure with no possible
+> check on optimism.
+
+### TBL-VIS-491: Metric Governance Authority Matrix
+
+| Action | Product | Architecture | Engineering | Governance | Agent | Record required |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Propose** a metric | ✅ | ✅ | ✅ | ✅ | ✅ | Proposal with the 21-field contract |
+| **Define** a metric | ✅ | ✅ | — | ✅ | **✅ at `A2`** | Contract entry, reviewed |
+| **Implement** collection | — | ✅ | ✅ | — | **✅ at `A2`** | Collection script committed |
+| **Publish** a value | ✅ | ✅ | ✅ | ✅ | **✅ at `A3` if `EV3`** | Value with class and timestamp |
+| **Change** a definition | — | — | — | ✅ | **❌** | New metric identifier plus supersession |
+| **Change** a baseline | — | — | — | ✅ | **❌** | Decision record, `VAL-VIS-816` |
+| **Deprecate** a metric | ✅ | ✅ | — | ✅ | **❌** | Deprecation record with successor |
+| **Delete** a metric | **❌** | **❌** | **❌** | **❌** | **❌** | **Prohibited — metrics are deprecated, never deleted** |
+
+> **`VIS-509`.** The last row is absolute. `VIS-347` forbids identifier reuse and a deleted metric
+> whose identifier is later reused would silently rewrite history. **Deprecation with a stated
+> successor is the only retirement path.**
+
+> **`VIS-510`.** The agent column shows the same shape as `TBL-VIS-456`: agents may add and may
+> publish well-evidenced facts, but may not change what a number means or what it is compared
+> against. **Definition and baseline are the two levers by which a metric can be made to say
+> anything, and both are human-only.**
+
+### TBL-VIS-492: Metric Versioning Rules
+
+| Change type | Same identifier? | New version? | Historical values remain valid? | Example |
+| :--- | :---: | :---: | :---: | :--- |
+| Correcting a typo in the description | **yes** | patch | **yes** | Fixing "documnets" to "documents" |
+| Clarifying wording without changing scope | **yes** | patch | **yes** | "markdown files" to "files with a `.md` extension" |
+| Changing the collection tool, same definition | **yes** | minor | **yes** | `find` replaced by a script producing identical output |
+| Changing the aggregation window | **no** | — | **no** | Weekly mean becomes monthly mean — a different metric |
+| Changing what is counted | **no** | — | **no** | "markdown files" to "all documentation files" |
+| Changing the unit | **no** | — | **no** | Lines to tokens |
+| Changing the baseline for comparison | **yes** | major | **yes, but not comparable across the change** | Baseline moved from PART 03 to PART 04 |
+
+> **`VIS-511`.** Three of seven changes require a **new identifier**, not a version bump. The test is
+> simple and worth stating as a rule: **if a historical value would be misleading when placed next to
+> a new value, the metric is a different metric.** Versioning exists for changes that preserve
+> comparability; anything else is a new instrument.
+
+### TBL-VIS-493: Baseline Control
+
+| Property | Rule |
+| :--- | :--- |
+| **Definition** | A baseline is a recorded reference reading against which later readings are compared |
+| **Establishment** | A baseline requires a named commit SHA, a collection method, and an evidence class |
+| **Immutability** | A baseline reading is never adjusted; a new baseline supersedes the old one |
+| **Supersession** | Superseding a baseline requires a decision record naming why the old one no longer applies |
+| **Comparability** | Comparisons across a baseline change must be labelled NOT COMPARABLE |
+| **Current state in Oship** | The PART 04 register at commit `0d9b607` is the **first and only baseline**; no comparison across baselines has yet been possible |
+
+> **`VIS-512`.** Oship has exactly one baseline and therefore exactly zero trend data. **Every
+> quantitative statement in this document is a point reading, not a trend**, and any language
+> suggesting improvement or degradation over time would be unsupported. This is why PART 04 contains
+> no direction-of-travel claims anywhere.
+
+### TBL-VIS-494: Validation Rules — Metric Governance
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-813` | A metric definition change that breaks comparability requires a new identifier | **HALT** |
+| `VAL-VIS-814` | Metrics are deprecated with a successor, never deleted | **HALT** |
+| `VAL-VIS-815` | The definer and the publisher of a metric should be distinct roles where the organisation permits | **WARN** |
+| `VAL-VIS-816` | A baseline change requires a decision record | **HALT** |
+| `VAL-VIS-817` | Comparisons spanning a baseline change are labelled NOT COMPARABLE | **BLOCK** |
+| `VAL-VIS-818` | An agent may not change a definition or a baseline | **HALT** |
+| `VAL-VIS-819` | Every metric names an owning role, never a person | **BLOCK** |
+| `VAL-VIS-820` | A metric with no owner may not be published | **BLOCK** |
+| `VAL-VIS-821` | Version history is retained with every metric | **BLOCK** |
+| `VAL-VIS-822` | Trend language requires at least two baselines | **HALT** |
+| `VAL-VIS-823` | Governance authority is recorded by role, resolvable through `CODEOWNERS` | **WARN** |
+| `VAL-VIS-824` | Where one principal holds all governance roles, every governance pass is capped at `EV2` | **BLOCK** |
+
+> **`VIS-513`.** `VAL-VIS-824` applies to Oship today. With a single `CODEOWNERS` principal, **every
+> governance approval in this repository is self-approval and is capped at `EV2` regardless of how
+> rigorously it is performed.** Rigour is not independence.
+
+---
+
+## 04.22 — The Dashboard Information Architecture
+
+### AI NAVIGATION METADATA — §04.22
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P2 — read when presenting measurements to any audience** |
+| **AI DEPENDENCIES** | §04.13 documentation panels · §04.25 security classification |
+| **AI INPUTS** | An audience and a question |
+| **AI OUTPUTS** | The dashboard layer that answers it, and the layers that must not be shown |
+| **AI IMPLEMENTATION IMPACT** | Specification only; **no dashboard exists in the repository** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-825`…`VAL-VIS-836` |
+| **AI RELATED DOCUMENTS** | §04.23 interpretation · `.ai/METRICS.md` |
+
+---
+
+### 04.22.1 — Eight Layers, One Question Each
+
+> **`VIS-514`.** Dashboards fail by trying to serve every audience on one screen. The result is a
+> surface where an executive sees engineering noise and an engineer sees rounded aggregates, and
+> neither can act. **The Oship dashboard model is eight distinct layers, each answering exactly one
+> question for exactly one audience, with explicit rules about which layers may be composed.**
+
+```mermaid
+flowchart TD
+    L1["DSH-01 Executive<br/>Is anything blocking?"]
+    L2["DSH-02 Portfolio<br/>Where is effort concentrated?"]
+    L3["DSH-03 Domain<br/>Which domains are healthy?"]
+    L4["DSH-04 Capability<br/>What can the system do?"]
+    L5["DSH-05 Evidence<br/>How do we know?"]
+    L6["DSH-06 Quality<br/>What is failing validation?"]
+    L7["DSH-07 Agent<br/>What did agents do?"]
+    L8["DSH-08 Raw<br/>What are the readings?"]
+    L1 --> L2 --> L3 --> L4
+    L4 --> L5 --> L6
+    L6 --> L8
+    L7 --> L5
+    L7 --> L8
+    classDef exec fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef mid fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef ev fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef raw fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class L1,L2 exec
+    class L3,L4 mid
+    class L5,L6,L7 ev
+    class L8 raw
+```
+
+> **Diagram ID:** `DGM-VIS-127`
+> **Explanation:** The eight dashboard layers and their drill-down paths. Every arrow is a permitted
+> descent from a summary to its supporting detail. **There is no path that skips `DSH-05`** on the
+> way from a capability claim to raw data — the evidence layer is mandatory in every drill-down,
+> which is the structural expression of NO CLAIM WITHOUT EVIDENCE.
+
+### TBL-VIS-495: Dashboard Layer Register `DSH-01`…`DSH-08`
+
+| Layer | Audience | Single question | Primary content | Refresh expectation | Buildable today |
+| :--- | :--- | :--- | :--- | :--- | :---: |
+| **`DSH-01`** Executive | Leadership | Is anything blocking release? | Open HALT validations; blocked gates | On change | **yes — 4 HALTs are known** |
+| **`DSH-02`** Portfolio | Product | Where is effort concentrated? | Counted states by part and domain | Per part | **yes** |
+| **`DSH-03`** Domain | Domain owners | Which domains are healthy? | Per-domain linkage and metric coverage | Per part | **partially — coverage unmeasured** |
+| **`DSH-04`** Capability | Product, Architecture | What can the system do, verifiably? | Capability status counts with evidence classes | Per part | **yes, capped at `EV3`** |
+| **`DSH-05`** Evidence | Governance, audit | How do we know each claim? | Claim to evidence chains; class distribution | On change | **partially — chains are manual** |
+| **`DSH-06`** Quality | Engineering | What is failing validation? | `VAL-VIS-` results by severity | Per run | **no — no validation runner** |
+| **`DSH-07`** Agent | Governance | What did agents do and at what autonomy? | Trace summaries, refusal rates | Per session | **no — no trace store** |
+| **`DSH-08`** Raw | Anyone | What are the actual readings? | `MET-VIS-` values with method and timestamp | On collection | **yes** |
+
+> **`VIS-515`.** Four layers are buildable now from repository facts alone, and one of them —
+> `DSH-01` — is the layer leadership actually needs. **The four open HALT validations `VAL-VIS-437`,
+> `443`, `456`, and `470` are a complete executive dashboard in themselves**, requiring no
+> infrastructure beyond a rendered list.
+
+### TBL-VIS-496: Layer Composition Rules
+
+| Rule | Statement |
+| :--- | :--- |
+| **Descent** | Every number on layers `DSH-01`…`DSH-04` must be clickable through to `DSH-05` and then `DSH-08` |
+| **No orphan aggregate** | An aggregate whose components are not reachable may not be displayed |
+| **Class inheritance** | An aggregate displays the **weakest** evidence class among its components, per `MPC-23` |
+| **Mixed-class prohibition** | Values of different evidence classes may not be summed into one figure without the class shown |
+| **Absence display** | A metric with no reading displays NOT YET MEASURED, never zero, never blank |
+| **Cross-layer arithmetic** | Numbers from different layers may not be combined; layers have different denominators |
+| **Security filtering** | `DSH-05` and `DSH-07` are filtered by §04.25 classification before display |
+| **Staleness marking** | Any reading past its freshness window is shown struck through with its age |
+
+> **`VIS-516`.** The "absence display" rule is the one that most changes a dashboard's character.
+> **A dashboard that shows zero for unmeasured things looks complete and performs well; a dashboard
+> that shows NOT YET MEASURED looks broken and is honest.** Oship's would be substantially the
+> second, and `TBL-VIS-495` already shows why: three of eight layers cannot be populated at all.
+
+### TBL-VIS-497: `DSH-01` Executive Layer — Contents as of This Part
+
+| Item | Value | Class | Action implied |
+| :--- | :--- | :---: | :--- |
+| Open HALT validations | **4** — `VAL-VIS-437`, `443`, `456`, `470` | `EV3` | Release blocked |
+| HALTs clearable by documentation | **1** — `VAL-VIS-456` | `EV2` | Authoring |
+| Gates attainable | **3 of 9** | `EV3` | Infrastructure decision needed |
+| Open obligations | **`OBL-01`…`OBL-42`**, of which 6 tracked live | `EV3` | Prioritisation |
+| Critical-path blocker | `OBL-03` persistence strategy undecided | `EV2` | **Human decision required** |
+| Evidence ceiling | `EV3` | `EV3` | CI installation would raise it to `EV4` |
+| Application source files | **0** | `EV3` | Phase 0 confirmed |
+
+> **`VIS-517`.** This table is a complete executive dashboard rendered as markdown, and it took no
+> tooling. **The absence of a dashboard product is not what prevents Oship from having executive
+> visibility — the visibility exists and fits on one screen.** What tooling would add is refresh,
+> not insight.
+
+### TBL-VIS-498: `IMG-VIS-046` — Dashboard Layer Stack
+
+| Field | Specification |
+| :--- | :--- |
+| **ID** | `IMG-VIS-046` |
+| **Title** | The Oship Dashboard Layer Stack |
+| **Purpose** | Show the eight layers as a vertical stack with audience on the left and buildability on the right |
+| **Audience** | Leadership, product, governance |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 1920 × 1080, background `#0d1117` |
+| **Visual Hierarchy** | Layer 1 the eight horizontal bands; Layer 2 audience labels; Layer 3 buildability indicators; Layer 4 drill-down arrows |
+| **Elements** | Eight stacked bands labelled `DSH-01`…`DSH-08`; a left gutter of audience names; a right gutter of three-state indicators |
+| **Relationships** | Vertical arrows for descent; a highlighted mandatory pass through `DSH-05` |
+| **Labels** | Layer identifier, layer name, the single question, in that order within each band |
+| **Colour Semantics** | Purple `#4a148c` executive bands; blue `#1a237e` mid bands; green `#1b5e20` evidence bands; grey `#37474f` raw; amber `#e65100` outline on partially buildable; red `#b71c1c` outline on not buildable |
+| **Typography** | Single sans-serif family; layer identifiers at 1.5× the question text |
+| **Legend** | Bottom right: buildable, partially buildable, not buildable |
+| **Meaning** | Visibility is layered by audience, and every claim descends through evidence |
+| **AI Interpretation** | Use to decide which layer a requested figure belongs to before answering |
+| **Implementation Relevance** | Specifies a real dashboard IA if one is ever built |
+| **Generation Prompt** | "Technical diagram on near-black background: eight horizontal stacked bands forming a vertical stack, each band a different saturated colour from purple at top through blue and green to grey at bottom, thin coloured outlines indicating status, small vertical arrows connecting bands, clean sans-serif labels inside each band, narrow legend at bottom right. Flat vector style, high contrast, no gradients. No photorealism, no people, no logos." |
+
+### TBL-VIS-499: Validation Rules — Dashboards
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-825` | Every displayed number carries its evidence class | **BLOCK** |
+| `VAL-VIS-826` | An unmeasured metric displays NOT YET MEASURED, never zero | **HALT** |
+| `VAL-VIS-827` | Aggregates display the weakest component class | **BLOCK** |
+| `VAL-VIS-828` | Every aggregate is drillable to its components | **BLOCK** |
+| `VAL-VIS-829` | No drill-down path may bypass `DSH-05` | **HALT** |
+| `VAL-VIS-830` | Numbers from different layers may not be combined | **HALT** |
+| `VAL-VIS-831` | Stale readings are marked with their age | **BLOCK** |
+| `VAL-VIS-832` | A layer that cannot be populated is shown as unavailable, not omitted | **BLOCK** |
+| `VAL-VIS-833` | Colour alone may not encode status; a text label is required | **WARN** |
+| `VAL-VIS-834` | Trend visualisations require two baselines per `VAL-VIS-822` | **HALT** |
+| `VAL-VIS-835` | `DSH-05` and `DSH-07` are filtered by security classification before display | **BLOCK** |
+| `VAL-VIS-836` | A dashboard displaying only green is audited for `FAL-VIS-256` vestigial gating | **WARN** |
+
+---
+
+## 04.23 — AI Interpretation of Measurements
+
+### AI NAVIGATION METADATA — §04.23
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before drawing any conclusion from a number** |
+| **AI DEPENDENCIES** | §04.2 classes · §04.19 failure classes · §04.22 layers |
+| **AI INPUTS** | A measurement and a question it seems to answer |
+| **AI OUTPUTS** | A permitted conclusion, or a refusal with the reason |
+| **AI IMPLEMENTATION IMPACT** | Binding on every agent reading this repository |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-837`…`VAL-VIS-848` |
+| **AI RELATED DOCUMENTS** | §04.24 forecasting · `.ai/AI_AGENT_OPERATING_MANUAL.md` |
+
+---
+
+### 04.23.1 — The Interpretation Decision Tree
+
+> **`VIS-518`.** An agent handed a number will produce a conclusion, because producing conclusions is
+> what it does. The tree below inserts five refusal points into that reflex. **Each refusal point
+> corresponds to an interpretation failure observed in real systems**, and each terminates in an
+> explicit permitted output rather than in silence.
+
+```mermaid
+flowchart TD
+    Q["A measurement is available"] --> C1{"Does it have a MET-VIS or AIO identifier?"}
+    C1 -->|"No"| R1["REFUSE - restate as EV1 assertion only"]
+    C1 -->|"Yes"| C2{"Is its evidence class EV2 or higher?"}
+    C2 -->|"No"| R2["REPORT the value and state it is asserted, draw no conclusion"]
+    C2 -->|"Yes"| C3{"Does the question match the metric definition exactly?"}
+    C3 -->|"No"| R3["REFUSE - answer NOT MEASURED for this question"]
+    C3 -->|"Yes"| C4{"Is the reading inside its freshness window?"}
+    C4 -->|"Unknown"| R4["REPORT with staleness UNKNOWN flag"]
+    C4 -->|"Yes"| C5{"Does the conclusion require a trend?"}
+    C5 -->|"Yes"| R5["REFUSE - one baseline only, per VAL-VIS-822"]
+    C5 -->|"No"| P["PERMITTED - state the conclusion with the class and the method"]
+    classDef refuse fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef report fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    class R1,R3,R5 refuse
+    class R2,R4 report
+    class P ok
+    class Q,C1,C2,C3,C4,C5 q
+```
+
+> **Diagram ID:** `DGM-VIS-128`
+> **Explanation:** The interpretation decision tree. Three branches refuse outright, two report with
+> a qualifier, and only one permits a conclusion. The proportion is intentional: **most numbers an
+> agent encounters in this repository do not license the conclusion the agent is being asked for**,
+> and the tree makes that the default outcome rather than the exception.
+
+### TBL-VIS-500: The Five Interpretation Prohibitions
+
+| # | Prohibition | Why | Typical violating phrasing | Correct phrasing |
+| ---: | :--- | :--- | :--- | :--- |
+| 1 | **No inference of cause from a count** | Counts describe state, not mechanism | "Documentation is thorough because the team values quality" | "The corpus is 127,285 lines; no cause is measured" |
+| 2 | **No inference of quality from volume** | Volume rises monotonically | "16,388 lines shows the vision is well developed" | "The vision document is 16,388 lines; density is 28.2 lines per anchor" |
+| 3 | **No inference of progress from activity** | Activity and progress are different metrics | "Many commits, so the project is advancing" | "`MET-VIS-050` agent-authored merged changes = 0" |
+| 4 | **No inference of readiness from completeness of documents** | Documents are `EV2`; readiness needs `EV4`+ | "Architecture is documented, so it is ready" | "Architecture is `DOCUMENTED`; `QG-4` is unattainable" |
+| 5 | **No inference of trend from a single reading** | One baseline exists | "Coverage is improving" | "Coverage at the single baseline is 0.885" |
+
+> **`VIS-519`.** Prohibition 4 is the one this repository is most exposed to. Oship contains
+> 127,285 lines of high-quality specification and **zero executable artefacts**, a combination that
+> makes "documented" and "ready" look adjacent when they are separated by five gates and three
+> evidence classes.
+
+### TBL-VIS-501: Permitted Conclusion Forms
+
+| Form | Template | Example from this document |
+| :--- | :--- | :--- |
+| **Point statement** | "`<metric>` reads `<value>` at `<commit>`, class `<EVn>`, method `<method>`" | "`MET-VIS-009` reads 0 at `0d9b607`, class `EV3`, method `find`" |
+| **Comparison to threshold** | "`<value>` is `<inside/outside>` the `<threshold>` band" | "28.2 lines per anchor is inside the 20–60 band" |
+| **Structural inference** | "Because `<fact>`, `<consequence>` follows by `<rule>`" | "Because no CI is installed, `QG-4` is unattainable by `TBL-VIS-479`" |
+| **Refusal** | "`<question>` is NOT YET MEASURED; the blocker is `<blocker>`" | "Chunk independence is NOT YET MEASURED; no deterministic method exists" |
+| **Bounded estimate** | "`<value>` is an estimate at `EV2` derived from `<EV3 inputs>` by `<arithmetic>`" | "~266,000 tokens estimated from line counts" |
+
+> **`VIS-520`.** "Structural inference" is the form doing most of the analytical work throughout
+> PART 04, and it is legitimate precisely because it derives consequences from **rules stated in this
+> document** applied to **facts measured from the repository** — neither of which is a guess. It is
+> the only inference form that produces new knowledge without new measurement.
+
+### TBL-VIS-502: Validation Rules — Interpretation
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-837` | A conclusion must name the metric identifier it rests on | **BLOCK** |
+| `VAL-VIS-838` | Cause may not be inferred from a count | **HALT** |
+| `VAL-VIS-839` | Quality may not be inferred from volume | **HALT** |
+| `VAL-VIS-840` | Readiness may not be inferred from documentation completeness | **HALT** |
+| `VAL-VIS-841` | Trends require two baselines | **HALT** |
+| `VAL-VIS-842` | A question outside a metric's definition is answered NOT MEASURED | **BLOCK** |
+| `VAL-VIS-843` | An agent must prefer refusal to a qualified guess | **BLOCK** |
+| `VAL-VIS-844` | Estimates state their inputs and their arithmetic | **BLOCK** |
+| `VAL-VIS-845` | A conclusion inherits the weakest class among its inputs | **BLOCK** |
+| `VAL-VIS-846` | Structural inference must cite the rule it applies | **BLOCK** |
+| `VAL-VIS-847` | Restating a value without its identifier drops it to `EV1` per `DQR-050` | **BLOCK** |
+| `VAL-VIS-848` | Interpretations are recorded in the agent trace per `TRC-016` | **BLOCK** |
+
+---
