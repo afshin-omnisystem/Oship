@@ -1,7 +1,7 @@
 ---
 File ID: AI-CTX-001
 Title: Current Repository Architectural Context
-Version: 1.3.0
+Version: 1.4.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -14,9 +14,10 @@ AI Priority: CRITICAL
 
 ## 1. Current Phase & Operational State
 
-- **Active Lifecycle Phase**: **Phase 0 — Enterprise Repository Foundation & Infrastructure**
+- **Active Lifecycle Phase**: **Phase A — Bounded-Domain Content** (Phase 0 foundation concluded)
 - **Semantic Version Target**: `v0.1.0-alpha.0` (Pre-release foundation)
 - **Primary Operational Goal**: Transform `afshin-omnisystem/Oship` into an enterprise-grade, world-class AI-Native Software Development Repository without writing application code.
+- **Active Work In Progress**: `docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` (`AOM-ARCH-001`, v1.0.0, `IN_PROGRESS`, Authority L2 — Architectural). **PART 01 — System Architecture Constitution is complete**: §01.1 Architectural Purpose through §01.30 AI Interpretation Guide, plus Appendix A (image specification registry) and Appendix B (identifier allocation ledger, coverage record, repository reality snapshot, completion statement). 10,844 lines · 152 Mermaid diagrams · 263 tables · 28 image specifications · 395 validation rules · 267 failure modes · 60 invariants · 21 principles. The document is an **AI-executable architecture specification**: every section carries AI navigation metadata, every claim carries an honest status label (`IMPLEMENTED` / `DOCUMENTED` / `PARTIALLY IMPLEMENTED` / `PLANNED` / `PROPOSED` / `UNKNOWN — REQUIRES REPOSITORY VERIFICATION`), and identifiers are permanent and never reused. **NOT RELEASED** — the append-only part model continues in PART 02, and no PR, merge, or tag (`aom-arch-001-v1.0.0`) occurs before the final part. Continuation state is recorded at the literal `<!-- CONTINUATION_POINT -->` marker at the end of the file; the next execution reads that marker and resumes from `NEXT_SECTION` without summarising or restarting.
 - **Recent Completion**: MASTER_CONTEXT_MEMORY_SYSTEM.md (MCX-MEM-001, EPIC-2 Sprint B7) **RELEASED v1.0.0** — the cognitive memory architecture of Oship (~34,428 lines, 50 parts). Merged via PR #5 into `main` (merge commit `e3fb4d4`), tagged `mcx-mem-001-v1.0.0`. PROJECT_PHILOSOPHY.md (Constitutional Document) PART 01–04 completed (146 sections, 12,600+ lines). Phase 0 constitutional alignment concluded; foundation established for Phase A execution.
 - **Knowledge Infrastructure**: `docs/MASTER_CONTEXT/` knowledge graph established with 24 canonical knowledge domains, each with a metadata-compliant `INDEX.md`, a global knowledge graph root index, AI context routing (`.ai/CONTEXT_ROUTER.md`), and repository metrics (`.ai/METRICS.md`).
 - **README Landing Page**: `README.md` is a complete, production-hardened AI-native repository landing page (EPIC-1, Sprint A1, README-06 final audit), ~1990 lines (v2.4.0). All sections present (Hero → Footer) plus deep routing, governance, and operational content. 31 Mermaid diagrams, 18 image specs, 68 verified links, 180 tables, max visual gap 96 lines. All audit gates PASSED. README remains a navigation hub — all detailed knowledge lives in MASTER_CONTEXT.

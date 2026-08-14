@@ -1,7 +1,7 @@
 ---
 File ID: AI-ACT-001
 Title: Deterministic Next Action Queue
-Version: 1.2.0
+Version: 1.3.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -47,6 +47,10 @@ This queue defines the deterministic sequence of tasks required to transition fr
 | **P0** | `MCX-REL-01` | Create the MASTER_CONTEXT relationship model (`docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md`) — the complete relationship graph of Oship enabling full self-reconstruction. | AI Agent Mode | `COMPLETED` |
 | **P0** | `MCX-EXEC-01` | Create the MASTER_CONTEXT execution model (`docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md`) — the runtime operating system of Oship enabling full runtime reconstruction. | AI Agent Mode | `COMPLETED` |
 | **P0** | `MCX-MEM-01` | Create the MASTER_CONTEXT memory system (`docs/MASTER_CONTEXT/MASTER_CONTEXT_MEMORY_SYSTEM.md`) — the cognitive memory architecture of Oship enabling full memory reconstruction (50 parts, 34,428 lines, 784 mermaid, 620 tables, 448 JSON, 420 YAML, 264 DSL, 56 image specs). | AI Agent Mode | `RELEASED` (PR #5, tag `mcx-mem-001-v1.0.0`) |
+| **P0** | `ARCH-01` | Author `docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` (`AOM-ARCH-001`) **PART 01 — System Architecture Constitution**: §01.1–§01.30 plus Appendix A image registry and Appendix B identifier ledger. | AI Agent Mode | `COMPLETED` (10,844 lines · 152 Mermaid · 263 tables · 395 validation rules · 267 failure modes; Mermaid and anchor validation GREEN) |
+| **P0** | `ARCH-02` | (Next) Author `AOM-ARCH-001` **PART 02**, appended after the `<!-- CONTINUATION_POINT -->` marker. Resume from the recorded `NEXT_SECTION` and `NEXT_ID` values; never rewrite, reorder, or squash Part 01. Discharge the forward obligations in `TBL-ARCH-262` — reach the line-density target and add the three outstanding decision trees. | AI Agent Mode | `PENDING` |
+| **P1** | `ARCH-03` | (Blocked by final part) Full-document validation, then PR → review → merge to `main` → release tag `aom-arch-001-v1.0.0`. No release before the FINAL part. | AI Agent Mode | `BLOCKED` |
+| **P1** | `ARCH-04` | (Next after `AOM-ARCH-001`) Update `docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md` to move `SYSTEM_ARCHITECTURE.md` from `PLANNED` to its real status and recompute domain completeness. | AI Agent Mode | `PENDING` |
 
 ## 3. Transition Criteria for Phase A
 

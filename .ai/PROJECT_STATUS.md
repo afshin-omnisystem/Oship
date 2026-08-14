@@ -1,7 +1,7 @@
 ---
 File ID: AI-STAT-001
 Title: Enterprise Project Phase & Milestone Status
-Version: 1.2.0
+Version: 1.3.0
 Status: ACTIVE
 Owner: Architecture Team / AI Repository Architect
 Review Date: 2026-11-04
@@ -84,3 +84,22 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 | **Actual Metrics** | 34,428 lines · 50 parts · 784 Mermaid · 620 tables · 448 JSON · 420 YAML · 264 DSL · 56 image specs |
 | **Next Objective** | Phase A bounded-domain content documents under MASTER_CONTEXT (README-07 / AOM-02), e.g. `04_ARCHITECTURE SYSTEM_ARCHITECTURE.md` |
   - [x] Create the AI Agent Operating Manual (`.ai/AI_AGENT_OPERATING_MANUAL.md`) — permanent operational constitution for all AI agents (AOM-01).
+  - [x] Begin Phase A bounded-domain content: author `docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` (AOM-ARCH-001) **PART 01 — System Architecture Constitution** (ARCH-01).
+
+### Work-in-Progress Register — AOM-ARCH-001 (Oship System Architecture)
+
+| Field | Value |
+| :--- | :--- |
+| **Document ID** | `AOM-ARCH-001` |
+| **Path** | `docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` |
+| **STATUS** | `IN_PROGRESS` — Part 01 of N complete |
+| **VERSION** | `1.0.0` (unreleased) |
+| **Authority Level** | L2 — Architectural |
+| **Phase** | Phase A — Bounded-Domain Content |
+| **Part 01 Scope** | §01.1 – §01.30, Appendix A (image registry), Appendix B (identifier ledger) |
+| **Actual Metrics** | 10,844 lines · 88,496 words · 152 Mermaid (18 sequence, 13 state) · 263 identified tables · 28 image specs · 395 validation rules · 267 failure modes · 60 invariants · 30 components · 21 principles · 27 decision trees |
+| **Validation** | Mermaid `mermaid.parse()` — 152 blocks, 0 failures. Internal anchors — 0 broken. Identifier ledger reconciled against body (no declared range without defined IDs). |
+| **Unmet Targets** | Line-density target (15,000+) and decision-tree target (30+) recorded honestly in `TBL-ARCH-260`; carried to Part 02 via `TBL-ARCH-262`. |
+| **Release Status** | `NOT RELEASED` — no PR, merge, or tag until the FINAL part. Planned tag: `aom-arch-001-v1.0.0`. |
+| **Continuation** | `<!-- CONTINUATION_POINT -->` at end of file. Part 02 appends after it; nothing above may be rewritten. |
+| **Next Objective** | PART 02 — continue from `NEXT_SECTION` recorded at the continuation point. |
