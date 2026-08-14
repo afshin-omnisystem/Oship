@@ -15342,3 +15342,846 @@ flowchart TD
 > things with equal comfort**, and immature when every metric mysteriously has a value.
 
 ---
+
+## 04.6 — The Metric Lifecycle
+
+### AI NAVIGATION METADATA — §04.6
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before changing a metric's state or trusting its state label** |
+| **AI DEPENDENCIES** | §04.5 canonical contract · §04.2 evidence classes |
+| **AI INPUTS** | A metric and a proposed state transition |
+| **AI OUTPUTS** | Transition permitted with its entry conditions, or refused with the violated rule |
+| **AI IMPLEMENTATION IMPACT** | Only `TRUSTED` metrics may gate a release; only `VALIDATED` and above may appear on a dashboard |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-601`…`VAL-VIS-620` and `VAL-VIS-621`…`VAL-VIS-640` |
+| **AI RELATED DOCUMENTS** | §04.18 quality gates · §04.20 correction lifecycle |
+
+---
+
+### 04.6.1 — Seven States
+
+> **`VIS-437`.** A metric's state is not its value. A metric can hold a perfectly accurate number
+> while sitting in a state that forbids anyone from acting on it. Conflating the two is how
+> organisations end up gating releases on numbers that were never validated — the value looked
+> right, so nobody asked what state the metric was in.
+
+```mermaid
+stateDiagram-v2
+    [*] --> PROPOSED : "someone identifies a question worth answering"
+    PROPOSED --> DEFINED : "all 21 contract fields populated"
+    DEFINED --> IMPLEMENTED : "collection method exists and executes"
+    IMPLEMENTED --> COLLECTING : "method runs on its declared frequency"
+    COLLECTING --> VALIDATED : "values survive their validation rules across repeated runs"
+    VALIDATED --> TRUSTED : "independently reproduced and consumed by a real decision"
+    TRUSTED --> DEPRECATED : "the question it answered no longer drives any decision"
+    DEPRECATED --> [*] : "archived with its history intact"
+
+    PROPOSED --> [*] : "rejected - the question is not worth answering"
+    DEFINED --> PROPOSED : "contract found incomplete on review"
+    IMPLEMENTED --> DEFINED : "collection method proved nondeterministic"
+    COLLECTING --> IMPLEMENTED : "collection interrupted or source removed"
+    VALIDATED --> COLLECTING : "a validation rule began failing"
+    TRUSTED --> VALIDATED : "reproduction failed or the owning decision was retired"
+    DEPRECATED --> TRUSTED : "REVIVAL - permitted only by a recorded decision record"
+
+    note right of TRUSTED
+        OSHIP TODAY
+        Zero metrics reach TRUSTED
+        The bar is consumption
+        by a real decision
+        and no gate is installed
+    end note
+
+    note left of DEFINED
+        OSHIP TODAY
+        50 MET-VIS metrics are DEFINED
+        21 are IMPLEMENTED
+        0 are COLLECTING
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-121` — **Metric Lifecycle State Machine**
+> **Explanation:** The upward path has six transitions and each has a hard entry condition, but the
+> transition that stops nearly everything is `VALIDATED → TRUSTED`. Its condition is not statistical
+> — it is **consumption**: a metric becomes trusted when a real decision depends on it, because only
+> then does anyone care enough to notice when it lies. A metric nothing consumes is never truly
+> tested, however many times it is collected. That is why `MPC-32` exists and why Oship has zero
+> `TRUSTED` metrics: the values are real, but no gate consumes them yet. The downward edges are
+> ordinary and expected; the `DEPRECATED → TRUSTED` revival edge is the only one requiring a decision
+> record, because silently reviving a retired metric resurrects its old interpretation along with it.
+
+### TBL-VIS-436: Metric Lifecycle States — Entry Conditions and Permitted Uses
+
+| State | Entry condition | May be published | May appear on a dashboard | May gate a decision | Oship count |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `PROPOSED` | A question worth answering is named | no | no | no | **111** — the `DMET-`/`CMET-` retrofit backlog of `OBL-38` |
+| `DEFINED` | All 21 contract fields populated | with class | no | no | **50** |
+| `IMPLEMENTED` | Collection method exists and executes deterministically | with class and value | no | no | **21** |
+| `COLLECTING` | Method runs at its declared frequency, unattended | yes | yes | no | **0** |
+| `VALIDATED` | Values survived validation rules across repeated runs | yes | yes | advisory only | **0** |
+| `TRUSTED` | Independently reproduced and consumed by a live decision | yes | yes | **yes** | **0** |
+| `DEPRECATED` | No decision consumes it any longer | historically | no | no | **0** |
+
+> **`VIS-438`.** The distribution is a funnel that terminates at zero, and the shape is diagnostic:
+> **111 → 50 → 21 → 0 → 0 → 0.** Everything up to `IMPLEMENTED` can be achieved by writing carefully.
+> The step from `IMPLEMENTED` to `COLLECTING` requires something to run unattended, and that is
+> exactly where Oship stops. **The entire measurement programme is blocked at one transition**, and
+> that transition is `OUT-VIS-004`.
+
+---
+
+### 04.6.2 — Invalid Transitions
+
+> **`VIS-439`.** Naming the legal transitions is half the specification. The prohibited ones carry
+> more information, because each corresponds to a specific way real measurement programmes fail.
+
+### TBL-VIS-437: Prohibited Metric Lifecycle Transitions
+
+| Prohibited transition | Why it is attempted | Why it is prohibited | Rule |
+| :--- | :--- | :--- | :--- |
+| `PROPOSED → IMPLEMENTED` | The collection script is easy, so it gets written first | Implementing before defining locks the definition to whatever the script happened to compute | `VAL-VIS-601` |
+| `DEFINED → COLLECTING` | A one-off manual run is mistaken for collection | Collection means unattended and repeated; one run is a sample | `VAL-VIS-602` |
+| `DEFINED → TRUSTED` | The definition is clearly correct, so why wait | Trust is earned by repetition and consumption, never by clarity | `VAL-VIS-603` |
+| `IMPLEMENTED → VALIDATED` | The first value looked reasonable | One value cannot demonstrate stability | `VAL-VIS-604` |
+| `IMPLEMENTED → TRUSTED` | Urgency — a decision needs a number now | The most damaging shortcut; produces confident gating on unvalidated data | `VAL-VIS-605` |
+| `COLLECTING → TRUSTED` | Values have been collected for a long time | Duration is not validation; a metric can be consistently wrong | `VAL-VIS-606` |
+| `DEPRECATED → COLLECTING` | Someone restarts the collector | Revival must pass through `TRUSTED` via a decision record so the interpretation is re-examined | `VAL-VIS-607` |
+| Any state → `TRUSTED` skipping `VALIDATED` | Trust is treated as a label rather than a state | `TRUSTED` is the only state that gates releases; it has exactly one entrance | `VAL-VIS-608` |
+| `TRUSTED → DEPRECATED` without a successor | The metric became inconvenient | A gating metric may only be retired when its decision is retired or reassigned | `VAL-VIS-609` |
+| Silent state change | Nobody noticed the transition happened | Every transition is an event with an actor and a reason | `VAL-VIS-610` |
+
+> **`VIS-440`.** `VAL-VIS-605` is the rule most likely to be violated under pressure, and the
+> violation is always locally reasonable: a decision is due, a number exists, the number is probably
+> fine. The result is a release gated on an unvalidated metric, which is worse than a release gated
+> on nothing, because the ungated release at least knows it is ungated.
+
+---
+
+### 04.6.3 — Forty Lifecycle Validation Rules
+
+### TBL-VIS-438: Lifecycle Validation Rules — Definition and Implementation
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-601` | A metric may not be implemented before every contract field is populated | **BLOCK** |
+| `VAL-VIS-602` | `COLLECTING` requires unattended execution at a declared frequency | **BLOCK** |
+| `VAL-VIS-603` | `TRUSTED` may be entered only from `VALIDATED` | **HALT** |
+| `VAL-VIS-604` | `VALIDATED` requires at least three collections passing every validation rule | **BLOCK** |
+| `VAL-VIS-605` | A metric below `TRUSTED` may not gate a release decision | **HALT** |
+| `VAL-VIS-606` | Collection duration alone never advances state | **BLOCK** |
+| `VAL-VIS-607` | Revival from `DEPRECATED` requires a `DEC-VIS-` record | **BLOCK** |
+| `VAL-VIS-608` | `TRUSTED` has exactly one entrance and it is `VALIDATED` | **HALT** |
+| `VAL-VIS-609` | A gating metric may be deprecated only when its decision is retired or reassigned | **BLOCK** |
+| `VAL-VIS-610` | Every transition records actor, reason, and prior state | **BLOCK** |
+| `VAL-VIS-611` | A metric's definition may not change while it is `COLLECTING` or above | **HALT** |
+| `VAL-VIS-612` | A definition change forces the metric back to `DEFINED` with a new identifier | **HALT** |
+| `VAL-VIS-613` | A unit change is a definition change, never a formatting change | **HALT** |
+| `VAL-VIS-614` | An aggregation change is a definition change | **BLOCK** |
+| `VAL-VIS-615` | Two metrics may not share a definition under different identifiers | **BLOCK** |
+| `VAL-VIS-616` | A metric may not be defined without naming the decision it is intended to inform | **BLOCK** |
+| `VAL-VIS-617` | A metric whose intended decision never materialises is deprecated, not retained | WARN |
+| `VAL-VIS-618` | Judgmental metrics may reach `DEFINED` but never `VALIDATED` | **BLOCK** |
+| `VAL-VIS-619` | Stochastic metrics require a declared variance expectation before `VALIDATED` | **BLOCK** |
+| `VAL-VIS-620` | A metric with evidence class `EV0` may not exceed state `DEFINED` | **BLOCK** |
+
+> **`VIS-441`.** `VAL-VIS-620` consumes the last identifier of the `VAL-VIS-` ceiling declared in
+> §04.0. Under `DEC-VIS-036` a namespace may not be extended by allocation, only by decision. The
+> record follows immediately, before any further rule is written — this is `OBL-34` operating as
+> designed, on its first real test.
+
+### TBL-VIS-439: `DEC-VIS-041` — Extension of the `VAL-VIS-` Namespace Ceiling
+
+| Field | Content |
+| :--- | :--- |
+| **ID** | `DEC-VIS-041` |
+| **Title** | Raise the `VAL-VIS-` ceiling from 620 to 780 |
+| **Status** | ACCEPTED |
+| **Authority** | L1 — binding on all parts of `AOM-VIS-001` |
+| **Context** | §04.0 set the `VAL-VIS-` ceiling at 620 based on an estimate made before §04.6 through §04.31 were written. `MET-VIS-021` flagged the namespace at 85 percent consumption while twenty-five sections remained unwritten. The ceiling is now reached at §04.6, with §04.7 alone requiring fifty rules. |
+| **Options considered** | **A** — compress remaining rules to fit 620; rejected, it would suppress required content to satisfy an estimate. **B** — reuse gaps from earlier parts; rejected, `VIS-347` forbids identifier reuse absolutely. **C** — open a second namespace such as `VALQ-VIS-`; rejected, `VIS-198` forbids terminology collisions and two validation namespaces would be exactly that. **D** — raise the ceiling by recorded decision. **Selected: D.** |
+| **Decision** | The `VAL-VIS-` ceiling becomes **780**. Allocation continues sequentially from `VAL-VIS-621`. |
+| **Scope** | `AOM-VIS-001` only. `VAL-ARCH-` in `AOM-ARCH-001` is untouched and remains read-only. |
+| **Ownership** | Documentation Architecture role |
+| **Compatibility** | Fully backward compatible; no existing identifier changes meaning |
+| **Migration implications** | None. No published rule is renumbered. |
+| **Allocation policy** | `VAL-VIS-621`…`VAL-VIS-780` are allocated in §04.7 through §04.31 in document order. A further extension requires another decision record. |
+| **Consequences if reversed** | Sections §04.7 onward would lose their validation rules, leaving roughly half of PART 04 unenforceable |
+| **Review trigger** | Consumption reaching 90 percent of 780, or the completion of PART 04 |
+
+> **`VIS-442`.** This is the mechanism working correctly rather than a planning failure. The estimate
+> was wrong, a metric detected it, a decision recorded the change, and no identifier was reused or
+> renumbered. **The alternative — quietly allocating `VAL-VIS-621` and moving on — is precisely what
+> `OBL-34` was opened to prevent**, and it would have been invisible.
+
+### TBL-VIS-440: Lifecycle Validation Rules — Collection, Validation, and Trust
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-621` | Collection failures are recorded as events, never as absent values | **BLOCK** |
+| `VAL-VIS-622` | A failed collection may not be replaced by the previous value | **HALT** |
+| `VAL-VIS-623` | A failed collection may not be replaced by an interpolated value | **HALT** |
+| `VAL-VIS-624` | Gaps in a metric's history remain visible in every presentation of it | **BLOCK** |
+| `VAL-VIS-625` | Collection frequency changes are recorded transitions | **BLOCK** |
+| `VAL-VIS-626` | A metric collected less often than its staleness threshold is permanently stale | **BLOCK** |
+| `VAL-VIS-627` | Validation rules are declared before the first collection, never after | **HALT** |
+| `VAL-VIS-628` | A validation rule may not be weakened to make a failing metric pass | **HALT** |
+| `VAL-VIS-629` | Weakening a validation rule returns the metric to `COLLECTING` | **BLOCK** |
+| `VAL-VIS-630` | Validation results are retained even after the metric is deprecated | **BLOCK** |
+| `VAL-VIS-631` | A metric failing validation is demoted within one collection cycle | **BLOCK** |
+| `VAL-VIS-632` | Demotion notifies every decision that consumes the metric | **BLOCK** |
+| `VAL-VIS-633` | Independent reproduction means a different actor, method reconstructed from the contract alone | **HALT** |
+| `VAL-VIS-634` | Reproduction by the metric's owner does not satisfy `VAL-VIS-633` | **HALT** |
+| `VAL-VIS-635` | A `TRUSTED` metric is re-verified whenever its source structure changes | **BLOCK** |
+| `VAL-VIS-636` | Trust is per-metric and never inherited by related metrics | **BLOCK** |
+| `VAL-VIS-637` | A composite metric is no more trusted than its least trusted input | **HALT** |
+| `VAL-VIS-638` | Deprecation retains the metric's full history and its final interpretation | **BLOCK** |
+| `VAL-VIS-639` | A deprecated metric may not be cited as current in any artifact | **BLOCK** |
+| `VAL-VIS-640` | An identifier belonging to a deprecated metric is never reused | **HALT** |
+
+> **`VIS-443`.** Forty lifecycle rules, `VAL-VIS-601`…`640`. Three of them — `VAL-VIS-622`, `623`,
+> and `624` — all defend the same boundary from different angles, and it is the boundary `MPC-29`
+> names: **missing data must stay missing.** Carrying forward the last value, interpolating a
+> plausible one, or smoothing a gap out of a chart are the three standard ways a measurement system
+> starts lying while every individual number remains defensible.
+
+---
+
+## 04.7 — Data Quality Model
+
+### AI NAVIGATION METADATA — §04.7
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before ingesting, aggregating, or presenting any collected value** |
+| **AI DEPENDENCIES** | §04.5 contract · §04.6 lifecycle · §04.1 preconditions |
+| **AI INPUTS** | A collected value or a set of values |
+| **AI OUTPUTS** | A data quality verdict per dimension, and a `DQR-` rule identifier for each failure |
+| **AI IMPLEMENTATION IMPACT** | A value failing any BLOCK-severity quality rule may not be published |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-641`…`VAL-VIS-660` |
+| **AI RELATED DOCUMENTS** | §04.20 correction lifecycle · §04.27 reproducibility contract |
+
+---
+
+### 04.7.1 — Eight Dimensions
+
+> **`VIS-444`.** Data quality is usually presented as a checklist of adjectives. The useful framing
+> is different: each dimension answers a distinct question, and the questions are ordered because
+> failing an early one makes the later ones unanswerable. There is no point assessing the accuracy
+> of a value that is not there.
+
+```mermaid
+flowchart TD
+    V["A collected value arrives"]:::start
+
+    V --> D1{"COMPLETENESS - is the value present at all?"}
+    D1 -->|"absent"| F1["FAIL - record as missing, never as zero"]:::bad
+    D1 -->|"present"| D2{"VALIDITY - is it a legal value for its declared type and range?"}
+    D2 -->|"illegal"| F2["FAIL - reject at the boundary, do not coerce"]:::bad
+    D2 -->|"legal"| D3{"ACCURACY - does it match the reality it claims to describe?"}
+    D3 -->|"diverges"| F3["FAIL - the collection method is wrong, not the reality"]:::bad
+    D3 -->|"matches"| D4{"UNIQUENESS - is this the only record of this observation?"}
+    D4 -->|"duplicated"| F4["FAIL - deduplicate before aggregating, never after"]:::bad
+    D4 -->|"unique"| D5{"CONSISTENCY - does it agree with related values?"}
+    D5 -->|"contradicts"| F5["FAIL - the TBL-VIS-278 versus TBL-VIS-390 case"]:::bad
+    D5 -->|"agrees"| D6{"TIMELINESS - is it within its staleness threshold?"}
+    D6 -->|"stale"| F6["FAIL - void the value, retain the record"]:::bad
+    D6 -->|"fresh"| D7{"INTEGRITY - are its references resolvable?"}
+    D7 -->|"dangling"| F7["FAIL - the value describes something that no longer exists"]:::bad
+    D7 -->|"resolvable"| D8{"LINEAGE - can the value be traced to its source and run?"}
+    D8 -->|"untraceable"| F8["FAIL - unauditable, capped at EV1"]:::bad
+    D8 -->|"traceable"| OK["PUBLISHABLE - all eight dimensions satisfied"]:::good
+
+    classDef start fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-111` — **Data Quality Model**
+> **Explanation:** The ordering is the specification. Completeness precedes validity because an
+> absent value cannot be range-checked; accuracy precedes consistency because two values can agree
+> while both being wrong; lineage comes last because it is the only dimension that cannot be
+> assessed from the value itself. The `F5` branch is annotated with the real incident this document
+> produced — a consistency failure between two published capability counts — because it is the one
+> failure mode Oship has actually demonstrated rather than merely anticipated.
+
+### TBL-VIS-441: Data Quality Dimensions — Definition and Oship State
+
+| Dimension | Question answered | Detection method | Oship state today |
+| :--- | :--- | :--- | :--- |
+| **Completeness** | Is the value present? | null and sentinel check | **PARTIAL** — `NOT YET MEASURED` used correctly in §04.5, absent elsewhere |
+| **Validity** | Is it legal for its type, unit, and range? | schema and range check | **NOT ENFORCED** — no schema exists for metric values |
+| **Accuracy** | Does it match reality? | independent re-derivation | **UNVERIFIED** — self-verification only, per `MET-VIS-024` |
+| **Uniqueness** | Is this observation recorded once? | key deduplication | **NOT APPLICABLE** — no store, therefore no duplicates |
+| **Consistency** | Does it agree with related values? | cross-value assertion | **KNOWN FAILURE** — `OBL-33`, two capability counts disagree |
+| **Timeliness** | Is it within its staleness threshold? | timestamp comparison | **UNMEASURABLE** — `MPC-17`, no timestamps exist |
+| **Integrity** | Do its references resolve? | reference resolution | **UNMEASURED** — the `MCAT-05` family is entirely `EV0` |
+| **Lineage** | Can it be traced to source and run? | provenance record inspection | **PARTIAL** — commands recorded, runs are not |
+
+> **`VIS-445`.** Not one dimension reads clean. Two are structurally not applicable, three are
+> unmeasurable without infrastructure, and one — consistency — has a live, documented failure inside
+> this very document. This table is the honest quality baseline, and it is far more useful than a
+> green scorecard would be, because every future improvement is now visible against it.
+
+---
+
+### 04.7.2 — Fifty Data Quality Rules
+
+> **`VIS-446`.** `DQR-001`…`DQR-052` follow, grouped by dimension. Each rule states the condition
+> and the action taken on violation. Actions are drawn from a fixed set: **REJECT** the value at the
+> boundary, **VOID** the value while retaining its record, **FLAG** and publish with a marker, or
+> **DEMOTE** the metric's state.
+
+### TBL-VIS-442: Data Quality Rules — Completeness and Validity
+
+| ID | Dimension | Rule | Action |
+| :--- | :--- | :--- | :--- |
+| `DQR-001` | Completeness | A missing value is recorded as missing, never as zero, blank, or dash | REJECT |
+| `DQR-002` | Completeness | `NOT YET MEASURED`, `NOT APPLICABLE`, and `UNKNOWN` are distinct and not interchangeable | REJECT |
+| `DQR-003` | Completeness | A partially collected aggregate declares its coverage | FLAG |
+| `DQR-004` | Completeness | An aggregate below its declared minimum coverage is not published | REJECT |
+| `DQR-005` | Completeness | A gap in a series is visible in every rendering of that series | FLAG |
+| `DQR-006` | Completeness | Absence of a required contract field blocks collection entirely | REJECT |
+| `DQR-007` | Validity | A value outside its declared range is rejected, never clamped | REJECT |
+| `DQR-008` | Validity | A ratio outside 0 to 1 is rejected unless the contract permits it explicitly | REJECT |
+| `DQR-009` | Validity | A count is a non-negative integer; a fractional count is rejected | REJECT |
+| `DQR-010` | Validity | A value whose unit differs from the contract is rejected, never converted silently | REJECT |
+| `DQR-011` | Validity | Unit conversion, where permitted, is recorded as a transformation step | FLAG |
+| `DQR-012` | Validity | A percentage without a stated denominator is invalid | REJECT |
+| `DQR-013` | Validity | Precision exceeding the method's resolution is truncated and flagged | FLAG |
+| `DQR-014` | Validity | A value of exactly zero is distinguished in presentation from a missing value | FLAG |
+
+### TBL-VIS-443: Data Quality Rules — Accuracy and Uniqueness
+
+| ID | Dimension | Rule | Action |
+| :--- | :--- | :--- | :--- |
+| `DQR-015` | Accuracy | A value is accurate only relative to a named reference; no absolute accuracy claim is admissible | REJECT |
+| `DQR-016` | Accuracy | Divergence between two collection methods demotes both to `COLLECTING` until reconciled | DEMOTE |
+| `DQR-017` | Accuracy | Reconciliation identifies which method was wrong; splitting the difference is prohibited | REJECT |
+| `DQR-018` | Accuracy | A value corrected after publication follows §04.20, never a silent edit | REJECT |
+| `DQR-019` | Accuracy | An accuracy claim requires independent re-derivation per `VAL-VIS-633` | DEMOTE |
+| `DQR-020` | Accuracy | A value matching expectation is not thereby accurate; confirmation bias is not evidence | FLAG |
+| `DQR-021` | Accuracy | Systematic bias, once identified, voids all historical values from that method | VOID |
+| `DQR-022` | Uniqueness | An observation is keyed by metric, source, and run; duplicates by key are rejected | REJECT |
+| `DQR-023` | Uniqueness | Re-running a collection creates a new observation, never an overwrite | REJECT |
+| `DQR-024` | Uniqueness | Deduplication happens before aggregation, never after | REJECT |
+| `DQR-025` | Uniqueness | Two metrics computing the same quantity are consolidated by decision record | FLAG |
+| `DQR-026` | Uniqueness | A value appearing in two artifacts must resolve to one observation, not two | FLAG |
+
+### TBL-VIS-444: Data Quality Rules — Consistency and Timeliness
+
+| ID | Dimension | Rule | Action |
+| :--- | :--- | :--- | :--- |
+| `DQR-027` | Consistency | Two published values for the same quantity constitute a defect, not a discrepancy | DEMOTE |
+| `DQR-028` | Consistency | The defect is resolved by re-collection, never by choosing the preferred value | REJECT |
+| `DQR-029` | Consistency | A component sum must equal its declared total, or the difference is itself published | FLAG |
+| `DQR-030` | Consistency | A derived value recomputed from published inputs must reproduce the published output | DEMOTE |
+| `DQR-031` | Consistency | Values crossing a document boundary carry their metric identifier | REJECT |
+| `DQR-032` | Consistency | A value cited without its identifier is treated as `EV1` regardless of origin | DEMOTE |
+| `DQR-033` | Consistency | Contradiction between a status label and a measured value voids the label, not the value | VOID |
+| `DQR-034` | Consistency | Consistency checks run across artifacts, not only within one | FLAG |
+| `DQR-035` | Timeliness | A value beyond its staleness threshold is void for decisions and retained for history | VOID |
+| `DQR-036` | Timeliness | A void value may still be displayed, marked stale, never silently | FLAG |
+| `DQR-037` | Timeliness | An untimestamped value has unknown freshness and is capped at advisory use | DEMOTE |
+| `DQR-038` | Timeliness | Staleness is computed against collection time, never publication time | REJECT |
+| `DQR-039` | Timeliness | A source commit invalidates every value derived from that source | VOID |
+| `DQR-040` | Timeliness | Freshness of an aggregate equals the freshness of its oldest input | REJECT |
+
+### TBL-VIS-445: Data Quality Rules — Integrity and Lineage
+
+| ID | Dimension | Rule | Action |
+| :--- | :--- | :--- | :--- |
+| `DQR-041` | Integrity | A value referencing a nonexistent identifier is rejected | REJECT |
+| `DQR-042` | Integrity | A value whose source path no longer resolves is voided | VOID |
+| `DQR-043` | Integrity | Referential integrity is checked at collection, not at presentation | REJECT |
+| `DQR-044` | Integrity | Deleting a source requires voiding or migrating its dependent values first | REJECT |
+| `DQR-045` | Integrity | A metric depending on a deprecated metric is itself deprecated | DEMOTE |
+| `DQR-046` | Integrity | Renaming an identifier is prohibited; supersession is the only mechanism | REJECT |
+| `DQR-047` | Lineage | Every value records the metric, source, method, and run that produced it | REJECT |
+| `DQR-048` | Lineage | A value without full lineage may not exceed `EV1` | DEMOTE |
+| `DQR-049` | Lineage | Lineage survives aggregation; an aggregate names its contributing runs | REJECT |
+| `DQR-050` | Lineage | Lineage survives summarisation; a reported number carries its origin | DEMOTE |
+| `DQR-051` | Lineage | An agent restating a value inherits responsibility for carrying its lineage | DEMOTE |
+| `DQR-052` | Lineage | Lineage records are immutable; corrections append, never overwrite | REJECT |
+
+> **`VIS-447`.** Fifty-two rules against a required fifty. `DQR-050` and `DQR-051` deserve emphasis
+> because they govern the interface between this measurement system and the agents that will consume
+> it. **The moment an agent writes "the repository has 87 markdown files" without writing
+> `MET-VIS-001`, the value has lost its lineage and dropped to `EV1`** — regardless of the fact that
+> the underlying measurement was sound. Lineage is not a property of the measurement; it is a
+> property of every restatement of it.
+
+### TBL-VIS-446: Data Quality Rule Severity Distribution
+
+| Dimension | Rules | REJECT | VOID | FLAG | DEMOTE | Currently enforceable in Oship |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| Completeness | 6 | 4 | 0 | 2 | 0 | **yes** — by convention, unenforced |
+| Validity | 8 | 5 | 0 | 3 | 0 | no — no schema exists |
+| Accuracy | 7 | 3 | 1 | 2 | 2 | partially — re-derivation is possible manually |
+| Uniqueness | 5 | 3 | 0 | 2 | 0 | not applicable — no store |
+| Consistency | 8 | 3 | 1 | 2 | 3 | **yes** — and currently failing, per `OBL-33` |
+| Timeliness | 6 | 2 | 2 | 1 | 1 | no — `MPC-17` unmet |
+| Integrity | 6 | 5 | 1 | 0 | 1 | partially — link checking is possible today |
+| Lineage | 6 | 3 | 0 | 0 | 3 | **yes** — by discipline, unenforced |
+| **Total** | **52** | **28** | **5** | **12** | **9** | 3 of 8 dimensions enforceable by convention |
+
+> **`VIS-448`.** The last column is the recurring finding of PART 04 in its final form: **the rules
+> that can be followed today are followed by discipline, not by enforcement.** Discipline is real —
+> this document has exercised it consistently — but it is `EV2` evidence at best, because the only
+> thing preventing a lapse is attention. Every one of these fifty-two rules becomes `EV4` on the day
+> a workflow runs them, and not one day sooner.
+
+---
+
+## 04.8 — Observability Architecture
+
+### AI NAVIGATION METADATA — §04.8
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before proposing any instrumentation** |
+| **AI DEPENDENCIES** | §04.4 taxonomy tiers · §04.5 register · `AOM-ARCH-001` §01.14 (read-only) |
+| **AI INPUTS** | A question about what the system is doing or has done |
+| **AI OUTPUTS** | The observability plane that answers it, or a statement that no plane exists yet |
+| **AI IMPLEMENTATION IMPACT** | Defines the target architecture; **none of it is built** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-661`…`VAL-VIS-672` |
+| **AI RELATED DOCUMENTS** | `observability/` — `.gitkeep` only · `monitoring/` — `.gitkeep` only |
+
+---
+
+### 04.8.1 — Five Planes
+
+> **`VIS-449`.** Observability in an AI-first repository is not the standard three pillars of
+> metrics, logs, and traces. Those three assume a running service is the thing being observed. In
+> Oship the primary observed subject during this phase is **the repository itself and the agents
+> acting on it**, and two additional planes are required to cover them. The five-plane model spans
+> both the current documentation phase and the eventual runtime phase without needing replacement.
+
+```mermaid
+flowchart TD
+    subgraph P1["PLANE 1 - ARTIFACT OBSERVABILITY - what the repository IS"]
+        A1["Structural metrics MCAT-01"]
+        A2["Documentation metrics MCAT-02"]
+        A3["Knowledge and identifier metrics MCAT-03"]
+        A4["Traceability metrics MCAT-05"]
+    end
+
+    subgraph P2["PLANE 2 - PROCESS OBSERVABILITY - what happens TO the repository"]
+        B1["Commit and change events"]
+        B2["Review and approval events"]
+        B3["Gate outcomes MCAT-11"]
+        B4["Build and check results MCAT-07 to MCAT-10"]
+    end
+
+    subgraph P3["PLANE 3 - AGENT OBSERVABILITY - what agents DO"]
+        C1["Action traces TRC namespace"]
+        C2["Autonomy level exercised"]
+        C3["Intervention and rejection events"]
+        C4["Context load and cost"]
+    end
+
+    subgraph P4["PLANE 4 - RUNTIME OBSERVABILITY - what the system DOES"]
+        D1["Performance MCAT-12"]
+        D2["Reliability MCAT-13"]
+        D3["Distributed traces"]
+        D4["Structured logs"]
+    end
+
+    subgraph P5["PLANE 5 - OUTCOME OBSERVABILITY - whether any of it MATTERED"]
+        E1["Business metrics MCAT-15"]
+        E2["Adoption and usage"]
+        E3["Cost per outcome"]
+    end
+
+    P1 -->|"feeds"| P2 -->|"feeds"| P3
+    P3 -->|"will feed once code exists"| P4 -->|"will feed once users exist"| P5
+
+    P1 -.->|"STATUS - 21 metrics live at EV3"| S1["PARTIALLY OPERATIONAL"]:::warn
+    P2 -.->|"STATUS - git history readable, no gates installed"| S2["MINIMAL"]:::warn
+    P3 -.->|"STATUS - no trace format, no capture"| S3["NOT BUILT"]:::bad
+    P4 -.->|"STATUS - no runtime"| S4["NOT APPLICABLE"]:::bad
+    P5 -.->|"STATUS - no users"| S5["NOT APPLICABLE"]:::bad
+
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-112` — **Oship Observability Architecture**
+> **Explanation:** Planes 1 and 2 are the ones that exist in any form today, and both are weak.
+> Plane 3 is the distinctive one: **agent observability is the plane Oship needs most and has least
+> of**, because the entire vision rests on agents acting on this repository and there is currently no
+> way to observe what an agent did beyond reading the resulting diff. Planes 4 and 5 are drawn
+> because omitting them would imply the architecture ends at the repository boundary; they are
+> correctly marked `NOT APPLICABLE` rather than `PLANNED`, since neither has a defined predecessor
+> condition beyond the existence of code.
+
+### TBL-VIS-447: Observability Plane Contracts
+
+| Plane | Observed subject | Signal type | Storage requirement | Present state | First achievable step |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 — Artifact | The repository as a static object | Point-in-time counts | None; recomputable from any commit | **21 metrics at `EV3`** | Automate the 21 in CI |
+| 2 — Process | Changes applied to the repository | Events | Git history already stores it | Readable but unanalysed | Parse `git log` into `MCAT-14` |
+| 3 — Agent | Agent actions and their context | Traces | Requires a durable store — `OBL-03` | **Nothing exists** | Define the trace format, §04.10 |
+| 4 — Runtime | The deployed system | Metrics, logs, traces | Requires a telemetry backend | Not applicable | Blocked until `MET-VIS-003` exceeds 0 |
+| 5 — Outcome | Value delivered to users | Aggregated business signal | Requires analytics | Not applicable | Blocked until users exist |
+
+> **`VIS-450`.** The "first achievable step" column is deliberately narrow and cheap. Plane 1's step
+> requires installing one workflow that runs commands this document has already run. Plane 2's step
+> requires parsing a log that git already keeps. **Neither needs a persistence decision, a service,
+> or a budget.** Plane 3's step is a format definition, which is writing — also achievable. Three of
+> five planes can advance without resolving `OBL-03`.
+
+### TBL-VIS-448: Signal-to-Question Routing
+
+| Question an agent might ask | Plane | Answerable today | If not, why |
+| :--- | :---: | :---: | :--- |
+| How large is the documentation set? | 1 | **yes** | `MET-VIS-007` |
+| Are all cross-references resolvable? | 1 | no | `MCAT-05` family unmeasured, `OBL-39` |
+| Did the last change pass its checks? | 2 | no | No checks are installed |
+| Who approved this change? | 2 | partially | Git records it; `MET-VIS-024` shows review is self-review |
+| What did the agent read before acting? | 3 | no | No trace capture exists |
+| Why did the agent choose this action? | 3 | no | No decision record is emitted by agents |
+| Is the service healthy? | 4 | not applicable | No service |
+| Did anyone benefit? | 5 | not applicable | No users |
+
+---
+
+## 04.9 — AI Observability
+
+### AI NAVIGATION METADATA — §04.9
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this plane observes the reader** |
+| **AI DEPENDENCIES** | §04.8 plane 3 · PART 03 §03.19 `AI-VIS-072`…`100` · `A0`…`A4` autonomy scale |
+| **AI INPUTS** | An agent session acting on this repository |
+| **AI OUTPUTS** | The telemetry that session should emit, and the metric each signal feeds |
+| **AI IMPLEMENTATION IMPACT** | Defines `AIO-001`…`AIO-052`; **zero are currently collected** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-673`…`VAL-VIS-690` |
+| **AI RELATED DOCUMENTS** | §04.10 trace contract · §04.15 context loading cost |
+
+---
+
+### 04.9.1 — Why Agent Observability Is Different
+
+> **`VIS-451`.** Conventional observability watches a system that does the same thing every time.
+> Agent observability watches a system that may do something different given identical inputs, that
+> chooses its own inputs, and whose most important failure mode is **being confidently wrong rather
+> than crashing**. None of the standard signals detect that. A service that returns a wrong answer
+> quickly and with a 200 status code is indistinguishable, to conventional monitoring, from one
+> working perfectly.
+
+> **`VIS-452`.** This produces three requirements that runtime observability does not have. First,
+> **the inputs must be observed, not just the outputs** — what the agent read determines what it
+> could possibly have concluded. Second, **the refusals must be observed** — an agent declining to
+> act is a success, and a system that only counts actions will optimise it away. Third, **the
+> corrections must be observed** — human intervention is the ground truth signal for agent quality,
+> and it is the only one available before formal verification exists.
+
+```mermaid
+flowchart LR
+    subgraph IN["INPUT SIGNALS - what the agent consumed"]
+        I1["AIO-001 documents loaded"]
+        I2["AIO-005 tokens consumed"]
+        I3["AIO-009 context sufficiency verdict"]
+    end
+
+    subgraph PROC["PROCESS SIGNALS - what the agent did internally"]
+        P1["AIO-014 decisions taken"]
+        P2["AIO-018 rules consulted"]
+        P3["AIO-022 ambiguities encountered"]
+    end
+
+    subgraph OUT["OUTPUT SIGNALS - what the agent produced"]
+        O1["AIO-027 artifacts changed"]
+        O2["AIO-031 claims asserted"]
+        O3["AIO-035 evidence class of those claims"]
+    end
+
+    subgraph JUDGE["JUDGMENT SIGNALS - what happened next"]
+        J1["AIO-040 human interventions"]
+        J2["AIO-044 refusals - a success signal"]
+        J3["AIO-048 corrections required after acceptance"]
+    end
+
+    IN --> PROC --> OUT --> JUDGE
+    JUDGE -.->|"the only ground truth available today"| IN
+
+    classDef in fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef proc fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef out fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef judge fill:#e65100,stroke:#ffcc80,color:#ffffff
+    class I1,I2,I3 in
+    class P1,P2,P3 proc
+    class O1,O2,O3 out
+    class J1,J2,J3 judge
+```
+
+> **Diagram ID:** `DGM-VIS-122` — **AI Observability Signal Graph**
+> **Explanation:** The feedback edge is labelled as the only ground truth available today, and that
+> is the honest position. Without formal verification, without tests, and without a runtime, the
+> single reliable signal about whether an agent did good work is **whether a human had to fix it
+> afterwards**. That makes the judgment plane the most valuable of the four and, inconveniently, the
+> slowest and most expensive to collect. Note also that the refusal signal sits in the judgment
+> plane rather than the output plane: a refusal is judged, not merely emitted.
+
+### TBL-VIS-449: AI Observability Metric Register — Input and Process Signals
+
+| ID | Signal | Unit | Why it matters | Collectable today |
+| :--- | :--- | :--- | :--- | :--- |
+| `AIO-001` | Documents loaded per session | count | Determines the ceiling of what the agent could know | no — no session record |
+| `AIO-002` | Documents loaded but unused | count | Wasted context; the primary optimisation target | no |
+| `AIO-003` | Required documents not loaded | count | The highest-severity input failure | no |
+| `AIO-004` | Load order conformance | ratio | §04.29 defines a required sequence | no |
+| `AIO-005` | Total tokens consumed on input | tokens | Direct cost driver | no |
+| `AIO-006` | Tokens consumed by the largest single document | tokens | Identifies chunking failures | **partially** — `MET-VIS-032` |
+| `AIO-007` | Context window utilisation at peak | ratio | Predicts truncation risk | no |
+| `AIO-008` | Truncation events | count | Silent knowledge loss; catastrophic and invisible | no |
+| `AIO-009` | Context sufficiency verdict declared by the agent | enum | Agent's own statement that it had enough to act | no |
+| `AIO-010` | Sessions proceeding despite insufficient context | count | Should be zero; every instance is a defect | no |
+| `AIO-011` | Re-reads of the same document within a session | count | Signals poor navigation structure | no |
+| `AIO-012` | Cross-part references followed | count | Measures whether part boundaries hold | no |
+| `AIO-013` | Index or router consultations | count | Whether navigation aids are used or bypassed | no |
+| `AIO-014` | Discrete decisions taken | count | Denominator for every quality ratio below | no |
+| `AIO-015` | Decisions with a recorded rationale | ratio | Auditability of agent reasoning | no |
+| `AIO-016` | Decisions citing a specific rule identifier | ratio | Whether governance is consulted or paraphrased | no |
+| `AIO-017` | Decisions citing no source at all | count | Should trend to zero | no |
+| `AIO-018` | Validation rules consulted | count | Whether the rule corpus is actually reachable | no |
+| `AIO-019` | Validation rules violated then self-corrected | count | Healthy signal; self-correction is desirable | no |
+| `AIO-020` | Validation rules violated and shipped | count | The critical defect count | no |
+| `AIO-021` | Constraints detected as conflicting | count | Surfaces contradictions in the corpus | no |
+| `AIO-022` | Ambiguities encountered | count | Drives documentation improvement priority | no |
+| `AIO-023` | Ambiguities resolved by asking versus by assuming | ratio | **Assumption rate is the key risk indicator** | no |
+| `AIO-024` | Assumptions made and recorded | count | Recorded assumptions are recoverable; unrecorded ones are not | no |
+| `AIO-025` | Assumptions made and unrecorded | count | Detectable only retrospectively, by failure | no |
+| `AIO-026` | Reasoning steps per decision | count | Proxy for problem difficulty | no |
+
+### TBL-VIS-450: AI Observability Metric Register — Output and Judgment Signals
+
+| ID | Signal | Unit | Why it matters | Collectable today |
+| :--- | :--- | :--- | :--- | :--- |
+| `AIO-027` | Artifacts created | count | Volume of output | **yes** — from git |
+| `AIO-028` | Artifacts modified | count | Volume of change | **yes** — from git |
+| `AIO-029` | Artifacts deleted | count | Highest-risk action class | **yes** — from git |
+| `AIO-030` | Lines added and removed | count | Crude output magnitude | **yes** — from git |
+| `AIO-031` | Claims asserted in output | count | Denominator for evidence discipline | no |
+| `AIO-032` | Claims carrying a source | ratio | Direct measure of `DQR-050` compliance | no |
+| `AIO-033` | Claims carrying an evidence class | ratio | Direct measure of `MPC-23` compliance | no |
+| `AIO-034` | Claims later found false | count | The definitive quality signal, available only in arrears | no |
+| `AIO-035` | Mean evidence class of asserted claims | ordinal | Whether the agent inflates | no |
+| `AIO-036` | Identifiers allocated | count | Namespace consumption per session | **yes** — by diff |
+| `AIO-037` | Identifiers reused in violation of policy | count | Must be zero; `VIS-347` | **yes** — by diff |
+| `AIO-038` | Fabricated values detected | count | Must be zero; the gravest failure | no |
+| `AIO-039` | Output conforming to the declared format contract | ratio | Structural quality | **partially** |
+| `AIO-040` | Human interventions during the session | count | Direct measure of autonomy achieved | no |
+| `AIO-041` | Human corrections after acceptance | count | Measure of undetected error | no |
+| `AIO-042` | Rework cycles per deliverable | count | Cost of low first-pass quality | no |
+| `AIO-043` | Time from output to acceptance | duration | `VIS-051` forbids dates in prose; durations in telemetry are permitted | no |
+| `AIO-044` | Refusals to act | count | **A success signal, not a failure signal** | no |
+| `AIO-045` | Refusals later judged correct | ratio | Whether the agent's caution is calibrated | no |
+| `AIO-046` | Refusals later judged over-cautious | ratio | The opposite failure; both matter | no |
+| `AIO-047` | Escalations to a human decision | count | Healthy when the decision was genuinely human | no |
+| `AIO-048` | Corrections required after acceptance | count | Escaped defects | no |
+| `AIO-049` | Autonomy level exercised, maximum | `A0`…`A4` | Must never reach `A4`, per `VIS-033` | no |
+| `AIO-050` | Actions exceeding permitted autonomy | count | Governance breach count; must be zero | no |
+| `AIO-051` | Sessions ending without a continuation marker | count | Context loss risk on resumption | **partially** |
+| `AIO-052` | Obligations opened versus discharged | ratio | Whether the agent creates more debt than it clears | **yes** — by count |
+
+> **`VIS-453`.** Fifty-two AI observability metrics. **Nine are collectable today, all from git
+> history, and forty-three are not.** The forty-three all need the same thing: a session trace. That
+> is one artifact, defined in §04.10, and it unlocks more measurement capability than any other
+> single item in this document.
+
+> **`VIS-454`.** `AIO-044` through `AIO-046` form a set that most agent evaluation frameworks omit
+> entirely, and the omission is consequential. A system that counts only completions will penalise
+> an agent for refusing to act on insufficient context — the exact behaviour `VAL-VIS-535` and
+> `MPC-29` demand. **Refusal must be counted as output, and its correctness must be judged
+> separately**, or the measurement system will train the behaviour out of the agents it measures.
+
+### TBL-VIS-451: Agent Telemetry Matrix — Signal Availability by Source
+
+| Telemetry source | Signals it can provide | Available today | What it would cost |
+| :--- | :--- | :---: | :--- |
+| Git commit history | `AIO-027`…`AIO-030`, `AIO-036`, `AIO-037`, `AIO-052` | **yes** | A parsing script; nothing else |
+| Pull request records | `AIO-040`, `AIO-041`, `AIO-047` | **no PRs exist yet** | Adopting a PR workflow |
+| Agent session trace | `AIO-001`…`AIO-026`, `AIO-031`…`AIO-035` | **no** | A trace format and an emitting agent |
+| Human review record | `AIO-041`, `AIO-045`, `AIO-046`, `AIO-048` | **no** | A structured review convention |
+| CI run records | `AIO-039`, `AIO-050` | **no** | `OUT-VIS-004` — install the workflows |
+| Continuation markers in documents | `AIO-051` | **partially** | Already conventional in this document |
+
+---
+
+## 04.10 — The Agent Trace Contract
+
+### AI NAVIGATION METADATA — §04.10
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this defines what an agent must emit about its own work** |
+| **AI DEPENDENCIES** | §04.9 signals · PART 03 §03.19 permitted agent actions · `A0`…`A4` |
+| **AI INPUTS** | An agent session |
+| **AI OUTPUTS** | A trace conforming to `TRC-001`…`TRC-024` |
+| **AI IMPLEMENTATION IMPACT** | Unlocks 43 of the 52 `AIO-` signals; nothing else does |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-691`…`VAL-VIS-706` |
+| **AI RELATED DOCUMENTS** | §04.26 audit chain · §04.27 reproducibility |
+
+---
+
+### 04.10.1 — The Agent Trace Graph
+
+> **`VIS-455`.** A trace is not a log. A log records what happened in sequence; a trace records what
+> happened **and what caused it**, so that a later reader can reconstruct not only the actions but
+> the reasoning that admitted them. For agent work the causal structure matters more than the
+> sequence, because the interesting question is never "what did it do" but "what made that seem
+> correct".
+
+```mermaid
+flowchart TD
+    SESS["SESSION - TRC-001 - one bounded unit of agent work"]:::root
+
+    SESS --> TASK["TASK - TRC-002 - the stated objective"]
+    TASK --> LOAD["CONTEXT LOAD - TRC-003 - documents read, in order"]
+    LOAD --> SUFF{"SUFFICIENCY - TRC-004 - did the agent have enough?"}
+
+    SUFF -->|"no"| REF["REFUSAL - TRC-020 - recorded as an outcome, not an error"]:::refuse
+    SUFF -->|"yes"| PLAN["PLAN - TRC-005 - intended sequence of actions"]
+
+    PLAN --> STEP["STEP - TRC-006 - one atomic action"]
+    STEP --> RULE["RULE CONSULTED - TRC-007 - the governing identifier"]
+    RULE --> JUST["JUSTIFICATION - TRC-008 - why this action is admissible"]
+    JUST --> AUTH{"AUTONOMY CHECK - TRC-009 - is this within permitted level?"}
+
+    AUTH -->|"exceeds"| ESC["ESCALATION - TRC-021 - handed to a human"]:::refuse
+    AUTH -->|"within"| EXEC["EXECUTION - TRC-010 - the change applied"]
+    EXEC --> EVID["EVIDENCE EMITTED - TRC-011 - command run and its output"]
+    EVID --> CLAIM["CLAIMS ASSERTED - TRC-012 - with evidence class"]
+
+    CLAIM --> NEXT{"more steps?"}
+    NEXT -->|"yes"| STEP
+    NEXT -->|"no"| CLOSE["SESSION CLOSE - TRC-022 - continuation marker and open obligations"]
+
+    REF --> CLOSE
+    ESC --> CLOSE
+    CLOSE --> AUDIT["AUDIT RECORD - TRC-023 - immutable, appended"]:::audit
+
+    classDef root fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef refuse fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef audit fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-113` — **Agent Trace Graph**
+> **Explanation:** Two branches terminate without producing work — refusal and escalation — and both
+> route to session close rather than to an error state. That routing is the diagram's substantive
+> claim: **a session that refuses to act is a complete session, not a failed one.** The `TRC-007` and
+> `TRC-008` nodes sitting between the step and its execution encode the requirement that every action
+> names the rule permitting it before it happens, not after. And `TRC-011` is placed after execution
+> rather than before, because evidence is what the action produced, not what motivated it — the
+> motivation is `TRC-008`.
+
+### TBL-VIS-452: Agent Trace Contract — Required Fields
+
+| ID | Field | Cardinality | Required | Purpose |
+| :--- | :--- | :--- | :---: | :--- |
+| `TRC-001` | Session identifier | 1 | **yes** | Groups all records of one unit of work |
+| `TRC-002` | Task statement | 1 | **yes** | What was asked, verbatim where possible |
+| `TRC-003` | Documents loaded, ordered | 0..n | **yes** | The knowledge boundary of the session |
+| `TRC-004` | Context sufficiency verdict | 1 | **yes** | The agent's own declaration before acting |
+| `TRC-005` | Plan | 0..1 | **yes** for `A2`+ | Intended actions, recorded before execution |
+| `TRC-006` | Step | 0..n | **yes** | One atomic action |
+| `TRC-007` | Governing rule identifier | 1 per step | **yes** | Which rule admits this action |
+| `TRC-008` | Justification | 1 per step | **yes** | Why the rule applies here |
+| `TRC-009` | Autonomy level claimed | 1 per step | **yes** | `A0`…`A3`; `A4` is prohibited by `VIS-033` |
+| `TRC-010` | Change applied | 0..1 per step | **yes** if any | Path and diff reference |
+| `TRC-011` | Evidence emitted | 0..n per step | **yes** if a claim follows | Command and output |
+| `TRC-012` | Claims asserted | 0..n | **yes** | Each with its evidence class |
+| `TRC-013` | Identifiers allocated | 0..n | **yes** | Namespace consumption |
+| `TRC-014` | Assumptions recorded | 0..n | **yes** | Every assumption, explicitly |
+| `TRC-015` | Ambiguities encountered | 0..n | **yes** | Input to documentation improvement |
+| `TRC-016` | Conflicts detected | 0..n | **yes** | Contradictions in the governing corpus |
+| `TRC-017` | Validation rules checked | 0..n | **yes** | Which checks were actually run |
+| `TRC-018` | Validation failures self-corrected | 0..n | **yes** | Healthy behaviour, recorded as such |
+| `TRC-019` | Validation failures shipped | 0..n | **yes** | Defects, recorded honestly |
+| `TRC-020` | Refusal record | 0..1 | **yes** if refused | Reason and the missing precondition |
+| `TRC-021` | Escalation record | 0..n | **yes** if escalated | What was handed over and why |
+| `TRC-022` | Continuation marker | 1 | **yes** | State needed to resume |
+| `TRC-023` | Obligations opened and discharged | 0..n | **yes** | Debt created versus cleared |
+| `TRC-024` | Session outcome | 1 | **yes** | completed, refused, escalated, or truncated |
+
+> **`VIS-456`.** Twenty-four fields, of which `TRC-019` is the one a trace format is most tempted to
+> omit. An agent recording its own shipped defects is recording evidence against itself, and there is
+> no mechanism forcing it to. This is why `VIS-032` places accountability on a human role rather than
+> on the agent: **the trace is a report, not a confession, and its integrity comes from the human who
+> reviews it against the diff**, which is independently observable.
+
+### TBL-VIS-453: Trace Completeness Requirements by Autonomy Level
+
+| Autonomy | Description | Required trace fields | Rationale |
+| :---: | :--- | :--- | :--- |
+| `A0` | Suggests only; a human performs every change | `TRC-001`…`TRC-004`, `TRC-012`, `TRC-024` | No change occurred; only the reasoning needs recording |
+| `A1` | Drafts changes for human application | Adds `TRC-006`…`TRC-008`, `TRC-014` | The draft's justification must be reviewable |
+| `A2` | Applies changes within a bounded scope, human reviews after | Adds `TRC-005`, `TRC-009`…`TRC-013`, `TRC-017`…`TRC-019` | Post-hoc review requires the full causal record |
+| `A3` | Applies changes and merges within an explicitly delegated scope | **All 24 fields** | No prior human gate exists; the trace is the only control |
+| `A4` | Unbounded autonomous action | **PROHIBITED** — `VIS-033` | No trace format can compensate for the absence of a boundary |
+
+> **`VIS-457`.** The `A4` row is not an omission to be filled in later. `VIS-033` prohibits it, and
+> §04.10 restates why in measurement terms: **a trace is a control only if something reads it and can
+> still intervene.** At `A4` there is no such reader by definition, so the trace becomes a record of
+> what has already irreversibly happened. That is forensics, not governance.
+
+### TBL-VIS-454: Trace Validation Rules
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-691` | Every session emits a trace, including sessions that refuse | **BLOCK** |
+| `VAL-VIS-692` | A trace is append-only; no record is edited after emission | **HALT** |
+| `VAL-VIS-693` | Every step names the rule identifier permitting it | **BLOCK** |
+| `VAL-VIS-694` | A step citing no rule is a governance breach, not a documentation gap | **HALT** |
+| `VAL-VIS-695` | Claimed autonomy may not exceed the level delegated for the session | **HALT** |
+| `VAL-VIS-696` | `A4` is never a valid value for `TRC-009` | **HALT** |
+| `VAL-VIS-697` | Context sufficiency must be declared before the first change | **BLOCK** |
+| `VAL-VIS-698` | Proceeding after declaring insufficient context is a defect | **HALT** |
+| `VAL-VIS-699` | Every claim in `TRC-012` carries an evidence class | **BLOCK** |
+| `VAL-VIS-700` | Evidence in `TRC-011` must be re-runnable from the trace alone | **BLOCK** |
+| `VAL-VIS-701` | Assumptions must be recorded at the point of assumption, not summarised at close | **BLOCK** |
+| `VAL-VIS-702` | A refusal record names the specific unmet precondition | **BLOCK** |
+| `VAL-VIS-703` | A truncated session emits a continuation marker before stopping | **BLOCK** |
+| `VAL-VIS-704` | Obligations opened without an owner are invalid | **BLOCK** |
+| `VAL-VIS-705` | A trace claiming zero validation failures across a large session is itself suspect and flagged for review | WARN |
+| `VAL-VIS-706` | Trace records are retained beyond the life of the session they describe | **BLOCK** |
+
+> **`VIS-458`.** `VAL-VIS-705` is unusual — a rule that flags a *clean* result. It exists because the
+> most likely failure of self-reported telemetry is not falsification but omission: an agent that
+> never noticed a violation will honestly report none. A perfectly clean trace over substantial work
+> is weak evidence of quality and reasonable evidence that the checking was shallow.
+
+### TBL-VIS-455: Worked Trace Fragment — A Real Action From This Session
+
+| Field | Value |
+| :--- | :--- |
+| `TRC-001` | Session authoring PART 04 of `AOM-VIS-001` |
+| `TRC-002` | Author PART 04 — measurement, evidence and observability vision |
+| `TRC-003` | `SYSTEM_VISION.md` PARTS 01–03, `MASTER_CONTEXT_RULES.md`, `.ai/PROJECT_STATUS.md`, repository tree |
+| `TRC-004` | **sufficient** — the repository was inspected directly before writing |
+| `TRC-005` | Append §04.0 through §04.31 in order, validating Mermaid after each chunk |
+| `TRC-006` | Step — allocate `VAL-VIS-621` after reaching the declared ceiling at `VAL-VIS-620` |
+| `TRC-007` | `DEC-VIS-036` — namespace ceilings are extended only by decision record |
+| `TRC-008` | The ceiling was reached mid-section; `OBL-34` requires a record before further allocation |
+| `TRC-009` | `A2` — bounded change to one document, human review after |
+| `TRC-010` | Append `TBL-VIS-439` containing `DEC-VIS-041` to `SYSTEM_VISION.md` |
+| `TRC-011` | `grep -ohE 'VAL-VIS-[0-9]+' \| sort -u \| wc -l` returned 530 against a ceiling of 620 |
+| `TRC-012` | Claim — the `VAL-VIS-` namespace was 85 percent consumed. Evidence class `EV3` |
+| `TRC-013` | `DEC-VIS-041`, `TBL-VIS-439`, `VAL-VIS-621`…`640` |
+| `TRC-014` | Assumption — 780 is sufficient headroom for §04.7 through §04.31. **Recorded, not verified** |
+| `TRC-017` | `VAL-VIS-533` Mermaid parse check, run after the append |
+| `TRC-018` | None in this step |
+| `TRC-019` | None in this step |
+| `TRC-024` | completed |
+
+> **`VIS-459`.** This fragment is `EV2` evidence — it is a documented reconstruction, not a machine
+> emission, and it was written by the same agent it describes. Under `VAL-VIS-550` it is capped at
+> `EV3` and under `DQR-048` it would be `EV1` without its command record. It is included because a
+> trace format that has never been populated with a real example is untested, and populating it
+> immediately exposed that `TRC-015` and `TRC-016` had no natural value for this step — a small
+> finding that only appears when the format meets actual work.
+
+---
