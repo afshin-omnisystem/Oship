@@ -17656,3 +17656,677 @@ flowchart TD
 | `VAL-VIS-848` | Interpretations are recorded in the agent trace per `TRC-016` | **BLOCK** |
 
 ---
+
+## 04.24 — Forecasting, Prediction, Estimation
+
+### AI NAVIGATION METADATA — §04.24
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before stating anything about the future** |
+| **AI DEPENDENCIES** | `DEC-VIS-040` refusal · §04.23 interpretation |
+| **AI INPUTS** | A request for a future-facing statement |
+| **AI OUTPUTS** | A correctly typed statement, or a refusal |
+| **AI IMPLEMENTATION IMPACT** | Binding; **`DEC-VIS-040` prohibits a prediction namespace entirely** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-849`…`VAL-VIS-860` |
+| **AI RELATED DOCUMENTS** | `19_ROADMAP` domain · `.ai/ROADMAP_AI.md` |
+
+---
+
+### 04.24.1 — Five Terms That Are Not Synonyms
+
+> **`VIS-521`.** Enterprise documents use forecast, prediction, estimate, projection, and scenario
+> interchangeably, and the interchange is where accountability leaks out. Each term implies a
+> different evidence basis and a different obligation on the speaker. **Oship fixes the five
+> definitions and requires the term to be stated explicitly whenever a future-facing claim is made.**
+
+### TBL-VIS-503: The Five Future-Facing Statement Types
+
+| Term | Definition | Requires | Falsifiable | Permitted in Oship today | Obligation on the speaker |
+| :--- | :--- | :--- | :---: | :---: | :--- |
+| **Estimate** | A quantity derived by arithmetic from measured inputs | Measured inputs plus stated arithmetic | **yes** | **yes** | State the inputs and the operation |
+| **Projection** | An extrapolation of an observed trend under stated assumptions | **Two or more baselines** | **yes** | **no — one baseline** | State the trend and every assumption |
+| **Forecast** | A probabilistic statement about a future value with a stated method | Historical distribution, model, confidence interval | **yes** | **no — no history** | State method, interval, and error record |
+| **Prediction** | An unhedged assertion that a specific future state will obtain | Nothing formal; rests on the speaker's authority | **yes** | **PROHIBITED** | Would require accepting accountability |
+| **Scenario** | A conditional description of a possible future, explicitly not asserted | A stated condition | **no — it asserts nothing** | **yes** | Label the condition and the non-assertion |
+
+> **`VIS-522`.** Only two of five are usable in Oship right now: **estimate** and **scenario**. Both
+> are usable because neither requires history. The three that require history — projection,
+> forecast, prediction — are unavailable for the same structural reason recorded in `TBL-VIS-493`:
+> **one baseline, no trend data, no error record.**
+
+> **`VIS-523`.** `DEC-VIS-040` refused a `PRED-`/`FCST-` namespace. §04.24 explains that refusal
+> completely: **a namespace creates capacity, capacity invites use, and use of a forecast identifier
+> in a repository with no historical distribution would manufacture the appearance of a method where
+> none exists.** The absence of the namespace is the enforcement mechanism.
+
+```mermaid
+flowchart TD
+    S["A future-facing statement is requested"] --> C1{"Is it conditional and explicitly not asserted?"}
+    C1 -->|"Yes"| SC["SCENARIO - permitted, label the condition"]
+    C1 -->|"No"| C2{"Is it arithmetic on measured inputs?"}
+    C2 -->|"Yes"| ES["ESTIMATE - permitted, state inputs and operation"]
+    C2 -->|"No"| C3{"Are two or more baselines available?"}
+    C3 -->|"No"| RF["REFUSE - answer NOT PREDICTABLE and name the missing history"]
+    C3 -->|"Yes"| C4{"Is a probabilistic method with an error record available?"}
+    C4 -->|"No"| PJ["PROJECTION - permitted, state every assumption"]
+    C4 -->|"Yes"| FC["FORECAST - permitted, state method and interval"]
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef no fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    class SC,ES,PJ,FC ok
+    class RF no
+    class S,C1,C2,C3,C4 q
+```
+
+> **Diagram ID:** `DGM-VIS-129`
+> **Explanation:** The future-statement typing tree. In Oship today every path reaching the `C3`
+> decision terminates at REFUSE, because the two-baseline condition fails universally. The tree is
+> written for the general case so that it remains correct once history exists, rather than encoding
+> today's poverty as a permanent rule.
+
+### TBL-VIS-504: The Three Absence Values
+
+| Value | Means | Use when | Must not be replaced by |
+| :--- | :--- | :--- | :--- |
+| **`UNKNOWN`** | The value exists but has not been determined | A fact is knowable and nobody has checked | 0, "unclear", an omission |
+| **`NOT YET MEASURED`** | The metric is defined and collection has not run | A defined metric has no reading | `UNKNOWN`, 0, an empty cell |
+| **`NOT APPLICABLE`** | The question does not apply to this subject | A runtime metric on a system with no runtime | `NOT YET MEASURED`, 0 |
+
+> **`VIS-524`.** The distinction between `UNKNOWN` and `NOT YET MEASURED` is not pedantry — it is the
+> difference between **a gap in diligence and a gap in infrastructure**, and they have entirely
+> different remedies. Confusing them causes teams to schedule work that cannot be done, or to skip
+> work that could be done in minutes.
+
+### TBL-VIS-505: Absence Values Applied Across PART 04
+
+| Subject | Correct absence value | Why not the others |
+| :--- | :--- | :--- |
+| Referential integrity `MET-VIS-027`…`031` | **`NOT YET MEASURED`** | Defined, collectable, no parser built — infrastructure gap |
+| Runtime latency metrics `MCAT-12`…`15` | **`NOT APPLICABLE`** | Nothing runs; the question has no subject |
+| Chunk independence component `C` | **`UNKNOWN`** | No deterministic method exists; not merely uncollected |
+| Agent trace metrics `AIO-001`…`026` | **`NOT YET MEASURED`** | Contract defined in §04.10, emitter unbuilt |
+| Whether `OBL-03` will be resolved | **refuse entirely** | A future state, not an absence value at all |
+
+> **`VIS-525`.** The last row matters most. **Absence values describe present unknowns; they are not
+> a vocabulary for the future.** Writing "`OBL-03` resolution: `UNKNOWN`" would smuggle a prediction
+> into a status field by implying the outcome merely awaits discovery.
+
+### TBL-VIS-506: Validation Rules — Future-Facing Statements
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-849` | Every future-facing statement names its type from `TBL-VIS-503` | **HALT** |
+| `VAL-VIS-850` | Predictions are prohibited | **HALT** |
+| `VAL-VIS-851` | Projections require two or more baselines | **HALT** |
+| `VAL-VIS-852` | Forecasts require a stated method and error record | **HALT** |
+| `VAL-VIS-853` | Estimates state inputs and arithmetic | **BLOCK** |
+| `VAL-VIS-854` | Scenarios are labelled as not asserted | **BLOCK** |
+| `VAL-VIS-855` | No `PRED-` or `FCST-` namespace may be created without superseding `DEC-VIS-040` | **HALT** |
+| `VAL-VIS-856` | Absence is expressed with one of the three values in `TBL-VIS-504` | **BLOCK** |
+| `VAL-VIS-857` | Zero may never stand for absence | **HALT** |
+| `VAL-VIS-858` | Absence values may not be applied to future states | **BLOCK** |
+| `VAL-VIS-859` | Dates are not attached to any statement, per `VIS-051` | **HALT** |
+| `VAL-VIS-860` | A refused future statement names the missing precondition | **BLOCK** |
+
+---
+
+## 04.25 — Metric Security Classification
+
+### AI NAVIGATION METADATA — §04.25
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before publishing a measurement outside the repository** |
+| **AI DEPENDENCIES** | §04.22 dashboards · §04.26 audit chain |
+| **AI INPUTS** | A metric and a proposed audience |
+| **AI OUTPUTS** | An `MSC-` classification and a disclosure decision |
+| **AI IMPLEMENTATION IMPACT** | Classification is defined; **no enforcement mechanism exists** |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-861`…`VAL-VIS-872` |
+| **AI RELATED DOCUMENTS** | `.github/CODEOWNERS` · `14_SECURITY` domain |
+
+---
+
+### 04.25.1 — Why Metrics Need Classification
+
+> **`VIS-526`.** A measurement can be harmful in three distinct ways that have nothing to do with
+> whether it is true. It can **reveal a weakness** — an unmet gate, an absent control. It can
+> **reveal a person** — commit patterns, review latencies, refusal rates attach to individuals even
+> when the metric names a role. And it can **enable an inference** — several individually harmless
+> figures that together disclose something none of them discloses alone.
+
+> **`VIS-527`.** The third is the one classification schemes usually miss. **Oship's own PART 04 is
+> an example**: zero source files, zero workflows, one `CODEOWNERS` principal, and no runtime are
+> each innocuous; together they describe a project with no independent verification of any kind, in
+> enough detail to be actionable by an adversary or a competitor.
+
+### TBL-VIS-507: Metric Security Classification `MSC-1`…`MSC-6`
+
+| Class | Name | Disclosure | Examples in Oship | Aggregation risk |
+| :--- | :--- | :--- | :--- | :---: |
+| **`MSC-1`** | PUBLIC | Anyone | Repository structure counts, domain count, documentation volume | low |
+| **`MSC-2`** | STAKEHOLDER | Named external stakeholders | Gate attainability, evidence-class ceiling | **moderate** |
+| **`MSC-3`** | INTERNAL | All contributors | Open HALT validations, obligation register | moderate |
+| **`MSC-4`** | RESTRICTED | Governance and owning roles | Agent refusal rates, trace conformance, review latency | **high — person-attributable** |
+| **`MSC-5`** | CONFIDENTIAL | Named individuals only | Security control coverage, unmitigated weaknesses | **high** |
+| **`MSC-6`** | REGULATED | Handled under an external regime | None today — no regulated data exists in Oship | n/a |
+
+> **`VIS-528`.** No metric in Oship is `MSC-6`, and saying so is itself useful: **the absence of
+> regulated data means the classification scheme is currently a governance exercise rather than a
+> compliance requirement.** That will change the moment the Money Factory processes real financial
+> workloads, and the scheme is defined now so that it is not invented under pressure later.
+
+### TBL-VIS-508: Classification of the PART 04 Metric Families
+
+| Family | Class | Rationale | Aggregation caution |
+| :--- | :---: | :--- | :--- |
+| `MET-VIS-001`…`014` structure and volume | `MSC-1` | Derivable by anyone with repository access | — |
+| `MET-VIS-015`…`021` namespace consumption | `MSC-1` | Internal bookkeeping, no sensitivity | — |
+| `MET-VIS-022`…`025` governance principals | **`MSC-3`** | Reveals the single-principal weakness | **Combines with gate attainability to describe an unverifiable project** |
+| `MET-VIS-026`…`031` conformance and integrity | `MSC-3` | Reveals documentation defects | — |
+| `MET-VIS-032`…`037` context cost | `MSC-1` | Operational, not sensitive | — |
+| `AIO-001`…`052` agent observability | **`MSC-4`** | Refusal and error rates are person-attributable in a single-principal repository | **High — with commit metadata, identifies individuals** |
+| `QG-0`…`QG-8` gate outcomes | **`MSC-2`** | Stakeholders need them; broad disclosure reveals readiness gaps | **Combines with `MET-VIS-022`…`025`** |
+| `TRC-001`…`024` trace conformance | **`MSC-4`** | Session-level behaviour | **High** |
+
+> **`VIS-529`.** Two families sit at `MSC-4` and both are agent-behaviour families. This is worth
+> stating plainly: **agent observability is the most privacy-sensitive measurement domain in an
+> AI-native repository**, because in a one-principal project every agent action is also a record of
+> one person's working method. The metrics are still worth collecting; they are not worth publishing.
+
+### TBL-VIS-509: Aggregation and Inference Control
+
+| Control | Rule |
+| :--- | :--- |
+| **Combination ceiling** | A displayed combination carries the **highest** class among its inputs — the inverse of the evidence-class weakest-link rule |
+| **Minimum cohort** | A person-attributable metric may not be displayed where the cohort is fewer than 5 — **which in Oship means `MSC-4` metrics may not be displayed at all** |
+| **Temporal blurring** | Session-level agent metrics are reported per part, not per session |
+| **Inference review** | Any new public dashboard panel is reviewed against `TBL-VIS-508` for combination effects |
+| **Default** | An unclassified metric defaults to `MSC-3`, never to `MSC-1` |
+
+> **`VIS-530`.** The minimum-cohort rule has a stark consequence stated in the table: **with one
+> principal, every `MSC-4` metric is individually identifying and none of them may be displayed.**
+> This does not block collection or internal use by the individual concerned; it blocks
+> dashboarding. Recording the consequence now prevents a future dashboard from quietly publishing
+> them because the rule was never applied to a cohort of one.
+
+### TBL-VIS-510: Validation Rules — Metric Security
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-861` | Every metric carries an `MSC-` classification | **BLOCK** |
+| `VAL-VIS-862` | Unclassified metrics default to `MSC-3` | **BLOCK** |
+| `VAL-VIS-863` | A combination carries the highest class among its inputs | **HALT** |
+| `VAL-VIS-864` | Person-attributable metrics require a cohort of at least 5 | **HALT** |
+| `VAL-VIS-865` | Agent behaviour metrics are `MSC-4` by default | **BLOCK** |
+| `VAL-VIS-866` | Classification is reviewed when a metric's audience changes | **BLOCK** |
+| `VAL-VIS-867` | A metric may be reclassified upward by anyone and downward only by Governance | **HALT** |
+| `VAL-VIS-868` | Public dashboards are reviewed for inference risk before publication | **BLOCK** |
+| `VAL-VIS-869` | Security classification is independent of evidence class | **WARN** |
+| `VAL-VIS-870` | A metric may not be withheld to conceal a failure; withholding requires a stated `MSC-` basis | **HALT** |
+| `VAL-VIS-871` | Regulated metrics require an external handling regime before collection begins | **HALT** |
+| `VAL-VIS-872` | Classification decisions are recorded, not assumed | **BLOCK** |
+
+> **`VIS-531`.** `VAL-VIS-870` closes the obvious abuse of a classification scheme. **Classification
+> restricts audience; it never justifies non-measurement, and it never converts an inconvenient
+> finding into an unpublishable one.** The four open HALT validations are `MSC-3` and remain visible
+> to every contributor precisely because of this rule.
+
+---
+
+## 04.26 — The Audit Evidence Chain
+
+### AI NAVIGATION METADATA — §04.26
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read when preparing for or responding to an audit** |
+| **AI DEPENDENCIES** | §04.16 evidence graph · §04.20 corrections · §04.25 classification |
+| **AI INPUTS** | An audit question |
+| **AI OUTPUTS** | A chain from question to primary evidence, or the point of discontinuity |
+| **AI IMPLEMENTATION IMPACT** | **Oship would fail most external audits today**, and §04.26 states why precisely |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-873`…`VAL-VIS-884` |
+| **AI RELATED DOCUMENTS** | `.ai/DECISION_LOG.md` · `ADR-0001` |
+
+---
+
+### 04.26.1 — What an Auditor Actually Asks
+
+> **`VIS-532`.** An auditor does not ask whether a system is good. An auditor asks four questions in
+> sequence: **what do you claim, who decided it, what evidence supports it, and can I reproduce that
+> evidence without your help?** The fourth is the one that separates an audit from a presentation,
+> and it is the one Oship must be built to survive.
+
+```mermaid
+sequenceDiagram
+    participant A as Auditor
+    participant D as Document set
+    participant R as Decision record
+    participant E as Evidence artefact
+    participant T as Independent tool
+    A->>D: What is claimed and where
+    D-->>A: Claim with a VIS identifier
+    A->>R: Who decided this and on what basis
+    R-->>A: DEC-VIS record with alternatives
+    A->>E: What evidence supports the claim
+    E-->>A: MET-VIS reading with method and commit
+    A->>T: Reproduce the reading independently
+    T-->>A: Same value or a discrepancy
+    Note over A,T: The chain holds only if all four responses arrive and the last matches
+```
+
+> **Diagram ID:** `DGM-VIS-130`
+> **Explanation:** The four-step audit interrogation. Each arrow is a demand and each return is an
+> artefact that must exist independently of the person being audited. **Oship can satisfy the first
+> three steps for repository-derived claims and the fourth only for the subset reproducible by
+> standard shell tooling** — which is, in fact, most of the `MET-VIS-` register.
+
+### TBL-VIS-511: Audit Chain Link Requirements
+
+| Link | Artefact required | Must be independent of the author | Oship status |
+| :--- | :--- | :---: | :--- |
+| **Claim** | A statement with a stable identifier | no | **satisfied** — every normative statement carries a `VIS-` identifier |
+| **Authority** | A decision record naming alternatives and reversibility | no | **satisfied** — `DEC-VIS-001`…`042` and 3 ADRs |
+| **Evidence** | A reading with method, commit, and class | **yes** | **partially** — methods are stated, collection is manual |
+| **Reproduction** | A tool the auditor can run themselves | **yes** | **satisfied for Tier 1** — `find`, `grep`, `wc`, `git log` |
+| **Independence** | A second principal attesting the process | **yes** | **NOT SATISFIED** — one `CODEOWNERS` principal |
+| **Continuity** | An unbroken record of corrections and supersessions | **yes** | **partially** — `OBL-33` open at `CORR-4` |
+
+> **`VIS-533`.** Four of six links hold. The two that fail are **independence** and **continuity**,
+> and they fail for reasons already documented rather than for reasons discovered here — which is
+> itself an audit-relevant property. **A system that already knows and records its own audit gaps is
+> in a materially different position from one that discovers them during the audit.**
+
+### TBL-VIS-512: Audit Question Rehearsal — Six Real Questions
+
+| Auditor question | Oship answer | Chain holds | Discontinuity |
+| :--- | :--- | :---: | :--- |
+| "How many knowledge domains exist?" | 24, `MET-VIS-004`, reproducible with `find docs/MASTER_CONTEXT -name INDEX.md` | **yes** | — |
+| "Is any application code present?" | None, `MET-VIS-009`, reproducible with a `find` extension filter | **yes** | — |
+| "Who approved the architecture?" | `ADR-0001`, APPROVED, `CODEOWNERS` principal | **no** | Approver and author are the same principal |
+| "How do you know your diagrams are valid?" | `MET-VIS-011` = 1.00 via a Mermaid parser run | **partially** | The parser run is manual and unrecorded in CI |
+| "Show me a metric that changed and why" | `OBL-33`, class MF-A, stalled at `CORR-4` | **partially** | Correction unauthorised, therefore unpublished |
+| "What is your production error rate?" | **NOT APPLICABLE** — nothing runs | **n/a** | Correct refusal, not a failure |
+
+> **`VIS-534`.** The fourth row identifies the cheapest available audit improvement in the entire
+> repository. **The Mermaid validation already runs, produces a deterministic result, and is
+> reproducible — it simply is not recorded anywhere an auditor could see.** Installing it as a CI
+> check converts one partial link into a satisfied one and simultaneously raises `MET-VIS-011` from
+> `EV3` to `EV4`.
+
+### TBL-VIS-513: Audit Evidence Retention
+
+| Evidence type | Retained where | Retention period | Immutable | Oship today |
+| :--- | :--- | :--- | :---: | :--- |
+| Claims | The document set, in git | Permanent | **yes — git history** | **satisfied** |
+| Decisions | `DEC-VIS-` tables and ADRs, in git | Permanent | **yes** | **satisfied** |
+| Readings | Recorded inline with their part | Permanent as authored | **yes** | **satisfied but manual** |
+| Collection runs | **nowhere** | — | — | **NOT SATISFIED — `MPC-17`** |
+| Corrections | `CORR-` records in the document set | Permanent | **yes** | **satisfied structurally, one open** |
+| Agent traces | **nowhere** | — | — | **NOT SATISFIED — no trace store** |
+
+> **`VIS-535`.** Git provides immutability and permanence for four of six evidence types at zero
+> cost, which is a genuine structural advantage of a documentation-first repository. **The two gaps
+> are both about *runs* rather than *artefacts*** — collection runs and agent sessions are events,
+> and git records states. This is the specific reason `MPC-17` cannot be satisfied by better
+> authoring.
+
+### TBL-VIS-514: Validation Rules — Audit
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-873` | Every claim presented to an auditor carries its identifier | **BLOCK** |
+| `VAL-VIS-874` | Every reading presented carries its method and commit | **BLOCK** |
+| `VAL-VIS-875` | A reading that cannot be independently reproduced is presented as `EV2` at most | **HALT** |
+| `VAL-VIS-876` | Known audit gaps are disclosed before they are discovered | **BLOCK** |
+| `VAL-VIS-877` | Self-approval is disclosed wherever approval is claimed | **HALT** |
+| `VAL-VIS-878` | Open corrections are disclosed at their stalled state | **BLOCK** |
+| `VAL-VIS-879` | Absence of runtime evidence is presented as NOT APPLICABLE, never as a pass | **HALT** |
+| `VAL-VIS-880` | Audit artefacts are retained in version control, never in ephemeral storage | **BLOCK** |
+| `VAL-VIS-881` | An agent may assemble an audit chain and may not attest to it | **HALT** |
+| `VAL-VIS-882` | A discontinuity is named at its specific link, not as a general shortfall | **BLOCK** |
+| `VAL-VIS-883` | Audit responses are subject to `MSC-` classification | **BLOCK** |
+| `VAL-VIS-884` | An audit rehearsal is repeated whenever the evidence ceiling changes | **WARN** |
+
+---
+
+## 04.27 — The Reproducibility Contract
+
+### AI NAVIGATION METADATA — §04.27
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before publishing any reading** |
+| **AI DEPENDENCIES** | §04.5 metric contract · §04.26 audit chain |
+| **AI INPUTS** | A measurement about to be published |
+| **AI OUTPUTS** | A reproduction recipe, or a downgrade to `EV2` |
+| **AI IMPLEMENTATION IMPACT** | Directly determines the evidence class of every figure in PART 04 |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-885`…`VAL-VIS-896` |
+| **AI RELATED DOCUMENTS** | §04.30 reference appendix |
+
+---
+
+### 04.27.1 — The Six Conditions
+
+> **`VIS-536`.** A reading is reproducible when a stranger with repository access can obtain the same
+> value without asking anyone a question. Six conditions are jointly necessary. Missing any one
+> caps the reading at `EV2` regardless of how carefully it was taken.
+
+### TBL-VIS-515: The Six Reproducibility Conditions
+
+| # | Condition | Statement | Oship satisfies | Failure consequence |
+| ---: | :--- | :--- | :---: | :--- |
+| 1 | **Pinned subject** | The exact commit SHA the reading was taken at | **yes** | The value drifts with the tree |
+| 2 | **Stated tool** | The tool and its invocation, verbatim | **yes for Tier 1** | The reader guesses and gets a different value |
+| 3 | **Deterministic method** | The same inputs always yield the same output | **yes for Tier 1** | Non-reproducible by definition |
+| 4 | **No hidden filters** | Every exclusion is stated | **partially** | Silent scope differences |
+| 5 | **Environment independence** | The result does not depend on machine, locale, or tool version | **partially** | `find` and `grep` behaviour varies across platforms |
+| 6 | **Recorded execution** | The run itself is recorded, not just the result | **NO — `MPC-17`** | The reader must trust that the run happened |
+
+> **`VIS-537`.** Condition 6 is the sole reason the entire `MET-VIS-` register is capped at `EV3`
+> rather than reaching `EV4`. Conditions 1 through 5 are satisfied or nearly so. **The gap is not
+> methodological rigour — it is the absence of an execution record**, which is exactly what a CI run
+> provides and nothing else does.
+
+### TBL-VIS-516: Reproduction Recipes for the Core Repository Readings
+
+| Metric | Value at `0d9b607` | Reproduction command | Conditions met |
+| :--- | ---: | :--- | :--- |
+| `MET-VIS-001` markdown file count | 87 | `find . -name '*.md' -not -path './.git/*' \| wc -l` | 1,2,3,4,5 |
+| `MET-VIS-007` total markdown lines | 127,285 | `find . -name '*.md' -not -path './.git/*' -exec cat {} + \| wc -l` | 1,2,3,4 |
+| `MET-VIS-004` MCX domains | 24 | `ls -d docs/MASTER_CONTEXT/[0-9][0-9]_*/ \| wc -l` | 1,2,3,4,5 |
+| `MET-VIS-005` gitkeep directories | 73 | `find . -name '.gitkeep' -not -path './.git/*' \| wc -l` | 1,2,3,4,5 |
+| `MET-VIS-009` application source files | 0 | `find . \( -name '*.ts' -o -name '*.js' -o -name '*.py' -o -name '*.go' \) -not -path './.git/*' -not -path './node_modules/*' \| wc -l` | 1,2,3,4,5 |
+| `MET-VIS-010` installed workflows | 0 | `ls .github/workflows/ 2>/dev/null \| wc -l` | 1,2,3,4,5 |
+| `MET-VIS-024` CODEOWNERS principals | 1 | `grep -o '@[A-Za-z0-9-]*' .github/CODEOWNERS \| sort -u \| wc -l` | 1,2,3,4,5 |
+| `MET-VIS-026` frontmatter coverage | 77 of 87 | `for f in $(find . -name '*.md' -not -path './.git/*'); do head -1 "$f"; done \| grep -c '^---$'` | 1,2,3,4 |
+
+> **`VIS-538`.** Eight commands, each one line, jointly reproducing the factual foundation of PART
+> 04. **Publishing the recipes rather than only the results is the difference between an `EV3`
+> register and an `EV1` one**, and it costs nothing beyond the discipline of recording the command
+> at the moment it is run.
+
+> **`VIS-539`.** Condition 5 fails for the two line-counting recipes because `cat` ordering and
+> `head` behaviour vary subtly across platforms and because a `.md` file lacking a trailing newline
+> is counted differently by different `wc` implementations. **The variance is small and it is
+> disclosed rather than ignored** — a reader reproducing 127,285 and obtaining 127,283 has not found
+> an error.
+
+### TBL-VIS-517: Reproducibility by Metric Tier
+
+| Tier | Metrics | Conditions typically met | Ceiling | What would raise it |
+| :--- | :--- | :--- | :---: | :--- |
+| **Tier 1** repository-readable | `MCAT-01`…`06`, most `MET-VIS-` | 1,2,3,4, partially 5 | **`EV3`** | A recorded CI execution — condition 6 |
+| **Tier 2** CI-derivable | `MCAT-07`…`11` | none — no CI exists | **`EV0`** | Installing any workflow |
+| **Tier 3** runtime-derivable | `MCAT-12`…`15` | none — nothing runs | **`EV0`** | A running system |
+
+> **`VIS-540`.** The tier table repeats a finding first stated in §04.5 and it repeats it
+> deliberately, because §04.27 is where the finding acquires a **mechanism**. Tier 1 is capped at
+> `EV3` by exactly one missing condition out of six, and that condition is satisfied by a single CI
+> workflow file. **The distance between Oship's current evidence posture and a materially stronger
+> one is one file.**
+
+### TBL-VIS-518: Validation Rules — Reproducibility
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-885` | Every published reading names its commit SHA | **BLOCK** |
+| `VAL-VIS-886` | Every published reading names its tool and invocation | **BLOCK** |
+| `VAL-VIS-887` | A non-deterministic method may not produce an `EV3` reading | **HALT** |
+| `VAL-VIS-888` | Every exclusion applied during collection is stated | **BLOCK** |
+| `VAL-VIS-889` | Platform-dependent variance is disclosed with the reading | **WARN** |
+| `VAL-VIS-890` | A reading with no recorded execution is capped at `EV3` | **BLOCK** |
+| `VAL-VIS-891` | A reading whose recipe is unpublished is capped at `EV2` | **HALT** |
+| `VAL-VIS-892` | Recipes are tested by running them, not by writing them | **BLOCK** |
+| `VAL-VIS-893` | A recipe that no longer reproduces its published value opens a `CORR-1` | **HALT** |
+| `VAL-VIS-894` | Estimates state which reproducible inputs they derive from | **BLOCK** |
+| `VAL-VIS-895` | Reproduction failure is reported, never silently re-measured | **HALT** |
+| `VAL-VIS-896` | An agent must re-run recipes rather than quote remembered values | **HALT** |
+
+> **`VIS-541`.** `VAL-VIS-896` encodes a failure that has occurred twice in this project: published
+> line counts drifting because a figure was carried forward from memory instead of re-measured. It is
+> class MF-B, it was contained, and the containment is this rule.
+
+---
+
+## 04.28 — Measurement Anti-Patterns
+
+### AI NAVIGATION METADATA — §04.28
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before designing a metric or reading a dashboard** |
+| **AI DEPENDENCIES** | `DEC-VIS-038` namespace reopening · §04.19 failure classes |
+| **AI INPUTS** | A metric design or a published measurement |
+| **AI OUTPUTS** | A `FAL-VIS-` match, or a clean pass |
+| **AI IMPLEMENTATION IMPACT** | Allocates `FAL-VIS-251`…`290` — the full reopened range |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-897`…`VAL-VIS-908` |
+| **AI RELATED DOCUMENTS** | §04.20 correction lifecycle |
+
+---
+
+### 04.28.1 — Forty Instrument Failures
+
+> **`VIS-542`.** The forty entries below fill the range reopened by `DEC-VIS-038`, eight per class,
+> in the order established by `TBL-VIS-483`. Each entry states the pattern, why it is attractive —
+> anti-patterns persist because they are useful to someone — how to detect it, and whether Oship
+> currently exhibits it. **Nine are marked PRESENT, and marking them is the point of the catalogue.**
+
+### TBL-VIS-519: `FAL-VIS-251`…`258` — Class MF-A, Definition Failures
+
+| ID | Anti-pattern | Why it is attractive | Detection | In Oship |
+| :--- | :--- | :--- | :--- | :---: |
+| `FAL-VIS-251` | **Proxy substitution** — measuring an easy correlate and naming it the target | The correlate is available today | The metric name and the metric definition describe different things | **PRESENT** — `.ai/` file count used as an AI-first indicator |
+| `FAL-VIS-252` | **Undefined denominator** — a ratio whose base is unstated | Ratios look rigorous | Ask "out of what?" and get no fixed answer | **PRESENT** — historical "percent complete" phrasings |
+| `FAL-VIS-253` | **Composite of incommensurables** — summing units that do not add | One number is easier to report | Decompose and check the units | absent |
+| `FAL-VIS-254` | **Definition drift** — the meaning changes while the identifier persists | Avoids the cost of a new identifier | Compare current definition to the original | **PRESENT** — `OBL-38`, 111 metrics predating the contract |
+| `FAL-VIS-255` | **Aspirational definition** — defining the metric you wish you could collect | Signals ambition | Definition names a source that does not exist | **PRESENT** — Tier 3 runtime metrics |
+| `FAL-VIS-256` | **Vestigial gate** — a gate that has never rejected anything | Gates look like rigour | Count historical rejections | **PRESENT** — `QG-0`…`QG-2` have never rejected |
+| `FAL-VIS-257` | **Tautological metric** — the measurement is guaranteed by construction | It always passes | Ask what value would falsify it | absent |
+| `FAL-VIS-258` | **Unit ambiguity** — lines, tokens, words, or characters used interchangeably | All are "size" | Two readings of the same subject differ by an order of magnitude | contained — units stated throughout PART 04 |
+
+### TBL-VIS-520: `FAL-VIS-259`…`266` — Class MF-B, Collection Failures
+
+| ID | Anti-pattern | Why it is attractive | Detection | In Oship |
+| :--- | :--- | :--- | :--- | :---: |
+| `FAL-VIS-259` | **Silent exclusion** — a filter applied but not stated | Cleans up the number | Reproduce without the filter and compare | contained — `VAL-VIS-888` |
+| `FAL-VIS-260` | **Memory quotation** — restating a value without re-measuring | Fast | Compare to a fresh run | **occurred twice, contained by `VAL-VIS-896`** |
+| `FAL-VIS-261` | **Sampling without disclosure** — reporting a sample as a census | Cheaper to collect | The method says sample, the headline says total | absent |
+| `FAL-VIS-262` | **Convenience window** — choosing the interval that flatters | The data supports it | Re-run across adjacent windows | not applicable — no time series |
+| `FAL-VIS-263` | **Streetlight collection** — measuring what is easy rather than what matters | It produces readings immediately | The measured set and the decision-relevant set barely overlap | **PRESENT** — token cost measured, dilution and staleness not |
+| `FAL-VIS-264` | **Collection without timestamp** — a value with no time of collection | Nothing forces it | The reading has no time field | **PRESENT** — `MPC-17` unmet |
+| `FAL-VIS-265` | **Interpolated gaps** — filling missing intervals with plausible values | Charts look continuous | Compare against the raw collection log | prohibited by `MPC-29`; absent |
+| `FAL-VIS-266` | **Instrument self-measurement** — the tool measures its own success | No third party required | The collector and the subject are the same code | latent risk — the validator counts its own blocks |
+
+### TBL-VIS-521: `FAL-VIS-267`…`274` — Class MF-C, Interpretation Failures
+
+| ID | Anti-pattern | Why it is attractive | Detection | In Oship |
+| :--- | :--- | :--- | :--- | :---: |
+| `FAL-VIS-267` | **Volume as quality** — more output read as better output | Volume is visible | The claim cites a count and concludes about worth | guarded by `VAL-VIS-839` |
+| `FAL-VIS-268` | **Activity as progress** — commits or edits read as advancement | Activity is easy to see | Compare against a counted-state vector | guarded by `VAL-VIS-727` |
+| `FAL-VIS-269` | **Documentation as readiness** — specification read as capability | Documents are tangible | Check the gate the claim would need | **PRESENT as a risk** — the single largest interpretive exposure in Oship |
+| `FAL-VIS-270` | **Green as healthy** — absence of red read as wellness | Dashboards reward it | Check how many panels can even turn red | guarded by `TBL-VIS-462` |
+| `FAL-VIS-271` | **Single reading as trend** — one point described with direction words | Direction is what people want | Count the baselines | guarded by `VAL-VIS-822` |
+| `FAL-VIS-272` | **Correlation narrated as cause** | Narrative is compelling | Ask what the mechanism is | guarded by `VAL-VIS-838` |
+| `FAL-VIS-273` | **Precision as accuracy** — decimals read as confidence | Decimals look scientific | Check the evidence class behind the digits | contained — classes published alongside values |
+| `FAL-VIS-274` | **Absence read as zero** — no measurement read as no occurrences | Empty cells look like zeros | Check for the three absence values | guarded by `VAL-VIS-857` |
+
+### TBL-VIS-522: `FAL-VIS-275`…`282` — Class MF-D, Presentation Failures
+
+| ID | Anti-pattern | Why it is attractive | Detection | In Oship |
+| :--- | :--- | :--- | :--- | :---: |
+| `FAL-VIS-275` | **Badge inflation** — a hand-written badge implying automated verification | Badges look machine-generated | Trace the badge to its generator | **PRESENT** — `FAL-VIS-171`, the "24 of 24" badge |
+| `FAL-VIS-276` | **Skeleton as system** — templates presented as installed capability | The files exist | Check whether anything executes them | **PRESENT** — `.github/workflow-skeletons/` |
+| `FAL-VIS-277` | **Truncated axis** — a scale chosen to exaggerate | The change looks larger | Inspect the axis origin | not applicable — no charts |
+| `FAL-VIS-278` | **Aggregate without class** — a summary that hides a weak component | Cleaner presentation | Decompose and check classes | guarded by `VAL-VIS-827` |
+| `FAL-VIS-279` | **Selective panel** — showing only the panels that pass | Reporting is easier | Compare against the full layer register | guarded by `VAL-VIS-832` |
+| `FAL-VIS-280` | **Colour-only status** | Compact | Read the dashboard in greyscale | guarded by `VAL-VIS-833` |
+| `FAL-VIS-281` | **Stale reading presented as current** | Refresh is expensive | Check the reading's age against its window | **PRESENT as a risk** — no timestamps exist to check |
+| `FAL-VIS-282` | **Rounded away** — a small but material count rounded to zero or to a percentage | Percentages read cleanly | Demand the raw count | contained — raw counts published |
+
+### TBL-VIS-523: `FAL-VIS-283`…`290` — Class MF-E, Governance Failures
+
+| ID | Anti-pattern | Why it is attractive | Detection | In Oship |
+| :--- | :--- | :--- | :--- | :---: |
+| `FAL-VIS-283` | **Self-approval** — author and approver are the same principal | There is only one principal | Compare authorship to approval | **PRESENT** — `MET-VIS-024` = 1 |
+| `FAL-VIS-284` | **Silent baseline move** — the comparison point changes without record | Results improve | Compare against the recorded baseline SHA | guarded by `VAL-VIS-816` |
+| `FAL-VIS-285` | **Metric deletion** — an inconvenient metric disappears | Removes a problem | Diff the register across parts | prohibited by `VAL-VIS-814` |
+| `FAL-VIS-286` | **Ownerless metric** — no role accountable | Nobody has to maintain it | Check the owner field | guarded by `VAL-VIS-820` |
+| `FAL-VIS-287` | **Classification abuse** — withholding a finding under a security label | Avoids disclosure | Demand the `MSC-` basis | prohibited by `VAL-VIS-870` |
+| `FAL-VIS-288` | **Silent correction** — a wrong value quietly edited | Looks tidy | Compare git history to the published record | prohibited by `VAL-VIS-801` |
+| `FAL-VIS-289` | **Gate redefinition after rejection** — moving the bar to admit rejected work | Unblocks delivery | Compare gate definitions across parts | prohibited by `VAL-VIS-788` |
+| `FAL-VIS-290` | **Unrecorded refusal** — a proposed correction refused without record | Avoids a difficult conversation | Look for proposals with no outcome | guarded by `VAL-VIS-805` |
+
+### TBL-VIS-524: Anti-Pattern Prevalence Summary
+
+| Class | Entries | PRESENT in Oship | Contained | Guarded | Not applicable |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| MF-A Definition | 8 | **5** | 1 | 0 | 2 |
+| MF-B Collection | 8 | **2** | 2 | 1 | 3 |
+| MF-C Interpretation | 8 | **1** | 1 | 6 | 0 |
+| MF-D Presentation | 8 | **3** | 1 | 3 | 1 |
+| MF-E Governance | 8 | **1** | 0 | 6 | 1 |
+| **Total** | **40** | **12** | **5** | **16** | **7** |
+
+> **`VIS-543`.** Twelve of forty anti-patterns are present, and their distribution is diagnostic:
+> **five of the twelve are definition failures — the silent, highest-priority class.** Interpretation
+> and governance failures are almost entirely guarded, because guarding those requires only rules,
+> which this document can supply. Definition failures require rebuilding instruments, which it
+> cannot.
+
+> **`VIS-544`.** `FAL-VIS-266` deserves separate note as a **latent** rather than present risk. The
+> Mermaid validator that reports "checked N blocks, 0 failures" is the same tool whose correctness
+> underwrites `MET-VIS-011`. If it silently skipped a block it would report success. **The mitigation
+> is a deliberate negative test — introducing a known-bad diagram and confirming the validator
+> fails** — which has not been performed and is recorded here as `OBL-43`.
+
+### TBL-VIS-525: Validation Rules — Anti-Patterns
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-897` | A new metric is checked against `TBL-VIS-519`…`TBL-VIS-523` before definition | **BLOCK** |
+| `VAL-VIS-898` | An anti-pattern found PRESENT is recorded, not silently fixed | **HALT** |
+| `VAL-VIS-899` | A proxy metric names what it proxies for | **BLOCK** |
+| `VAL-VIS-900` | Every ratio names its denominator | **HALT** |
+| `VAL-VIS-901` | A gate with zero historical rejections is reviewed for `FAL-VIS-256` | **WARN** |
+| `VAL-VIS-902` | A self-measuring instrument requires a negative test | **BLOCK** |
+| `VAL-VIS-903` | Badges must be generated or labelled hand-written | **HALT** |
+| `VAL-VIS-904` | Templates may not be described with language implying execution | **HALT** |
+| `VAL-VIS-905` | Anti-pattern presence is re-audited each part | **BLOCK** |
+| `VAL-VIS-906` | The count of PRESENT anti-patterns is a published metric | **WARN** |
+| `VAL-VIS-907` | An anti-pattern may not be closed without evidence of removal | **BLOCK** |
+| `VAL-VIS-908` | Guarded status requires a citable rule; assertion is insufficient | **BLOCK** |
+
+---
+
+## 04.29 — The AI Evidence Loading Sequence
+
+### AI NAVIGATION METADATA — §04.29
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this is the first section an agent should read in PART 04** |
+| **AI DEPENDENCIES** | §04.15 context cost · §04.23 interpretation |
+| **AI INPUTS** | A measurement-related task |
+| **AI OUTPUTS** | An ordered load plan and an interpretation posture |
+| **AI IMPLEMENTATION IMPACT** | Governs agent behaviour directly |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-909`…`VAL-VIS-920` |
+| **AI RELATED DOCUMENTS** | `.ai/CONTEXT_ROUTER.md` · `.ai/AI_AGENT_OPERATING_MANUAL.md` |
+
+---
+
+### 04.29.1 — Order Matters
+
+> **`VIS-545`.** Loading evidence in the wrong order produces confident wrong answers. An agent that
+> reads a metric value before reading the evidence-class rules will treat `EV1` and `EV3` figures
+> identically. An agent that reads conclusions before reading the anti-pattern catalogue will inherit
+> the document's framing without the means to question it. **The sequence below is ordered so that
+> each step supplies the interpretive apparatus needed for the next.**
+
+```mermaid
+flowchart TD
+    S1["AI-VIS-101 - Load the evidence class scale from 04.2"]
+    S2["AI-VIS-102 - Load the interpretation tree from 04.23"]
+    S3["AI-VIS-103 - Load the absence vocabulary from 04.24"]
+    S4["AI-VIS-104 - Load the anti-pattern catalogue from 04.28"]
+    S5["AI-VIS-105 - Load the metric register relevant to the task"]
+    S6["AI-VIS-106 - Re-measure the four ground facts"]
+    S7["AI-VIS-107 - Compare published values to the re-measured ones"]
+    S8["AI-VIS-108 - Form conclusions using permitted forms only"]
+    S9["AI-VIS-109 - Emit a trace per the 04.10 contract"]
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8 --> S9
+    S7 -.->|"discrepancy"| C["Open CORR-1, do not proceed to conclusions"]
+    classDef step fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef alarm fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class S1,S2,S3,S4,S5,S6,S7,S8,S9 step
+    class C alarm
+```
+
+> **Diagram ID:** `DGM-VIS-131`
+> **Explanation:** The nine-step evidence loading sequence with its single interrupt. Step
+> `AI-VIS-106` is non-optional and non-cacheable: the four ground facts from `TBL-VIS-471` are
+> re-measured every session, because every structural conclusion in PART 04 rests on them and they
+> are cheap.
+
+### TBL-VIS-526: Agent Instructions `AI-VIS-101`…`AI-VIS-115`
+
+| ID | Instruction | Rationale |
+| :--- | :--- | :--- |
+| `AI-VIS-101` | Load the `EV0`…`EV6` scale before any value | Values are meaningless without their class |
+| `AI-VIS-102` | Load the interpretation tree before drawing conclusions | Refusal must be the default, not the exception |
+| `AI-VIS-103` | Load the absence vocabulary before filling any gap | Prevents zero-for-absence |
+| `AI-VIS-104` | Load the anti-pattern catalogue before trusting a framing | Including this document's own framing |
+| `AI-VIS-105` | Load only the metric families the task requires | `TBL-VIS-468` load budgets |
+| `AI-VIS-106` | Re-measure source-file count, workflow count, `CODEOWNERS` principals, and `.gitkeep` count | `VAL-VIS-761`; four commands, whole-document blast radius |
+| `AI-VIS-107` | Compare re-measured values to published ones and halt on discrepancy | A discrepancy is a `CORR-1`, not a rounding note |
+| `AI-VIS-108` | Use only the conclusion forms in `TBL-VIS-501` | Every other form is unlicensed |
+| `AI-VIS-109` | Emit a trace conforming to `TRC-001`…`024` at the required autonomy level | Traceability of the reasoning itself |
+| `AI-VIS-110` | Never publish a composite whose components differ in class without showing both | `VAL-VIS-827` |
+| `AI-VIS-111` | Never create a `PRED-` or `FCST-` identifier | `DEC-VIS-040` |
+| `AI-VIS-112` | Never edit a frozen part; supersede in a new part | `VAL-VIS-811` |
+| `AI-VIS-113` | Report an instrument failure rather than repairing it | `VAL-VIS-800` |
+| `AI-VIS-114` | Stop at `CORR-4`; authorisation is human | `VAL-VIS-809` |
+| `AI-VIS-115` | When the sequence cannot be completed, state which step failed and stop | Partial application is worse than none |
+
+> **`VIS-546`.** `AI-VIS-115` is the terminal instruction and the one that makes the rest safe. **An
+> agent that completes six of nine steps and answers anyway has produced an answer with unknown
+> interpretive backing**, which is indistinguishable from an unbacked answer but carries the
+> appearance of process.
+
+### TBL-VIS-527: Loading Sequence Cost
+
+| Step | Approximate tokens | Cacheable across sessions | Skippable |
+| :--- | ---: | :---: | :---: |
+| `AI-VIS-101` evidence scale | ~2,500 | yes | **no** |
+| `AI-VIS-102` interpretation tree | ~2,000 | yes | **no** |
+| `AI-VIS-103` absence vocabulary | ~900 | yes | **no** |
+| `AI-VIS-104` anti-patterns | ~4,500 | yes | only for pure retrieval tasks |
+| `AI-VIS-105` metric register | 3,000–20,000 | partially | scoped, not skipped |
+| `AI-VIS-106` re-measurement | ~300 | **no — never cacheable** | **no** |
+| `AI-VIS-107` comparison | ~200 | no | **no** |
+| `AI-VIS-108` conclusion forming | task-dependent | no | **no** |
+| `AI-VIS-109` trace emission | ~800 | no | **no** at `A2` and above |
+| **Total fixed overhead** | **~11,200 plus register** | — | — |
+
+> **`VIS-547`.** The fixed interpretive overhead is roughly 11,200 tokens — **about 4 percent of the
+> cost of loading this document in full, and it is what makes the other 96 percent safe to read.**
+> An agent that skips the overhead to save context has optimised the wrong quantity.
+
+### TBL-VIS-528: Validation Rules — Loading Sequence
+
+| Rule | Statement | Severity |
+| :--- | :--- | :---: |
+| `VAL-VIS-909` | Steps `AI-VIS-101`…`103` precede any value being read | **HALT** |
+| `VAL-VIS-910` | `AI-VIS-106` re-measurement is never served from cache | **HALT** |
+| `VAL-VIS-911` | A discrepancy at `AI-VIS-107` halts the task and opens `CORR-1` | **HALT** |
+| `VAL-VIS-912` | Skipped steps are declared in the output | **BLOCK** |
+| `VAL-VIS-913` | The sequence is completed in order; steps may not be reordered | **BLOCK** |
+| `VAL-VIS-914` | Trace emission is required at autonomy `A2` and above | **BLOCK** |
+| `VAL-VIS-915` | An agent may not extend its own autonomy level | **HALT** |
+| `VAL-VIS-916` | Load scope is recorded in the trace per `TRC-004` | **BLOCK** |
+| `VAL-VIS-917` | An incomplete sequence yields a refusal, not a hedged answer | **HALT** |
+| `VAL-VIS-918` | The four ground facts are quoted with the commit at which they were re-measured | **BLOCK** |
+| `VAL-VIS-919` | Conclusions cite the `TBL-VIS-501` form they use | **WARN** |
+| `VAL-VIS-920` | This sequence supersedes any conflicting shorter routine elsewhere in `.ai/` | **BLOCK** |
+
+---
