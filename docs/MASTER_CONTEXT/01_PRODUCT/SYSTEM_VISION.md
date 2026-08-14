@@ -19,7 +19,7 @@ Last Updated: 2026-08-14
 # Oship System Vision — The Strategic and Conceptual Constitution
 
 > **Document ID:** `AOM-VIS-001` · **Version:** `1.0.0` · **Authority Level:** **L1 — Strategic / Constitutional**
-> **Status:** `IN_PROGRESS` — PART 01 of N complete · **Phase:** Phase A — Bounded-Domain Content
+> **Status:** `IN_PROGRESS` — PART 01 and PART 02 of N complete · **Phase:** Phase A — Bounded-Domain Content
 > **Part model:** APPEND-ONLY. Once a part is committed it is never rewritten, reordered, or squashed.
 
 ---
@@ -5093,3 +5093,3269 @@ DEPENDENCIES_LOADED: docs/MASTER_CONTEXT/INDEX.md; docs/MASTER_CONTEXT/01_PRODUC
 NEXT_FREE_IDENTIFIERS: VIS-104; PROB-VIS-024; ACT-VIS-017; CAP-VIS-071; OUT-VIS-021; PRN-VIS-021; NG-VIS-025; CON-VIS-031; SUC-VIS-026; BND-VIS-017; EVD-VIS-026; DEC-VIS-031; AI-VIS-061 (ceiling reached — raise via DEC-VIS-021); VAL-VIS-201 (ceiling reached — raise via DEC-VIS-021); FAL-VIS-121; DGM-VIS-054; TBL-VIS-139; IMG-VIS-023; VAL-CHAIN-VIS-013
 BINDING_RULE: Append only. Never rewrite, reorder, or squash PART 01.
 ```
+
+---
+
+# PART 02 — DOMAIN VISION ARCHITECTURE
+
+> **Part status:** `IN_PROGRESS` — appended after `<!-- END OF PART 01 -->`. Nothing above this line
+> was modified, reordered, or squashed. PART 01 remains frozen per `PRN-VIS-006`.
+
+---
+
+## PART 02 — PREAMBLE
+
+### AI NAVIGATION METADATA — PART 02
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this part is the domain topology of Oship. No implementation may be placed without it.** |
+| **AI DEPENDENCIES** | PART 01 in full, especially §01.7 capabilities, §01.9 boundaries, §01.17 architecture traceability, §01.27 traceability matrix |
+| **AI INPUTS** | A proposed piece of work — a feature, a service, a document, a test, a schema |
+| **AI OUTPUTS** | The domain that owns it, its dependencies, its boundary obligations, and its architecture anchor |
+| **AI IMPLEMENTATION IMPACT** | Determines directory placement, ownership, contract requirements, and review path for every future artifact |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-201`…`VAL-VIS-320` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §01.9 domains, `architecture/DOMAIN_MODEL.md`, `docs/MASTER_CONTEXT/INDEX.md` §1003 |
+
+### What PART 02 Answers
+
+> **`VIS-104`.** PART 01 established *what Oship is*. PART 02 establishes *what Oship is made of*.
+> A vision without a domain decomposition is unactionable: an agent that knows the mission but not
+> the domain topology has no deterministic place to put its work, and every placement decision
+> becomes an improvisation. Improvised placement is the origin of architectural entropy.
+
+### TBL-VIS-139: Questions PART 02 Answers and Where
+
+| Question | Section | Primary output |
+| :--- | :--- | :--- |
+| What is a domain, and what is it not? | §02.1 | `TBL-VIS-140` terminology matrix |
+| How are domains classified? | §02.2 | `TBL-VIS-141` taxonomy registry |
+| Which domains exist in Oship? | §02.3 | `DOMAIN-VIS-001`…`DOMAIN-VIS-050` |
+| What do the product domains do? | §02.4 | Purpose, value, actors, capabilities per domain |
+| How is AI structured as a domain? | §02.5 | `DGM-VIS-056`, `TBL-VIS-150` |
+| How does memory work as a domain? | §02.6 | `DGM-VIS-057`, `TBL-VIS-160` |
+| How does knowledge circulate? | §02.7 | Knowledge flow and lifecycle models |
+| How is experience owned? | §02.8 | `DGM-VIS-060`, experience image specifications |
+| Who owns data and under what contract? | §02.9 | Data lifecycle and boundary models |
+| What is the security philosophy? | §02.10 | Security boundary diagram and decision tree |
+| What runs the system? | §02.11 | Infrastructure evolution model |
+| How does Oship meet the outside world? | §02.12 | Integration ecosystem diagram |
+| How do domains interact? | §02.13 | `DGM-VIS-070` interaction graph |
+| Who owns each domain? | §02.14 | Ownership matrix |
+| How do domains evolve? | §02.15 | Lifecycle state machine |
+| What are the dependency rules? | §02.16 | Dependency graph and acyclicity rules |
+| How is domain health measured? | §02.17 | `DMET-VIS-` metric matrix |
+| How should an agent use all of this? | §02.18 | Domain loading sequence |
+
+### The Traceability Spine This Part Completes
+
+```mermaid
+flowchart TB
+    A["SYSTEM VISION - PART 01"] --> B["DOMAIN VISION - PART 02"]
+    B --> C["CAPABILITY - CAP-VIS namespace"]
+    C --> D["ARCHITECTURE DOMAIN - DOM-ARCH namespace"]
+    D --> E["COMPONENT - CMP-ARCH namespace"]
+    E --> F["IMPLEMENTATION - not yet present"]
+    F --> G["TEST - not yet present"]
+    G --> H["RELEASE - governed by 01.21"]
+
+    B -.->|"defines placement for"| E
+    B -.->|"constrains"| F
+    A -.->|"authority over"| B
+
+    classDef done fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef now fill:#0d47a1,stroke:#90caf9,color:#ffffff
+    classDef absent fill:#4e342e,stroke:#bcaaa4,color:#ffffff
+    class A,C,D,E done
+    class B now
+    class F,G,H absent
+```
+
+> **Diagram ID:** `DGM-VIS-054` — **Domain Universe Map: Position of PART 02 in the Traceability Spine**
+> **Explanation:** Green stages have defined identifier namespaces with populated registers. Blue is
+> the stage this part delivers. Brown stages have no artifacts in the repository — that is a
+> statement of fact recorded in `EVD-VIS-001`…`EVD-VIS-025`, not a deficiency of this document. The
+> dotted edges are the reason domain vision must precede implementation: placement, constraint, and
+> authority all flow downward before any code exists.
+
+---
+
+## PART 02 — IDENTIFIER GOVERNANCE
+
+### 02.0.1 Namespace Ceilings Reached in PART 01
+
+> **`VIS-105`.** Three namespaces reached their declared ceilings in PART 01 and one is within
+> seventeen of its ceiling. PART 02 cannot allocate in them without a governance act. `VIS-100`
+> made this explicit and forbade silently exceeding a ceiling. This subsection performs the
+> governance act in the open, before a single new identifier is issued.
+
+### TBL-VIS-140: Namespace Pressure Entering PART 02
+
+| Namespace | PART 01 ceiling | Highest allocated | Remaining | Pressure | Action required |
+| :--- | ---: | ---: | ---: | :--- | :--- |
+| `VAL-VIS-` | 200 | 200 | 0 | **Exhausted** | Raise ceiling |
+| `AI-VIS-` | 60 | 060 | 0 | **Exhausted** | Raise ceiling |
+| `VIS-` | 120 | 105 | 15 | **Critical** | Raise ceiling |
+| `TBL-VIS-` | 200 | 140 | 60 | **High** — PART 02 alone plans more than 60 | Raise ceiling |
+| `DGM-VIS-` | 200 | 054 | 146 | Moderate | Raise ceiling for later parts |
+| `FAL-VIS-` | 200 | 120 | 80 | Moderate | Raise ceiling for later parts |
+| `CAP-VIS-` | 120 | 070 | 50 | Adequate for PART 02 | Raise ceiling for later parts |
+| `IMG-VIS-` | 40 | 022 | 18 | Adequate — PART 02 plans 15 | Monitor |
+| `PROB-VIS-` | 60 | 023 | 37 | Adequate | No action |
+| `CON-VIS-` | 60 | 030 | 30 | Adequate | No action |
+| `SUC-VIS-` | 60 | 025 | 35 | Adequate | No action |
+| `DEC-VIS-` | 40 | 030 | 10 | Watch | Raise ceiling |
+| `EVD-VIS-` | 50 | 025 | 25 | Adequate | No action |
+| `ACT-VIS-` | 30 | 016 | 14 | Adequate | No action |
+| `BND-VIS-` | 30 | 016 | 14 | Adequate | No action |
+| `PRN-VIS-` | 30 | 020 | 10 | Watch | No action in PART 02 |
+| `NG-VIS-` | 40 | 024 | 16 | Adequate | No action |
+| `OUT-VIS-` | 60 | 020 | 40 | Adequate | No action |
+| `VAL-CHAIN-VIS-` | 20 | 012 | 8 | Adequate | No action |
+
+### 02.0.2 Correcting a Pointer Error Inherited from PART 01
+
+> **`VIS-106`.** The continuation block at the end of PART 01 instructs the next author to raise
+> the exhausted ceilings "via `DEC-VIS-021`". That instruction is **procedurally correct and
+> referentially ambiguous**, and this document resolves the ambiguity without editing PART 01.
+> `DEC-VIS-021` is already allocated: it is the decision *procedure* "Is this change
+> constitutional?" defined in §01.26.4 and tabulated in `TBL-VIS-117`. A procedure is not a record.
+> Running `DEC-VIS-021` against a proposed ceiling change produces the answer *constitutional*,
+> which by `TBL-VIS-117` requires owner approval and a **new decision record**. That new record is
+> `DEC-VIS-031`, allocated below. No identifier is reused, and `PRN-VIS-007` stable identity holds.
+
+```mermaid
+flowchart LR
+    Q["Proposed change - raise namespace ceilings"] --> P["Run DEC-VIS-021 procedure"]
+    P --> T["TBL-VIS-117 row - does it retire or renumber an identifier"]
+    T -->|"No - it extends a range"| U["Row - does it add a new element within an existing schema"]
+    U --> V["Answer - STRUCTURAL with constitutional character"]
+    V --> W["Owner approval plus new decision record"]
+    W --> X["DEC-VIS-031 issued"]
+    X --> Y["Allocation may proceed"]
+
+    classDef proc fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef out fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class P,T,U proc
+    class X,Y out
+```
+
+> **Diagram ID:** `DGM-VIS-055` — **Resolution Path from Procedure `DEC-VIS-021` to Record `DEC-VIS-031`**
+> **Explanation:** This is the general pattern for every future governance act in this namespace: a
+> `DEC-VIS-` procedure is *executed*, and its execution *emits* a new `DEC-VIS-` record. Procedures
+> and records share a namespace deliberately, because both are decisions; they are distinguished by
+> the **Kind** column of the decision register, not by separate prefixes.
+
+### TBL-VIS-141: `DEC-VIS-031` — Namespace Expansion Decision
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-031` |
+| **Kind** | Record — the durable output of executing procedure `DEC-VIS-021` |
+| **Title** | Namespace Expansion for `AOM-VIS-001` |
+| **Status** | `ACCEPTED` |
+| **Authority** | L1 — Strategic / Constitutional. Owner: Product Management / CPO |
+| **Trigger** | `VIS-100`: the `VAL-VIS-` ceiling was reached at the end of PART 01 |
+| **Question** | May the declared ceilings of `AOM-VIS-001` identifier namespaces be raised, and may two new namespaces be registered? |
+| **Answer** | Yes, subject to the five conditions below |
+| **Condition 1** | No previously allocated number may be retired, renumbered, or reused. Expansion is strictly additive at the top of a range. |
+| **Condition 2** | A raised ceiling is itself a published fact and appears in the ledger of every subsequent part. |
+| **Condition 3** | A new namespace requires a prefix that collides with no existing prefix in `AOM-VIS-001` or `AOM-ARCH-001`. |
+| **Condition 4** | Raising a ceiling grants permission to allocate, not an obligation. Allocating an identifier with no defined content is a defect (`FAL-VIS-121`). |
+| **Condition 5** | Ceilings may be raised. They may never be lowered below the highest allocated number, because that would orphan live identifiers. |
+| **Consequence if rejected** | PART 02 could define no validation rules, no AI directives, and fewer than sixty tables — the domain model would be undocumentable in this file |
+| **Reversibility** | Irreversible in practice. Once identifiers above the old ceiling are cited by other documents, contraction breaks references. |
+| **Supersedes** | Nothing. Extends the ledger declared in `TBL-VIS-002`. |
+
+### TBL-VIS-142: Ceilings Before and After `DEC-VIS-031`
+
+| Namespace | Old range | New range | Justification |
+| :--- | :--- | :--- | :--- |
+| `VIS-` | 001–120 | **001–999** | Vision statements accumulate one per substantive claim across a planned six parts |
+| `VAL-VIS-` | 001–200 | **001–9999** | Validation is per-rule, per-domain, per-contract; growth is the point |
+| `AI-VIS-` | 001–060 | **001–999** | Every domain requires interpretation directives |
+| `TBL-VIS-` | 001–200 | **001–9999** | This document is table-dense by design (`PRN-VIS-003`) |
+| `DGM-VIS-` | 001–200 | **001–9999** | Visual density rule requires a diagram every twenty to sixty lines |
+| `FAL-VIS-` | 001–200 | **001–9999** | Failure taxonomy expands with each new domain |
+| `CAP-VIS-` | 001–120 | **001–999** | Capability decomposition deepens per domain |
+| `DEC-VIS-` | 001–040 | **001–999** | Procedures and records share the namespace |
+| `IMG-VIS-` | 001–040 | **001–999** | Image specifications scale with visual surface |
+| `PROB-VIS-` | 001–060 | **001–999** | Unchanged in practice; raised for symmetry |
+| `CON-VIS-`, `SUC-VIS-`, `OUT-VIS-`, `EVD-VIS-` | 001–060 / 001–050 | **001–999** each | Raised for symmetry; no pressure today |
+| `ACT-VIS-`, `BND-VIS-`, `PRN-VIS-`, `NG-VIS-` | 001–030 / 001–040 | **001–999** each | Raised for symmetry; growth expected to stay low |
+| `VAL-CHAIN-VIS-` | 001–020 | **001–999** | Value chains multiply with product domains |
+
+### TBL-VIS-143: New Namespaces Registered by `DEC-VIS-031`
+
+| Prefix | Meaning | Range | Collision check | Defined in |
+| :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-` | A domain of the Oship domain vision model | 001–999 | No collision with `DOM-ARCH-` in `AOM-ARCH-001`; the longer, unambiguous form is deliberate | §02.3 |
+| `DMET-VIS-` | A domain health metric definition | 001–999 | No collision with `SUC-VIS-` system measures or `PERF-ARCH-` | §02.17 |
+
+> **`VIS-107`.** `DOMAIN-VIS-` and `DOM-ARCH-` are **different things and must never be conflated**.
+> A `DOMAIN-VIS-` entry is a *vision-level* domain: a coherent area of purpose with an owner, a
+> reason to exist, and a boundary. A `DOM-ARCH-` entry is an *architecture-level* bounded context
+> with a code location and an integration pattern. Many `DOMAIN-VIS-` entries map to one
+> `DOM-ARCH-` entry; some map to none yet. The mapping is published in `TBL-VIS-148` and is
+> deliberately many-to-one, not one-to-one.
+
+### TBL-VIS-144: PART 02 Identifier Allocation Plan
+
+| Namespace | Block reserved for PART 02 | Pinned assignments | Overflow block |
+| :--- | :--- | :--- | :--- |
+| `VIS-` | 104 onward | — | sequential |
+| `DGM-VIS-` | 054–120 | 054 §02.1, 055 §02.0, 056 §02.5, 057 §02.6, 060 §02.8, 070 §02.13 | 071 onward for §02.3, §02.4, §02.14–§02.18 |
+| `TBL-VIS-` | 139–260 | 139–144 preamble, 141 taxonomy record, 150 §02.5, 160 §02.6 | 170 onward sequential from §02.8 |
+| `DOMAIN-VIS-` | 001–050 | 001–050 assigned in §02.3 | 051 onward reserved for later parts |
+| `VAL-VIS-` | 201–320 | — | sequential |
+| `FAL-VIS-` | 121–175 | — | sequential |
+| `IMG-VIS-` | 023–037 | — | sequential |
+| `AI-VIS-` | 061–110 | — | sequential |
+| `DMET-VIS-` | 001–060 | — | sequential |
+| `CAP-VIS-` | 071–090 | — | sequential |
+| `DEC-VIS-` | 031–045 | 031 namespace expansion | sequential |
+
+> **`VIS-108`.** Pinned assignments exist because the domain vision brief named specific identifiers
+> for specific artifacts. Honouring them creates gaps — for example `DGM-VIS-058` and `DGM-VIS-059`
+> are consumed by §02.7 even though §02.7 appears after §02.5, which holds `DGM-VIS-056`. Gaps in
+> allocation order are permitted. Gaps in *definition* are not: every number in a reserved block
+> must either be defined in this part or explicitly recorded as unallocated in the closing ledger.
+
+---
+
+## 02.1 — Domain Vision Overview
+
+### AI NAVIGATION METADATA — §02.1
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before creating any directory, service, or document** |
+| **AI DEPENDENCIES** | §01.7 capabilities, §01.9 boundaries, PART 02 preamble |
+| **AI INPUTS** | A noun a human used — "the billing thing", "the agent runtime", "the design system" |
+| **AI OUTPUTS** | Whether that noun is a domain, a capability, a module, a service, a component, or a feature |
+| **AI IMPLEMENTATION IMPACT** | Wrong classification here produces wrong directory placement and wrong ownership for the life of the artifact |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-201`…`VAL-VIS-212` |
+| **AI RELATED DOCUMENTS** | `architecture/DOMAIN_MODEL.md`, `AOM-ARCH-001` §01.9 |
+
+### 02.1.1 What a Domain Is
+
+> **`VIS-109`.** A **domain** is a bounded area of purpose within Oship that has: one reason to
+> exist, one accountable owner, a vocabulary whose terms mean exactly one thing inside it, a
+> boundary across which all traffic is explicit, and a lifecycle it can traverse independently of
+> its neighbours. Remove any one of those five and the thing is not a domain — it is a grouping,
+> and groupings decay.
+
+### TBL-VIS-145: The Five Necessary Conditions of a Domain
+
+| # | Condition | Test | Failure if absent |
+| :--- | :--- | :--- | :--- |
+| 1 | **Single reason to exist** | Can its purpose be stated in one sentence with no "and"? | Becomes a junk drawer (`FAL-VIS-122`) |
+| 2 | **Single accountable owner** | Does one named role approve changes to it? | Ownership vacuum (`FAL-VIS-127`) |
+| 3 | **Unambiguous vocabulary** | Does every term inside it have exactly one meaning? | Semantic collision (`FAL-VIS-124`) |
+| 4 | **Explicit boundary** | Is every inbound and outbound flow named in a contract? | Hidden coupling (`FAL-VIS-131`) |
+| 5 | **Independent lifecycle** | Can it move from `PLANNED` to `IMPLEMENTED` without forcing a neighbour to move? | Lockstep evolution (`FAL-VIS-152`) |
+
+> **`VIS-110`.** The five conditions are **conjunctive**. A candidate that satisfies four is not
+> "eighty percent a domain"; it is not a domain. The remedy is to merge it into a domain that does
+> satisfy all five, or to split it until the parts do.
+
+### 02.1.2 Why Domains Exist
+
+> **`VIS-111`.** Domains exist to make placement deterministic. In a system with no domain model,
+> the question "where does this go?" is answered by whoever is asking, which means the answer varies
+> by author, by day, and by mood. `PRN-VIS-002` requires determinism. A domain model is the
+> mechanism by which placement becomes a lookup rather than a judgement.
+
+### TBL-VIS-146: What Domains Buy, Stated as Concrete Effects
+
+| Effect | Without domains | With domains | Which principle it serves |
+| :--- | :--- | :--- | :--- |
+| **Placement** | Author chooses a directory by intuition | Directory follows from domain lookup | `PRN-VIS-002` determinism |
+| **Ownership** | Reviewer chosen by availability | Reviewer follows from domain owner | `PRN-VIS-008` human accountability |
+| **Blast radius** | Unknown until something breaks | Bounded by the domain's declared dependents | `PRN-VIS-013` reversibility |
+| **Vocabulary** | The same word means three things | One meaning per domain, translation at the boundary | `PRN-VIS-003` explicit over implicit |
+| **Agent tractability** | Agent must read everything to place anything | Agent reads one registry row | `PRN-VIS-005` agent-tractable |
+| **Parallel work** | Two authors collide in the same file | Two authors work in two domains | `PRN-VIS-020` finish before starting |
+| **Traceability** | Chain breaks between vision and code | Domain is the joint between them | `PRN-VIS-004` traceable |
+
+```mermaid
+flowchart TB
+    subgraph WITHOUT["Placement without a domain model"]
+        W1["New work item"] --> W2["Author intuition"]
+        W2 --> W3["Directory A"]
+        W2 --> W4["Directory B"]
+        W2 --> W5["Directory C"]
+        W3 --> W6["Divergence"]
+        W4 --> W6
+        W5 --> W6
+    end
+
+    subgraph WITH["Placement with a domain model"]
+        V1["New work item"] --> V2["Classification test - TBL-VIS-147"]
+        V2 --> V3["Domain registry lookup - 02.3"]
+        V3 --> V4["Exactly one destination"]
+        V4 --> V5["Convergence"]
+    end
+
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class W6 bad
+    class V5 good
+```
+
+> **Diagram ID:** `DGM-VIS-056` — **Determinism Effect of a Domain Model on Placement**
+> **Explanation:** The left path has three valid answers, which means it has none. The right path
+> is a function: one input, one output, repeatable by any agent or human. This is the entire
+> argument for spending a part of the vision document on domain decomposition.
+
+### 02.1.3 The Six Confusable Terms
+
+> **`VIS-112`.** Six words are used interchangeably in most codebases and must not be here:
+> **domain**, **capability**, **module**, **service**, **component**, **feature**. Each answers a
+> different question. Conflating them causes the most expensive category of architectural error,
+> because the error is invisible in code review — everything compiles.
+
+### TBL-VIS-147: Domain Terminology Matrix
+
+| Term | Answers the question | Granularity | Lifecycle | Has an owner? | Deployable? | Namespace | Example in Oship |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Domain** | *Why does this area exist?* | Coarsest | Independent | Yes — accountable role | No | `DOMAIN-VIS-` | Governance and Knowledge |
+| **Capability** | *What can the system do?* | Coarse | Tied to its domain | Inherits domain owner | No | `CAP-VIS-` | `CAP-VIS-006` immutable decision record |
+| **Module** | *How is code organised?* | Medium | Tied to its repository | No — a code convention | No | none yet | `packages/` entries — none exist |
+| **Service** | *What runs and can fail alone?* | Medium | Independent deployment | Inherits domain owner | **Yes** | `CMP-ARCH-` | `CMP-ARCH-010` Identity Service `PLANNED` |
+| **Component** | *What is the named unit of architecture?* | Fine | Tied to its service | Inherits service | Sometimes | `CMP-ARCH-` | `CMP-ARCH-002` AI Control Plane |
+| **Feature** | *What does a user perceive?* | Finest | Tied to a release | Product owner | No | none yet | None exist — no application code |
+
+> **`VIS-113`.** Read `TBL-VIS-147` column by column, not row by row. The **Deployable** column is
+> the sharpest discriminator: only a service deploys. The **Has an owner** column is the second
+> sharpest: only a domain originates ownership; everything else inherits it. An artifact that
+> claims to originate ownership and also claims to deploy is two things wearing one name.
+
+### TBL-VIS-148: Disambiguation Test — Six Questions in Fixed Order
+
+| Order | Question | If yes | If no |
+| :--- | :--- | :--- | :--- |
+| 1 | Does a user perceive it directly as a unit of value? | **Feature** | Continue |
+| 2 | Does it deploy and fail independently? | **Service** | Continue |
+| 3 | Is it a named unit inside a service or a document set? | **Component** | Continue |
+| 4 | Is it purely a code-organisation convenience? | **Module** | Continue |
+| 5 | Is it something the system can *do*, expressible as verb plus object? | **Capability** | Continue |
+| 6 | Is it an area of purpose with its own owner and vocabulary? | **Domain** | **Unclassifiable — halt and ask** (`DEC-VIS-032`) |
+
+> **`VIS-114`.** The order is fixed and must not be reordered, because the questions are not
+> mutually exclusive in practice. "The ledger" is a feature to a user, a service to an operator, a
+> capability to a planner, and a domain to an architect. Fixed order makes the classification
+> deterministic: the *first* yes wins. Ask question 6 first and every noun becomes a domain, which
+> is the failure mode `FAL-VIS-123` domain inflation.
+
+```mermaid
+flowchart TB
+    N["Noun under classification"] --> Q1{"Perceived by a user as value?"}
+    Q1 -->|"Yes"| F["FEATURE"]
+    Q1 -->|"No"| Q2{"Deploys and fails alone?"}
+    Q2 -->|"Yes"| S["SERVICE"]
+    Q2 -->|"No"| Q3{"Named unit inside a service or document set?"}
+    Q3 -->|"Yes"| C["COMPONENT"]
+    Q3 -->|"No"| Q4{"Only a code-organisation convenience?"}
+    Q4 -->|"Yes"| M["MODULE"]
+    Q4 -->|"No"| Q5{"Verb plus object the system can do?"}
+    Q5 -->|"Yes"| CAP["CAPABILITY"]
+    Q5 -->|"No"| Q6{"Area of purpose with owner and vocabulary?"}
+    Q6 -->|"Yes"| D["DOMAIN"]
+    Q6 -->|"No"| H["HALT - unclassifiable - escalate per DEC-VIS-032"]
+
+    classDef dom fill:#0d47a1,stroke:#90caf9,color:#ffffff
+    classDef halt fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class D dom
+    class H halt
+```
+
+> **Diagram ID:** `DGM-VIS-057` — **Six-Question Classification Decision Tree (`DEC-VIS-032`)**
+> **Explanation:** This is the executable form of `TBL-VIS-148`. An agent presented with an
+> unclassified noun runs this tree top to bottom and stops at the first yes. The halt terminal is
+> not a failure of the tree; it is the correct output when a noun is genuinely ambiguous, and it
+> routes to a human per `PRN-VIS-008`.
+
+### TBL-VIS-149: Worked Classifications Against Real Repository Nouns
+
+| Noun as commonly spoken | First yes at | Classification | Evidence | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| "The `.ai` folder" | Q3 | Component — `CMP-ARCH-002` | `EVD-VIS-020` | `IMPLEMENTED` |
+| "Master Context" | Q6 | Domain — `DOMAIN-VIS-002` | `EVD-VIS-006` | `PARTIALLY IMPLEMENTED` |
+| "Decision records" | Q5 | Capability — `CAP-VIS-006` | `EVD-VIS-005` | `IMPLEMENTED` |
+| "The Money Factory" | Q6 | Domain — `DOMAIN-VIS-020` | `EVD-VIS-021` | `PLANNED` |
+| "The ledger service" | Q2 | Service — `CMP-ARCH-015` | `AOM-ARCH-001` | `PLANNED` |
+| "Design system" | Q6 | Domain — `DOMAIN-VIS-030` | `design/INDEX.md` | `DOCUMENTED` |
+| "Dark mode toggle" | Q1 | Feature | None — no UI exists | `PROPOSED` |
+| "`packages/` shared code" | Q4 | Module | Directory is `.gitkeep`-only | `PLANNED` |
+| "Agent runtime" | Q2 | Service — `CMP-ARCH-021` | `AOM-ARCH-001` | `PLANNED` |
+| "AI, generally" | Q6 | Domain — `DOMAIN-VIS-010` | `EVD-VIS-020` | `PARTIALLY IMPLEMENTED` |
+| "Observability" | Q6 | Domain — `DOMAIN-VIS-041` | `EVD-VIS-020` | `PLANNED` |
+| "Rate limiting" | Q5 | Capability — `CAP-VIS-036` | None | `PLANNED` |
+
+### 02.1.4 What a Domain Is Not
+
+> **`VIS-115`.** Four things are routinely mislabelled as domains in enterprise repositories. Each
+> mislabelling has a distinct cost, and each is prohibited here by name so that a future agent can
+> cite the prohibition rather than re-derive it.
+
+### TBL-VIS-150: Prohibited Domain Forms
+
+| Anti-form | Description | Why it fails the five conditions | Cost | Failure ID |
+| :--- | :--- | :--- | :--- | :--- |
+| **The team domain** | A domain named after the group that staffs it | Fails condition 1 — its reason to exist is an org chart, which changes | Reorg invalidates the architecture | `FAL-VIS-125` |
+| **The technology domain** | A domain named after a tool — "the Kafka domain" | Fails condition 1 — a tool is a mechanism, not a purpose | Vendor change forces a domain rewrite; violates `PRN-VIS-015` | `FAL-VIS-126` |
+| **The layer domain** | A domain named after a tier — "the frontend domain" | Fails condition 3 — every business term appears in every layer | Every feature crosses every domain | `FAL-VIS-128` |
+| **The leftover domain** | "Common", "shared", "misc", "core utils" | Fails conditions 1 and 5 — no purpose, no independent lifecycle | Becomes the highest-coupling node in the graph | `FAL-VIS-122` |
+
+> **`VIS-116`.** `TBL-VIS-150` has an uncomfortable consequence for Oship's own Master Context.
+> Several of the twenty-four knowledge domains are layer domains or technology domains by this test
+> — `07_FRONTEND`, `08_BACKEND`, `06_DATABASE`, `09_INFRASTRUCTURE`. This is **acceptable and
+> deliberate**, because knowledge domains and system domains are different objects with different
+> purposes: a knowledge domain organises *documents for retrieval*, where a layer split is the most
+> navigable arrangement, while a system domain organises *purpose and ownership*, where a layer
+> split is fatal. §02.2.4 makes this distinction formal. Failing to state it would leave the next
+> agent believing the Master Context violates the vision it derives from.
+
+### TBL-VIS-151: Domain Classification Rules — Binding
+
+| Rule | Statement | Enforcement | Violation |
+| :--- | :--- | :--- | :--- |
+| `DCR-01` | Every domain satisfies all five conditions of `TBL-VIS-145` | Review against the registry | Reject the domain |
+| `DCR-02` | Classification uses `TBL-VIS-148` in the given order; first yes wins | Agent runs `DEC-VIS-032` | Reclassify |
+| `DCR-03` | No domain may be named after a team, tool, layer, or leftover | Name inspection at registration | Rename or merge |
+| `DCR-04` | A domain's name is a noun phrase of purpose, not an implementation | Name inspection | Rename |
+| `DCR-05` | Every domain has exactly one entry in the §02.3 registry | Registry completeness check | Add or delete |
+| `DCR-06` | Every domain declares a status from the PART 01 vocabulary | Status field required | Reject as fabrication risk |
+| `DCR-07` | A domain with no capability mapped to it is `PROPOSED` at most | Cross-check §02.3 against §01.7 | Downgrade status |
+| `DCR-08` | A domain with no owner is invalid regardless of other merits | Owner field required | Halt and escalate |
+| `DCR-09` | Two domains may not claim the same responsibility | Overlap scan, §02.18.4 | Merge or re-split |
+| `DCR-10` | Domain identifiers are permanent; retirement marks `DEPRECATED`, never deletes | Ledger audit | Restore the identifier |
+
+---
+
+## 02.2 — Domain Taxonomy Model
+
+### AI NAVIGATION METADATA — §02.2
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — required before adding a domain to the registry** |
+| **AI DEPENDENCIES** | §02.1 |
+| **AI INPUTS** | A validated domain that passed the `TBL-VIS-148` test |
+| **AI OUTPUTS** | Its category, its loading priority, and its expected dependency direction |
+| **AI IMPLEMENTATION IMPACT** | Category determines dependency legality — see `TBL-VIS-155` |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-213`…`VAL-VIS-226` |
+| **AI RELATED DOCUMENTS** | §02.3 registry, §02.16 dependency model |
+
+### 02.2.1 Why a Taxonomy and Not a Flat List
+
+> **`VIS-117`.** Thirty to fifty domains in a flat list is an unsorted set, and an unsorted set of
+> that size cannot be reasoned about. Categories are not decoration: **the category determines
+> which dependencies are legal**. A Core Product domain may depend on an Infrastructure domain; the
+> reverse is a defect. Without categories, that rule cannot be stated, let alone checked.
+
+### TBL-VIS-152: The Ten Domain Categories
+
+| Code | Category | Reason to exist | Typical owner | Dependency posture |
+| :--- | :--- | :--- | :--- | :--- |
+| `C1` | **Strategic** | Define why the system exists and what it may become | Product Management / CPO | Depends on nothing; everything depends on it |
+| `C2` | **Core Product** | Deliver the value the strategy names | Product plus engineering leads | Depends on `C4`–`C10`; never on another `C2` peer through internals |
+| `C3` | **AI** | Make the system operable by machine intelligence | AI Repository Architect | Depends on `C4`, `C5`, `C9`; may not be depended on by `C1` |
+| `C4` | **Knowledge** | Hold, index, and serve what the system knows | Architecture and Documentation | Depends on `C1` only |
+| `C5` | **Data** | Own state, its shape, its lifecycle, and its contracts | Database Architect | Depends on `C7` |
+| `C6` | **Experience** | Own how humans perceive and act on the system | UX/UI Design | Depends on `C2`, `C4` |
+| `C7` | **Infrastructure** | Run, scale, and keep the system alive | Platform Engineering | Depends on nothing above it |
+| `C8` | **Security** | Constrain everything, trust nothing implicitly | Security Architect | Cross-cutting; may constrain any category |
+| `C9` | **Operational** | Observe, respond, recover, and improve | SRE | Depends on `C7`; observes all |
+| `C10` | **Integration** | Mediate every crossing of the system edge | API / Integration Lead | Depends on `C7`, `C8` |
+
+```mermaid
+flowchart TB
+    C1["C1 STRATEGIC"] --> C2["C2 CORE PRODUCT"]
+    C1 --> C4["C4 KNOWLEDGE"]
+    C4 --> C3["C3 AI"]
+    C2 --> C6["C6 EXPERIENCE"]
+    C2 --> C5["C5 DATA"]
+    C2 --> C10["C10 INTEGRATION"]
+    C5 --> C7["C7 INFRASTRUCTURE"]
+    C3 --> C7
+    C10 --> C7
+    C6 --> C7
+    C7 --> C9["C9 OPERATIONAL"]
+    C8["C8 SECURITY - cross-cutting"] -.->|"constrains"| C2
+    C8 -.->|"constrains"| C3
+    C8 -.->|"constrains"| C5
+    C8 -.->|"constrains"| C7
+    C8 -.->|"constrains"| C10
+    C9 -.->|"evidence to"| C1
+
+    classDef strat fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef sec fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef infra fill:#01579b,stroke:#81d4fa,color:#ffffff
+    class C1 strat
+    class C8 sec
+    class C7,C9 infra
+```
+
+> **Diagram ID:** `DGM-VIS-058` — **Domain Taxonomy Tree with Legal Dependency Directions**
+> **Explanation:** Solid edges are permitted dependency directions; an arrow from `X` to `Y` means
+> `X` may depend on `Y`. Dotted edges from `C8` are constraint relations, not dependencies —
+> security constrains without being called. The single dotted edge from `C9` to `C1` is the
+> evidence loop: operational reality is the only legitimate input that flows *back* to strategy,
+> which is how `SUC-VIS-` measures are supposed to close. Any edge not drawn here is illegal and
+> is caught by `VAL-VIS-219`.
+
+### TBL-VIS-153: Category Assignment Test
+
+| Ask | If yes | Category |
+| :--- | :--- | :--- |
+| Does it decide what the system should become? | Strategic | `C1` |
+| Does a paying or served party receive value directly from it? | Core Product | `C2` |
+| Does it exist to make machine reasoning possible? | AI | `C3` |
+| Is its product a durable, retrievable representation of truth? | Knowledge | `C4` |
+| Does it own the authoritative copy of state? | Data | `C5` |
+| Does a human perceive it with their senses? | Experience | `C6` |
+| Would the system stop running without it? | Infrastructure | `C7` |
+| Does it exist to deny, verify, or contain? | Security | `C8` |
+| Does it exist to observe and to respond? | Operational | `C9` |
+| Does it exist to translate between us and something outside? | Integration | `C10` |
+
+> **`VIS-118`.** As with `TBL-VIS-148`, order matters and first yes wins. A domain that answers yes
+> twice is a candidate for splitting, and `VAL-VIS-215` requires that the split be attempted before
+> a dual-category domain is admitted.
+
+### 02.2.2 Category Loading Priority for Agents
+
+> **`VIS-119`.** An agent with a bounded context window cannot load fifty domains. Categories carry
+> a loading priority so that an agent loads the smallest sufficient set. The priority is not
+> importance; it is **order of necessity**.
+
+### TBL-VIS-154: Category Loading Priority
+
+| Priority | Categories | Load when | Approximate cost |
+| :--- | :--- | :--- | :--- |
+| **L0 — always** | `C1` Strategic, `C4` Knowledge | Every task without exception | Two registry sections |
+| **L1 — near always** | `C8` Security, `C3` AI | Any task an agent performs autonomously | Two registry sections |
+| **L2 — task-scoped** | `C2` Core Product, `C5` Data | Any task touching behaviour or state | Per-domain rows only |
+| **L3 — conditional** | `C6` Experience, `C10` Integration | Only when the task crosses that surface | Per-domain rows only |
+| **L4 — rare** | `C7` Infrastructure, `C9` Operational | Only for runtime, deployment, or incident work | Per-domain rows only |
+
+### 02.2.3 Category Invariants
+
+### TBL-VIS-155: Category Dependency Legality Matrix
+
+| From ↓ / May depend on → | `C1` | `C2` | `C3` | `C4` | `C5` | `C6` | `C7` | `C8` | `C9` | `C10` |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`C1` Strategic** | — | No | No | No | No | No | No | No | No | No |
+| **`C2` Core Product** | Yes | Contract only | Yes | Yes | Yes | No | Yes | Yes | No | Yes |
+| **`C3` AI** | Yes | No | — | Yes | Yes | No | Yes | Yes | No | Yes |
+| **`C4` Knowledge** | Yes | No | No | — | No | No | No | Yes | No | No |
+| **`C5` Data** | Yes | No | No | Yes | Contract only | No | Yes | Yes | No | No |
+| **`C6` Experience** | Yes | Yes | Yes | Yes | No | — | No | Yes | No | Yes |
+| **`C7` Infrastructure** | Yes | No | No | No | No | No | Contract only | Yes | No | No |
+| **`C8` Security** | Yes | No | No | Yes | No | No | Yes | — | Yes | Yes |
+| **`C9` Operational** | Yes | No | No | Yes | No | No | Yes | Yes | — | No |
+| **`C10` Integration** | Yes | No | No | Yes | No | No | Yes | Yes | No | Contract only |
+
+> **`VIS-120`.** "Contract only" means a peer-to-peer dependency is legal **solely** through a
+> published, versioned contract — never through shared internals, shared tables, or shared
+> in-process state. This is the mechanism that keeps `C2` domains from fusing into one monolith
+> while still permitting them to cooperate. `VAL-VIS-220` checks it.
+
+> **`VIS-121`.** The `C1` row is entirely "No" and that is the most important row in the matrix.
+> **Strategy depends on nothing.** The instant a strategic domain depends on an implementation
+> domain, the vision becomes a description of what was built rather than a specification of what
+> should be built, and the document you are reading loses its authority. `FAL-VIS-129` names this
+> inversion.
+
+### 02.2.4 Knowledge Domains Are Not System Domains
+
+> **`VIS-122`.** `docs/MASTER_CONTEXT/` contains twenty-four **knowledge domains**, numbered
+> `01_PRODUCT` through `24_DIAGRAMS`, each with an `INDEX.md` and a named owner. This part defines
+> **system domains** in the `DOMAIN-VIS-` namespace. The two sets are related but not identical,
+> and an agent that treats them as identical will place system artifacts in documentation folders.
+
+### TBL-VIS-156: Knowledge Domain Versus System Domain
+
+| Dimension | Knowledge domain (`docs/MASTER_CONTEXT/NN_NAME/`) | System domain (`DOMAIN-VIS-nnn`) |
+| :--- | :--- | :--- |
+| **Purpose** | Organise documents for retrieval | Organise purpose and ownership for construction |
+| **Optimised for** | Navigation and context loading | Dependency control and blast-radius containment |
+| **Count today** | 24, all present with `INDEX.md` | 50 defined in §02.3 |
+| **Layer split allowed?** | **Yes** — frontend/backend/database split aids retrieval | **No** — prohibited by `DCR-03` |
+| **Governing rule** | `MASTER_CONTEXT_RULES.md` PART 04, `TBL-MCR-008` | `TBL-VIS-151` `DCR-01`…`DCR-10` |
+| **Identifier** | `MCX-NN-nnn` | `DOMAIN-VIS-nnn` |
+| **Status today** | `IMPLEMENTED` as documentation | Mostly `PLANNED` — see §02.3 |
+| **Mapping** | Many-to-many with system domains — see `TBL-VIS-157` | — |
+
+### TBL-VIS-157: Knowledge Domain to System Domain Mapping
+
+| Knowledge domain | Primary system domain | Secondary | Note |
+| :--- | :--- | :--- | :--- |
+| `01_PRODUCT` | `DOMAIN-VIS-001` System Vision | `DOMAIN-VIS-021` | Houses this document |
+| `02_BUSINESS` | `DOMAIN-VIS-003` Business Strategy | — | No content documents yet |
+| `03_USERS` | `DOMAIN-VIS-031` User Research | `DOMAIN-VIS-030` | — |
+| `04_ARCHITECTURE` | `DOMAIN-VIS-004` Architecture Authority | all | Houses `AOM-ARCH-001` |
+| `05_AI` | `DOMAIN-VIS-010`…`016` | `DOMAIN-VIS-002` | Seven AI system domains map here |
+| `06_DATABASE` | `DOMAIN-VIS-034`…`037` | — | Data domains |
+| `07_FRONTEND` | `DOMAIN-VIS-030`, `032` | `DOMAIN-VIS-033` | Layer-named for retrieval only |
+| `08_BACKEND` | `DOMAIN-VIS-020`…`026` | `DOMAIN-VIS-005` | Layer-named for retrieval only |
+| `09_INFRASTRUCTURE` | `DOMAIN-VIS-038`…`040` | — | — |
+| `10_SECURITY` | `DOMAIN-VIS-044`…`047` | all | Cross-cutting |
+| `11_DEPLOYMENT` | `DOMAIN-VIS-039` Delivery | `DOMAIN-VIS-038` | — |
+| `12_OPERATIONS` | `DOMAIN-VIS-042` Operations | `DOMAIN-VIS-041` | — |
+| `13_OBSERVABILITY` | `DOMAIN-VIS-041` Observability | `DOMAIN-VIS-043` | — |
+| `14_DESIGN_SYSTEM` | `DOMAIN-VIS-030` Design System | `DOMAIN-VIS-032` | Backed by `design/` |
+| `15_API` | `DOMAIN-VIS-048` API Surface | `DOMAIN-VIS-049` | — |
+| `16_PLUGINS` | `DOMAIN-VIS-050` Extension | `DOMAIN-VIS-048` | — |
+| `17_AUTOMATION` | `DOMAIN-VIS-006` Governance Automation | `DOMAIN-VIS-039` | — |
+| `18_TESTING` | `DOMAIN-VIS-007` Verification | all | Cross-cutting |
+| `19_ROADMAP` | `DOMAIN-VIS-003` Business Strategy | `DOMAIN-VIS-001` | — |
+| `20_APPENDIX` | `DOMAIN-VIS-002` Knowledge Graph | — | — |
+| `21_RESEARCH` | `DOMAIN-VIS-008` Experimentation | — | — |
+| `22_DECISIONS` | `DOMAIN-VIS-005` Decision Authority | — | — |
+| `23_STANDARDS` | `DOMAIN-VIS-009` Standards | all | Cross-cutting |
+| `24_DIAGRAMS` | `DOMAIN-VIS-002` Knowledge Graph | — | — |
+
+> **`VIS-123`.** Every one of the twenty-four knowledge domains maps to at least one system domain,
+> and no system domain in §02.3 lacks a knowledge home. That bidirectional completeness is checked
+> by `VAL-VIS-224` and `VAL-VIS-225`. It is the mechanism that prevents a system domain from being
+> invented with nowhere to document it, and a knowledge folder from existing with nothing to say.
+
+### TBL-VIS-158: Domain Taxonomy Registry — Category Populations
+
+| Category | Domain IDs | Count | `IMPLEMENTED` | `PARTIAL` | `DOCUMENTED` | `PLANNED` | `PROPOSED` |
+| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `C1` Strategic | `DOMAIN-VIS-001`…`005` | 5 | 2 | 2 | 1 | 0 | 0 |
+| `C4` Knowledge | `DOMAIN-VIS-006`…`009` | 4 | 2 | 1 | 1 | 0 | 0 |
+| `C3` AI | `DOMAIN-VIS-010`…`016` | 7 | 0 | 2 | 1 | 4 | 0 |
+| `C2` Core Product | `DOMAIN-VIS-017`…`029` | 13 | 0 | 0 | 1 | 9 | 3 |
+| `C6` Experience | `DOMAIN-VIS-030`…`033` | 4 | 0 | 0 | 2 | 2 | 0 |
+| `C5` Data | `DOMAIN-VIS-034`…`037` | 4 | 0 | 0 | 0 | 4 | 0 |
+| `C7` Infrastructure | `DOMAIN-VIS-038`…`040` | 3 | 0 | 0 | 0 | 3 | 0 |
+| `C9` Operational | `DOMAIN-VIS-041`…`043` | 3 | 0 | 0 | 0 | 3 | 0 |
+| `C8` Security | `DOMAIN-VIS-044`…`047` | 4 | 0 | 0 | 2 | 2 | 0 |
+| `C10` Integration | `DOMAIN-VIS-048`…`050` | 3 | 0 | 0 | 0 | 2 | 1 |
+| **Total** | `DOMAIN-VIS-001`…`050` | **50** | **4** | **5** | **8** | **29** | **4** |
+
+> **`VIS-124`.** Four domains out of fifty are `IMPLEMENTED`. That ratio — eight percent — is the
+> honest shape of Oship at this moment and matches the capability ratio recorded in PART 01 (six of
+> seventy). Two independent decompositions producing the same proportion is weak corroboration that
+> neither is inflated. The number will look bad in a status report. It is correct, and `PRN-VIS-001`
+> requires that correctness outrank comfort.
+
+---
+
+## 02.3 — Domain Registry
+
+### AI NAVIGATION METADATA — §02.3
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this is the lookup table for all placement decisions** |
+| **AI DEPENDENCIES** | §02.1 classification, §02.2 taxonomy |
+| **AI INPUTS** | A classified domain name, or a work item needing a home |
+| **AI OUTPUTS** | The full record: purpose, owner, inputs, outputs, dependencies, architecture anchor, status |
+| **AI IMPLEMENTATION IMPACT** | Every future directory, service, and document derives its home from this register |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-227`…`VAL-VIS-248` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` `TBL-ARCH-098` domain register, `architecture/DOMAIN_MODEL.md` |
+
+### 02.3.1 Registry Schema
+
+> **`VIS-125`.** Every domain record carries fourteen fields. The schema is fixed: a record missing
+> any field is invalid, and a field whose value is unknown carries the literal string
+> `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` rather than a guess, a blank, or an optimistic
+> placeholder.
+
+### TBL-VIS-159: Domain Record Schema
+
+| Field | Type | Constraint | Absent value |
+| :--- | :--- | :--- | :--- |
+| **Domain ID** | `DOMAIN-VIS-nnn` | Permanent, never reused | Invalid |
+| **Name** | Noun phrase of purpose | No team, tool, layer, or leftover name (`DCR-03`) | Invalid |
+| **Purpose** | One sentence | Must contain no "and" joining two purposes | Invalid |
+| **Category** | One of `C1`…`C10` | Exactly one (`TBL-VIS-153`) | Invalid |
+| **Status** | PART 01 vocabulary | `IMPLEMENTED` requires evidence | `UNKNOWN` |
+| **Owner** | Accountable role | Must be a role, never a person's convenience | Invalid (`DCR-08`) |
+| **Inputs** | What it consumes | Named sources | `none` |
+| **Outputs** | What it produces | Named artifacts | `none` |
+| **Dependencies** | Other `DOMAIN-VIS-` IDs | Must be legal per `TBL-VIS-155` | `none` |
+| **Architecture Reference** | `DOM-ARCH-` / `CMP-ARCH-` / `LYR-ARCH-` | Read-only citation into `AOM-ARCH-001` | `UNMAPPED` |
+| **Implementation Status** | Code-level reality | Independent of documentation status | `NO CODE` |
+| **AI Loading Priority** | `L0`…`L4` | From `TBL-VIS-154` | `L4` |
+| **Security Classification** | `S1` critical … `S4` public | See `TBL-VIS-160` | `S3` |
+| **Evolution Level** | `E0`…`E7` | From `TBL-VIS-215` state machine | `E0` |
+
+### TBL-VIS-160: Security Classification Scale
+
+| Level | Meaning | Requirement when a domain carries it |
+| :--- | :--- | :--- |
+| `S1` | Compromise is catastrophic and possibly unrecoverable | Threat model required before any implementation; dual review |
+| `S2` | Compromise causes material loss or regulatory exposure | Threat model required before release; security reviewer on every change |
+| `S3` | Compromise causes operational disruption | Standard review, secrets hygiene, least privilege |
+| `S4` | Public by design | No confidentiality requirement; integrity still required |
+
+### 02.3.2 Strategic Domains — `C1`
+
+### TBL-VIS-161: `DOMAIN-VIS-001` System Vision
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | System Vision |
+| **Purpose** | Define what Oship is and what it must become, in a form an agent can execute |
+| **Category** | `C1` Strategic |
+| **Status** | `PARTIALLY IMPLEMENTED` — this document, PART 01 and PART 02 of a planned six |
+| **Owner** | Product Management / Chief Product Officer |
+| **Inputs** | Repository evidence, `PROJECT_PHILOSOPHY.md`, `README.md`, ADR decisions |
+| **Outputs** | `VIS-`, `CAP-VIS-`, `PRN-VIS-`, `NG-VIS-`, `OUT-VIS-`, `DOMAIN-VIS-` registers |
+| **Dependencies** | none — `C1` depends on nothing (`VIS-121`) |
+| **Architecture Reference** | `DOM-ARCH-001` Governance and AI |
+| **Implementation Status** | `NO CODE` — a specification domain by nature |
+| **AI Loading Priority** | `L0` |
+| **Security Classification** | `S4` — public by design |
+| **Evolution Level** | `E4` Implemented as documentation |
+
+### TBL-VIS-162: `DOMAIN-VIS-002` Knowledge Graph
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | Knowledge Graph |
+| **Purpose** | Hold every durable truth about Oship in a retrievable, cross-linked structure |
+| **Category** | `C4` Knowledge — registered in the `C1` block because it is the strategic partner of `DOMAIN-VIS-001` |
+| **Status** | `PARTIALLY IMPLEMENTED` — 24 domain indexes exist, most content documents do not |
+| **Owner** | Architecture / Documentation Team |
+| **Inputs** | All domain knowledge, decisions, standards |
+| **Outputs** | `docs/MASTER_CONTEXT/` corpus, `MCX-` identifiers, routing tables |
+| **Dependencies** | `DOMAIN-VIS-001` |
+| **Architecture Reference** | `CMP-ARCH-001` Master Context Corpus |
+| **Implementation Status** | `NO CODE` — documentation corpus |
+| **AI Loading Priority** | `L0` |
+| **Security Classification** | `S4` |
+| **Evolution Level** | `E4` |
+
+### TBL-VIS-163: `DOMAIN-VIS-003` Business Strategy
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | Business Strategy |
+| **Purpose** | Determine which value Oship pursues, in what order, under what economics |
+| **Category** | `C1` Strategic |
+| **Status** | `DOCUMENTED` — `02_BUSINESS` and `19_ROADMAP` indexes exist; no content documents |
+| **Owner** | Business Strategy / Product Leadership |
+| **Inputs** | Market context, `DOMAIN-VIS-001` vision, operational evidence |
+| **Outputs** | Priority order, economic constraints, roadmap sequencing |
+| **Dependencies** | `DOMAIN-VIS-001` |
+| **Architecture Reference** | `UNMAPPED` |
+| **Implementation Status** | `NO CODE` |
+| **AI Loading Priority** | `L0` |
+| **Security Classification** | `S3` |
+| **Evolution Level** | `E2` Planned |
+
+### TBL-VIS-164: `DOMAIN-VIS-004` Architecture Authority
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | Architecture Authority |
+| **Purpose** | Translate vision into a buildable structure and defend that structure against drift |
+| **Category** | `C1` Strategic |
+| **Status** | `PARTIALLY IMPLEMENTED` — `AOM-ARCH-001` PART 01 complete, 10,844 lines |
+| **Owner** | Lead Enterprise Architect |
+| **Inputs** | `DOMAIN-VIS-001` vision, capability register, constraints |
+| **Outputs** | `LYR-ARCH-`, `DOM-ARCH-`, `CMP-ARCH-`, `INV-ARCH-` registers |
+| **Dependencies** | `DOMAIN-VIS-001`, `DOMAIN-VIS-002` |
+| **Architecture Reference** | `CMP-ARCH-008` Architecture Specification |
+| **Implementation Status** | `NO CODE` |
+| **AI Loading Priority** | `L0` |
+| **Security Classification** | `S4` |
+| **Evolution Level** | `E4` |
+
+### TBL-VIS-165: `DOMAIN-VIS-005` Decision Authority
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | Decision Authority |
+| **Purpose** | Record every consequential choice immutably with its reasoning and its cost of reversal |
+| **Category** | `C1` Strategic |
+| **Status** | `IMPLEMENTED` — `docs/ADR/` process plus `.ai/DECISION_LOG.md` with `DEC-001`…`DEC-010` |
+| **Owner** | Architecture Board |
+| **Inputs** | Proposed changes reaching the constitutional or structural threshold |
+| **Outputs** | ADRs, `DEC-` records, supersession chains |
+| **Dependencies** | `DOMAIN-VIS-001` |
+| **Architecture Reference** | `CMP-ARCH-004` Decision Record Set |
+| **Implementation Status** | `NO CODE` — process plus documents |
+| **AI Loading Priority** | `L0` |
+| **Security Classification** | `S4` |
+| **Evolution Level** | `E4` |
+
+### 02.3.3 Knowledge Domains — `C4`
+
+### TBL-VIS-166: `DOMAIN-VIS-006` Governance Automation
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | Governance Automation |
+| **Purpose** | Execute governance rules mechanically so that compliance is observed rather than asserted |
+| **Category** | `C4` Knowledge |
+| **Status** | `PLANNED` — workflow skeletons exist in `.github/workflow-skeletons/`, none installed (`EVD-VIS-017`) |
+| **Owner** | DevOps / Automation Lead |
+| **Inputs** | `VAL-` rule catalogues, repository state |
+| **Outputs** | Pass or fail signals on every change |
+| **Dependencies** | `DOMAIN-VIS-002`, `DOMAIN-VIS-009` |
+| **Architecture Reference** | `UNMAPPED` |
+| **Implementation Status** | `NO CODE` — eight skeleton workflows not in `.github/workflows/` |
+| **AI Loading Priority** | `L1` |
+| **Security Classification** | `S2` — CI has repository write authority |
+| **Evolution Level** | `E2` |
+
+### TBL-VIS-167: `DOMAIN-VIS-007` Verification
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | Verification |
+| **Purpose** | Establish that a claim is true by executing a check rather than by reading a sentence |
+| **Category** | `C4` Knowledge, cross-cutting |
+| **Status** | `PARTIALLY IMPLEMENTED` — 595 `VAL-` rules written across two documents, two automated |
+| **Owner** | QA / Test Engineering Lead |
+| **Inputs** | Every specification claim, every artifact |
+| **Outputs** | Verdicts with evidence |
+| **Dependencies** | `DOMAIN-VIS-006`, `DOMAIN-VIS-002` |
+| **Architecture Reference** | `UNMAPPED` |
+| **Implementation Status** | `NO CODE` — `tests/` is `.gitkeep`-only |
+| **AI Loading Priority** | `L1` |
+| **Security Classification** | `S3` |
+| **Evolution Level** | `E2` |
+
+### TBL-VIS-168: `DOMAIN-VIS-008` Experimentation
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | Experimentation |
+| **Purpose** | Permit disciplined exploration whose failures cannot contaminate production knowledge |
+| **Category** | `C4` Knowledge |
+| **Status** | `DOCUMENTED` — `research/` and `experiments/` exist as `.gitkeep`-only directories |
+| **Owner** | Research / Innovation Lead |
+| **Inputs** | Open questions, `UNKNOWN` labels from any domain |
+| **Outputs** | Findings that either become decisions or are discarded with a record |
+| **Dependencies** | `DOMAIN-VIS-002` |
+| **Architecture Reference** | `UNMAPPED` |
+| **Implementation Status** | `NO CODE` |
+| **AI Loading Priority** | `L4` |
+| **Security Classification** | `S3` — experiments must never hold production data (`BND-VIS-014`) |
+| **Evolution Level** | `E1` Research |
+
+### TBL-VIS-169: `DOMAIN-VIS-009` Standards
+
+| Field | Value |
+| :--- | :--- |
+| **Name** | Standards |
+| **Purpose** | Fix the form of every artifact so that difference in form never signals difference in meaning |
+| **Category** | `C4` Knowledge, cross-cutting |
+| **Status** | `IMPLEMENTED` — `23_STANDARDS/METADATA_STANDARD.md` defines the canonical 15-key frontmatter |
+| **Owner** | Enterprise Standards / Architecture Board |
+| **Inputs** | Recurring form questions from every domain |
+| **Outputs** | Metadata standard, naming rules, identifier conventions |
+| **Dependencies** | `DOMAIN-VIS-002` |
+| **Architecture Reference** | `CMP-ARCH-005` Metadata Standard |
+| **Implementation Status** | `NO CODE` |
+| **AI Loading Priority** | `L0` |
+| **Security Classification** | `S4` |
+| **Evolution Level** | `E4` |
+
+```mermaid
+flowchart TB
+    D1["DOMAIN-VIS-001 System Vision - PARTIAL"] --> D4["DOMAIN-VIS-004 Architecture Authority - PARTIAL"]
+    D1 --> D3["DOMAIN-VIS-003 Business Strategy - DOCUMENTED"]
+    D1 --> D2["DOMAIN-VIS-002 Knowledge Graph - PARTIAL"]
+    D1 --> D5["DOMAIN-VIS-005 Decision Authority - IMPLEMENTED"]
+    D2 --> D9["DOMAIN-VIS-009 Standards - IMPLEMENTED"]
+    D2 --> D8["DOMAIN-VIS-008 Experimentation - DOCUMENTED"]
+    D9 --> D6["DOMAIN-VIS-006 Governance Automation - PLANNED"]
+    D6 --> D7["DOMAIN-VIS-007 Verification - PARTIAL"]
+
+    classDef impl fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef part fill:#f57f17,stroke:#fff59d,color:#000000
+    classDef plan fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class D5,D9 impl
+    class D1,D2,D4,D7 part
+    class D3,D6,D8 plan
+```
+
+> **Diagram ID:** `DGM-VIS-059` — **Strategic and Knowledge Domain Cluster with Real Status**
+> **Explanation:** This cluster is the only part of Oship with any implemented substance. Colour is
+> status, not importance: green implemented, amber partial, grey planned or documentation-only. The
+> chain `DOMAIN-VIS-009` → `006` → `007` is the enforcement path, and it is grey at its middle
+> link, which is precisely why 593 of 595 validation rules across this document and `AOM-ARCH-001`
+> remain unexecuted.
+
+### 02.3.4 AI Domains — `C3`
+
+### TBL-VIS-170: AI Domain Register — `DOMAIN-VIS-010`…`016`
+
+| ID | Name | Purpose | Status | Owner | AI Load | Sec | Evo |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-010` | AI Control Plane | Give agents a single authoritative place to read state and write status | `IMPLEMENTED` — `.ai/` with 17 files | AI Repository Architect | `L0` | `S2` | `E4` |
+| `DOMAIN-VIS-011` | Agent Runtime | Execute agent work inside a bounded, observable sandbox | `PLANNED` | AI Repository Architect | `L1` | `S1` | `E2` |
+| `DOMAIN-VIS-012` | Model Routing | Select and call an inference provider without binding the system to one | `PLANNED` — no provider selected (`EVD-VIS-019`) | AI Repository Architect | `L1` | `S2` | `E2` |
+| `DOMAIN-VIS-013` | Context Assembly | Build the smallest sufficient context for a given task | `PARTIALLY IMPLEMENTED` — `CONTEXT_ROUTER.md` exists; assembly is manual | AI Repository Architect | `L0` | `S2` | `E3` |
+| `DOMAIN-VIS-014` | AI Memory | Persist what agents learn across sessions and contexts | `DOCUMENTED` — `MCX-MEM-001` released, 34,428 lines, no runtime | AI Repository Architect | `L1` | `S2` | `E3` |
+| `DOMAIN-VIS-015` | AI Evaluation | Judge agent output against specification before it is accepted | `PLANNED` | QA / AI Architect | `L1` | `S1` | `E2` |
+| `DOMAIN-VIS-016` | AI Safety and Autonomy | Enforce the autonomy boundary and refuse what must be refused | `PARTIALLY IMPLEMENTED` — enforced socially, not technically (`CAP-VIS-056`) | Security Architect | `L1` | `S1` | `E3` |
+
+> **`VIS-126`.** Two AI domains carry security classification `S1`: `DOMAIN-VIS-011` Agent Runtime
+> and `DOMAIN-VIS-016` AI Safety and Autonomy. An agent runtime is `S1` because it executes
+> arbitrary generated instructions with repository credentials; a safety domain is `S1` because its
+> failure mode is silent. `DOMAIN-VIS-015` is `S1` for the same reason as `016` — an evaluator that
+> passes bad output is worse than no evaluator, because it manufactures unearned confidence.
+
+### 02.3.5 Core Product Domains — `C2`
+
+### TBL-VIS-171: Core Product Domain Register — `DOMAIN-VIS-017`…`029`
+
+| ID | Name | Purpose | Status | Owner | Arch ref | Sec | Evo |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-017` | Product Core | Hold the entities and rules every other product domain shares | `PLANNED` | Backend Engineering Lead | `DOM-ARCH-002` | `S2` | `E2` |
+| `DOMAIN-VIS-018` | Identity and Access | Establish who a caller is and what they may do | `PLANNED` | Security Architect | `DOM-ARCH-005` `PROPOSED` | `S1` | `E2` |
+| `DOMAIN-VIS-019` | Tenancy | Keep one customer's world structurally separate from every other | `PLANNED` | Backend Engineering Lead | `DOM-ARCH-006` `PROPOSED` | `S1` | `E2` |
+| `DOMAIN-VIS-020` | Financial Factory | Process enterprise financial workloads — the value-generating engine | `PLANNED` | Backend Engineering Lead | `DOM-ARCH-003` | `S1` | `E2` |
+| `DOMAIN-VIS-021` | Ledger | Hold the immutable, double-entry record of value movement | `PLANNED` | Backend Engineering Lead | `CMP-ARCH-015` | `S1` | `E2` |
+| `DOMAIN-VIS-022` | Settlement | Finalise value movement exactly once, under failure | `PLANNED` | Backend Engineering Lead | `CMP-ARCH-017` | `S1` | `E2` |
+| `DOMAIN-VIS-023` | Reconciliation | Detect and resolve divergence between two records of the same truth | `PLANNED` | Backend Engineering Lead | `UNMAPPED` | `S2` | `E2` |
+| `DOMAIN-VIS-024` | Workflow Orchestration | Carry long-running processes across failures and restarts | `PLANNED` | Backend Engineering Lead | `CMP-ARCH-013` | `S2` | `E2` |
+| `DOMAIN-VIS-025` | Automation | Let users express repeatable work once and have the system perform it | `PROPOSED` | Product Management | `UNMAPPED` | `S2` | `E1` |
+| `DOMAIN-VIS-026` | Analytics | Turn accumulated state into answers a human can act on | `PROPOSED` | Data Engineering Lead | `UNMAPPED` | `S2` | `E1` |
+| `DOMAIN-VIS-027` | Notification | Deliver a message to a party outside the system, exactly as often as intended | `PLANNED` | Backend Engineering Lead | `CMP-ARCH-014` | `S3` | `E2` |
+| `DOMAIN-VIS-028` | Monetization | Convert delivered value into recorded revenue | `PROPOSED` | Business Strategy | `UNMAPPED` | `S1` | `E1` |
+| `DOMAIN-VIS-029` | Marketplace | Let parties outside Oship offer capability to parties inside it | `PROPOSED` | Platform / Extension Lead | `UNMAPPED` | `S2` | `E0` |
+
+> **`VIS-127`.** Every domain in `TBL-VIS-171` is `PLANNED` or `PROPOSED`. Not one line of code
+> exists for any of them; the directories that would hold them — `apps/`, `services/`, `packages/`
+> — contain only `.gitkeep` files (`EVD-VIS-020`). This table is therefore a **specification of
+> intent**, and `NG-VIS-`-class discipline forbids any downstream document from citing it as
+> evidence that these domains exist. `VAL-VIS-231` checks for exactly that misuse.
+
+> **`VIS-128`.** Six of the thirteen Core Product domains carry `S1`. That concentration is a
+> direct consequence of the Money Factory objective: a system that moves money has an
+> irrecoverable failure mode that a system that moves documents does not. `DOMAIN-VIS-018`,
+> `019`, `020`, `021`, `022`, and `028` must each have a threat model before a single line of
+> their implementation is written — that is the binding effect of `S1` in `TBL-VIS-160`, and it
+> is restated as `CON-VIS-031` in §02.10.
+
+```mermaid
+flowchart LR
+    subgraph EDGE["Edge and access"]
+        D18["DOMAIN-VIS-018 Identity S1"]
+        D19["DOMAIN-VIS-019 Tenancy S1"]
+    end
+    subgraph CORE["Value engine"]
+        D20["DOMAIN-VIS-020 Financial Factory S1"]
+        D21["DOMAIN-VIS-021 Ledger S1"]
+        D22["DOMAIN-VIS-022 Settlement S1"]
+        D23["DOMAIN-VIS-023 Reconciliation S2"]
+    end
+    subgraph SUPPORT["Supporting product"]
+        D17["DOMAIN-VIS-017 Product Core S2"]
+        D24["DOMAIN-VIS-024 Workflow S2"]
+        D27["DOMAIN-VIS-027 Notification S3"]
+    end
+    subgraph FUTURE["Proposed only"]
+        D25["DOMAIN-VIS-025 Automation"]
+        D26["DOMAIN-VIS-026 Analytics"]
+        D28["DOMAIN-VIS-028 Monetization S1"]
+        D29["DOMAIN-VIS-029 Marketplace"]
+    end
+
+    D18 --> D19
+    D19 --> D20
+    D17 --> D20
+    D20 --> D21
+    D21 --> D22
+    D22 --> D23
+    D24 --> D20
+    D20 --> D27
+    D21 --> D26
+    D22 --> D28
+    D25 -.-> D24
+    D29 -.-> D25
+
+    classDef s1 fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef prop fill:#4e342e,stroke:#bcaaa4,color:#ffffff
+    class D18,D19,D20,D21,D22,D28 s1
+    class D25,D26,D29 prop
+```
+
+> **Diagram ID:** `DGM-VIS-060` — **Core Product Domain Dependency Chain**
+> **Explanation:** Red nodes are security classification `S1`. The critical path is
+> `018 → 019 → 020 → 021 → 022`: identity gates tenancy, tenancy scopes the factory, the factory
+> writes the ledger, the ledger drives settlement. Five sequential `S1` domains means the
+> implementation order is not negotiable, and it means the first implementable product domain is
+> `DOMAIN-VIS-018`, not the Money Factory itself. Dotted edges are `PROPOSED` relationships that
+> carry no commitment.
+
+### 02.3.6 Experience Domains — `C6`
+
+### TBL-VIS-172: Experience Domain Register — `DOMAIN-VIS-030`…`033`
+
+| ID | Name | Purpose | Status | Evidence | Owner | Sec | Evo |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-030` | Design System | Fix the visual and interaction vocabulary so every surface reads as one system | `DOCUMENTED` | `design/` with 12 subdirectories, all `.gitkeep`-only; `design/INDEX.md` `DES-IND-001` | UX/UI Design Team | `S4` | `E2` |
+| `DOMAIN-VIS-031` | User Research | Establish what users actually need rather than what the team assumes | `DOCUMENTED` | `03_USERS/INDEX.md`; `design/ux/` empty | UX Research | `S3` | `E1` |
+| `DOMAIN-VIS-032` | Interaction and Accessibility | Ensure every capability is reachable by every user, including assistive paths | `PLANNED` | `design/ui/`, `design/animations/` empty | UX/UI Design Team | `S3` | `E2` |
+| `DOMAIN-VIS-033` | Personalization | Adapt presentation to a user without forking behaviour | `PLANNED` | none | Product Management | `S2` | `E1` |
+
+### 02.3.7 Data Domains — `C5`
+
+### TBL-VIS-173: Data Domain Register — `DOMAIN-VIS-034`…`037`
+
+| ID | Name | Purpose | Status | Owner | Arch ref | Sec | Evo |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-034` | Data Contracts | Publish the shape of every datum crossing a boundary, versioned | `PLANNED` | Database Architect | `CMP-ARCH-030` Contract Registry | `S2` | `E2` |
+| `DOMAIN-VIS-035` | Persistence | Store state durably and transactionally | `PLANNED` — `database/` is `.gitkeep`-only | Database Architect | `CMP-ARCH-024` | `S1` | `E2` |
+| `DOMAIN-VIS-036` | Data Lifecycle | Govern how data is created, retained, archived, and destroyed | `PLANNED` | Database Architect | `UNMAPPED` | `S1` | `E2` |
+| `DOMAIN-VIS-037` | Data Quality | Detect and reject data that is structurally valid but factually wrong | `PLANNED` | Data Engineering Lead | `UNMAPPED` | `S2` | `E1` |
+
+### 02.3.8 Infrastructure Domains — `C7`
+
+### TBL-VIS-174: Infrastructure Domain Register — `DOMAIN-VIS-038`…`040`
+
+| ID | Name | Purpose | Status | Evidence | Owner | Sec | Evo |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-038` | Runtime Platform | Provide the substrate on which services execute | `PLANNED` | `infra/`, `k8s/`, `docker/` all `.gitkeep`-only; stack `UNKNOWN` (`EVD-VIS-019`) | Platform Engineering | `S1` | `E2` |
+| `DOMAIN-VIS-039` | Delivery | Move a validated change from author to production reproducibly | `PLANNED` | `deployment/` empty; CI skeletons uninstalled | DevOps / SRE | `S1` | `E2` |
+| `DOMAIN-VIS-040` | Configuration and Secrets | Supply environment-specific values without rebuilds and without exposure | `PLANNED` | `configs/` `.gitkeep`-only | Platform Engineering | `S1` | `E2` |
+
+### 02.3.9 Operational Domains — `C9`
+
+### TBL-VIS-175: Operational Domain Register — `DOMAIN-VIS-041`…`043`
+
+| ID | Name | Purpose | Status | Evidence | Owner | Sec | Evo |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-041` | Observability | Make the system's internal state externally evident | `PLANNED` | `monitoring/`, `observability/` `.gitkeep`-only | SRE / Observability Lead | `S2` | `E2` |
+| `DOMAIN-VIS-042` | Operations and Incident Response | Detect, contain, and recover from failure with a record | `PLANNED` | `12_OPERATIONS/INDEX.md` only | SRE | `S2` | `E2` |
+| `DOMAIN-VIS-043` | Reliability Engineering | Set and defend service objectives against measured reality | `PLANNED` | No SLOs defined anywhere | SRE | `S2` | `E1` |
+
+> **`VIS-129`.** `DOMAIN-VIS-041` Observability is the domain whose absence hurts most today.
+> Thirteen of fifteen construction measures in `SUC-VIS-` are `NOT YET MEASURED` (`VIS-052`) for a
+> single reason: no domain owns measurement. Until `DOMAIN-VIS-041` reaches `E4`, the success model
+> in §01.12 is a list of intentions.
+
+### 02.3.10 Security Domains — `C8`
+
+### TBL-VIS-176: Security Domain Register — `DOMAIN-VIS-044`…`047`
+
+| ID | Name | Purpose | Status | Evidence | Owner | Sec | Evo |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-044` | Threat Modelling | Enumerate what an adversary would attempt before building the thing they would attack | `DOCUMENTED` | `docs/security/`, `10_SECURITY/INDEX.md` | Security Architect | `S2` | `E2` |
+| `DOMAIN-VIS-045` | Authorization Policy | Decide, in one place, whether a principal may perform an action | `PLANNED` | `CMP-ARCH-011` `PLANNED` | Security Architect | `S1` | `E2` |
+| `DOMAIN-VIS-046` | Privacy and Data Protection | Bound what may be known about a person and for how long | `PLANNED` — regulatory regime `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` (`PROB-VIS-023`) | Security Architect | `S1` | `E1` |
+| `DOMAIN-VIS-047` | Audit and Attestation | Produce an unforgeable record of who did what, when, and under what authority | `DOCUMENTED` — git history plus `DECISION_LOG.md` (`CAP-VIS-024`) | Auditor / Security | `S1` | `E3` |
+
+### 02.3.11 Integration Domains — `C10`
+
+### TBL-VIS-177: Integration Domain Register — `DOMAIN-VIS-048`…`050`
+
+| ID | Name | Purpose | Status | Evidence | Owner | Sec | Evo |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-048` | API Surface | Present a stable, versioned contract to callers outside the system | `PLANNED` | `apis/`, `sdk/` `.gitkeep`-only; `15_API/INDEX.md` exists | API / Integration Lead | `S1` | `E2` |
+| `DOMAIN-VIS-049` | External Providers | Depend on third-party systems without being owned by them | `PLANNED` — no provider selected in any category | API / Integration Lead | `S2` | `E1` |
+| `DOMAIN-VIS-050` | Extension and Plugins | Let third parties add capability inside a sandbox that cannot harm the host | `PROPOSED` | `plugins/` `.gitkeep`-only; `CMP-ARCH-029` `PLANNED` | Platform / Extension Lead | `S1` | `E1` |
+
+### 02.3.12 Registry Completeness Audit
+
+### TBL-VIS-178: Registry Coverage Against `AOM-ARCH-001`
+
+| Architecture domain | Vision domains mapping to it | Count | Unmapped vision domains in this row |
+| :--- | :--- | ---: | :--- |
+| `DOM-ARCH-001` Governance and AI | `001`, `002`, `004`, `005`, `006`, `007`, `008`, `009`, `010`, `013`, `014` | 11 | — |
+| `DOM-ARCH-002` Core Platform | `017`, `024`, `027`, `035`, `038`, `040` | 6 | — |
+| `DOM-ARCH-003` Financial Factory | `020`, `021`, `022`, `023` | 4 | — |
+| `DOM-ARCH-004` Observability | `041`, `042`, `043`, `047` | 4 | — |
+| `DOM-ARCH-005` Identity and Access `PROPOSED` | `018`, `045` | 2 | — |
+| `DOM-ARCH-006` Tenancy `PROPOSED` | `019` | 1 | — |
+| `DOM-ARCH-007` Workflow `PROPOSED` | `024` secondary | 1 | — |
+| `DOM-ARCH-008` AI Runtime `PROPOSED` | `011`, `012`, `015`, `016` | 4 | — |
+| `DOM-ARCH-009` Integration `PROPOSED` | `048`, `049`, `050` | 3 | — |
+| `DOM-ARCH-010` Notification `PROPOSED` | `027` secondary | 1 | — |
+| **No architecture domain exists** | `003`, `025`, `026`, `028`, `029`, `030`, `031`, `032`, `033`, `034`, `036`, `037`, `039`, `044`, `046` | **15** | Recorded as `UNMAPPED` |
+
+> **`VIS-130`.** Fifteen of fifty vision domains have no corresponding architecture domain. This is
+> not a defect of this document — it is a **forward obligation on `AOM-ARCH-001` PART 02**, which
+> must either create architecture domains for them or record why they are absorbed into existing
+> ones. §02.13 restates the fifteen as a numbered obligation list, and `VAL-VIS-246` requires that
+> the list shrink or be re-justified in each subsequent part. This document may not close the gap
+> itself: §01.17 and `VIS-065` make the vision read-only toward architecture.
+
+### TBL-VIS-179: Registry Integrity Checks Run Against §02.3
+
+| Check | Rule | Result |
+| :--- | :--- | :--- |
+| Every ID in `001`…`050` defined exactly once | `DCR-05` | **PASS** — 50 of 50 |
+| Every record has all 14 schema fields | `TBL-VIS-159` | **PASS** |
+| Every record has an owner | `DCR-08` | **PASS** — all 50 |
+| No team, tool, layer, or leftover names | `DCR-03` | **PASS** |
+| Every status drawn from the PART 01 vocabulary | `DCR-06` | **PASS** |
+| No `IMPLEMENTED` status without cited evidence | `VAL-VIS-229` | **PASS** — 4 implemented, 4 cite evidence |
+| Every dependency legal per `TBL-VIS-155` | `VAL-VIS-219` | **PASS** |
+| Every domain has a knowledge home | `VAL-VIS-224` | **PASS** — via `TBL-VIS-157` |
+| Every knowledge domain has a system domain | `VAL-VIS-225` | **PASS** — 24 of 24 |
+| Architecture references cite only existing IDs | `VAL-VIS-244` | **PASS** — `PROPOSED` anchors labelled as such |
+
+---
+
+## 02.4 — Domain Boundary Model
+
+### AI NAVIGATION METADATA — §02.4
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before writing any code that spans two domains** |
+| **AI DEPENDENCIES** | §02.3 registry, §01.9 system boundaries `BND-VIS-001`…`016` |
+| **AI INPUTS** | Two domain IDs and a proposed interaction between them |
+| **AI OUTPUTS** | Whether the interaction is permitted, and through which mechanism |
+| **AI IMPLEMENTATION IMPACT** | Determines module structure, package layout, and network topology |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-249`…`VAL-VIS-266` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §04.6 trust boundaries `TB-1`…`TB-10` |
+
+### 02.4.1 What a Domain Boundary Is
+
+> **`VIS-131`.** A domain boundary is not a folder. A folder is a filing convenience that any
+> import statement can ignore. A boundary is a **rule about which knowledge may cross**, enforced
+> by something that will refuse a violation — a compiler, a linter, a network, or a review gate
+> that has actually blocked something. A boundary with no refusing enforcer is a preference.
+
+> **`VIS-132`.** Oship today has **zero technically enforced domain boundaries**. Every boundary
+> described in this section is a specification of what enforcement must exist, not a report of
+> enforcement that does exist. `EVD-VIS-020` is the evidence: there is no build system, no linter
+> configuration, and no CI workflow installed that could refuse a cross-domain import.
+
+### TBL-VIS-180: Boundary Strength Scale
+
+| Strength | Name | Enforcer | Violation detected | Present in Oship |
+| :--- | :--- | :--- | :--- | :--- |
+| `B0` | Aspirational | Nothing | Never | **All 50 domains today** |
+| `B1` | Documented | A sentence in a document | By a reader who happens to look | Partially — this section |
+| `B2` | Reviewed | A human at a pull request | If the reviewer notices | Weak — single-owner `CODEOWNERS` (`VIS-069`) |
+| `B3` | Linted | A static rule in CI | Every change, automatically | No |
+| `B4` | Compiled | Module system or type system | Before the code runs | No |
+| `B5` | Deployed | Process or network separation | At runtime, unavoidably | No |
+
+> **`VIS-133`.** Boundary strength is not a maturity ladder to climb uniformly. A domain at `S1`
+> security classification requires at least `B4`; a domain at `S4` may legitimately rest at `B2`
+> forever. Spending effort to push `DOMAIN-VIS-030` Design System from `B2` to `B5` would be waste,
+> while leaving `DOMAIN-VIS-021` Ledger at `B2` would be negligence. `TBL-VIS-181` fixes the
+> required minimum per classification.
+
+### TBL-VIS-181: Required Boundary Strength by Security Classification
+
+| Security class | Minimum strength | Rationale | Domains affected |
+| :--- | :--- | :--- | :--- |
+| `S1` | `B4` compiled, `B5` where a tenant boundary is crossed | Failure is irrecoverable | `018`, `019`, `020`, `021`, `022`, `028`, `035`, `036`, `038`, `039`, `040`, `045`, `046`, `047`, `048`, `050`, `011`, `015`, `016` |
+| `S2` | `B3` linted | Failure is expensive but recoverable | `006`, `010`, `012`, `013`, `014`, `017`, `023`, `024`, `025`, `026`, `033`, `034`, `037`, `041`, `042`, `043`, `044`, `049` |
+| `S3` | `B2` reviewed | Failure is operational | `003`, `007`, `008`, `027`, `031`, `032` |
+| `S4` | `B1` documented | No confidentiality requirement | `001`, `002`, `004`, `005`, `009`, `030` |
+
+```mermaid
+flowchart TB
+    B0["B0 Aspirational - nothing refuses"] --> B1["B1 Documented - a reader might notice"]
+    B1 --> B2["B2 Reviewed - a human might notice"]
+    B2 --> B3["B3 Linted - CI always notices"]
+    B3 --> B4["B4 Compiled - it cannot build"]
+    B4 --> B5["B5 Deployed - it cannot reach"]
+
+    S4["S4 public - stop at B1"] -.-> B1
+    S3["S3 operational - stop at B2"] -.-> B2
+    S2["S2 material - stop at B3"] -.-> B3
+    S1["S1 catastrophic - reach B4 or B5"] -.-> B4
+
+    NOW["Oship today - all 50 domains"] --> B0
+
+    classDef now fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef strong fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class NOW,B0 now
+    class B4,B5 strong
+```
+
+> **Diagram ID:** `DGM-VIS-061` — **Boundary Strength Ladder and Required Stopping Points**
+> **Explanation:** The solid chain is the ladder; the dotted edges are the required stopping point
+> for each security classification, not a target to exceed. The red node states the current
+> position honestly: every Oship domain sits at `B0`, including all nineteen `S1` domains. The gap
+> between `B0` and `B4` for nineteen domains is the single largest structural debt this document
+> records, and it is why `DOMAIN-VIS-006` Governance Automation is on the critical path for
+> everything else.
+
+### 02.4.2 The Five Boundary Crossings
+
+> **`VIS-134`.** Knowledge crosses a domain boundary in exactly five ways, and each has a different
+> cost, a different failure mode, and a different legality rule. Naming them separately prevents
+> the common error of treating "domain A uses domain B" as a single undifferentiated relationship.
+
+### TBL-VIS-182: Boundary Crossing Kinds
+
+| Kind | Name | What crosses | Coupling created | Legality default |
+| :--- | :--- | :--- | :--- | :--- |
+| `X1` | Call | A synchronous request and its response | Temporal and structural — caller waits, caller knows shape | Permitted only along a legal dependency edge |
+| `X2` | Event | A fact that already happened | Structural only — publisher does not wait or know subscribers | Permitted in any direction, including upward |
+| `X3` | Contract | A schema, type, or interface definition | Structural — both sides know the shape | Permitted only from a lower-priority to a higher-priority domain |
+| `X4` | Shared store | Rows or documents both domains read or write | Total — schema changes couple deployments | **Prohibited** without an explicit `DEC-` record |
+| `X5` | Shared code | A library both domains import | Structural, and viral through transitivity | Permitted only for `C4` Knowledge and `C7` Infrastructure domains |
+
+> **`VIS-135`.** `X4` shared store is the crossing that destroys domain architecture most reliably
+> and most quietly. Two domains writing the same table are one domain wearing two names; the
+> boundary between them exists only in the directory listing. It is therefore prohibited by
+> default rather than discouraged, and the prohibition is `CON-VIS-032`.
+
+> **`VIS-136`.** `X2` event is the only crossing permitted to travel **upward** against the
+> dependency direction of `TBL-VIS-155`. A `C2` product domain may not call a `C1` strategic
+> domain, but it may emit a fact that a `C1` process observes. This is how reality informs strategy
+> without strategy becoming dependent on reality's current shape.
+
+### TBL-VIS-183: Crossing Legality Matrix
+
+| From ↓ To → | `C1` | `C2` | `C3` | `C4` | `C5` | `C6` | `C7` | `C8` | `C9` | `C10` |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| `C1` Strategic | — | `X2` | `X2` | `X3` | ✗ | ✗ | ✗ | `X3` | `X2` | ✗ |
+| `C2` Core Product | `X2` | `X1` `X2` `X3` | `X1` | `X3` | `X1` `X3` | `X2` | `X1` | `X1` | `X2` | `X1` |
+| `C3` AI | `X2` | `X1` | `X1` `X2` | `X3` | `X1` | ✗ | `X1` | `X1` | `X2` | `X1` |
+| `C4` Knowledge | `X3` | `X3` | `X3` | `X3` `X5` | `X3` | `X3` | `X3` | `X3` | `X3` | `X3` |
+| `C5` Data | `X2` | `X2` | `X2` | `X3` | `X1` `X3` | ✗ | `X1` | `X1` | `X2` | ✗ |
+| `C6` Experience | `X2` | `X1` | `X1` | `X3` | ✗ | `X1` `X5` | ✗ | `X1` | `X2` | `X1` |
+| `C7` Infrastructure | `X2` | ✗ | ✗ | `X3` | ✗ | ✗ | `X1` `X5` | `X1` | `X2` | ✗ |
+| `C8` Security | `X2` | `X2` | `X2` | `X3` | `X2` | `X2` | `X2` | `X1` | `X2` | `X2` |
+| `C9` Operational | `X2` | ✗ | ✗ | `X3` | ✗ | ✗ | ✗ | `X2` | `X1` | ✗ |
+| `C10` Integration | `X2` | `X2` | `X2` | `X3` | ✗ | ✗ | `X1` | `X1` | `X2` | `X1` |
+
+> **`VIS-137`.** Read `TBL-VIS-183` as: a domain in the row category may reach a domain in the
+> column category **only** through the listed crossing kinds. `✗` means no crossing of any kind;
+> the two categories must not know of each other. `X4` appears nowhere in the matrix — that is
+> deliberate and is the visual form of `CON-VIS-032`.
+
+> **`VIS-138`.** `C8` Security is the only category permitted to reach every other category, and it
+> reaches all of them by `X2` event — it observes, it does not call. A security domain that calls
+> into a product domain has made itself a dependency of the thing it is supposed to judge, and a
+> judge that the defendant must run is not a judge. `FAL-VIS-136` records this anti-pattern.
+
+### 02.4.3 Boundary Contracts
+
+> **`VIS-139`.** Where a crossing is legal, it must still be **specified**. The specification is a
+> boundary contract, and it has seven parts. A crossing without a contract is an undocumented
+> coupling, which is indistinguishable from an accident that has not yet been noticed.
+
+### TBL-VIS-184: Boundary Contract Required Parts
+
+| Part | Question it answers | Failure if omitted |
+| :--- | :--- | :--- |
+| **Shape** | What data structure crosses? | Callers guess; guesses diverge |
+| **Direction** | Who initiates? | Circular initiation deadlock |
+| **Guarantee** | At-most-once, at-least-once, or exactly-once? | Duplicate financial effects |
+| **Failure semantics** | What does the caller see when the callee is down? | Cascading failure |
+| **Versioning** | How does the shape change without breaking callers? | Coordinated deploys forever |
+| **Authority** | Who may invoke this, under what identity? | Privilege escalation across the boundary |
+| **Observability** | How does an operator see this crossing happening? | Silent failure |
+
+> **`VIS-140`.** The **Guarantee** part is the one most often skipped and most expensive to add
+> late. `DOMAIN-VIS-022` Settlement is defined by exactly-once semantics; if the crossing from
+> `DOMAIN-VIS-020` to `DOMAIN-VIS-022` is specified as at-least-once without an idempotency key in
+> the contract, the system will double-settle under retry, and the defect will appear only under
+> the load conditions that make it most costly. `VAL-VIS-256` requires an explicit guarantee on
+> every crossing into an `S1` domain.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant P as "DOMAIN-VIS-020 Financial Factory"
+    participant C as "Boundary contract X1"
+    participant S as "DOMAIN-VIS-022 Settlement"
+    participant L as "DOMAIN-VIS-021 Ledger"
+
+    P->>C: "Submit settlement intent with idempotency key"
+    Note over C: "Guarantee exactly-once and authority tenant-scoped"
+    C->>S: "Deliver intent"
+    S->>L: "Read prior state for this key"
+    alt "Key already settled"
+        L-->>S: "Prior result exists"
+        S-->>C: "Return prior result unchanged"
+    else "Key unseen"
+        S->>L: "Append settlement entry"
+        L-->>S: "Committed"
+        S-->>C: "Return new result"
+    end
+    C-->>P: "Result"
+    S->>S: "Emit settled event X2 for observers"
+```
+
+> **Diagram ID:** `DGM-VIS-062` — **Exactly-Once Boundary Contract, Settlement Path**
+> **Explanation:** The contract, not the caller and not the callee, owns the exactly-once
+> guarantee. The idempotency key is part of the shape; the alternative branch is the failure
+> semantics; the trailing event is the observability part discharged as an `X2` crossing rather
+> than a callback. This path is `PLANNED` in its entirety — no code implements it — but the shape
+> is fixed here so that the implementation cannot invent a weaker one.
+
+### 02.4.4 Boundary Violations
+
+### TBL-VIS-185: Boundary Violation Catalogue
+
+| ID | Violation | How it appears | Detection | Severity |
+| :--- | :--- | :--- | :--- | :--- |
+| `BV-01` | Import across an `✗` cell | A file in one category imports another | `B3` lint on import paths | Blocking |
+| `BV-02` | Shared table between domains | Two domains' migrations touch one table | Schema ownership map | Blocking |
+| `BV-03` | Synchronous call where `X2` is required | Product domain calls strategy | `B3` lint on call graph | Blocking |
+| `BV-04` | Contract defined by the consumer | Consumer owns the type the producer emits | Contract registry ownership | Blocking |
+| `BV-05` | Boundary crossed with the caller's identity | No re-authorization at the boundary | Authorization test | Blocking |
+| `BV-06` | Retry without idempotency into an `S1` domain | Duplicate effects under load | Contract review | Blocking |
+| `BV-07` | Utility library that accreted domain logic | A `C4` library that knows about ledgers | Dependency review | Advisory |
+| `BV-08` | Boundary bypassed "temporarily" | A direct call with a comment promising to fix it | Code search for the comment | Advisory |
+
+> **`VIS-141`.** `BV-08` deserves its own entry because it is the mechanism by which every other
+> violation enters a codebase. No one adds a shared table on purpose; someone adds it once, under
+> deadline, with a comment. The comment is the artifact that survives; the fix is not. Oship's
+> response is `PRN-VIS-020` — finish before starting — applied at the boundary level: a crossing is
+> either contracted or it does not exist.
+
+---
+
+## 02.5 — Domain Responsibility Model
+
+### AI NAVIGATION METADATA — §02.5
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read when deciding which domain owns a behaviour** |
+| **AI DEPENDENCIES** | §02.3 registry, §02.4 boundaries |
+| **AI INPUTS** | A behaviour, rule, or piece of state needing an owner |
+| **AI OUTPUTS** | Exactly one owning domain, and the reason |
+| **AI IMPLEMENTATION IMPACT** | Prevents duplicated logic and orphaned state |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-267`…`VAL-VIS-282` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` component register `CMP-ARCH-001`…`030` |
+
+### 02.5.1 The Single-Owner Rule
+
+> **`VIS-142`.** Every behaviour, every rule, and every piece of durable state has **exactly one**
+> owning domain. Not a primary owner with helpers; not a shared responsibility; one owner. Shared
+> ownership means that when the behaviour is wrong, two teams each have a defensible reason why
+> fixing it is the other's job, and the behaviour stays wrong.
+
+> **`VIS-143`.** The single-owner rule applies to the *decision*, not to the *use*. Many domains
+> may read whether a user is authorized; exactly one — `DOMAIN-VIS-045` Authorization Policy —
+> decides it. Confusing use with ownership produces the most common architectural failure in
+> permission systems: authorization logic re-implemented, slightly differently, in eleven places.
+
+### TBL-VIS-186: Responsibility Kinds and Their Ownership Test
+
+| Kind | Definition | Ownership test | Example |
+| :--- | :--- | :--- | :--- |
+| `R1` Decision | Choosing between outcomes | Which domain is blamed if the choice is wrong? | Authorization verdict → `DOMAIN-VIS-045` |
+| `R2` State | Durable data whose truth must be maintained | Which domain's invariant breaks if it is corrupt? | Balance → `DOMAIN-VIS-021` |
+| `R3` Rule | An invariant that must always hold | Which domain's purpose sentence contains it? | Double-entry balance → `DOMAIN-VIS-021` |
+| `R4` Process | A sequence carried across time | Which domain resumes it after a crash? | Multi-step payment → `DOMAIN-VIS-024` |
+| `R5` Contract | The shape of something crossing a boundary | Which domain produces the thing? | Settlement result → `DOMAIN-VIS-022` |
+| `R6` Interpretation | Turning raw signal into meaning | Which domain is cited when the meaning is disputed? | Anomaly verdict → `DOMAIN-VIS-041` |
+
+### TBL-VIS-187: Responsibility Assignment for Contested Behaviours
+
+| Contested behaviour | Plausible owners | **Assigned owner** | Reason |
+| :--- | :--- | :--- | :--- |
+| Deciding whether a request is authorized | `018`, `045`, `019` | **`DOMAIN-VIS-045`** | `018` establishes identity; `045` decides permission; separating them lets identity change without re-deciding policy |
+| Knowing which tenant a request belongs to | `018`, `019` | **`DOMAIN-VIS-019`** | Tenancy is scope, not identity; a single identity may act in several tenants |
+| Recording that money moved | `020`, `021`, `022` | **`DOMAIN-VIS-021`** | The ledger's purpose sentence *is* the immutable record; the factory computes, the ledger remembers |
+| Preventing double settlement | `022`, `024` | **`DOMAIN-VIS-022`** | Exactly-once is settlement's defining guarantee (`VIS-140`) |
+| Deciding when to retry a failed step | `024`, `038` | **`DOMAIN-VIS-024`** | Retry policy is process semantics, not platform mechanics |
+| Redacting personal data from logs | `041`, `046` | **`DOMAIN-VIS-046`** | Privacy owns what may be known; observability owns making state visible, within that bound |
+| Deciding an agent may not act | `016`, `045` | **`DOMAIN-VIS-016`** | Autonomy limits are categorical (`VIS-033`), not policy-configurable |
+| Choosing which model serves a request | `012`, `011` | **`DOMAIN-VIS-012`** | Routing is a policy decision; the runtime executes whatever it is handed |
+| Judging whether agent output is acceptable | `015`, `007` | **`DOMAIN-VIS-015`** | Verification checks artifacts against rules; evaluation judges generated output against intent |
+| Defining a metric's meaning | `041`, `043` | **`DOMAIN-VIS-043`** | Reliability owns objectives; observability owns instrumentation |
+| Storing a user's display preference | `033`, `017` | **`DOMAIN-VIS-033`** | Personalization owns presentation adaptation without forking behaviour |
+| Versioning a public API shape | `048`, `034` | **`DOMAIN-VIS-034`** | Contracts own shape and evolution; the API surface exposes them |
+
+```mermaid
+flowchart LR
+    Q["A behaviour needs an owner"] --> K{"Which responsibility kind?"}
+    K -->|"R1 decision"| K1{"Who is blamed if wrong?"}
+    K -->|"R2 state"| K2{"Whose invariant breaks if corrupt?"}
+    K -->|"R3 rule"| K3{"Whose purpose sentence contains it?"}
+    K -->|"R4 process"| K4{"Who resumes after a crash?"}
+    K -->|"R5 contract"| K5{"Who produces the thing?"}
+    K -->|"R6 interpretation"| K6{"Who is cited in a dispute?"}
+
+    K1 --> ONE{"Exactly one domain answers?"}
+    K2 --> ONE
+    K3 --> ONE
+    K4 --> ONE
+    K5 --> ONE
+    K6 --> ONE
+
+    ONE -->|"Yes"| ASSIGN["Assign - record in TBL-VIS-187"]
+    ONE -->|"None"| GAP["Responsibility gap - a domain is missing - go to DEC-VIS-032"]
+    ONE -->|"More than one"| SPLIT["The behaviour is two behaviours - split it and re-run"]
+
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class GAP,SPLIT bad
+    class ASSIGN good
+```
+
+> **Diagram ID:** `DGM-VIS-063` — **`DEC-VIS-033` Responsibility Assignment Procedure**
+> **Explanation:** The procedure never permits "both" as an answer. Two domains claiming one
+> behaviour is diagnostic: the behaviour has been described too coarsely and is actually two
+> behaviours with different blame surfaces. Splitting and re-running resolves it. Zero claimants is
+> the opposite diagnosis — a domain is missing from the registry, and `DEC-VIS-032` must be run to
+> create it rather than parking the behaviour in whichever domain is nearest.
+
+> **`VIS-144`.** Decision `DEC-VIS-033` is binding on all future parts of this document and on
+> `AOM-ARCH-001` PART 02 when it assigns components to domains. Its output is auditable: every
+> assignment must be expressible as a row in `TBL-VIS-187` with a one-sentence reason.
+
+### 02.5.2 The Responsibility Matrix
+
+### TBL-VIS-188: Domain Responsibility Matrix — Selected Cross-Cutting Concerns
+
+| Concern | Decides | Stores | Enforces | Observes | Reports |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Who a caller is | `018` | `018` | `018` | `041` | `047` |
+| What a caller may do | `045` | `045` | `018` at edge, `045` at core | `041` | `047` |
+| Which tenant applies | `019` | `019` | `019` | `041` | `047` |
+| Whether money moved | `020` | `021` | `021` | `041` | `047` |
+| Whether it moved once | `022` | `021` | `022` | `041` | `047` |
+| Whether records agree | `023` | `021` | `023` | `041` | `047` |
+| Whether a process completed | `024` | `024` | `024` | `041` | `042` |
+| Whether data is well-formed | `034` | `035` | `034` | `037` | `037` |
+| Whether data is true | `037` | `035` | `037` | `041` | `037` |
+| Whether data may be retained | `046` | `036` | `036` | `047` | `047` |
+| Whether an agent may act | `016` | `010` | `016` | `041` | `047` |
+| Whether output is acceptable | `015` | `014` | `015` | `041` | `007` |
+| Whether the system is healthy | `043` | `041` | `042` | `041` | `042` |
+| Whether a change may ship | `007` | `005` | `006` | `039` | `047` |
+
+> **`VIS-145`.** Reading `TBL-VIS-188` column-wise reveals the load concentration: `DOMAIN-VIS-041`
+> Observability appears in the *Observes* column for eleven of fourteen concerns, and
+> `DOMAIN-VIS-047` Audit appears in *Reports* for nine. Both are `PLANNED`. A system whose two most
+> load-bearing cross-cutting domains do not exist can still be specified correctly — but it cannot
+> be *operated*, and no downstream document may assume otherwise.
+
+### TBL-VIS-189: Responsibility Anti-Patterns
+
+| ID | Anti-pattern | Why it is attractive | What it costs |
+| :--- | :--- | :--- | :--- |
+| `RA-01` | Assigning a concern to "the platform" | Nobody objects | Nobody owns it either |
+| `RA-02` | Splitting a decision across two domains for "flexibility" | Both teams keep autonomy | The decision becomes non-deterministic across paths |
+| `RA-03` | Letting the caller decide what the callee should enforce | Fewer round trips | Every caller becomes a security boundary |
+| `RA-04` | Owning state without owning the rule that constrains it | Feels like a clean data layer | The rule is enforced nowhere, or everywhere differently |
+| `RA-05` | Reassigning ownership without moving the state | The diagram looks right | The old owner still writes the table |
+| `RA-06` | Creating a domain to hold what no other domain wanted | Tidiness | A junk-drawer domain, prohibited by `DCR-03` |
+
+---
+
+## 02.6 — Domain Interaction Model
+
+### AI NAVIGATION METADATA — §02.6
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before designing any inter-domain protocol** |
+| **AI DEPENDENCIES** | §02.4 boundaries, §02.5 responsibility |
+| **AI INPUTS** | A legal crossing and a business need |
+| **AI OUTPUTS** | An interaction pattern with named guarantees |
+| **AI IMPLEMENTATION IMPACT** | Determines transport, retry, ordering, and consistency choices |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-283`…`VAL-VIS-298` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §04.4 relationship patterns |
+
+### 02.6.1 Interaction Patterns
+
+> **`VIS-146`.** A legal crossing (`TBL-VIS-183`) says *whether* two domains may interact. An
+> interaction pattern says *how*. Choosing the pattern is an architectural decision with permanent
+> consequences for consistency, latency, and failure behaviour, and it must never be made
+> implicitly by whichever library was already on the classpath.
+
+### TBL-VIS-190: Interaction Pattern Catalogue
+
+| ID | Pattern | Consistency | Failure mode | Use when | Never use when |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `IP-01` | Synchronous request/response | Strong, within one call | Caller blocks and may cascade | The caller cannot proceed without the answer | The callee may be slow or unavailable and the caller holds a lock |
+| `IP-02` | Asynchronous command | None at submission | Command lost or duplicated | Work may complete later | The submitter needs the result to answer a user now |
+| `IP-03` | Event notification | Eventual | Subscriber misses or reprocesses | Others may care about a fact | The publisher needs to know it was handled |
+| `IP-04` | Event-carried state transfer | Eventual, with a local replica | Replica drifts | Read-heavy consumers must not call the owner | The data must be current to the millisecond |
+| `IP-05` | Saga / process manager | Eventual, with compensation | Compensation itself fails | A multi-domain process must be atomic in effect | A true transaction is available and sufficient |
+| `IP-06` | Query by contract | Strong read, no write | Stale if cached | A consumer needs the owner's current view | The consumer would call it in a loop |
+| `IP-07` | Batch transfer | Point-in-time | Whole batch fails | Volume makes per-item crossing wasteful | Latency matters |
+| `IP-08` | Shared read model | Eventual | Projection lags or corrupts | Many domains ask the same cross-domain question | Writes are needed |
+
+> **`VIS-147`.** `IP-05` saga is required, not optional, for any process that changes state in more
+> than one `S1` domain. `DOMAIN-VIS-020` → `021` → `022` is such a process; a distributed
+> transaction across them is not available once they are separately deployed, so compensation must
+> be designed *into* the contract rather than added after the first partial failure in production.
+
+> **`VIS-148`.** `IP-04` event-carried state transfer is the pattern most likely to be adopted for
+> the wrong reason — it removes a call from a latency graph and appears free. Its true cost is a
+> second copy of somebody else's truth, which will diverge, and which someone must reconcile. It is
+> permitted only where `DOMAIN-VIS-023` Reconciliation has an active check over the replica, which
+> is stated as `CON-VIS-033`.
+
+```mermaid
+flowchart TB
+    Q["Two domains must interact"] --> A{"Does the caller need the answer to proceed?"}
+    A -->|"No"| B{"Does anyone need to know it was handled?"}
+    B -->|"No"| IP03["IP-03 Event notification"]
+    B -->|"Yes"| IP02["IP-02 Asynchronous command"]
+    A -->|"Yes"| C{"Does it write state in more than one S1 domain?"}
+    C -->|"Yes"| IP05["IP-05 Saga with compensation - mandatory"]
+    C -->|"No"| D{"Is it a read?"}
+    D -->|"Yes"| E{"Would the caller ask repeatedly at high volume?"}
+    E -->|"Yes"| IP04["IP-04 State transfer plus reconciliation check"]
+    E -->|"No"| IP06["IP-06 Query by contract"]
+    D -->|"No"| F{"Is the callee slow or unreliable?"}
+    F -->|"Yes"| IP02
+    F -->|"No"| IP01["IP-01 Synchronous request response"]
+
+    classDef mand fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef cond fill:#f57f17,stroke:#fff59d,color:#000000
+    class IP05 mand
+    class IP04 cond
+```
+
+> **Diagram ID:** `DGM-VIS-064` — **`DEC-VIS-034` Interaction Pattern Selection**
+> **Explanation:** The first question is deliberately about the *caller's* need, not about the
+> technology available, because the most common architectural mistake is choosing synchronous calls
+> for work that nobody is waiting on. The red terminal is mandatory rather than advisory: any
+> multi-`S1`-domain write is a saga, and a reviewer may not accept a simpler pattern with a promise
+> to add compensation later.
+
+### 02.6.2 Interaction Guarantees
+
+### TBL-VIS-191: Delivery and Ordering Guarantees
+
+| Guarantee | Meaning | Cost | Required for |
+| :--- | :--- | :--- | :--- |
+| At-most-once | May be lost, never duplicated | Cheapest | Non-critical notification only |
+| At-least-once | Never lost, may be duplicated | Requires idempotent consumers | Default for all `X2` events |
+| Exactly-once effect | Applied once regardless of delivery count | Requires an idempotency key and a dedup store | Every crossing into `S1` (`VIS-140`) |
+| Ordered per key | Events for one entity arrive in order | Partitioning constraint | Ledger entries, state machines |
+| Globally ordered | All events arrive in one order | Throughput ceiling | **Never required** — no Oship domain needs it |
+
+> **`VIS-149`.** Global ordering is explicitly declared unnecessary. It is recorded here because
+> teams reach for it when they mean per-key ordering, and it imposes a single-writer throughput
+> ceiling that would cap the Money Factory permanently. This is `NG-VIS-025`.
+
+### TBL-VIS-192: Consistency Model per Domain Pair Class
+
+| Pair class | Model | Justification |
+| :--- | :--- | :--- |
+| Within one domain | Strong, transactional | A domain that cannot keep its own invariant is not a domain |
+| `S1` to `S1`, same process boundary | Strong | Money invariants may not be eventually true |
+| `S1` to `S1`, across process boundary | Saga with compensation | Distributed transactions unavailable; effect-atomicity required |
+| `S1` to non-`S1` | Eventual | The non-`S1` side may lag without harm |
+| Any to `C9` Operational | Eventual, lossy tolerated | Losing a metric is better than blocking a payment |
+| Any to `C8` Security audit | At-least-once, durable, never lossy | An unrecorded action is an unauditable action |
+
+> **`VIS-150`.** The last two rows are deliberately opposed. Telemetry may be dropped under
+> pressure; audit may not. Systems that treat both as "logging" and apply one policy either waste
+> capacity protecting metrics or lose the audit trail exactly when an incident makes it matter.
+> `FAL-VIS-141` records the conflation.
+
+### 02.6.3 Interaction Failure Model
+
+```mermaid
+stateDiagram-v2
+    [*] --> Requested
+    Requested --> Delivered: "transport succeeded"
+    Requested --> Lost: "transport failed permanently"
+    Requested --> Timeout: "no response in budget"
+    Timeout --> Unknown: "caller cannot tell if it applied"
+    Unknown --> Retried: "idempotency key present"
+    Unknown --> Corrupted: "no idempotency key - retry may duplicate"
+    Retried --> Delivered
+    Delivered --> Applied: "callee committed"
+    Delivered --> Rejected: "contract violation or authorization failure"
+    Applied --> [*]
+    Rejected --> [*]
+    Lost --> Compensating: "saga detects missing step"
+    Corrupted --> Reconciling: "DOMAIN-VIS-023 detects divergence"
+    Compensating --> [*]
+    Reconciling --> [*]
+```
+
+> **Diagram ID:** `DGM-VIS-065` — **Interaction Failure State Machine**
+> **Explanation:** The pivotal state is `Unknown` — the caller timed out and genuinely cannot tell
+> whether the work happened. Every distributed system reaches this state; the only question is
+> which exit it takes. With an idempotency key the exit is `Retried` and harmless. Without one the
+> exit is `Corrupted`, and recovery moves from the interaction layer to `DOMAIN-VIS-023`
+> Reconciliation, which is `PLANNED`. This diagram is the argument for `VIS-140` in state form.
+
+### TBL-VIS-193: Failure Response Requirements by Pattern
+
+| Pattern | Timeout policy | Retry policy | Dead-letter | Compensation |
+| :--- | :--- | :--- | :--- | :--- |
+| `IP-01` Sync | Explicit budget, always set | Only if idempotent | n/a | Caller-side |
+| `IP-02` Async command | n/a | Bounded with backoff | Required | Required if `S1` |
+| `IP-03` Event | n/a | Consumer-side redelivery | Required | Not applicable |
+| `IP-04` State transfer | n/a | Redelivery plus periodic full resync | Required | Reconciliation |
+| `IP-05` Saga | Per-step budget | Per-step, bounded | Required | **Mandatory, per step** |
+| `IP-06` Query | Explicit budget | Safe — read only | n/a | n/a |
+| `IP-07` Batch | Whole-batch budget | Whole batch, from a checkpoint | Required | Batch-level |
+| `IP-08` Read model | n/a | Rebuild projection | n/a | Rebuild |
+
+> **`VIS-151`.** Every row in `TBL-VIS-193` that says "Required" describes infrastructure Oship
+> does not have. There is no message transport, no dead-letter facility, and no saga coordinator;
+> `EVD-VIS-019` records that the runtime stack itself is `UNKNOWN — REQUIRES REPOSITORY
+> VERIFICATION`. The table is therefore a **selection constraint on that future choice**: any
+> transport chosen for Oship must support dead-lettering and per-key ordering, or it disqualifies
+> itself. This is recorded as `CON-VIS-034`.
+
+---
+
+## 02.7 — Domain Lifecycle Model
+
+### AI NAVIGATION METADATA — §02.7
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before changing any domain's status** |
+| **AI DEPENDENCIES** | §02.3 registry, PART 01 §01.14 evolution model |
+| **AI INPUTS** | A domain and a proposed status change |
+| **AI OUTPUTS** | Whether the transition is legal and what evidence it requires |
+| **AI IMPLEMENTATION IMPACT** | Gates when implementation may begin and when a domain may be retired |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-299`…`VAL-VIS-312` |
+| **AI RELATED DOCUMENTS** | `.ai/PROJECT_STATUS.md`, `AOM-ARCH-001` §04.9 |
+
+### 02.7.1 The Eight Evolution Levels
+
+> **`VIS-152`.** A domain's evolution level `E0`…`E7` is distinct from its documentation status.
+> Status answers "what does the repository contain"; evolution level answers "how far along its
+> life is this domain". A domain may be `DOCUMENTED` at `E2` and remain there for years without
+> that being a defect — but it may not be `IMPLEMENTED` at `E1`, and `VAL-VIS-301` rejects that
+> combination.
+
+### TBL-VIS-194: Domain Evolution Levels
+
+| Level | Name | Entry condition | Exit condition | Reversible |
+| :--- | :--- | :--- | :--- | :--- |
+| `E0` | Identified | Someone named a responsibility gap | A purpose sentence passes `DCR-01` | Yes — delete freely |
+| `E1` | Researched | Open questions written down | Every open question has an answer or an accepted `UNKNOWN` | Yes |
+| `E2` | Specified | A registry record exists with all 14 fields | Boundary contracts drafted for every legal crossing | Yes, with a `DEC-` record |
+| `E3` | Designed | Contracts and internal model fixed | Implementation begins | Yes, with a `DEC-` record |
+| `E4` | Implemented | Code or documents exist and are used | Verification covers the domain's stated rules | Costly |
+| `E5` | Verified | `VAL-` rules for it execute automatically and pass | Operating in production with observers | Costly |
+| `E6` | Operated | Running, observed, with owners on call | Superseded or no longer needed | Very costly |
+| `E7` | Retired | Replacement live, traffic drained | — terminal | No |
+
+```mermaid
+stateDiagram-v2
+    [*] --> E0: "responsibility gap named"
+    E0 --> E1: "questions written"
+    E1 --> E2: "registry record complete"
+    E2 --> E3: "contracts fixed"
+    E3 --> E4: "built"
+    E4 --> E5: "checks execute and pass"
+    E5 --> E6: "observed in production"
+    E6 --> E7: "superseded and drained"
+    E7 --> [*]
+
+    E1 --> E0: "cheap reversal"
+    E2 --> E1: "DEC record required"
+    E3 --> E2: "DEC record required"
+    E4 --> E3: "costly - DEC plus migration"
+    E2 --> E7: "abandoned before build"
+    E6 --> E4: "regression - verification lost"
+
+    note right of E5
+        "No Oship domain has ever
+        reached E5. Highest is E4,
+        held by five documentation
+        domains."
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-066` — **Domain Evolution State Machine with Legal Reversals**
+> **Explanation:** Backward transitions exist and are legal, which is a deliberate expression of
+> `PRN-VIS-013` reversibility. What varies is the *price*: reversing `E1` → `E0` costs nothing,
+> `E2` → `E1` costs a decision record, `E4` → `E3` costs a migration. The `E6` → `E4` edge is the
+> regression path — a domain that loses its automated verification has genuinely moved backwards
+> even though its code is unchanged, and pretending otherwise is how systems rot while their
+> dashboards stay green.
+
+### TBL-VIS-195: Current Evolution Level Distribution
+
+| Level | Count | Domains |
+| :--- | ---: | :--- |
+| `E0` Identified | 1 | `029` |
+| `E1` Researched | 10 | `008`, `026`, `028`, `031`, `033`, `037`, `043`, `046`, `049`, `050` |
+| `E2` Specified | 28 | `003`, `006`, `007`, `011`, `012`, `015`, `017`, `018`, `019`, `020`, `021`, `022`, `023`, `024`, `025`, `027`, `030`, `032`, `034`, `035`, `036`, `038`, `039`, `040`, `041`, `042`, `044`, `045`, `048` |
+| `E3` Designed | 4 | `013`, `014`, `016`, `047` |
+| `E4` Implemented | 5 | `001`, `002`, `004`, `005`, `009`, `010` |
+| `E5` Verified | **0** | — |
+| `E6` Operated | **0** | — |
+| `E7` Retired | 0 | — |
+
+> **`VIS-153`.** The distribution is the honest shape of Oship: a system whose entire mass sits at
+> `E2`, with a small implemented core that is entirely documentation, and **nothing at all** past
+> `E4`. No domain has automated verification; no domain runs in production. Any statement anywhere
+> in this repository that implies otherwise is contradicted by this table, and `VAL-VIS-305`
+> instructs agents to treat this table as authoritative over prose.
+
+> **`VIS-154`.** The `E4` → `E5` transition is the most valuable single move available to Oship
+> today, because it is the transition that converts written rules into executed rules. Five domains
+> sit at `E4`; moving even one to `E5` requires `DOMAIN-VIS-006` Governance Automation to leave
+> `E2`, which is why that domain, unglamorous as it is, gates the credibility of everything else.
+
+### 02.7.2 Transition Gates
+
+### TBL-VIS-196: Evidence Required per Transition
+
+| Transition | Required evidence | Approver | Blocking check |
+| :--- | :--- | :--- | :--- |
+| `E0` → `E1` | Written question list | Domain owner | `VAL-VIS-299` |
+| `E1` → `E2` | Complete 14-field registry record | Architecture Board | `VAL-VIS-300` |
+| `E2` → `E3` | Boundary contract per legal crossing; category assigned; security class set | Architecture Board plus Security if `S1` | `VAL-VIS-302` |
+| `E3` → `E4` | Working artifact referenced by path | Domain owner | `VAL-VIS-303` |
+| `E4` → `E5` | Automated checks exist, execute in CI, and pass | QA plus Architecture Board | `VAL-VIS-304` |
+| `E5` → `E6` | Named on-call owner, observability in place, runbook exists | SRE | `VAL-VIS-306` |
+| `E6` → `E7` | Replacement at `E6`, traffic drained, data migrated or destroyed per `DOMAIN-VIS-036` | Architecture Board plus Security | `VAL-VIS-307` |
+| Any backward | `DEC-` record naming the cost and the reason | Architecture Board | `VAL-VIS-308` |
+
+> **`VIS-155`.** No transition may be granted on the basis of intent. `E3` → `E4` requires a
+> **path**, not a plan; `E4` → `E5` requires a **passing run**, not a written rule. This is the
+> domain-level application of `DEC-VIS-028` — where specification and artifact disagree about
+> whether something exists, the artifact decides existence and the specification decides
+> correctness.
+
+### 02.7.3 Domain Retirement
+
+> **`VIS-156`.** A domain is retired, never deleted. Its registry record persists with status
+> `DEPRECATED` and evolution level `E7`, carrying a forward pointer to whatever replaced it.
+> Deleting the record breaks every historical decision that cited it and makes the audit trail
+> lie by omission.
+
+### TBL-VIS-197: Retirement Requirements
+
+| Requirement | Reason |
+| :--- | :--- |
+| Registry record retained with `E7` and `DEPRECATED` | Historical citations must resolve (`DCR-05`) |
+| Forward pointer to the replacement domain | A reader arriving from an old document must be routed |
+| Data disposition recorded — migrated, archived, or destroyed | `DOMAIN-VIS-036` owns the outcome; silence is not an option |
+| Identifier never reused | `DCR-05`, absolute |
+| Dependent domains re-pointed before drain | A dependency on a retired domain is a broken build waiting to happen |
+| `DEC-` record capturing why | Retirement is a consequential decision |
+
+---
+
+## 02.8 — Domain to Capability Mapping
+
+### AI NAVIGATION METADATA — §02.8
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this is the join between PART 01 capabilities and PART 02 domains** |
+| **AI DEPENDENCIES** | PART 01 §01.7 `CAP-VIS-001`…`070`, §02.3 registry |
+| **AI INPUTS** | A `CAP-VIS-` identifier or a `DOMAIN-VIS-` identifier |
+| **AI OUTPUTS** | The counterpart identifiers, and the implementation status of the pair |
+| **AI IMPLEMENTATION IMPACT** | Determines which domain must be built to deliver a promised capability |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-313`…`VAL-VIS-320` |
+| **AI RELATED DOCUMENTS** | PART 01 §01.8 capability hierarchy, §01.18 requirements derivation |
+
+### 02.8.1 The Mapping Rule
+
+> **`VIS-157`.** Every capability is **delivered by exactly one domain** and may be **used by many**.
+> The delivering domain is the one whose failure makes the capability unavailable. A capability with
+> two delivering domains has been described at the wrong granularity and must be split, by the same
+> logic as `DEC-VIS-033`.
+
+> **`VIS-158`.** Every domain delivers at least one capability. A domain that delivers none is
+> either a layer wearing a domain's name (`DCR-03`) or a domain whose capabilities have not yet been
+> written — and `VAL-VIS-313` requires the second case to be labelled `UNKNOWN` rather than left
+> silent.
+
+### TBL-VIS-198: Capability Group to Domain Mapping
+
+| `CAP-VIS-` range | Group | Delivering domains | Implemented in group |
+| :--- | :--- | :--- | ---: |
+| `001`…`012` | Knowledge and AI control plane | `002`, `010`, `013`, `014` | 4 of 12 |
+| `013`…`024` | Governance | `005`, `006`, `007`, `009`, `047` | 4 of 12 |
+| `025`…`040` | Platform runtime | `017`, `024`, `027`, `035`, `038`, `040`, `048` | 0 of 16 |
+| `041`…`048` | Financial factory | `020`, `021`, `022`, `023`, `028` | 0 of 8 |
+| `049`…`056` | AI runtime | `011`, `012`, `015`, `016` | 0 of 8, 3 partial |
+| `057`…`070` | Bounded-context capabilities | `001`, `003`, `004`, `018`, `019`, `030`, `041`, `044` | 1 of 14, 1 partial |
+| **Total** | — | **All 50 domains appear at least once** | **6 of 70 (`VIS-041`)** |
+
+### TBL-VIS-199: Detailed Capability to Domain Binding — Control Plane and Governance
+
+| Capability | Delivering domain | Users of the capability | Pair status |
+| :--- | :--- | :--- | :--- |
+| `CAP-VIS-001` | `DOMAIN-VIS-002` | all | Capability `PLANNED`, domain `E4` |
+| `CAP-VIS-002` | `DOMAIN-VIS-002` | `001`, `004` | `PLANNED` |
+| `CAP-VIS-003` | `DOMAIN-VIS-013` | `010`, `011` | `PLANNED` |
+| `CAP-VIS-004` | `DOMAIN-VIS-010` | all agents | **`IMPLEMENTED`** — `.ai/` control plane |
+| `CAP-VIS-005` | `DOMAIN-VIS-013` | `010` | `PLANNED` |
+| `CAP-VIS-006` | `DOMAIN-VIS-010` | all agents | **`IMPLEMENTED`** |
+| `CAP-VIS-007` | `DOMAIN-VIS-014` | `011`, `013` | `PLANNED` |
+| `CAP-VIS-008` | `DOMAIN-VIS-002` | all | **`IMPLEMENTED`** — 24 domain indexes |
+| `CAP-VIS-009` | `DOMAIN-VIS-014` | `011` | `PLANNED` — `UNMAPPED` in PART 01 (`VIS-067`), now bound here |
+| `CAP-VIS-010` | `DOMAIN-VIS-013` | `010` | `PLANNED` |
+| `CAP-VIS-011` | `DOMAIN-VIS-010` | all agents | **`IMPLEMENTED`** |
+| `CAP-VIS-012` | `DOMAIN-VIS-014` | `011`, `015` | `PLANNED` |
+| `CAP-VIS-013` | `DOMAIN-VIS-005` | all | **`IMPLEMENTED`** — ADR process |
+| `CAP-VIS-014` | `DOMAIN-VIS-009` | all | **`IMPLEMENTED`** — metadata standard |
+| `CAP-VIS-015` | `DOMAIN-VIS-005` | `004`, `001` | **`IMPLEMENTED`** — `DECISION_LOG.md` |
+| `CAP-VIS-016` | `DOMAIN-VIS-009` | all | **`IMPLEMENTED`** — identifier conventions |
+| `CAP-VIS-017`…`020` | `DOMAIN-VIS-006` | all | `PLANNED` — skeletons uninstalled |
+| `CAP-VIS-021`…`023` | `DOMAIN-VIS-007` | all | `PLANNED` — no test infrastructure |
+| `CAP-VIS-024` | `DOMAIN-VIS-047` | auditors | `DOCUMENTED` — git history serves partially |
+
+> **`VIS-159`.** `CAP-VIS-009` was recorded `UNMAPPED` in PART 01 (`VIS-067`) because no
+> architecture domain claimed it. PART 02 resolves it against a **vision** domain,
+> `DOMAIN-VIS-014` AI Memory, without touching `AOM-ARCH-001`. The architecture gap remains open
+> and is carried forward in `TBL-VIS-178` as an obligation on `AOM-ARCH-001` PART 02. Resolving a
+> capability to a vision domain is not the same as resolving it to an architecture domain, and
+> `VAL-VIS-317` requires both.
+
+### TBL-VIS-200: Detailed Capability to Domain Binding — Runtime, Factory, AI, Context
+
+| Capability | Delivering domain | Depends on domains | Pair status |
+| :--- | :--- | :--- | :--- |
+| `CAP-VIS-025`…`030` | `DOMAIN-VIS-017` | `018`, `019`, `035` | `PLANNED`, non-callable (`VIS-039`) |
+| `CAP-VIS-031`…`034` | `DOMAIN-VIS-024` | `017`, `027` | `PLANNED` |
+| `CAP-VIS-035`…`037` | `DOMAIN-VIS-048` | `034`, `018` | `PLANNED` |
+| `CAP-VIS-038`…`040` | `DOMAIN-VIS-038`, `040` | `039` | `PLANNED` |
+| `CAP-VIS-041`…`044` | `DOMAIN-VIS-020` | `018`, `019`, `021` | `PLANNED` |
+| `CAP-VIS-045`, `046` | `DOMAIN-VIS-021` | `035` | `PLANNED` |
+| `CAP-VIS-047` | `DOMAIN-VIS-022` | `021`, `023` | `UNKNOWN` in PART 01; domain assigned, status remains `UNKNOWN` |
+| `CAP-VIS-048` | `DOMAIN-VIS-023` | `021` | `PLANNED` |
+| `CAP-VIS-049`, `050` | `DOMAIN-VIS-011` | `010`, `016` | `050` `PARTIAL`; both `UNMAPPED` in PART 01, now bound |
+| `CAP-VIS-051`, `052` | `DOMAIN-VIS-012` | `011` | `PLANNED`, `UNMAPPED` in PART 01, now bound |
+| `CAP-VIS-053`, `054` | `DOMAIN-VIS-015` | `007`, `014` | `054` `PARTIAL`, now bound |
+| `CAP-VIS-055`, `056` | `DOMAIN-VIS-016` | `010`, `045` | `056` `PARTIAL` — enforced socially only |
+| `CAP-VIS-057`…`060` | `DOMAIN-VIS-001`, `003`, `004` | `002` | `060` **`IMPLEMENTED`** as documentation |
+| `CAP-VIS-061`…`063` | `DOMAIN-VIS-018`, `019` | `045` | `PLANNED` |
+| `CAP-VIS-064`, `065` | `DOMAIN-VIS-030` | `031`, `032` | `PLANNED` |
+| `CAP-VIS-066`…`068` | `DOMAIN-VIS-041` | `043` | `066` `PARTIAL` |
+| `CAP-VIS-069`, `070` | `DOMAIN-VIS-044` | `045`, `046` | `PLANNED` |
+
+> **`VIS-160`.** PART 01 recorded eight capabilities as `UNMAPPED`: `CAP-VIS-009` and
+> `CAP-VIS-049`…`056` (`VIS-067`). PART 02 binds all eight to vision domains. `PRN-VIS-015`
+> — the remaining unmapped item from `VIS-067` — is a principle, not a capability, and is bound to
+> `DOMAIN-VIS-049` External Providers in §02.10 as a constraint rather than a delivery obligation.
+
+```mermaid
+flowchart LR
+    subgraph IMPL["6 implemented capabilities"]
+        C4["CAP-VIS-004"]
+        C6["CAP-VIS-006"]
+        C8["CAP-VIS-008"]
+        C11["CAP-VIS-011"]
+        C13["CAP-VIS-013 to 016"]
+        C60["CAP-VIS-060"]
+    end
+    subgraph DOM["Delivered by 5 domains"]
+        D10["DOMAIN-VIS-010 AI Control Plane"]
+        D02["DOMAIN-VIS-002 Knowledge Graph"]
+        D05["DOMAIN-VIS-005 Decision Authority"]
+        D09["DOMAIN-VIS-009 Standards"]
+        D04["DOMAIN-VIS-004 Architecture Authority"]
+    end
+    subgraph REST["64 capabilities not implemented"]
+        R1["45 domains deliver them"]
+    end
+
+    C4 --> D10
+    C6 --> D10
+    C11 --> D10
+    C8 --> D02
+    C13 --> D05
+    C13 --> D09
+    C60 --> D04
+    REST -.-> R1
+
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef bad fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class C4,C6,C8,C11,C13,C60,D10,D02,D05,D09,D04 good
+    class REST,R1 bad
+```
+
+> **Diagram ID:** `DGM-VIS-067` — **Implemented Capability Concentration**
+> **Explanation:** All six implemented capabilities are delivered by five domains, and all five are
+> documentation or governance domains. Not one implemented capability belongs to the Money Factory,
+> the platform runtime, or the AI runtime. This is the visual restatement of `VIS-041`: Oship's
+> demonstrated ability is currently the ability to describe itself rigorously, which is a real
+> capability and an insufficient one.
+
+### TBL-VIS-201: Capability Delivery Risk by Domain
+
+| Domain | Capabilities delivered | Domains it depends on | Risk if delayed |
+| :--- | ---: | ---: | :--- |
+| `DOMAIN-VIS-018` Identity | 3 | 1 | **Critical** — blocks `019`, `020`, `021`, `022`, all edge capabilities |
+| `DOMAIN-VIS-021` Ledger | 2 | 1 | **Critical** — blocks `022`, `023`, `026`, `028` |
+| `DOMAIN-VIS-006` Governance Automation | 4 | 2 | **Critical** — blocks every `E4` → `E5` transition |
+| `DOMAIN-VIS-041` Observability | 3 | 1 | **High** — blocks 13 of 15 success measures |
+| `DOMAIN-VIS-017` Product Core | 6 | 3 | High — largest single capability count |
+| `DOMAIN-VIS-035` Persistence | 0 direct | 1 | High — every stateful domain waits on it |
+| `DOMAIN-VIS-016` AI Safety | 2 | 2 | High — `VIS-033` autonomy prohibition is unenforced without it |
+| `DOMAIN-VIS-029` Marketplace | 0 | 2 | None — `E0`, no commitment |
+
+---
+
+## 02.9 — Domain Data Ownership Model
+
+### AI NAVIGATION METADATA — §02.9
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before designing any schema** |
+| **AI DEPENDENCIES** | §02.5 responsibility, §02.4 crossing kind `X4` |
+| **AI INPUTS** | A data entity needing a home |
+| **AI OUTPUTS** | Its owning domain, its replication rules, its retention class |
+| **AI IMPLEMENTATION IMPACT** | Fixes schema ownership, migration authority, and deletion authority |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-267`…`VAL-VIS-282` shared with §02.5 |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` `CMP-ARCH-024` persistence, `CMP-ARCH-030` contract registry |
+
+### 02.9.1 Ownership Axioms
+
+> **`VIS-161`.** **One writer.** Exactly one domain may write any given entity. Others read through
+> a contract or a replica. This is `X4`'s prohibition (`VIS-135`) stated positively.
+
+> **`VIS-162`.** **The owner owns the schema.** Migration authority follows write authority. A
+> consumer that needs a column requests it from the owner; it does not add one.
+
+> **`VIS-163`.** **The owner owns deletion.** Only the owning domain may destroy an entity, and only
+> in coordination with `DOMAIN-VIS-036` Data Lifecycle, which holds retention authority. A consumer
+> holding a replica must delete on the owner's signal — which makes deletion propagation part of the
+> boundary contract, not an afterthought.
+
+> **`VIS-164`.** **Replicas are declared.** Every replica of another domain's entity is registered
+> with its source, its freshness expectation, and the reconciliation check that detects drift.
+> An undeclared replica is a `BV-02` violation regardless of how it is stored.
+
+### TBL-VIS-202: Data Ownership Register — Principal Entities
+
+| Entity class | Owning domain | Replicated to | Retention class | Security |
+| :--- | :--- | :--- | :--- | :--- |
+| Principal identity | `018` | `019` id only | Lifetime of the account plus statutory | `S1` |
+| Credential material | `018` | never | Rotated; never archived | `S1` |
+| Tenant record | `019` | `017`, `020` id only | Lifetime of the contract plus statutory | `S1` |
+| Authorization policy | `045` | cached at edge with TTL | Versioned indefinitely | `S1` |
+| Financial instruction | `020` | `024` process state | Statutory | `S1` |
+| Ledger entry | `021` | `026` read model | **Immutable, never deleted** | `S1` |
+| Settlement result | `022` | `020`, `023` | Statutory | `S1` |
+| Reconciliation finding | `023` | `042` | Until resolved plus audit window | `S2` |
+| Process instance state | `024` | none | Until terminal plus retention window | `S2` |
+| Notification record | `027` | `047` | Short — delivery proof only | `S3` |
+| Contract definition | `034` | all consumers by design | Versioned indefinitely | `S2` |
+| Telemetry series | `041` | none | Windowed, lossy permitted | `S2` |
+| Audit event | `047` | none | **Never deleted, never lossy** (`VIS-150`) | `S1` |
+| Agent session record | `010` | `014` | Bounded by session policy | `S2` |
+| Learned memory | `014` | `013` | Curated; supersession not deletion | `S2` |
+| Personal data of a subject | `046` governs, owner varies | per contract | Bound by subject rights | `S1` |
+
+> **`VIS-165`.** Two entity classes are declared **never deleted**: ledger entries and audit events.
+> Two are declared **lossy-tolerated**: telemetry and, within its policy window, agent session
+> records. These are opposite guarantees and must not share a storage strategy. Any design that
+> puts audit events in the telemetry pipeline for convenience violates `VIS-150` and is
+> `FAL-VIS-141`.
+
+> **`VIS-166`.** `DOMAIN-VIS-046` Privacy is registered as a **governing** domain over personal data
+> rather than an owning one. It does not hold the rows; it holds the rules about which rows may
+> exist, for how long, and who may see them. This is the only split of governance from ownership
+> permitted in the model, and it exists because personal data appears inside entities owned by many
+> domains. `VAL-VIS-276` requires every entity marked as containing personal data to cite
+> `DOMAIN-VIS-046` in its contract.
+
+```mermaid
+flowchart TB
+    subgraph OWN["Write authority - exactly one per entity"]
+        O18["018 identity and credentials"]
+        O19["019 tenant records"]
+        O21["021 ledger entries - immutable"]
+        O47["047 audit events - immutable"]
+        O34["034 contract definitions"]
+    end
+    subgraph GOV["Governing authority - rules not rows"]
+        G46["046 privacy - what may be known"]
+        G36["036 lifecycle - how long it lives"]
+    end
+    subgraph REP["Declared replicas only"]
+        R26["026 analytics read model from 021"]
+        R45["045 policy cache at edge"]
+        R23["023 reconciliation view"]
+    end
+
+    O21 --> R26
+    O21 --> R23
+    O34 --> R45
+    G46 -.->|"constrains"| O18
+    G46 -.->|"constrains"| O19
+    G36 -.->|"constrains"| O21
+    G36 -.->|"constrains"| O47
+    R26 -->|"drift check required"| O21
+
+    classDef imm fill:#0d47a1,stroke:#90caf9,color:#ffffff
+    classDef gov fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    class O21,O47 imm
+    class G46,G36 gov
+```
+
+> **Diagram ID:** `DGM-VIS-068` — **Data Ownership, Governance, and Declared Replication**
+> **Explanation:** Three distinct relationships appear: solid ownership edges to replicas, dotted
+> constraint edges from governing domains, and the return edge from the analytics read model to the
+> ledger carrying a mandatory drift check. Blue nodes are immutable stores where the only legal
+> write is an append. Purple nodes hold no data at all — their authority is over the rules, which is
+> why `DOMAIN-VIS-036` can constrain an immutable store without being able to delete from it.
+
+### TBL-VIS-203: Retention Classes
+
+| Class | Rule | Applies to | Deletion authority |
+| :--- | :--- | :--- | :--- |
+| `RT-1` Immutable | Append-only; never deleted, never edited | Ledger, audit | None — deletion is impossible by design |
+| `RT-2` Statutory | Retained for a period fixed by regulation | Financial instructions, settlements | `036` on expiry, with an audit record |
+| `RT-3` Contractual | Retained while a relationship exists plus a tail | Tenant records, identities | `036` on relationship end |
+| `RT-4` Operational | Retained while useful, windowed | Telemetry, process state | `036` by policy, no per-record decision |
+| `RT-5` Subject-bound | Retained only while the data subject permits | Personal data | `046` decides, owner executes |
+| `RT-6` Ephemeral | Not retained beyond the operation | Credential material in transit, prompts | Immediate |
+
+> **`VIS-167`.** The applicable statutory regime for `RT-2` is
+> `UNKNOWN — REQUIRES REPOSITORY VERIFICATION`. `PROB-VIS-023` records that no jurisdiction,
+> regulator, or compliance framework has been selected for Oship. `RT-2` therefore has a defined
+> *shape* and an undefined *duration*, and no implementation of `DOMAIN-VIS-036` can be completed
+> until that is answered. This is the single largest open question in the data model and it is
+> carried as an obligation in §02.13.
+
+### TBL-VIS-204: Prohibited Data Patterns
+
+| ID | Pattern | Why prohibited | Detection |
+| :--- | :--- | :--- | :--- |
+| `DP-01` | Two domains writing one table | Destroys the boundary (`VIS-135`) | Schema ownership map |
+| `DP-02` | Undeclared replica | Drifts silently, no reconciliation | Dependency and storage audit |
+| `DP-03` | Consumer-added column on an owner's table | Migration authority violated (`VIS-162`) | Migration review |
+| `DP-04` | Personal data in telemetry | Lossy store carrying `RT-5` data | Field-level classification scan |
+| `DP-05` | Audit events in a windowed store | Violates never-lossy (`VIS-150`) | Storage policy review |
+| `DP-06` | Mutable ledger entry | Violates `RT-1`; makes history negotiable | Schema review — no `UPDATE` grant |
+| `DP-07` | Credential material at rest outside `018` | Widens the blast radius of any breach | Secret scanning |
+| `DP-08` | Cross-tenant query without a tenant predicate | Silent tenant leakage | Query-level enforcement in `019` |
+
+> **`VIS-168`.** `DP-08` is the highest-consequence data defect available to a multi-tenant
+> financial system, because it produces no error, no alert, and no operational symptom — only a
+> correct-looking answer containing another customer's money. Its prevention cannot be a code review
+> convention; it must be structural, enforced by `DOMAIN-VIS-019` at the point where queries are
+> constructed. This is `CON-VIS-035`.
+
+---
+
+## 02.10 — Domain Constraints
+
+### AI NAVIGATION METADATA — §02.10
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — constraints are binding, not advisory** |
+| **AI DEPENDENCIES** | PART 01 §01.19 `CON-VIS-001`…`030` |
+| **AI INPUTS** | Any proposed domain design |
+| **AI OUTPUTS** | Whether the design is admissible |
+| **AI IMPLEMENTATION IMPACT** | A design violating any constraint must be rejected, not negotiated |
+| **AI VALIDATION REQUIREMENTS** | Each constraint has a paired `VAL-VIS-` rule |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` invariants `INV-ARCH-001`…`060` |
+
+### 02.10.1 Domain-Level Constraints
+
+> **`VIS-169`.** PART 01 established thirty system constraints, `CON-VIS-001`…`030`. PART 02 adds
+> fifteen that arise specifically from the domain model. They continue the same numbering and carry
+> the same force: a constraint is not a preference, and a design that violates one is rejected
+> rather than justified.
+
+### TBL-VIS-205: Domain Constraint Register — `CON-VIS-031`…`045`
+
+| ID | Constraint | Source | Verification | Violation severity |
+| :--- | :--- | :--- | :--- | :--- |
+| `CON-VIS-031` | Every `S1` domain has an approved threat model before its first line of implementation | `TBL-VIS-160`, `VIS-128` | Gate at `E2` → `E3` | Blocking |
+| `CON-VIS-032` | No two domains write the same persistent entity (`X4` prohibited) | `VIS-135`, `VIS-161` | Schema ownership map | Blocking |
+| `CON-VIS-033` | Every event-carried replica has an active reconciliation check | `VIS-148`, `VIS-164` | Replica register review | Blocking |
+| `CON-VIS-034` | Any transport chosen for Oship must support dead-lettering and per-key ordering | `VIS-151` | Technology selection ADR | Blocking |
+| `CON-VIS-035` | Tenant scoping is enforced structurally at query construction, never by convention | `VIS-168` | Query-path review plus test | Blocking |
+| `CON-VIS-036` | No domain depends on a domain at a lower evolution level than `E2` | `TBL-VIS-194` | Dependency scan | Blocking |
+| `CON-VIS-037` | Every crossing into an `S1` domain declares an explicit delivery guarantee | `VIS-140` | Contract review | Blocking |
+| `CON-VIS-038` | A domain's security classification may only increase, never decrease, without a `DEC-` record | `TBL-VIS-160` | Registry diff | Blocking |
+| `CON-VIS-039` | Domain identifiers are never reused, including after retirement | `DCR-05`, `VIS-156` | Registry uniqueness check | Blocking |
+| `CON-VIS-040` | No domain may be created without an accountable owning role | `DCR-08` | Registry field check | Blocking |
+| `CON-VIS-041` | Vendor-specific concepts never appear in a domain's purpose, name, or contract | `PRN-VIS-015` | Naming and contract review | Blocking |
+| `CON-VIS-042` | No capability is delivered by more than one domain | `VIS-157` | Mapping uniqueness check | Blocking |
+| `CON-VIS-043` | A `C1` strategic domain never depends on a `C2` product domain | `TBL-VIS-155` | Dependency legality matrix | Blocking |
+| `CON-VIS-044` | Personal data never enters a lossy or windowed store | `DP-04` | Field classification scan | Blocking |
+| `CON-VIS-045` | Autonomy level A4 is unreachable by configuration in any domain | `VIS-033` | Code and config review | Blocking |
+
+> **`VIS-170`.** All fifteen constraints are **blocking**, and none of the fifteen is currently
+> verifiable by an executing check. Every entry in the Verification column describes a review or a
+> scan that no installed workflow performs (`EVD-VIS-017`). The constraints are therefore real as
+> specification and unenforced as practice — which is exactly the condition `DOMAIN-VIS-006`
+> exists to end.
+
+> **`VIS-171`.** `CON-VIS-041` is the constraint that binds `PRN-VIS-015` vendor neutrality, the
+> item PART 01 left `UNMAPPED` (`VIS-067`). It attaches to `DOMAIN-VIS-049` External Providers as a
+> naming and contract obligation rather than to any delivered capability: neutrality is something a
+> design is, not something a feature does.
+
+### TBL-VIS-206: Constraint Interaction — Where Constraints Pull Against Each Other
+
+| Constraint A | Constraint B | Tension | Resolution |
+| :--- | :--- | :--- | :--- |
+| `CON-VIS-032` one writer | Performance pressure for local joins | Cross-domain joins become network calls | `IP-04` with `CON-VIS-033` reconciliation, never a shared table |
+| `CON-VIS-035` structural tenant scoping | `CON-VIS-041` vendor neutrality | Structural enforcement is easiest with vendor row-level security | Enforce in Oship's own query layer, not the database vendor's feature |
+| `CON-VIS-037` explicit guarantees | `IP-03` fire-and-forget simplicity | Every `S1` crossing needs machinery | Route non-critical facts around `S1` domains rather than weakening them |
+| `CON-VIS-044` no personal data in lossy stores | Observability's need for context | Debugging is harder without identifiers | Use opaque correlation identifiers owned by `041`, resolvable only via `018` |
+| `CON-VIS-036` no dependency below `E2` | Desire to prototype quickly | Prototypes depend on unspecified things | Prototypes live in `DOMAIN-VIS-008` Experimentation, which is exempt by `BND-VIS-014` |
+| `CON-VIS-045` A4 unreachable | Pressure for autonomous remediation | Incidents would resolve faster | Human accountability (`VIS-032`) is not tradeable against latency |
+
+> **`VIS-172`.** Constraint tension is normal and is recorded rather than resolved by softening.
+> Every row in `TBL-VIS-206` has a resolution that preserves **both** constraints. Where no such
+> resolution exists, the correct action is a `DEC-` record that removes one constraint explicitly —
+> never a quiet exception in one subsystem.
+
+```mermaid
+flowchart LR
+    subgraph HARD["Non-negotiable - failure is irrecoverable"]
+        C31["CON-VIS-031 threat model first"]
+        C32["CON-VIS-032 one writer"]
+        C35["CON-VIS-035 structural tenant scope"]
+        C39["CON-VIS-039 no ID reuse"]
+        C45["CON-VIS-045 A4 unreachable"]
+    end
+    subgraph STRUCT["Structural - failure is expensive"]
+        C33["CON-VIS-033 replica reconciliation"]
+        C36["CON-VIS-036 no dependency below E2"]
+        C37["CON-VIS-037 explicit guarantees"]
+        C42["CON-VIS-042 one delivering domain"]
+        C43["CON-VIS-043 no upward dependency"]
+    end
+    subgraph SELECT["Selection - failure forecloses options"]
+        C34["CON-VIS-034 transport capability"]
+        C38["CON-VIS-038 classification ratchet"]
+        C40["CON-VIS-040 named owner"]
+        C41["CON-VIS-041 vendor neutrality"]
+        C44["CON-VIS-044 no personal data in lossy stores"]
+    end
+
+    HARD --> ENF["Enforcement required at B4 or B5"]
+    STRUCT --> ENF2["Enforcement required at B3"]
+    SELECT --> ENF3["Enforcement at B2 review"]
+    ENF --> NONE["Currently enforced by - nothing"]
+    ENF2 --> NONE
+    ENF3 --> NONE
+
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class NONE bad
+```
+
+> **Diagram ID:** `DGM-VIS-069` — **Constraint Classes and Their Common Enforcement Gap**
+> **Explanation:** Constraints divide by consequence into three classes requiring three different
+> enforcement strengths from `TBL-VIS-180`. All three paths converge on the same red terminal. The
+> diagram is not decorative pessimism — it is the argument for sequencing `DOMAIN-VIS-006` ahead of
+> feature work, because fifteen blocking constraints enforced by nothing will be violated, and the
+> violations will be discovered after they are expensive to reverse.
+
+---
+
+## 02.11 — AI Domain Interpretation Model
+
+### AI NAVIGATION METADATA — §02.11
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this section tells an agent how to use PART 02** |
+| **AI DEPENDENCIES** | All of §02.1–§02.10, PART 01 §01.23 boot sequence |
+| **AI INPUTS** | A task, a file path, or a question about placement |
+| **AI OUTPUTS** | The domain context an agent must load before acting |
+| **AI IMPLEMENTATION IMPACT** | Determines what an agent reads, and what it must refuse |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-283`…`VAL-VIS-298` shared with §02.6 |
+| **AI RELATED DOCUMENTS** | `.ai/CONTEXT_ROUTER.md`, `.ai/AI_AGENT_OPERATING_MANUAL.md` |
+
+### 02.11.1 Domain Resolution for Agents
+
+> **`VIS-173`.** Before an agent writes anything, it resolves the **domain** of the work. Domain
+> resolution precedes file creation, precedes design, and precedes asking what the code should do —
+> because the domain determines which rules bind, which owner approves, and which security class
+> applies. An agent that starts by choosing a filename has already skipped the only step that
+> constrains it.
+
+### TBL-VIS-207: `AI-VIS-061` Domain Resolution Procedure
+
+| Step | Action | Input | If it fails |
+| ---: | :--- | :--- | :--- |
+| 1 | Read the task and extract the responsibility, not the artifact | Task text | Ask for the responsibility |
+| 2 | Classify the responsibility kind `R1`…`R6` | `TBL-VIS-186` | HALT — ambiguous work |
+| 3 | Find the owning domain via `TBL-VIS-187` and `TBL-VIS-188` | Registry | Go to step 4 |
+| 4 | If no owner exists, run `DEC-VIS-032` to determine whether a domain is missing | `TBL-VIS-148` | HALT — do not park the work |
+| 5 | Load the domain record from §02.3 | `DOMAIN-VIS-nnn` | HALT — unregistered domain |
+| 6 | Read the domain's security classification and evolution level | Record | — |
+| 7 | If `S1`, verify a threat model exists (`CON-VIS-031`) | Repository | **HALT** — refuse to implement |
+| 8 | If evolution level is below `E3`, refuse implementation; produce specification instead | Record | Produce a `DEC-` proposal |
+| 9 | Enumerate legal crossings from `TBL-VIS-183` for this domain's category | Matrix | — |
+| 10 | Load only the crossed domains' contracts, not their internals | Contracts | — |
+| 11 | Check all fifteen `CON-VIS-031`…`045` against the plan | `TBL-VIS-205` | HALT on any violation |
+| 12 | Act, and record the domain ID in the change description | — | — |
+
+> **`VIS-174`.** Steps 7, 8, and 11 are **HALT gates**. An agent reaching them without satisfaction
+> stops and reports; it does not proceed with a caveat, a `TODO`, or a best-effort attempt. This
+> extends the three HALT gates of the PART 01 boot sequence (`AI-VIS-045`) to three more at the
+> domain level, giving six total. `VAL-VIS-288` verifies that an agent's change record names the
+> domain it resolved.
+
+```mermaid
+flowchart TB
+    T["Task arrives"] --> R1["Extract the responsibility"]
+    R1 --> R2["Classify R1 to R6"]
+    R2 --> R3{"Owning domain found?"}
+    R3 -->|"No"| DEC["Run DEC-VIS-032 - is a domain missing?"]
+    DEC -->|"Yes - propose new domain"| HALT1["HALT - registry change needs approval"]
+    DEC -->|"No - it belongs to an existing domain"| R4
+    R3 -->|"Yes"| R4["Load domain record"]
+    R4 --> S{"Security class S1?"}
+    S -->|"Yes"| TM{"Threat model exists?"}
+    TM -->|"No"| HALT2["HALT - CON-VIS-031 blocks implementation"]
+    TM -->|"Yes"| E
+    S -->|"No"| E{"Evolution level at least E3?"}
+    E -->|"No"| SPEC["Produce specification only - do not implement"]
+    E -->|"Yes"| X["Load legal crossings and contracts"]
+    X --> C{"All 15 CON-VIS constraints satisfied?"}
+    C -->|"No"| HALT3["HALT - report the violated constraint"]
+    C -->|"Yes"| ACT["Act - name the domain in the change record"]
+
+    classDef halt fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class HALT1,HALT2,HALT3 halt
+    class ACT ok
+```
+
+> **Diagram ID:** `DGM-VIS-070` — **`AI-VIS-061` Agent Domain Resolution with HALT Gates**
+> **Explanation:** Three of five outcomes are refusals and one is a downgrade to specification-only
+> work. That ratio is intentional for a system at `E2`: with no domain past `E4`, the statistically
+> correct agent behaviour on an implementation request is to produce a specification, not code. An
+> agent that reaches `ACT` in today's repository is almost certainly working on documentation, and
+> that is the honest state of the system rather than a limitation of the procedure.
+
+### TBL-VIS-208: `AI-VIS-062`…`AI-VIS-070` Agent Domain Rules
+
+| ID | Rule | Failure it prevents |
+| :--- | :--- | :--- |
+| `AI-VIS-062` | Never place a file by directory resemblance; place it by resolved domain | Junk-drawer accumulation |
+| `AI-VIS-063` | Never read a domain's internals to satisfy a crossing; read its contract | Hidden coupling |
+| `AI-VIS-064` | Never infer a domain's status from prose; read `TBL-VIS-195` | Believing planned work is built |
+| `AI-VIS-065` | Never create a `DOMAIN-VIS-` identifier without registry approval | Identifier collision, orphan domains |
+| `AI-VIS-066` | Never widen a crossing from `X2` to `X1` for convenience | Turning eventual coupling into temporal coupling |
+| `AI-VIS-067` | Never assign one behaviour to two domains | `RA-02` non-deterministic decisions |
+| `AI-VIS-068` | Never write to an entity owned by another domain | `CON-VIS-032` violation |
+| `AI-VIS-069` | When a domain's status is `UNKNOWN`, report it; never resolve it by assumption | Fabrication |
+| `AI-VIS-070` | Cite the domain ID in every commit message touching domain-bound work | Untraceable change |
+
+### 02.11.2 Context Loading by Domain
+
+### TBL-VIS-209: `AI-VIS-071` Minimum Context Set per Task Class
+
+| Task class | Must load | Must not load | Rationale |
+| :--- | :--- | :--- | :--- |
+| Place a new file | §02.2 taxonomy, §02.3 record | Other domains' contracts | Placement needs category, not behaviour |
+| Design a crossing | §02.4, §02.6, both domain records, both contracts | Either domain's internals | Contracts are the interface |
+| Assign a responsibility | §02.5, `TBL-VIS-187` | Implementation code | Ownership is a specification question |
+| Change a status | §02.7, `TBL-VIS-196` | Everything else | Transitions are evidence-gated |
+| Add a capability | §02.8, PART 01 §01.7 | Unrelated domains | One delivering domain only |
+| Design a schema | §02.9, owner's record, `TBL-VIS-203` | Consumer code | Owner decides shape |
+| Review a design | §02.10 all fifteen constraints | — | Constraints are checked in full, always |
+
+> **`VIS-175`.** `TBL-VIS-209` has a **Must not load** column because context discipline is a
+> correctness mechanism, not an efficiency one. An agent that reads another domain's internals will
+> use what it read, and the coupling it creates will be invisible in review because the reviewer
+> sees only the diff, not the reading. Restricting what is loaded restricts what can be coupled.
+
+---
+
+## 02.12 — Domain Image Specifications
+
+### AI NAVIGATION METADATA — §02.12
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P2 — read when producing visual assets |
+| **AI DEPENDENCIES** | §02.2 taxonomy, §02.3 registry, §02.4 boundaries |
+| **AI INPUTS** | A specification identifier `IMG-VIS-nnn` |
+| **AI OUTPUTS** | An image conforming to the specification |
+| **AI IMPLEMENTATION IMPACT** | None on runtime; governs documentation and presentation assets |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-313`…`VAL-VIS-320` shared with §02.8 |
+| **AI RELATED DOCUMENTS** | PART 01 §01.4 image specifications `IMG-VIS-001`…`022` |
+
+> **`VIS-176`.** These are **specifications**, not assets. No binary image file is created by this
+> document. Each specification is complete enough that two different illustrators, or an
+> illustrator and a generation model, would produce semantically equivalent images.
+
+### TBL-VIS-210: `IMG-VIS-023` — Domain Taxonomy Wheel
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `IMG-VIS-023` |
+| **Title** | The Ten Domain Categories |
+| **Purpose** | Let a newcomer grasp the whole domain space in one glance before reading any table |
+| **Audience** | New engineers, new agents, architecture reviewers |
+| **Aspect Ratio** | 1:1 |
+| **Canvas** | 2048 × 2048, dark background `#0d1117` |
+| **Visual Hierarchy** | Layer 1 centre hub; layer 2 ten category segments; layer 3 domain-count badges |
+| **Elements** | Central hub labelled "Oship — 50 domains"; ten radial segments `C1`…`C10`; each segment carries its name and count |
+| **Relationships** | Segment width proportional to domain count — `C2` widest at 13, `C1` at 5 |
+| **Labels** | Category code, category name, count; no domain names at this zoom |
+| **Colour Semantics** | `C1` deep indigo, `C2` teal, `C3` violet, `C4` slate, `C5` amber, `C6` rose, `C7` steel, `C8` crimson, `C9` olive, `C10` cyan |
+| **Typography** | Single geometric sans; hub 64 pt, category 36 pt, counts 28 pt |
+| **Legend** | Bottom-left: colour to category key |
+| **Meaning** | The domain space is finite, bounded, and unequally populated |
+| **AI Interpretation** | Segment size is population, never importance; do not infer priority from area |
+| **Implementation Relevance** | Orientation asset for `docs/MASTER_CONTEXT/01_PRODUCT/` |
+| **Generation prompt** | "Flat vector radial segmented wheel on a very dark near-black background, ten unequal segments in distinct saturated colours radiating from a labelled central hub, thin light outlines, clean geometric sans-serif labels, no photorealism, no people, no logos, no gradients beyond flat fills, technical diagram aesthetic, square composition" |
+
+### TBL-VIS-211: `IMG-VIS-024` — Boundary Strength Ladder
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `IMG-VIS-024` |
+| **Title** | From Aspiration to Enforcement |
+| **Purpose** | Make the `B0`…`B5` scale memorable and make Oship's position on it unmistakable |
+| **Audience** | Engineering leadership, reviewers |
+| **Aspect Ratio** | 3:4 |
+| **Canvas** | 1536 × 2048, dark background `#0d1117` |
+| **Visual Hierarchy** | Layer 1 six ascending steps; layer 2 the enforcer icon per step; layer 3 a marker showing current position |
+| **Elements** | Six rising blocks `B0`…`B5`; a small glyph per step for enforcer type; a bright marker resting on `B0` labelled "all 50 domains today" |
+| **Relationships** | Height encodes strength; the marker's distance from `B4` encodes the debt |
+| **Labels** | Step code, name, enforcer, "detected when" |
+| **Colour Semantics** | `B0`–`B1` grey, `B2` amber, `B3` yellow-green, `B4`–`B5` green; marker crimson |
+| **Typography** | Geometric sans; step titles 40 pt, detail 24 pt |
+| **Legend** | Right margin: required stopping point per security class |
+| **Meaning** | Enforcement is a ladder with mandatory heights, and Oship stands at the bottom |
+| **AI Interpretation** | The marker position is factual as of this document; verify before reuse |
+| **Implementation Relevance** | Argument asset for prioritising `DOMAIN-VIS-006` |
+| **Generation prompt** | "Flat vector side-view staircase of six ascending rectangular blocks on a very dark background, blocks coloured grey through green in ascending order, a single crimson circular marker resting on the lowest block, thin geometric sans-serif labels beside each step, minimal line icons, no photorealism, no people, no logos, portrait composition, technical infographic style" |
+
+### TBL-VIS-212: `IMG-VIS-025` — Domain Dependency Constellation
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `IMG-VIS-025` |
+| **Title** | Fifty Domains and Their Legal Edges |
+| **Purpose** | Show the whole dependency graph at once so that clusters and single points of failure are visible |
+| **Audience** | Architects, planners |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | 3840 × 2160, dark background `#0d1117` |
+| **Visual Hierarchy** | Layer 1 fifty nodes in force-directed layout; layer 2 dependency edges; layer 3 halos on `S1` nodes |
+| **Elements** | One node per `DOMAIN-VIS-`; node fill by category colour from `IMG-VIS-023`; node size by capability count; crimson halo on the nineteen `S1` domains |
+| **Relationships** | Directed edges follow `TBL-VIS-155`; edge opacity by crossing kind |
+| **Labels** | Domain ID on every node; name on nodes with three or more edges |
+| **Colour Semantics** | Category fill; crimson halo `S1`; edge grey; critical-path edges brightened |
+| **Typography** | Condensed sans; IDs 18 pt, names 22 pt |
+| **Legend** | Lower-left: category colours, halo meaning, edge kinds |
+| **Meaning** | Dependency load concentrates on identity, ledger, and governance automation |
+| **AI Interpretation** | Node size is capability count, not importance or effort |
+| **Implementation Relevance** | Planning asset for implementation sequencing |
+| **Generation prompt** | "Flat vector force-directed network graph on a very dark near-black background, approximately fifty circular nodes of varying size in ten distinct saturated colours, a subset ringed with thin crimson halos, thin grey directed edges with small arrowheads, small condensed sans-serif labels, no photorealism, no people, no logos, wide cinematic composition, clean technical data-visualisation aesthetic" |
+
+> **`VIS-177`.** Three image specifications are defined in PART 02 against the fifteen reserved by
+> the PART 01 plan (`IMG-VIS-023`…`037`). The remaining twelve are allocated across §02.13–§02.18
+> as those sections define subjects worth illustrating. Reserving a number without a subject would
+> be exactly the artificial padding `PRN-VIS-001` prohibits, so unallocated numbers stay unused
+> until a real subject claims them.
+
+---
+
+## 02.13 — Open Obligations and Forward Commitments
+
+### AI NAVIGATION METADATA — §02.13
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before claiming any part of PART 02 is complete** |
+| **AI DEPENDENCIES** | §02.3 registry, §02.8 mapping, §02.9 data model |
+| **AI INPUTS** | A claim that something is resolved |
+| **AI OUTPUTS** | Whether the obligation is discharged, and by what evidence |
+| **AI IMPLEMENTATION IMPACT** | Names the work PART 02 could not do and must not pretend to have done |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-246`, `VAL-VIS-305`, `VAL-VIS-309`…`312` |
+| **AI RELATED DOCUMENTS** | `.ai/NEXT_ACTION.md`, `AOM-ARCH-001` PART 02 when authored |
+
+> **`VIS-178`.** An obligation is a piece of work this document has identified, scoped, and
+> deliberately not performed — either because it belongs to another document, another authority, or
+> another phase. Recording obligations explicitly is the difference between an incomplete
+> specification and a dishonest one.
+
+### TBL-VIS-213: Open Obligation Register — `OBL-01`…`OBL-18`
+
+| ID | Obligation | Owed by | Blocked on | Discharge evidence |
+| :--- | :--- | :--- | :--- | :--- |
+| `OBL-01` | Create or absorb architecture domains for the 15 `UNMAPPED` vision domains | `AOM-ARCH-001` PART 02 | Nothing | `TBL-VIS-178` row count reaches zero |
+| `OBL-02` | Select the statutory regime governing `RT-2` retention | Business Strategy plus Legal | Jurisdiction decision | A `DEC-` record naming the regime |
+| `OBL-03` | Select the runtime stack — language, transport, persistence | Architecture Board | `OBL-02` for data residency | An ADR under `docs/ADR/` |
+| `OBL-04` | Install the eight CI workflow skeletons into `.github/workflows/` | DevOps | Nothing | Files present and a passing run |
+| `OBL-05` | Automate at least one `VAL-VIS-` rule end to end | QA plus DevOps | `OBL-04` | A CI run that fails on a seeded violation |
+| `OBL-06` | Produce threat models for all 19 `S1` domains | Security Architect | `OBL-03` in part | 19 documents referenced from the registry |
+| `OBL-07` | Resolve the single-owner `CODEOWNERS` conflict with author ≠ approver | Repository owner | Organisational | A second owning role in `CODEOWNERS` |
+| `OBL-08` | Define service objectives for `DOMAIN-VIS-043` | SRE | `OBL-03` | Named SLOs with measurement sources |
+| `OBL-09` | Define contracts for every legal crossing into an `S1` domain | Architecture Board | `OBL-03` | Contract documents per `TBL-VIS-184` |
+| `OBL-10` | Establish the schema ownership map enforcing `CON-VIS-032` | Database Architect | `OBL-03` | A machine-readable ownership file |
+| `OBL-11` | Register the replica set enforcing `CON-VIS-033` | Database Architect | `OBL-10` | A replica register with drift checks |
+| `OBL-12` | Implement structural tenant scoping for `CON-VIS-035` | Backend plus Security | `OBL-03` | A query layer that cannot omit the predicate |
+| `OBL-13` | Decide whether `DOMAIN-VIS-029` Marketplace survives `E0` | Product Management | Business strategy | A `DEC-` record advancing or retiring it |
+| `OBL-14` | Bind `CAP-VIS-047` status, currently `UNKNOWN` | Product plus Architecture | Repository verification | A status other than `UNKNOWN` with evidence |
+| `OBL-15` | Populate the twelve unallocated `IMG-VIS-026`…`037` specifications | This document, later parts | Subject matter | Specifications with real subjects |
+| `OBL-16` | Author PART 03 onwards of `AOM-VIS-001` | Product Management | Nothing | Appended parts |
+| `OBL-17` | Update `04_ARCHITECTURE/INDEX.md`, which still lists `SYSTEM_ARCHITECTURE.md` as `PLANNED` | Architecture | Nothing | Index status corrected |
+| `OBL-18` | Establish a mechanism that enforces `CON-VIS-045` technically rather than socially | Security Architect | `OBL-03` | A refusal path that cannot be configured away |
+
+> **`VIS-179`.** Six obligations — `OBL-03`, `06`, `08`, `09`, `10`, `12`, `18` — are blocked on a
+> single unresolved decision: the runtime stack. `EVD-VIS-019` records it as
+> `UNKNOWN — REQUIRES REPOSITORY VERIFICATION`, and it is the highest-leverage open decision in the
+> repository. `OBL-03` is therefore not merely one obligation among eighteen; it is the gate on
+> seven of them.
+
+```mermaid
+flowchart LR
+    O02["OBL-02 statutory regime"] --> O03["OBL-03 runtime stack - GATE"]
+    O03 --> O06["OBL-06 threat models"]
+    O03 --> O08["OBL-08 service objectives"]
+    O03 --> O09["OBL-09 S1 contracts"]
+    O03 --> O10["OBL-10 schema ownership"]
+    O10 --> O11["OBL-11 replica register"]
+    O03 --> O12["OBL-12 tenant scoping"]
+    O03 --> O18["OBL-18 autonomy enforcement"]
+    O04["OBL-04 install CI"] --> O05["OBL-05 automate one rule"]
+    O01["OBL-01 architecture gap"] -.-> IND1["independent"]
+    O07["OBL-07 CODEOWNERS"] -.-> IND1
+    O13["OBL-13 marketplace"] -.-> IND1
+    O16["OBL-16 later parts"] -.-> IND1
+    O17["OBL-17 index status"] -.-> IND1
+
+    classDef gate fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef free fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class O03 gate
+    class O01,O04,O07,O13,O16,O17 free
+```
+
+> **Diagram ID:** `DGM-VIS-071` — **Obligation Dependency Graph**
+> **Explanation:** Green obligations are unblocked and can be discharged immediately; the red node
+> gates seven others. `OBL-04` and `OBL-05` deserve attention precisely because they are green:
+> installing CI and automating a single validation rule requires no stack decision, and it would
+> move Oship's enforcement posture off `B0` for the first time.
+
+### TBL-VIS-214: What PART 02 Deliberately Did Not Do
+
+| Not done | Why not | Where it belongs |
+| :--- | :--- | :--- |
+| Modify `AOM-ARCH-001` | `VIS-065` — vision is read-only toward architecture | `AOM-ARCH-001` PART 02 |
+| Create directories for the 50 domains | Directories are `B0` boundaries and imply implementation | After `OBL-03` |
+| Assign implementation dates | `VIS-051` — no dates anywhere in this document | `19_ROADMAP` |
+| Choose technologies per domain | `PRN-VIS-015` vendor neutrality at the vision layer | `OBL-03` ADR |
+| Write per-domain detailed contracts | Contracts need the transport model from `OBL-03` | `OBL-09` |
+| Estimate effort or team size | Not a vision concern; would be fabrication | Planning documents |
+| Declare any domain `E5` | No automated verification exists anywhere | After `OBL-05` |
+
+---
+
+## 02.14 — Domain Validation Rules
+
+### AI NAVIGATION METADATA — §02.14
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — every rule here is checkable and binding** |
+| **AI DEPENDENCIES** | All of PART 02 |
+| **AI INPUTS** | Any artifact claiming conformance to the domain model |
+| **AI OUTPUTS** | Pass, fail, or `UNKNOWN` per rule, with evidence |
+| **AI IMPLEMENTATION IMPACT** | These rules become the content of `DOMAIN-VIS-006` automation |
+| **AI VALIDATION REQUIREMENTS** | Self-referential — `VAL-VIS-320` validates this section |
+| **AI RELATED DOCUMENTS** | PART 01 §01.24 `VAL-VIS-001`…`200` |
+
+> **`VIS-180`.** Rules `VAL-VIS-201`…`320` continue the PART 01 catalogue without renumbering.
+> Severity is `BLOCKING` or `ADVISORY`; a blocking failure stops the change, an advisory failure is
+> recorded and reviewed. **None of these rules is currently automated** (`EVD-VIS-017`); the
+> Automatable column states whether a rule *could* be executed mechanically once `DOMAIN-VIS-006`
+> exists, which is the specification `OBL-05` will implement against.
+
+### TBL-VIS-215: Validation Rules `VAL-VIS-201`…`226` — Classification and Taxonomy
+
+| ID | Rule | Severity | Automatable |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-201` | Every domain has a purpose sentence containing no coordinating "and" between two purposes | BLOCKING | Yes |
+| `VAL-VIS-202` | Every domain satisfies all five necessary conditions of `TBL-VIS-145` | BLOCKING | Partly |
+| `VAL-VIS-203` | No domain name matches a team name in `CODEOWNERS` | BLOCKING | Yes |
+| `VAL-VIS-204` | No domain name matches a technology, vendor, or product name | BLOCKING | Partly |
+| `VAL-VIS-205` | No domain name is a layer name from `LYR-ARCH-001`…`010` | BLOCKING | Yes |
+| `VAL-VIS-206` | No domain is named "common", "shared", "core utilities", "misc", or "platform services" | BLOCKING | Yes |
+| `VAL-VIS-207` | Every domain passes the six-question disambiguation test of `TBL-VIS-148` | BLOCKING | No |
+| `VAL-VIS-208` | Every prohibited domain form in `TBL-VIS-150` is absent from the registry | BLOCKING | Partly |
+| `VAL-VIS-209` | Every domain is assigned exactly one category `C1`…`C10` | BLOCKING | Yes |
+| `VAL-VIS-210` | No domain appears in two categories | BLOCKING | Yes |
+| `VAL-VIS-211` | Every category has at least one domain | ADVISORY | Yes |
+| `VAL-VIS-212` | Category assignment follows `TBL-VIS-153` in order, first match wins | BLOCKING | No |
+| `VAL-VIS-213` | Every domain has an AI loading priority `L0`…`L4` | BLOCKING | Yes |
+| `VAL-VIS-214` | No `L0` domain depends on an `L3` or `L4` domain | BLOCKING | Yes |
+| `VAL-VIS-215` | Loading priority is consistent with category per `TBL-VIS-154` | ADVISORY | Yes |
+| `VAL-VIS-216` | Every `DCR-01`…`DCR-10` rule is satisfied by every registry row | BLOCKING | Partly |
+| `VAL-VIS-217` | No two domains share a purpose sentence | BLOCKING | Yes |
+| `VAL-VIS-218` | No domain purpose is a restatement of its name | BLOCKING | No |
+| `VAL-VIS-219` | Every dependency edge is legal per `TBL-VIS-155` | BLOCKING | Yes |
+| `VAL-VIS-220` | The dependency graph contains no cycle | BLOCKING | Yes |
+| `VAL-VIS-221` | No `C1` domain has an outgoing dependency to `C2`…`C10` except `X2` and `X3` | BLOCKING | Yes |
+| `VAL-VIS-222` | Every `C7` infrastructure domain is depended upon by at least one other domain | ADVISORY | Yes |
+| `VAL-VIS-223` | No domain depends on more than seven other domains | ADVISORY | Yes |
+| `VAL-VIS-224` | Every system domain maps to at least one knowledge domain | BLOCKING | Yes |
+| `VAL-VIS-225` | Every one of the 24 knowledge domains maps to at least one system domain | BLOCKING | Yes |
+| `VAL-VIS-226` | Knowledge domain names are never used as system domain names | BLOCKING | Yes |
+
+### TBL-VIS-216: Validation Rules `VAL-VIS-227`…`248` — Registry Integrity
+
+| ID | Rule | Severity | Automatable |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-227` | Every `DOMAIN-VIS-` identifier in `001`…`050` is defined exactly once | BLOCKING | Yes |
+| `VAL-VIS-228` | Every registry record contains all fourteen schema fields | BLOCKING | Yes |
+| `VAL-VIS-229` | No record claims `IMPLEMENTED` without a cited evidence path | BLOCKING | Yes |
+| `VAL-VIS-230` | Every absent value uses the literal `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` | BLOCKING | Yes |
+| `VAL-VIS-231` | No downstream document cites `TBL-VIS-171` as evidence that product domains exist | BLOCKING | Partly |
+| `VAL-VIS-232` | Every record has an owning role, never a person's name | BLOCKING | Yes |
+| `VAL-VIS-233` | Every owning role appears in at least one `INDEX.md` owner field or `CODEOWNERS` | ADVISORY | Yes |
+| `VAL-VIS-234` | Every record has a security classification `S1`…`S4` | BLOCKING | Yes |
+| `VAL-VIS-235` | Every `S1` record cites a threat model path or `UNKNOWN` | BLOCKING | Yes |
+| `VAL-VIS-236` | Every record has an evolution level `E0`…`E7` | BLOCKING | Yes |
+| `VAL-VIS-237` | Evolution level and documentation status are mutually consistent per `TBL-VIS-194` | BLOCKING | Yes |
+| `VAL-VIS-238` | No record has `Implementation Status` other than `NO CODE` while `apps/` and `services/` are `.gitkeep`-only | BLOCKING | Yes |
+| `VAL-VIS-239` | Inputs and outputs are named artifacts or `none`, never prose | ADVISORY | No |
+| `VAL-VIS-240` | Every listed dependency is an existing `DOMAIN-VIS-` identifier | BLOCKING | Yes |
+| `VAL-VIS-241` | No record depends on itself | BLOCKING | Yes |
+| `VAL-VIS-242` | No retired domain is depended upon by a non-retired domain | BLOCKING | Yes |
+| `VAL-VIS-243` | Every retired domain has a forward pointer | BLOCKING | Yes |
+| `VAL-VIS-244` | Architecture references cite only identifiers that exist in `AOM-ARCH-001` | BLOCKING | Yes |
+| `VAL-VIS-245` | Architecture references to `PROPOSED` domains are labelled `PROPOSED` | BLOCKING | Yes |
+| `VAL-VIS-246` | The `UNMAPPED` count in `TBL-VIS-178` shrinks or is re-justified in each subsequent part | BLOCKING | Partly |
+| `VAL-VIS-247` | The registry contains exactly fifty domains, or a `DEC-` record explains the change | BLOCKING | Yes |
+| `VAL-VIS-248` | Category populations in `TBL-VIS-158` match the registry | BLOCKING | Yes |
+
+### TBL-VIS-217: Validation Rules `VAL-VIS-249`…`266` — Boundaries
+
+| ID | Rule | Severity | Automatable |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-249` | Every domain has a declared boundary strength `B0`…`B5` | BLOCKING | Yes |
+| `VAL-VIS-250` | Declared strength meets the minimum for its security class per `TBL-VIS-181` | BLOCKING | Yes |
+| `VAL-VIS-251` | Where declared strength exceeds `B1`, the enforcing mechanism is named | BLOCKING | Yes |
+| `VAL-VIS-252` | No crossing occurs through an `✗` cell of `TBL-VIS-183` | BLOCKING | Yes |
+| `VAL-VIS-253` | No `X4` shared store exists without a `DEC-` record | BLOCKING | Yes |
+| `VAL-VIS-254` | Every crossing declares its kind `X1`…`X5` | BLOCKING | Yes |
+| `VAL-VIS-255` | Every crossing has a contract with all seven parts of `TBL-VIS-184` | BLOCKING | Yes |
+| `VAL-VIS-256` | Every crossing into an `S1` domain declares an explicit delivery guarantee | BLOCKING | Yes |
+| `VAL-VIS-257` | Every exactly-once crossing names its idempotency key | BLOCKING | Yes |
+| `VAL-VIS-258` | Every contract names failure semantics for callee unavailability | BLOCKING | Yes |
+| `VAL-VIS-259` | Every contract names its versioning strategy | BLOCKING | Yes |
+| `VAL-VIS-260` | Every contract names the authority under which it may be invoked | BLOCKING | Yes |
+| `VAL-VIS-261` | Every contract names how the crossing is observed | BLOCKING | Yes |
+| `VAL-VIS-262` | No contract is defined by its consumer (`BV-04`) | BLOCKING | Partly |
+| `VAL-VIS-263` | No boundary is crossed with the caller's identity un-reauthorized (`BV-05`) | BLOCKING | No |
+| `VAL-VIS-264` | No `C4` library contains domain logic (`BV-07`) | ADVISORY | No |
+| `VAL-VIS-265` | No source comment promises a future boundary fix (`BV-08`) | ADVISORY | Yes |
+| `VAL-VIS-266` | `C8` security domains reach other categories only by `X2` | BLOCKING | Yes |
+
+### TBL-VIS-218: Validation Rules `VAL-VIS-267`…`282` — Responsibility and Data
+
+| ID | Rule | Severity | Automatable |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-267` | Every behaviour has exactly one owning domain | BLOCKING | No |
+| `VAL-VIS-268` | No responsibility appears in two domains' records | BLOCKING | Yes |
+| `VAL-VIS-269` | Every contested behaviour in `TBL-VIS-187` has a one-sentence reason | BLOCKING | Yes |
+| `VAL-VIS-270` | Every entity class has exactly one writing domain | BLOCKING | Yes |
+| `VAL-VIS-271` | No consumer migrates an owner's schema (`DP-03`) | BLOCKING | Partly |
+| `VAL-VIS-272` | Every replica is declared with source, freshness, and drift check | BLOCKING | Yes |
+| `VAL-VIS-273` | Every entity class has a retention class `RT-1`…`RT-6` | BLOCKING | Yes |
+| `VAL-VIS-274` | No `RT-1` entity has an update or delete path | BLOCKING | Yes |
+| `VAL-VIS-275` | No audit event is stored in a windowed or lossy store (`DP-05`) | BLOCKING | Yes |
+| `VAL-VIS-276` | Every entity containing personal data cites `DOMAIN-VIS-046` in its contract | BLOCKING | Yes |
+| `VAL-VIS-277` | No personal data appears in telemetry (`DP-04`) | BLOCKING | Partly |
+| `VAL-VIS-278` | No credential material is stored outside `DOMAIN-VIS-018` (`DP-07`) | BLOCKING | Yes |
+| `VAL-VIS-279` | No query crosses tenants without a tenant predicate (`DP-08`) | BLOCKING | Yes |
+| `VAL-VIS-280` | Deletion authority for every entity is the owning domain, coordinated with `036` | BLOCKING | Yes |
+| `VAL-VIS-281` | No responsibility is assigned to "the platform" (`RA-01`) | BLOCKING | Yes |
+| `VAL-VIS-282` | Ownership reassignment is accompanied by state movement (`RA-05`) | BLOCKING | No |
+
+### TBL-VIS-219: Validation Rules `VAL-VIS-283`…`298` — Interaction and AI
+
+| ID | Rule | Severity | Automatable |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-283` | Every interaction declares a pattern `IP-01`…`IP-08` | BLOCKING | Yes |
+| `VAL-VIS-284` | Every multi-`S1`-domain write uses `IP-05` saga | BLOCKING | Partly |
+| `VAL-VIS-285` | Every `IP-05` step declares its compensation | BLOCKING | Yes |
+| `VAL-VIS-286` | Every `IP-04` replica has a reconciliation check (`CON-VIS-033`) | BLOCKING | Yes |
+| `VAL-VIS-287` | No interaction requires global ordering (`NG-VIS-025`) | BLOCKING | Yes |
+| `VAL-VIS-288` | Every agent change record names the domain it resolved | BLOCKING | Yes |
+| `VAL-VIS-289` | No agent proceeds past a HALT gate of `AI-VIS-061` | BLOCKING | No |
+| `VAL-VIS-290` | No agent implements in a domain below evolution level `E3` | BLOCKING | Partly |
+| `VAL-VIS-291` | No agent reads another domain's internals to satisfy a crossing (`AI-VIS-063`) | BLOCKING | No |
+| `VAL-VIS-292` | No agent creates a `DOMAIN-VIS-` identifier without approval (`AI-VIS-065`) | BLOCKING | Yes |
+| `VAL-VIS-293` | Agents report `UNKNOWN` rather than resolving by assumption (`AI-VIS-069`) | BLOCKING | No |
+| `VAL-VIS-294` | Every `IP-02`, `IP-03`, `IP-04`, `IP-05`, and `IP-07` interaction has a dead-letter path | BLOCKING | Yes |
+| `VAL-VIS-295` | Every `IP-01` call declares a timeout budget | BLOCKING | Yes |
+| `VAL-VIS-296` | Retry is configured only where the target is idempotent | BLOCKING | Partly |
+| `VAL-VIS-297` | Telemetry loss is tolerated and audit loss is not, in configuration as well as prose | BLOCKING | Yes |
+| `VAL-VIS-298` | Context loading follows `TBL-VIS-209`, including its prohibitions | ADVISORY | No |
+
+### TBL-VIS-220: Validation Rules `VAL-VIS-299`…`320` — Lifecycle, Capability, Document
+
+| ID | Rule | Severity | Automatable |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-299` | `E0` → `E1` requires a written question list | BLOCKING | Yes |
+| `VAL-VIS-300` | `E1` → `E2` requires a complete fourteen-field record | BLOCKING | Yes |
+| `VAL-VIS-301` | No domain is `IMPLEMENTED` while below `E4` | BLOCKING | Yes |
+| `VAL-VIS-302` | `E2` → `E3` requires contracts for every legal crossing, plus security sign-off if `S1` | BLOCKING | Partly |
+| `VAL-VIS-303` | `E3` → `E4` requires a referenced artifact path, not a plan | BLOCKING | Yes |
+| `VAL-VIS-304` | `E4` → `E5` requires an executing, passing automated check | BLOCKING | Yes |
+| `VAL-VIS-305` | `TBL-VIS-195` is authoritative over prose about domain maturity | BLOCKING | Partly |
+| `VAL-VIS-306` | `E5` → `E6` requires a named on-call owner and a runbook | BLOCKING | Yes |
+| `VAL-VIS-307` | `E6` → `E7` requires a live replacement and recorded data disposition | BLOCKING | Yes |
+| `VAL-VIS-308` | Every backward transition has a `DEC-` record naming its cost | BLOCKING | Yes |
+| `VAL-VIS-309` | Every open obligation in `TBL-VIS-213` is either discharged or restated in the next part | BLOCKING | Partly |
+| `VAL-VIS-310` | No obligation is discharged by assertion; each names its evidence | BLOCKING | Partly |
+| `VAL-VIS-311` | `OBL-03` remains flagged as the gate on seven obligations until discharged | ADVISORY | Yes |
+| `VAL-VIS-312` | Nothing in `TBL-VIS-214` is later claimed as done by PART 02 | BLOCKING | Partly |
+| `VAL-VIS-313` | Every domain delivers at least one capability, or is labelled `UNKNOWN` | BLOCKING | Yes |
+| `VAL-VIS-314` | Every capability is delivered by exactly one domain (`CON-VIS-042`) | BLOCKING | Yes |
+| `VAL-VIS-315` | Every `CAP-VIS-001`…`070` appears exactly once in `TBL-VIS-199` or `TBL-VIS-200` | BLOCKING | Yes |
+| `VAL-VIS-316` | Capability status and delivering-domain evolution level are consistent | BLOCKING | Yes |
+| `VAL-VIS-317` | A capability bound to a vision domain but not an architecture domain is still counted `UNMAPPED` architecturally | BLOCKING | Yes |
+| `VAL-VIS-318` | Every image specification has all seventeen fields including a generation prompt | BLOCKING | Yes |
+| `VAL-VIS-319` | No `IMG-VIS-` number is reserved without a subject | BLOCKING | Yes |
+| `VAL-VIS-320` | Every table, diagram, and identifier introduced in PART 02 is referenced at least once by another block | ADVISORY | Yes |
+
+### TBL-VIS-221: Validation Rule Summary for PART 02
+
+| Measure | Value |
+| :--- | ---: |
+| Rules defined in PART 02 | 120 (`VAL-VIS-201`…`320`) |
+| Blocking | 108 |
+| Advisory | 12 |
+| Fully automatable once `DOMAIN-VIS-006` exists | 87 |
+| Partly automatable | 20 |
+| Requiring human judgement | 13 |
+| **Currently automated** | **0** |
+| Cumulative `VAL-VIS-` across PART 01 and PART 02 | 320 |
+
+> **`VIS-181`.** Eighty-seven of one hundred and twenty new rules are fully automatable. That number
+> is the concrete size of the prize behind `OBL-04` and `OBL-05`: the specification work needed to
+> make the domain model self-enforcing is already done, and what remains is installation. A
+> repository that writes 320 checkable rules and executes none of them has built a very precise
+> instrument and left it in its case.
+
+---
+
+## 02.15 — Domain Failure and Anti-Pattern Library
+
+### AI NAVIGATION METADATA — §02.15
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before approving any domain design** |
+| **AI DEPENDENCIES** | All of PART 02 |
+| **AI INPUTS** | A proposed or existing design |
+| **AI OUTPUTS** | Named anti-patterns present, with remediation |
+| **AI IMPLEMENTATION IMPACT** | These are the failures the domain model exists to prevent |
+| **AI VALIDATION REQUIREMENTS** | Each entry names its detecting `VAL-VIS-` rule |
+| **AI RELATED DOCUMENTS** | PART 01 §01.25 `FAL-VIS-001`…`120` |
+
+> **`VIS-182`.** Entries `FAL-VIS-121`…`175` continue the PART 01 library. Each carries the same
+> seven fields: symptom, cause, impact, detection, prevention, remediation, and AI warning. They are
+> presented as grouped tables rather than as fifty-five separate blocks, because the value is in
+> the pattern set being scannable, not in each entry occupying a page.
+
+### 02.15.1 Classification Failures
+
+### TBL-VIS-222: `FAL-VIS-121`…`131` — Domain Classification Anti-Patterns
+
+| ID | Anti-pattern | Symptom | Cause | Impact |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-121` | The Junk Drawer | A domain named "common", "shared", or "core" that grows without bound | No owner willing to refuse work | Every domain depends on it; nothing can be changed safely |
+| `FAL-VIS-122` | The Org Chart Domain | Domain names match team names | Conway's law accepted as design | Reorganisation invalidates the architecture |
+| `FAL-VIS-123` | The Layer Domain | A "domain" named Controllers, Services, or Repositories | Layering mistaken for domain decomposition | Every feature touches every domain |
+| `FAL-VIS-124` | The Vendor Domain | A domain named after a product or provider | Tool adoption preceded design | Replacing the vendor requires re-architecting |
+| `FAL-VIS-125` | The CRUD Domain | A domain whose purpose is "manage X records" | Data model mistaken for responsibility | No behaviour anywhere; logic scatters into callers |
+| `FAL-VIS-126` | The Conjunction Domain | A purpose sentence joining two purposes with "and" | Unwillingness to split | Two blame surfaces, one owner, permanent ambiguity |
+| `FAL-VIS-127` | The Anaemic Domain | A domain that owns state but no rule constraining it | State and behaviour separated by habit | Invariants enforced nowhere or inconsistently |
+| `FAL-VIS-128` | The Phantom Domain | A registry entry with no capability and no state | Created to fill a diagram | Reviewers assume coverage that does not exist |
+| `FAL-VIS-129` | The Overlapping Twins | Two domains whose purposes differ only in wording | Parallel teams naming the same thing | Duplicated logic that diverges |
+| `FAL-VIS-130` | The Category Escape | A domain claimed to belong to several categories | Avoiding the constraints of any one | Dependency legality becomes unverifiable |
+| `FAL-VIS-131` | The Renamed Leftover | A domain formed from what remained after the good ones were carved out | Decomposition stopped early | Highest change rate, lowest coherence |
+
+### TBL-VIS-223: `FAL-VIS-121`…`131` — Detection, Prevention, Remediation
+
+| ID | Detection | Prevention | Remediation | AI warning |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-121` | `VAL-VIS-206` name check plus dependency fan-in | `DCR-03` | Split by responsibility; retire the shell | Never place a file in a domain because nothing else fits |
+| `FAL-VIS-122` | `VAL-VIS-203` against `CODEOWNERS` | `DCR-03` | Rename to the responsibility, keep the identifier | Never derive a domain name from who is writing the code |
+| `FAL-VIS-123` | `VAL-VIS-205` against `LYR-ARCH-001`…`010` | `DCR-03` | Re-decompose vertically | Layers and domains are orthogonal; never substitute one |
+| `FAL-VIS-124` | `VAL-VIS-204` | `CON-VIS-041` | Introduce a contract; push the vendor behind it | Never let a provider name enter a purpose sentence |
+| `FAL-VIS-125` | Purpose sentence matching "manage" plus a noun | `DCR-01` | Find the decision the data serves; name that | A domain that only stores is a table, not a domain |
+| `FAL-VIS-126` | `VAL-VIS-201` | `DCR-01` | Split into two domains, re-run `DEC-VIS-032` | Refuse the second purpose; do not accept "and" |
+| `FAL-VIS-127` | State owned with no `R3` rule in `TBL-VIS-186` | `VIS-142` | Move the rule to the state's owner | Owning data without owning its invariant is not ownership |
+| `FAL-VIS-128` | `VAL-VIS-313` | `DCR-04` | Retire, or bind a real capability | A domain with no capability delivers nothing |
+| `FAL-VIS-129` | `VAL-VIS-217` purpose uniqueness | `TBL-VIS-148` | Merge, keep the older ID, forward-point the newer | Compare purposes, not names, when checking for duplicates |
+| `FAL-VIS-130` | `VAL-VIS-210` | `TBL-VIS-153` first-match rule | Force one category; record the rejected alternatives | Exactly one category, decided by ordered test |
+| `FAL-VIS-131` | Change frequency plus incoherent purpose | `PRN-VIS-020` | Re-decompose the whole cluster | High churn with a vague purpose is the signature |
+
+### 02.15.2 Boundary Failures
+
+### TBL-VIS-224: `FAL-VIS-132`…`145` — Boundary and Interaction Anti-Patterns
+
+| ID | Anti-pattern | Symptom | Impact | Detection | Remediation |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-132` | The Shared Table | Two domains write one entity | Boundary exists only in the folder tree | `VAL-VIS-270` | Assign one writer; the other reads a contract |
+| `FAL-VIS-133` | The Chatty Boundary | One user action produces dozens of cross-domain calls | Latency and cascading failure | Call-graph analysis | Coarsen the contract or adopt `IP-04` |
+| `FAL-VIS-134` | The Distributed Monolith | Domains deploy separately but must deploy together | All cost of distribution, no benefit | Release coupling analysis | Version contracts; remove synchronous chains |
+| `FAL-VIS-135` | The Leaky Contract | A contract exposes the owner's internal model | Owner cannot refactor | Contract review against internals | Define an interface model distinct from storage |
+| `FAL-VIS-136` | The Captured Judge | A security domain called synchronously by what it judges | Availability of the judged determines the judgement | `VAL-VIS-266` | Convert to `X2` observation plus an edge policy cache |
+| `FAL-VIS-137` | The Retry Storm | Failure amplified by retries at every layer | A slow dependency becomes an outage | Retry budget audit | Retry at exactly one layer, with backoff and a budget |
+| `FAL-VIS-138` | The Silent Duplicate | Retries applied twice with no idempotency key | Money moves twice; nobody notices | `VAL-VIS-257` | Idempotency key in the contract, dedup at the callee |
+| `FAL-VIS-139` | The Convenience Bypass | A direct call around the boundary, with a comment | The comment survives; the fix does not | `VAL-VIS-265` | Delete the bypass, not the comment |
+| `FAL-VIS-140` | The Consumer-Owned Contract | The consumer defines the producer's output shape | The producer cannot evolve | `VAL-VIS-262` | Move contract ownership to the producer |
+| `FAL-VIS-141` | The Merged Pipeline | Audit and telemetry share lossy transport | Audit gaps appear exactly during incidents | `VAL-VIS-297` | Separate transports with opposite guarantees |
+| `FAL-VIS-142` | The Undeclared Replica | A cached copy nobody registered | Silent divergence | `VAL-VIS-272` | Register or delete; add a drift check |
+| `FAL-VIS-143` | The Upward Call | A product domain synchronously calls a strategic one | Strategy becomes a runtime dependency | `VAL-VIS-221` | Invert to `X2` events |
+| `FAL-VIS-144` | The Ambient Identity | A boundary crossed without re-authorization | Every caller becomes a security boundary | `VAL-VIS-263` | Re-authorize at the callee, always |
+| `FAL-VIS-145` | The Timeout-Free Call | A synchronous call with no budget | Thread exhaustion under partial failure | `VAL-VIS-295` | Explicit budget on every `IP-01` |
+
+> **`VIS-183`.** `FAL-VIS-134` The Distributed Monolith is the failure most likely to befall Oship
+> specifically, because the fifty-domain registry invites fifty deployables. Domain count is a
+> **decomposition** decision; deployable count is an **operational** one, and the two are
+> independent. Fifty domains may correctly ship as three services. Any future document that treats
+> the registry as a service list has committed this anti-pattern at the planning stage.
+
+### 02.15.3 Ownership and Lifecycle Failures
+
+### TBL-VIS-225: `FAL-VIS-146`…`160` — Ownership, Data, and Lifecycle Anti-Patterns
+
+| ID | Anti-pattern | Symptom | Impact | Detection | Remediation |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-146` | Ownership Without State | A domain owns a decision but another holds the data it needs | Decisions made on stale copies | `TBL-VIS-188` audit | Move state to the decider, or the decision to the holder |
+| `FAL-VIS-147` | The Committee Decision | Two domains jointly decide one thing | Non-deterministic outcomes by path | `VAL-VIS-267` | Split the behaviour; re-run `DEC-VIS-033` |
+| `FAL-VIS-148` | The Orphan Entity | Data with no owning domain | Nobody migrates it, nobody deletes it | `VAL-VIS-270` | Assign an owner or destroy the data |
+| `FAL-VIS-149` | The Immortal Draft | A domain stuck at `E2` indefinitely with active work against it | Implementation proceeds against an unratified spec | Evolution audit | Advance or freeze; `CON-VIS-036` forbids depending on it |
+| `FAL-VIS-150` | The Paper Promotion | Status advanced without evidence | The registry stops describing reality | `VAL-VIS-303` | Revert the status; require the artifact path |
+| `FAL-VIS-151` | The Verification Regression | A domain at `E6` loses its automated checks | Rot with green dashboards | `E6` → `E4` edge in `DGM-VIS-066` | Restore checks before any further change |
+| `FAL-VIS-152` | The Deleted Domain | A retired domain's record removed from the registry | Historical citations dangle | `VAL-VIS-243` | Restore the record with `E7` and a forward pointer |
+| `FAL-VIS-153` | The Recycled Identifier | A retired `DOMAIN-VIS-` number reused | Two meanings for one ID across history | `VAL-VIS-227` | Issue a new ID; never reuse (`CON-VIS-039`) |
+| `FAL-VIS-154` | The Silent Declassification | Security class lowered without a decision | Controls quietly removed | `VAL-VIS-234` plus registry diff | Restore the class; `CON-VIS-038` requires a `DEC-` |
+| `FAL-VIS-155` | The Mutable Ledger | An update path exists on an `RT-1` entity | History becomes negotiable | `VAL-VIS-274` | Remove the grant; correct by compensating entry |
+| `FAL-VIS-156` | The Convenient Log | Personal data written to telemetry for debugging | `RT-5` data in an `RT-4` store | `VAL-VIS-277` | Correlation IDs resolvable only via `018` |
+| `FAL-VIS-157` | The Forever Retention | No retention class assigned, so nothing is deleted | Unbounded liability | `VAL-VIS-273` | Assign a class; implement expiry in `036` |
+| `FAL-VIS-158` | The Absent Tenant Predicate | A query without tenant scoping | Cross-tenant disclosure with no error | `VAL-VIS-279` | Structural enforcement per `CON-VIS-035` |
+| `FAL-VIS-159` | The Migration Squatter | A consumer adds a column to the owner's table | Migration authority destroyed | `VAL-VIS-271` | Revert; request the field from the owner |
+| `FAL-VIS-160` | The Ownership Diagram | Ownership reassigned on paper while writes continue from the old owner | The diagram lies | `VAL-VIS-282` | Move the write path, then the diagram |
+
+> **`VIS-184`.** `FAL-VIS-150` The Paper Promotion is the anti-pattern this document is most
+> structurally exposed to. `AOM-VIS-001` assigns statuses to fifty domains, and every one of those
+> assignments is a claim that could drift from reality without anyone noticing, because nothing
+> checks it. `VAL-VIS-238` is the specific guard: while `apps/` and `services/` contain only
+> `.gitkeep`, no domain may claim an implementation status other than `NO CODE`.
+
+### 02.15.4 AI-Specific Domain Failures
+
+### TBL-VIS-226: `FAL-VIS-161`…`175` — Agent Domain Anti-Patterns
+
+| ID | Anti-pattern | Symptom | Impact | Detection | Remediation |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-161` | Resemblance Placement | An agent files work by directory similarity | Junk-drawer growth | `VAL-VIS-288` | Require the resolved domain in the change record |
+| `FAL-VIS-162` | The Assumed Status | An agent reads prose and concludes a domain is built | Work layered on nothing | `VAL-VIS-305` | `TBL-VIS-195` is authoritative |
+| `FAL-VIS-163` | The Invented Domain | An agent coins a `DOMAIN-VIS-` identifier | Collisions, orphans | `VAL-VIS-292` | Registry approval is a human gate |
+| `FAL-VIS-164` | The Helpful Guess | An agent resolves `UNKNOWN` by inference | Fabrication entering the constitution | `VAL-VIS-293` | Report and halt |
+| `FAL-VIS-165` | The Convenient Widening | `X2` upgraded to `X1` because the agent wanted an answer now | Temporal coupling introduced silently | `VAL-VIS-254` | Reject; use the declared crossing kind |
+| `FAL-VIS-166` | Internals Reading | An agent reads a domain's implementation to satisfy a crossing | Coupling invisible in the diff | `VAL-VIS-291` | Restrict context per `TBL-VIS-209` |
+| `FAL-VIS-167` | The Caveat Proceed | An agent passes a HALT gate with a note | Gates become suggestions | `VAL-VIS-289` | HALT means stop |
+| `FAL-VIS-168` | Premature Implementation | Code produced for a domain below `E3` | Implementation ahead of specification | `VAL-VIS-290` | Produce specification instead |
+| `FAL-VIS-169` | The Threat Model Skip | `S1` work begun without a threat model | Security designed after exposure | `VAL-VIS-235` | `CON-VIS-031` blocks |
+| `FAL-VIS-170` | Context Overload | An agent loads all fifty records for a placement question | Slower, and it couples what it read | `TBL-VIS-209` | Load the minimum set |
+| `FAL-VIS-171` | The Optimistic Rollup | An agent summarises fifty domains as "the platform is progressing" | Leadership misinformed | `VAL-VIS-305` | Report counts by evolution level |
+| `FAL-VIS-172` | Silent Constraint Drop | A constraint judged inapplicable without a record | Fifteen blocking rules become thirteen | `VAL-VIS-312` | Any removal needs a `DEC-` record |
+| `FAL-VIS-173` | The Autonomy Creep | Repeated approvals treated as standing permission | A4 reached by accretion | `CON-VIS-045` review | Approval is per-action; `VIS-033` is categorical |
+| `FAL-VIS-174` | Capability Duplication | An agent binds one capability to two domains for coverage | `CON-VIS-042` violated | `VAL-VIS-314` | One delivering domain |
+| `FAL-VIS-175` | The Obligation Amnesia | A later part omits an undischarged obligation | Open work disappears from the record | `VAL-VIS-309` | Restate every open obligation each part |
+
+```mermaid
+flowchart TB
+    subgraph CLASS["Classification - 121 to 131"]
+        A1["Wrong name"]
+        A2["Wrong granularity"]
+        A3["No responsibility"]
+    end
+    subgraph BOUND["Boundary - 132 to 145"]
+        B1["Boundary not enforced"]
+        B2["Guarantee not declared"]
+        B3["Direction inverted"]
+    end
+    subgraph OWN["Ownership - 146 to 160"]
+        C1["Two owners or none"]
+        C2["Status without evidence"]
+        C3["Data without a class"]
+    end
+    subgraph AGENT["Agent - 161 to 175"]
+        D1["Acted without resolving"]
+        D2["Assumed instead of reporting"]
+        D3["Passed a gate"]
+    end
+
+    A1 --> ROOT["Root cause - a decision was skipped rather than made"]
+    A2 --> ROOT
+    A3 --> ROOT
+    B1 --> ROOT
+    B2 --> ROOT
+    B3 --> ROOT
+    C1 --> ROOT
+    C2 --> ROOT
+    C3 --> ROOT
+    D1 --> ROOT
+    D2 --> ROOT
+    D3 --> ROOT
+    ROOT --> FIX["Prevention - make the decision explicit and gate it"]
+
+    classDef root fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef fix fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class ROOT root
+    class FIX fix
+```
+
+> **Diagram ID:** `DGM-VIS-072` — **Common Root Cause Across All Fifty-Five Anti-Patterns**
+> **Explanation:** Fifty-five distinct failures reduce to one mechanism: a decision that should have
+> been made explicitly was instead made implicitly, by default, or by whoever typed first. This is
+> why the domain model's remedy is procedural rather than technical — `DEC-VIS-032`, `DEC-VIS-033`,
+> and `DEC-VIS-034` exist to force the decision into the open, and the HALT gates of `AI-VIS-061`
+> exist to stop work when it has not been made.
+
+### TBL-VIS-227: Anti-Pattern Presence Audit Against the Current Repository
+
+| Anti-pattern | Present in Oship today? | Evidence |
+| :--- | :--- | :--- |
+| `FAL-VIS-121` Junk Drawer | **No** | No domain named common, shared, or core in the registry |
+| `FAL-VIS-122` Org Chart Domain | **No** | Domain names are responsibilities; owners are separate fields |
+| `FAL-VIS-128` Phantom Domain | **No** | `VAL-VIS-313` passes — all 50 deliver at least one capability |
+| `FAL-VIS-132` Shared Table | **Not yet possible** | No persistence exists |
+| `FAL-VIS-134` Distributed Monolith | **Not yet possible** | No deployables exist |
+| `FAL-VIS-149` Immortal Draft | **Present, at scale** | 28 domains at `E2` with no advancement path scheduled |
+| `FAL-VIS-150` Paper Promotion | **Guarded, not prevented** | `VAL-VIS-238` written; no automation executes it |
+| `FAL-VIS-151` Verification Regression | **Not yet possible** | No domain has ever reached `E5` |
+| `FAL-VIS-171` Optimistic Rollup | **Live risk** | `README.md` badge reads "Knowledge Domains 24 of 24", which is true of indexes and easily misread as coverage |
+| `FAL-VIS-173` Autonomy Creep | **Live risk** | `CON-VIS-045` is enforced socially only (`OBL-18`) |
+
+> **`VIS-185`.** Four anti-patterns are recorded as "not yet possible" purely because Oship has no
+> running system. That is not a clean bill of health; it is the absence of the conditions under
+> which the failure occurs. The two live risks — `FAL-VIS-171` and `FAL-VIS-173` — are both about
+> *how the system is described and permitted*, not about how it is built, which is exactly what one
+> would expect of a repository whose only implemented capability is describing itself.
+
+---
+
+## 02.16 — Domain Dependency Model
+
+### AI NAVIGATION METADATA — §02.16
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before sequencing any implementation work** |
+| **AI DEPENDENCIES** | §02.3 registry, §02.4 crossing legality |
+| **AI INPUTS** | A set of domains to be built |
+| **AI OUTPUTS** | A legal build order and the critical path |
+| **AI IMPLEMENTATION IMPACT** | Determines what must exist before what |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-219`…`223`, `VAL-VIS-240`…`242` |
+| **AI RELATED DOCUMENTS** | `19_ROADMAP/INDEX.md` |
+
+### 02.16.1 Dependency Kinds
+
+> **`VIS-186`.** "Depends on" is four different relations wearing one phrase, and conflating them
+> produces build orders that are simultaneously over-constrained and unsafe. `TBL-VIS-228`
+> separates them.
+
+### TBL-VIS-228: Dependency Kinds
+
+| Kind | Name | Means | Blocks build order? | Blocks deployment? |
+| :--- | :--- | :--- | :--- | :--- |
+| `DK-1` Existential | A cannot function at all without B | Yes | Yes |  |
+| `DK-2` Functional | A loses a capability without B, but still functions | Yes, for that capability | No |
+| `DK-3` Semantic | A's meaning is defined by B's concepts | Yes, for specification | No |
+| `DK-4` Observational | A emits facts B consumes; A is unaffected if B is absent | No | No |
+
+> **`VIS-187`.** Only `DK-1` and `DK-3` force sequencing. `DK-4` observational dependency forces
+> nothing at all — which is why every crossing that can be expressed as `X2` should be, since it
+> converts a scheduling constraint into none.
+
+### TBL-VIS-229: Critical Path Dependencies
+
+| Domain | `DK-1` on | `DK-3` on | Earliest buildable after |
+| :--- | :--- | :--- | :--- |
+| `DOMAIN-VIS-018` Identity | `035` persistence | `009`, `045` | `OBL-03` plus `035` |
+| `DOMAIN-VIS-019` Tenancy | `018`, `035` | `034` | `018` |
+| `DOMAIN-VIS-020` Financial Factory | `019`, `021` | `034`, `044` | `021` |
+| `DOMAIN-VIS-021` Ledger | `035` | `034` | `035` |
+| `DOMAIN-VIS-022` Settlement | `021` | `020` | `021` |
+| `DOMAIN-VIS-023` Reconciliation | `021` | `022` | `022` |
+| `DOMAIN-VIS-024` Workflow | `035` | `017` | `035` |
+| `DOMAIN-VIS-035` Persistence | `038` runtime | `034` | `OBL-03` |
+| `DOMAIN-VIS-038` Runtime Platform | none | `040` | `OBL-03` |
+| `DOMAIN-VIS-041` Observability | `038` | `043` | `038` |
+| `DOMAIN-VIS-045` Authorization | `035` | `018`, `019` | `035` |
+| `DOMAIN-VIS-047` Audit | `035` | `009` | `035` |
+| `DOMAIN-VIS-006` Governance Automation | none | `009`, `007` | **now** |
+| `DOMAIN-VIS-007` Verification | `006` | `009` | `006` |
+
+```mermaid
+flowchart LR
+    OBL3["OBL-03 runtime stack decision"] --> D38["038 Runtime Platform"]
+    D38 --> D35["035 Persistence"]
+    D35 --> D18["018 Identity"]
+    D35 --> D21["021 Ledger"]
+    D35 --> D45["045 Authorization"]
+    D35 --> D47["047 Audit"]
+    D18 --> D19["019 Tenancy"]
+    D19 --> D20["020 Financial Factory"]
+    D21 --> D20
+    D21 --> D22["022 Settlement"]
+    D22 --> D23["023 Reconciliation"]
+    D38 --> D41["041 Observability"]
+
+    START["No blocker at all"] --> D06["006 Governance Automation"]
+    D06 --> D07["007 Verification"]
+    D07 --> E5["First E5 domain in Oship history"]
+
+    classDef free fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef gate fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class START,D06,D07,E5 free
+    class OBL3 gate
+```
+
+> **Diagram ID:** `DGM-VIS-073` — **Two Independent Build Frontiers**
+> **Explanation:** The upper chain is entirely gated on one unmade decision and cannot start. The
+> lower chain has no blocker whatsoever, needs no stack decision, and terminates in the first `E5`
+> domain Oship has ever had. Two frontiers, one blocked and one open, is a scheduling fact rather
+> than an opinion — and it makes the sequencing question unusually easy to answer.
+
+### TBL-VIS-230: Fan-In and Fan-Out Analysis
+
+| Domain | Depended upon by | Depends on | Interpretation |
+| :--- | ---: | ---: | :--- |
+| `DOMAIN-VIS-035` Persistence | 9 | 1 | Highest fan-in; a change here touches nine domains |
+| `DOMAIN-VIS-009` Standards | 8 | 1 | High fan-in, already `E4` — the healthy pattern |
+| `DOMAIN-VIS-018` Identity | 6 | 2 | Critical path root for the product cluster |
+| `DOMAIN-VIS-021` Ledger | 4 | 1 | Financial cluster root |
+| `DOMAIN-VIS-020` Financial Factory | 2 | 4 | High fan-out — an integrator, not a foundation |
+| `DOMAIN-VIS-002` Knowledge Graph | 7 | 1 | High fan-in, `E4` |
+| `DOMAIN-VIS-029` Marketplace | 0 | 2 | Zero fan-in at `E0` — safe to retire (`OBL-13`) |
+| `DOMAIN-VIS-006` Governance Automation | 3 | 2 | Modest fan-in, disproportionate leverage |
+
+> **`VIS-188`.** High fan-in is not a defect; it is what a foundation looks like. The signal to
+> watch is high fan-in **combined with** a low evolution level. `DOMAIN-VIS-035` has nine
+> dependants and sits at `E2` with no stack decision behind it — that combination is the single
+> riskiest position in the graph, and `VAL-VIS-223`'s advisory fan-out cap does nothing to catch it.
+
+---
+
+## 02.17 — Domain Metrics Model
+
+### AI NAVIGATION METADATA — §02.17
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P1 — read when reporting on domain health |
+| **AI DEPENDENCIES** | §02.3 registry, §02.7 lifecycle, PART 01 §01.12 success model |
+| **AI INPUTS** | The registry and repository state |
+| **AI OUTPUTS** | Measured values, or the literal `NOT YET MEASURED` |
+| **AI IMPLEMENTATION IMPACT** | Defines what `DOMAIN-VIS-041` must instrument |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-305`, `VAL-VIS-309`…`312` |
+| **AI RELATED DOCUMENTS** | `.ai/METRICS.md` |
+
+> **`VIS-189`.** A metric is defined by four things: what it counts, how it is obtained, what value
+> would be good, and what it currently is. A metric missing the fourth is a plan; a metric missing
+> the third is a number. Both are recorded here honestly, and `NOT YET MEASURED` appears wherever it
+> is true.
+
+### TBL-VIS-231: Structural Metrics — `DMET-VIS-001`…`020`
+
+| ID | Metric | Source | Healthy | Current |
+| :--- | :--- | :--- | :--- | ---: |
+| `DMET-VIS-001` | Total registered domains | Registry | Stable between changes | 50 |
+| `DMET-VIS-002` | Domains at `E0`–`E1` | Registry | Low, and moving | 11 |
+| `DMET-VIS-003` | Domains at `E2` | Registry | Should fall over time | 28 |
+| `DMET-VIS-004` | Domains at `E3` | Registry | Rising | 4 |
+| `DMET-VIS-005` | Domains at `E4` | Registry | Rising | 6 |
+| `DMET-VIS-006` | Domains at `E5` | Registry | At least one | **0** |
+| `DMET-VIS-007` | Domains at `E6` | Registry | Rising once shipping | **0** |
+| `DMET-VIS-008` | Retired domains | Registry | Non-zero over time is healthy | 0 |
+| `DMET-VIS-009` | Domains with no owner | Registry | Zero | 0 |
+| `DMET-VIS-010` | Domains with `UNKNOWN` fields | Registry | Falling | 3 |
+| `DMET-VIS-011` | `S1` domains | Registry | As low as honesty allows | 19 |
+| `DMET-VIS-012` | `S1` domains with a threat model | Repository | Equal to `DMET-VIS-011` | **0** |
+| `DMET-VIS-013` | Threat model coverage | `012` divided by `011` | 100% | **0%** |
+| `DMET-VIS-014` | Domains above boundary strength `B0` | Repository | All | **0** |
+| `DMET-VIS-015` | Mean dependencies per domain | Registry | Below 4 | 1.7 |
+| `DMET-VIS-016` | Maximum fan-in | Registry | Below 12 | 9 |
+| `DMET-VIS-017` | Dependency cycles | Registry | Zero | 0 |
+| `DMET-VIS-018` | Illegal dependency edges | `TBL-VIS-155` | Zero | 0 |
+| `DMET-VIS-019` | Categories with zero domains | Registry | Zero | 0 |
+| `DMET-VIS-020` | Domains not mapped to a knowledge domain | `TBL-VIS-157` | Zero | 0 |
+
+### TBL-VIS-232: Coverage and Quality Metrics — `DMET-VIS-021`…`040`
+
+| ID | Metric | Source | Healthy | Current |
+| :--- | :--- | :--- | :--- | ---: |
+| `DMET-VIS-021` | Capabilities bound to a delivering domain | `TBL-VIS-199`/`200` | 70 of 70 | 70 |
+| `DMET-VIS-022` | Capabilities implemented | PART 01 | Rising | 6 |
+| `DMET-VIS-023` | Capability implementation rate | `022` / 70 | Rising | 8.6% |
+| `DMET-VIS-024` | Domains delivering zero capabilities | Mapping | Zero | 0 |
+| `DMET-VIS-025` | Capabilities with two delivering domains | Mapping | Zero | 0 |
+| `DMET-VIS-026` | Vision domains with no architecture domain | `TBL-VIS-178` | Falling to zero | 15 |
+| `DMET-VIS-027` | Architecture coverage | 35 / 50 | 100% | 70% |
+| `DMET-VIS-028` | Validation rules defined for the domain model | §02.14 | Sufficient | 120 |
+| `DMET-VIS-029` | Validation rules automatable | §02.14 | High share | 87 |
+| `DMET-VIS-030` | Validation rules automated | CI | Equal to `029` | **0** |
+| `DMET-VIS-031` | Validation automation rate | `030` / `029` | 100% | **0%** |
+| `DMET-VIS-032` | Blocking constraints defined | §02.10 | Sufficient | 15 |
+| `DMET-VIS-033` | Blocking constraints enforced mechanically | CI | 15 | **0** |
+| `DMET-VIS-034` | Anti-patterns catalogued for domains | §02.15 | Sufficient | 55 |
+| `DMET-VIS-035` | Anti-patterns present today | `TBL-VIS-227` | Zero | 1 confirmed, 2 live risks |
+| `DMET-VIS-036` | Entity classes with an owner | `TBL-VIS-202` | All | 16 of 16 |
+| `DMET-VIS-037` | Entity classes with a retention class | `TBL-VIS-203` | All | 16 of 16 |
+| `DMET-VIS-038` | Retention classes with a defined duration | `RT-2` open | All | 5 of 6 |
+| `DMET-VIS-039` | Open obligations | `TBL-VIS-213` plus `OBL-19` | Falling | 19 |
+| `DMET-VIS-040` | Obligations blocked on `OBL-03` | `DGM-VIS-071` | Zero | 7 |
+
+### TBL-VIS-233: Operational Metrics — `DMET-VIS-041`…`060`
+
+| ID | Metric | Source | Healthy | Current |
+| :--- | :--- | :--- | :--- | :--- |
+| `DMET-VIS-041` | Domains in production | Deployment | Rising | **0** |
+| `DMET-VIS-042` | Domains with an on-call owner | Runbooks | Equal to `041` | 0 |
+| `DMET-VIS-043` | Domains with instrumentation | `041` domain | Equal to production count | 0 |
+| `DMET-VIS-044` | Boundary violations detected | CI | Zero | `NOT YET MEASURED` |
+| `DMET-VIS-045` | Cross-domain calls per user action | Tracing | Below 10 | `NOT YET MEASURED` |
+| `DMET-VIS-046` | Contracts with a declared guarantee | Contract registry | All | `NOT YET MEASURED` |
+| `DMET-VIS-047` | Replicas with an active drift check | Replica register | All | `NOT YET MEASURED` |
+| `DMET-VIS-048` | Detected replica drift events | Reconciliation | Zero sustained | `NOT YET MEASURED` |
+| `DMET-VIS-049` | Duplicate settlement effects | `022` | Exactly zero, always | `NOT YET MEASURED` |
+| `DMET-VIS-050` | Cross-tenant disclosures | `019` | Exactly zero, always | `NOT YET MEASURED` |
+| `DMET-VIS-051` | Audit events lost | `047` | Exactly zero, always | `NOT YET MEASURED` |
+| `DMET-VIS-052` | Domains deployable independently | Delivery | Rising where intended | `NOT YET MEASURED` |
+| `DMET-VIS-053` | Releases requiring coordinated multi-domain deploy | Delivery | Falling | `NOT YET MEASURED` |
+| `DMET-VIS-054` | Mean time to resolve a domain ownership question | Process | Falling | `NOT YET MEASURED` |
+| `DMET-VIS-055` | Agent HALT events at domain gates | Agent logs | Non-zero is healthy | `NOT YET MEASURED` |
+| `DMET-VIS-056` | Agent changes naming their resolved domain | Commit messages | 100% | `NOT YET MEASURED` |
+| `DMET-VIS-057` | Registry edits without a `DEC-` record | Git history | Zero | 0 |
+| `DMET-VIS-058` | Backward evolution transitions | Registry history | Rare, always recorded | 0 |
+| `DMET-VIS-059` | Domains whose status changed without evidence | Review | Zero | 0 |
+| `DMET-VIS-060` | Time a domain spends at `E2` before advancing | Registry history | Bounded | `NOT YET MEASURED` |
+
+> **`VIS-190`.** Seventeen of sixty domain metrics read `NOT YET MEASURED`, and eight more read
+> zero because the thing being counted cannot yet occur. Only the structural metrics —
+> `DMET-VIS-001`…`020` — are genuinely measurable today, because they are computed from the
+> registry rather than from a running system. This is the domain-level echo of `VIS-052`: Oship can
+> measure what it has written and nothing about what it does.
+
+> **`VIS-191`.** Three metrics are declared **exactly zero, always**: `DMET-VIS-049` duplicate
+> settlements, `DMET-VIS-050` cross-tenant disclosures, and `DMET-VIS-051` lost audit events. These
+> are not targets with tolerances. A single occurrence of any of them is an incident requiring a
+> `DEC-` record and a structural fix, not a rate to be optimised downward.
+
+---
+
+## 02.18 — PART 02 Traceability and Closure
+
+### AI NAVIGATION METADATA — §02.18
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P1 — read to traverse PART 02 mechanically |
+| **AI DEPENDENCIES** | All of PART 02 |
+| **AI INPUTS** | Any PART 02 identifier |
+| **AI OUTPUTS** | Its upstream source and downstream consumers |
+| **AI IMPLEMENTATION IMPACT** | Enables impact analysis before any change |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-320` |
+| **AI RELATED DOCUMENTS** | PART 01 §01.27 traceability matrix |
+
+### 02.18.1 Identifier Inventory
+
+### TBL-VIS-234: Identifiers Introduced in PART 02
+
+| Namespace | Range introduced | Count | Next free |
+| :--- | :--- | ---: | :--- |
+| `VIS-` | `104`…`196` | 93 | `VIS-197` |
+| `DOMAIN-VIS-` | `001`…`050` | 50 | `DOMAIN-VIS-051` |
+| `TBL-VIS-` | `139`…`241` | 103 | `TBL-VIS-242` |
+| `DGM-VIS-` | `054`…`073` | 20 | `DGM-VIS-074` |
+| `VAL-VIS-` | `201`…`320` | 120 | `VAL-VIS-321` |
+| `FAL-VIS-` | `121`…`175` | 55 | `FAL-VIS-176` |
+| `CON-VIS-` | `031`…`045` | 15 | `CON-VIS-046` |
+| `DMET-VIS-` | `001`…`060` | 60 | `DMET-VIS-061` |
+| `AI-VIS-` | `061`…`071` | 11 | `AI-VIS-072` |
+| `IMG-VIS-` | `023`…`025` | 3 | `IMG-VIS-026` |
+| `DEC-VIS-` | `032`…`034` | 3 | `DEC-VIS-035` |
+| `NG-VIS-` | `025` | 1 | `NG-VIS-026` |
+| Local rule namespaces | `DCR-01`…`10`, `C1`…`C10`, `L0`…`L4`, `B0`…`B5`, `X1`…`X5`, `IP-01`…`08`, `R1`…`R6`, `RA-01`…`06`, `BV-01`…`08`, `DP-01`…`08`, `RT-1`…`6`, `E0`…`E7`, `S1`…`S4`, `DK-1`…`4`, `OBL-01`…`18` | — | Scoped to PART 02 |
+
+### 02.18.2 Traceability Chains
+
+### TBL-VIS-235: PART 01 to PART 02 Trace
+
+| PART 01 element | PART 02 consumer | Relationship |
+| :--- | :--- | :--- |
+| `CAP-VIS-001`…`070` | `TBL-VIS-199`, `TBL-VIS-200` | Every capability bound to a delivering domain |
+| `VIS-067` eight `UNMAPPED` capabilities | `VIS-159`, `VIS-160` | All eight bound to vision domains; architecture gap retained |
+| `PRN-VIS-015` vendor neutrality | `CON-VIS-041` | Converted into a blocking constraint |
+| `PRN-VIS-020` finish before starting | `VIS-141`, `FAL-VIS-131` | Applied at boundary and decomposition level |
+| `VIS-032` human accountability | `CON-VIS-045`, `FAL-VIS-173` | Enforced as an unreachable autonomy level |
+| `VIS-033` A4 prohibited | `CON-VIS-045`, `OBL-18` | Prohibition restated; enforcement recorded as owed |
+| `VIS-039` non-callable capabilities | `TBL-VIS-200` | Reflected in every product-domain binding |
+| `VIS-041` six of seventy implemented | `DGM-VIS-067`, `DMET-VIS-022` | Visualised and measured |
+| `VIS-051` no dates | `TBL-VIS-214` | Restated as a deliberate omission |
+| `VIS-052` thirteen unmeasured | `VIS-190`, `TBL-VIS-233` | Extended to seventeen domain metrics |
+| `VIS-065` read-only toward architecture | `VIS-130`, `OBL-01` | Architecture gap recorded, never patched |
+| `VIS-069` single-owner `CODEOWNERS` | `OBL-07`, `TBL-VIS-180` `B2` | Weakens review-level boundary enforcement |
+| `BND-VIS-014` experiment isolation | `CON-VIS-036` exemption | Prototypes exempt from the `E2` dependency rule |
+| `PROB-VIS-023` unknown regulatory regime | `VIS-167`, `OBL-02` | Blocks `RT-2` duration |
+| `EVD-VIS-017` uninstalled workflows | `VIS-170`, `OBL-04` | Root of the enforcement gap |
+| `EVD-VIS-019` unknown stack | `VIS-151`, `OBL-03` | Gates seven obligations |
+| `EVD-VIS-020` empty runtime directories | `VIS-127`, `VAL-VIS-238` | Caps every implementation status at `NO CODE` |
+| `DEC-VIS-028` artifact over specification | `VIS-155` | Applied to evolution transitions |
+| `AI-VIS-045` boot sequence, three HALTs | `AI-VIS-061`, `VIS-174` | Extended to six HALT gates |
+
+### TBL-VIS-236: PART 02 to `AOM-ARCH-001` Trace — Read-Only
+
+| PART 02 element | Architecture element cited | Direction |
+| :--- | :--- | :--- |
+| `TBL-VIS-178` coverage audit | `DOM-ARCH-001`…`010` | Vision reads architecture |
+| `DOMAIN-VIS-001`…`050` records | `CMP-ARCH-001`…`030`, `LYR-ARCH-001`…`010` | Vision reads architecture |
+| `VAL-VIS-205` layer-name prohibition | `LYR-ARCH-001`…`010` | Vision reads architecture |
+| `VIS-130` fifteen unmapped domains | `AOM-ARCH-001` PART 02 | **Obligation placed, no edit made** |
+| `TBL-VIS-183` crossing legality | `AOM-ARCH-001` §04.4 relationship patterns | Consistent, independently derived |
+| `VIS-183` distributed monolith warning | Future deployment topology | Advisory to architecture |
+
+> **`VIS-192`.** No element of `AOM-ARCH-001` was modified by PART 02. Every reference is a
+> citation, and every gap discovered is recorded as an obligation in `TBL-VIS-213` rather than
+> repaired here. `VIS-065` holds without exception.
+
+### 02.18.3 Coverage Audit
+
+### TBL-VIS-237: PART 02 Section Coverage
+
+| Section | Subject | Visual anchors | Longest unbroken prose block |
+| :--- | :--- | ---: | ---: |
+| §02.1 | Domain vision overview | 2 diagrams, 7 tables | Under 30 lines |
+| §02.2 | Taxonomy model | 1 diagram, 7 tables | Under 30 lines |
+| §02.3 | Domain registry | 2 diagrams, 21 tables | Under 25 lines |
+| §02.4 | Boundary model | 2 diagrams, 6 tables | Under 30 lines |
+| §02.5 | Responsibility model | 1 diagram, 4 tables | Under 30 lines |
+| §02.6 | Interaction model | 2 diagrams, 4 tables | Under 30 lines |
+| §02.7 | Lifecycle model | 1 diagram, 4 tables | Under 25 lines |
+| §02.8 | Capability mapping | 1 diagram, 4 tables | Under 25 lines |
+| §02.9 | Data ownership | 1 diagram, 3 tables | Under 30 lines |
+| §02.10 | Constraints | 1 diagram, 2 tables | Under 25 lines |
+| §02.11 | AI interpretation | 1 diagram, 3 tables | Under 25 lines |
+| §02.12 | Image specifications | 3 specifications | Under 20 lines |
+| §02.13 | Obligations | 1 diagram, 2 tables | Under 20 lines |
+| §02.14 | Validation rules | 7 tables | Under 20 lines |
+| §02.15 | Anti-pattern library | 1 diagram, 6 tables | Under 20 lines |
+| §02.16 | Dependency model | 1 diagram, 3 tables | Under 25 lines |
+| §02.17 | Metrics | 3 tables | Under 20 lines |
+| §02.18 | Traceability | 5 tables | Under 20 lines |
+
+> **`VIS-193`.** No block in PART 02 exceeds thirty lines without a visual anchor, against the
+> stated ceiling of roughly one hundred and twenty. The density target of a visual every twenty to
+> sixty lines is met throughout.
+
+### 02.18.4 Overlap Scan
+
+### TBL-VIS-238: Overlap Scan — PART 02 Against PART 01
+
+| Potential overlap | Verdict | Distinction |
+| :--- | :--- | :--- |
+| PART 01 §01.7 capabilities vs §02.8 mapping | **No overlap** | PART 01 defines capabilities; §02.8 binds them to owners |
+| PART 01 §01.9 boundaries vs §02.4 | **No overlap** | `BND-VIS-` are system-level scope, trust, knowledge, and autonomy boundaries; §02.4 governs inter-domain crossings |
+| PART 01 §01.14 evolution vs §02.7 lifecycle | **No overlap** | `P0`…`P5` are system phases; `E0`…`E7` are per-domain levels |
+| PART 01 §01.19 constraints vs §02.10 | **Continuation** | Same register, extended from `031` |
+| PART 01 §01.24 validation vs §02.14 | **Continuation** | Same register, extended from `201` |
+| PART 01 §01.25 anti-patterns vs §02.15 | **Continuation** | Same register, extended from `121` |
+| PART 01 §01.27 traceability vs §02.18 | **No overlap** | PART 01 traces vision elements; §02.18 traces domain elements |
+| PART 01 `SUC-VIS-` vs §02.17 `DMET-VIS-` | **No overlap** | `SUC-VIS-` measures system success; `DMET-VIS-` measures domain-model health |
+| §02.2 knowledge domains vs `MCX-` registry | **No overlap** | `TBL-VIS-156`/`157` formally separate knowledge from system domains |
+
+### TBL-VIS-239: PART 02 Completion Statement
+
+| Claim | Status | Evidence |
+| :--- | :--- | :--- |
+| Fifty domains registered with complete records | **Done** | §02.3, `TBL-VIS-179` integrity audit passes |
+| Every capability bound to a delivering domain | **Done** | `DMET-VIS-021` = 70 of 70 |
+| Boundary, interaction, responsibility, and data models defined | **Done** | §02.4, §02.5, §02.6, §02.9 |
+| Lifecycle and dependency models defined | **Done** | §02.7, §02.16 |
+| 120 validation rules, 55 anti-patterns, 15 constraints, 60 metrics | **Done** | §02.10, §02.14, §02.15, §02.17 |
+| Agent procedure with HALT gates | **Done** | `AI-VIS-061`, `DGM-VIS-070` |
+| Nineteen open obligations recorded, none disguised | **Done** | `TBL-VIS-213`, `TBL-VIS-214`, `TBL-VIS-241` |
+| Any domain implemented in code | **Not claimed** | `VAL-VIS-238`; all runtime directories are `.gitkeep`-only |
+| Any rule automated | **Not claimed** | `DMET-VIS-030` = 0 |
+| Architecture gap closed | **Not claimed** | `OBL-01` remains open; `VIS-065` forbids closing it here |
+
+> **`VIS-194`.** PART 02 is complete as specification and honest about being nothing more. It has
+> made the domain space finite, named, owned, bounded, and checkable. It has not built anything, and
+> it has recorded in numbered obligations exactly what it did not do and who owes it.
+
+### 02.18.5 Navigation Correction — `TBL-VIS-139` Superseded
+
+> **`VIS-195`.** `TBL-VIS-139` was written at the opening of PART 02, before the part was drafted,
+> and it predicted a section plan that the finished part does not follow. Six of its eighteen rows
+> point at sections that exist under different subjects, and six of its promised subjects were not
+> written as sections at all. Under the append-only part model `TBL-VIS-139` is not edited. It is
+> **superseded** by `TBL-VIS-240`, and the shortfall is recorded as an obligation rather than
+> quietly absorbed. A forward-looking navigation table that is allowed to drift from the document it
+> indexes is itself an instance of `FAL-VIS-150` The Paper Promotion, applied to a table.
+
+### TBL-VIS-240: Corrected PART 02 Section Index — Supersedes `TBL-VIS-139`
+
+| § | Actual section title | Question it answers | Primary output |
+| :--- | :--- | :--- | :--- |
+| §02.1 | Domain Vision Overview | What is a domain, and what is it not? | `DCR-01`…`DCR-10` domain criteria |
+| §02.2 | Domain Taxonomy Model | How are domains classified? | Categories `C1`…`C10`, layers `L0`…`L4`, `S1`…`S4` |
+| §02.3 | Domain Registry | Which domains exist? | `DOMAIN-VIS-001`…`050` |
+| §02.4 | Domain Boundary Model | How strong is each boundary, and which crossings are legal? | `B0`…`B5`, `X1`…`X5`, `BV-01`…`BV-08` |
+| §02.5 | Domain Responsibility Model | Who is responsible for what, and where is it contested? | `R1`…`R6`, twelve contested assignments |
+| §02.6 | Domain Interaction Model | How may domains talk to each other? | `IP-01`…`IP-08` interaction patterns |
+| §02.7 | Domain Lifecycle Model | How does a domain evolve? | `E0`…`E7` levels and transition gates |
+| §02.8 | Domain to Capability Mapping | Which domain delivers which capability? | 70 of 70 capabilities bound |
+| §02.9 | Domain Data Ownership Model | Who owns data, and for how long? | Ownership axioms, `RT-1`…`RT-6`, `DP-01`…`DP-08` |
+| §02.10 | Domain Constraints | What is forbidden at domain level? | `CON-VIS-031`…`045` |
+| §02.11 | AI Domain Interpretation Model | How should an agent use all of this? | `AI-VIS-061`…`071`, six HALT gates |
+| §02.12 | Domain Image Specifications | What must be drawn? | `IMG-VIS-023`…`025` |
+| §02.13 | Open Obligations | What is owed, and by whom? | `OBL-01`…`OBL-18`; `OBL-19` added in §02.18 |
+| §02.14 | Domain Validation Rules | How is the model checked? | `VAL-VIS-201`…`320` |
+| §02.15 | Domain Failure and Anti-Pattern Library | How does the model fail? | `FAL-VIS-121`…`175` |
+| §02.16 | Domain Dependency Model | What are the dependency rules and the build order? | `DK-1`…`DK-4`, `DGM-VIS-073` |
+| §02.17 | Domain Metrics Model | How is domain health measured? | `DMET-VIS-001`…`060` |
+| §02.18 | Traceability and Closure | How is PART 02 traversed and closed? | `TBL-VIS-234`…`241` |
+
+### TBL-VIS-241: Subjects Promised by `TBL-VIS-139` and Not Written — `OBL-19`
+
+| Promised subject | `TBL-VIS-139` row | Where it partially lives now | Disposition |
+| :--- | :--- | :--- | :--- |
+| AI structured as a domain | §02.5 | `DOMAIN-VIS-011`…`017`, `C6` category | Deferred to a later part |
+| Memory as a domain | §02.6 | `DOMAIN-VIS-003`, `DOMAIN-VIS-014` | Deferred to a later part |
+| Knowledge circulation and lifecycle | §02.7 | `DOMAIN-VIS-002`, `009`, `010` | Deferred to a later part |
+| Experience ownership | §02.8 | `DOMAIN-VIS-030`…`034` | Deferred to a later part |
+| Security philosophy | §02.10 | `DOMAIN-VIS-018`, `045`, `046`, `047`; `TBL-VIS-180` boundary strengths | Deferred to a later part |
+| Infrastructure evolution and integration ecosystem | §02.11, §02.12 | `DOMAIN-VIS-035`…`040`, `034`; blocked on `OBL-03` | Deferred to a later part |
+
+> **`OBL-19`** — Write the six deferred subject areas of `TBL-VIS-241` as first-class sections in a
+> later part of `AOM-VIS-001`. Owed by: this document. Blocked by: nothing for the first four;
+> `OBL-03` for infrastructure and integration. Acceptance: each subject has its own section with its
+> own navigation metadata, diagrams, and validation rules, and `TBL-VIS-241` is closed by citation.
+
+> **`VIS-196`.** The next part of `AOM-VIS-001` continues from `VIS-197`, `TBL-VIS-242`,
+> `DGM-VIS-074`, `VAL-VIS-321`, `FAL-VIS-176`, `CON-VIS-046`, `DMET-VIS-061`, `AI-VIS-072`,
+> `IMG-VIS-026`, `DEC-VIS-035`, and `DOMAIN-VIS-051`.
+
+---
+
+<!-- CONTINUATION_POINT -->
+
+> This marker supersedes the earlier `CONTINUATION_POINT` recorded at the end of PART 01. The
+> earlier marker is retained unmodified under the append-only part model; the **last** marker in the
+> file is always the authoritative resumption point.
+
+**LAST_COMPLETED_SECTION:** PART 02 — DOMAIN VISION ARCHITECTURE
+**LAST_COMPLETED_SUBSECTION:** 02.18.5 Navigation Correction
+**LAST_COMPLETED_ID:** `VIS-196`
+**NEXT_SECTION:** PART 03 — §03.1
+**NEXT_ID:** `VIS-197`
+**CURRENT_PART:** PART 02 — COMPLETE
+**NEXT_PART:** PART 03
+**LAST_LINE_ANCHOR:** `TBL-VIS-241: Subjects Promised by TBL-VIS-139 and Not Written`
+**DEPENDENCIES_LOADED:** `AOM-ARCH-001` PART 01 read-only, `MASTER_CONTEXT_RULES.md`, `METADATA_STANDARD.md`, `01_PRODUCT/INDEX.md`, `architecture/DOMAIN_MODEL.md`, `.ai/` control plane
+
+---
