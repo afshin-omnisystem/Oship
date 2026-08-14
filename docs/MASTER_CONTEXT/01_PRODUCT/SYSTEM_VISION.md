@@ -13747,3 +13747,1598 @@ flowchart TB
 | **BLOCKING** | `OBL-03` persistence decision · `OUT-VIS-004` CI installation · `AOM-ARCH-001` PART 02 |
 
 ---
+
+# PART 04 — MEASUREMENT, EVIDENCE AND SYSTEM OBSERVABILITY VISION
+
+> **Document:** `AOM-VIS-001` · **Part:** 04 of a planned 6 · **Authority:** L1 — Strategic / Constitutional
+> **Appended after** the PART 03 continuation point. **PART 01, PART 02 and PART 03 are frozen** —
+> nothing above this line is rewritten, reordered, renumbered, or squashed by this part. The PART 03
+> continuation marker remains exactly as written; the marker at the end of *this* part becomes the
+> authoritative one.
+
+---
+
+## PART 04 — PREAMBLE
+
+### AI NAVIGATION METADATA — PART 04
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before making, repeating, or trusting any quantitative claim about Oship** |
+| **AI DEPENDENCIES** | PART 01 §01.20 evidence register · PART 02 §02.17 `DMET-VIS-` metrics · PART 03 §03.16 `CMET-VIS-` metrics · PART 03 §03.21 status reconciliation |
+| **AI INPUTS** | A number, a status label, a percentage, a completion claim, a metric name, or a dashboard reading |
+| **AI OUTPUTS** | Whether that number may be repeated, with what confidence, with what expiry, and what would falsify it |
+| **AI IMPLEMENTATION IMPACT** | Governs every progress report, every status field, every gate decision, and every autonomous action that depends on a measured value |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-471`…`VAL-VIS-620` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §01.24 observability (read-only) · `MCX-MEM-001` PART 36 memory metrics · `.ai/METRICS.md` · `.ai/PROJECT_STATUS.md` · `docs/MASTER_CONTEXT/20_MONITORING/INDEX.md` |
+
+---
+
+### What PART 04 Is For
+
+> **`VIS-376`.** PART 01 said *what Oship is*. PART 02 said *what Oship is made of*. PART 03 said
+> *what Oship can do*. PART 04 says something narrower and harder: **what Oship can prove.** It is
+> the part that converts a document full of confident sentences into a document whose every
+> confident sentence carries an address at which it can be checked, and a date after which it must
+> be checked again.
+
+> **`VIS-377`.** The three previous parts produced 375 vision statements, 167 capabilities, 50
+> domains, 470 validation rules, and 250 failure modes. Not one of them is currently measured by a
+> running process. That is not a criticism of the previous parts; it is the precise condition PART
+> 04 exists to name. A specification that cannot be measured is not wrong — it is **unfalsifiable**,
+> which is worse, because a wrong specification eventually fails visibly and an unfalsifiable one
+> never does.
+
+> **`VIS-378`.** The failure mode this part is built against has a specific shape, and PART 03
+> already demonstrated it inside this very document. §03.21.6 recounted the capability status
+> distribution and found **14 `IMPLEMENTED` / 21 `PARTIALLY IMPLEMENTED` / 11 `DOCUMENTED` / 102
+> `PLANNED` / 17 `PROPOSED` / 1 `VISION` / 1 `UNKNOWN`**, against a published `TBL-VIS-278`
+> distribution of 12 / 19 / 5 / 119 / 11 / 1. Both figures were produced by the same authors from
+> the same file within the same document. Neither was dishonest. **They diverged because no
+> definition of `DOCUMENTED` was pinned, no counting method was recorded, and no owner was
+> responsible for the number.** That is a measurement failure, not a status failure, and it is the
+> archetype for everything in this part.
+
+> **`VIS-379`.** Five principles govern PART 04. They are stated as prohibitions because
+> prohibitions are checkable and aspirations are not.
+
+| # | Principle | Prohibition form | Violated by |
+| :--- | :--- | :--- | :--- |
+| **P1** | No claim without evidence | A statement asserting a fact about Oship must name what would show it to be true | "The repository is enterprise-grade" |
+| **P2** | No metric without definition | A named metric must have a formula, a unit, and a window before it may carry a value | "Documentation coverage: 87%" |
+| **P3** | No status without measurement | A status label must name the observation that produced it | `IMPLEMENTED` with no artifact cited |
+| **P4** | No measurement without source | A value must name the artifact, command, or system it was read from | "152 diagrams" with no counting command |
+| **P5** | No source without traceability | A source must be reachable and re-readable by a different agent later | "verified during review" |
+
+> **`VIS-380`.** These five compose into one cycle, and the cycle is the spine of this part. Evidence
+> is not a terminal state; it is a position in a loop that returns to itself. A measurement that
+> never causes a decision is decoration, and a decision that never produces a new observation is a
+> guess with better formatting.
+
+```mermaid
+flowchart TD
+    VIS["VISION - what Oship intends to be"] --> CLM["CLAIM - a specific falsifiable assertion"]
+    CLM --> MSR["MEASURE - a defined metric with unit and window"]
+    MSR --> EVD["EVIDENCE - an artifact at a reachable address"]
+    EVD --> VLD["VALIDATION - a rule that can pass or fail"]
+    VLD --> DEC["DECISION - a recorded choice with rationale"]
+    DEC --> ACT["ACTION - a change to the repository or the plan"]
+    ACT --> RES["RESULT - the observed state after the change"]
+    RES --> NEW["NEW EVIDENCE - a fresh artifact superseding the old"]
+    NEW -->|"loop closes"| CLM
+    NEW -.->|"if the result contradicts the vision"| VIS
+
+    subgraph SPEC["SPECIFICATION SIDE - cheap, fast, currently 100 percent of Oship"]
+        VIS
+        CLM
+    end
+    subgraph MEAS["MEASUREMENT SIDE - requires tooling, currently 0 percent automated"]
+        MSR
+        EVD
+        VLD
+    end
+    subgraph ACTN["ACTION SIDE - requires authority, currently human-only above A2"]
+        DEC
+        ACT
+        RES
+        NEW
+    end
+
+    classDef spec fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef meas fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef actn fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class VIS,CLM spec
+    class MSR,EVD,VLD meas
+    class DEC,ACT,RES,NEW actn
+```
+
+> **Diagram ID:** `DGM-VIS-115` — **The Oship Evidence Cycle**
+> **Explanation:** Read the three subgraphs as a cost gradient. The blue stage costs a text editor.
+> The red stage costs tooling that **does not exist in this repository today** — that is why it is
+> red, not because it is dangerous. The green stage costs authority, and PART 03 established that
+> only autonomy levels `A0`…`A2` are currently exercisable by an agent. The dotted return edge is
+> the one most systems omit: when a result contradicts the vision, the **vision** is what must
+> change, and `VIS-057` in PART 01 already made that a standing rule. The loop as drawn is
+> aspirational in exactly one place — the red band — and PART 04 says so on every page rather than
+> drawing it green and hoping.
+
+> **`VIS-381`.** PART 04 does **not** install measurement. It cannot: `OUT-VIS-004` — installation of
+> the CI workflows from `.github/workflow-skeletons/` — is still open, and `OBL-03`, the runtime
+> persistence decision, is still unmade. What PART 04 does is make the absence *specific*. After
+> this part, "we do not measure that" is replaced by a metric identifier, an owner, a formula, a
+> named source, and a status of `NOT YET MEASURED`. The gap does not shrink. It becomes addressable.
+
+> **`VIS-382`.** A reader looking for the single most useful artifact in this part should go to
+> §04.30 and read `TBL-VIS-448`, the **Measurement Reality Snapshot**. It lists every metric this
+> document has ever defined across all four parts — `DMET-VIS-`, `CMET-VIS-`, and the new
+> `MET-VIS-` namespace — and states, per metric, whether a value exists. The honest headline is
+> printed here so that nobody has to read 4,000 lines to find it: **of all metrics defined by
+> `AOM-VIS-001` across PARTS 02, 03 and 04, the number with an automatically collected current
+> value is zero.**
+
+---
+
+### PART 04 Section Index
+
+| § | Subject | Primary output |
+| :--- | :--- | :--- |
+| §04.0 | Namespace Decisions | `DEC-VIS-036`…`040` — the four reopenings and one refusal |
+| §04.1 | Measurement Preconditions | `TBL-VIS-396` register of 32 preconditions, `DGM-VIS-108` pipeline |
+| §04.2 | Evidence Philosophy | `EV0`…`EV6` evidence classes, maturity state machine, classification matrix |
+| §04.3 | Claim to Evidence Model | `DGM-VIS-109` claim evidence graph, `TBL-VIS-397` 40-rule contract |
+| §04.4 | Metric Taxonomy | `DGM-VIS-110` taxonomy, `TBL-VIS-398` 15-category registry |
+| §04.5 | Metric Contract | `TBL-VIS-399` canonical contract, `MET-VIS-001`…`050` |
+| §04.6 | Metric Lifecycle | Seven-state machine, transition legality, 40 validation rules |
+| §04.7 | Data Quality | `DGM-VIS-111` eight-dimension model, `TBL-VIS-400` 50 rules |
+| §04.8 | Observability Vision | `DGM-VIS-112` eleven-signal architecture |
+| §04.9 | AI Observability | 50 `AIO-` metrics, agent telemetry matrix |
+| §04.10 | Agent Traceability | `DGM-VIS-113` trace graph, agent trace contract |
+| §04.11 | Decision Evidence | Decision evidence matrix, eight-stage justification chain |
+| §04.12 | Project Progress Measurement | Seven-dimension progress model, calculation contract |
+| §04.13 | Documentation Metrics | Documentation quality dashboard model |
+| §04.14 | AI Readability Metrics | The AI Readability Index and its formula |
+| §04.15 | AI Context Loading Cost | Cost model and per-subsystem matrix |
+| §04.16 | Evidence Graph | `DGM-VIS-114` enterprise evidence graph |
+| §04.17 | Traceability Matrix | 100+ end-to-end mappings |
+| §04.18 | Quality Gates | `QG-0`…`QG-8` gate state machine and evidence requirements |
+| §04.19 | Measurement Failure Library | `FAL-VIS-251`…`290` under `DEC-VIS-038` |
+| §04.20 | Recovery and Correction | Measurement correction lifecycle |
+| §04.21 | Metric Governance | Governance matrix, versioning, baseline control |
+| §04.22 | Dashboard Model | Eight-layer dashboard information architecture |
+| §04.23 | AI Dashboard Interpretation | Interpretation decision tree and five prohibitions |
+| §04.24 | Forecasting and Prediction | Five-term disambiguation, no fabricated values |
+| §04.25 | Metric Security | Security classification matrix |
+| §04.26 | Auditability | Audit evidence chain |
+| §04.27 | Reproducibility | Reproducibility contract |
+| §04.28 | Measurement Anti-Patterns | 40 anti-patterns, `FAL-VIS-251`…`290` |
+| §04.29 | AI Interpretation Guide | `AI-VIS-101`…`130`, evidence loading sequence |
+| §04.30 | Enterprise Measurement Reference | Registries, vocabularies, JSON, YAML, audit examples |
+| §04.31 | Traceability and Closure | Inventory, validation results, honest completion statement |
+
+---
+
+## 04.0 — Namespace Decisions
+
+### AI NAVIGATION METADATA — §04.0
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before allocating any identifier in PART 04 or later** |
+| **AI DEPENDENCIES** | PART 03 §03.18 `FAL-VIS-` ceiling · PART 03 §03.20 `IMG-VIS-` closure by `VIS-347` · `DEC-VIS-021` allocation procedure · `DEC-VIS-031` PART 02 additive raise |
+| **AI INPUTS** | A need for an identifier in a namespace that is closed or does not yet exist |
+| **AI OUTPUTS** | Either a decision record authorising allocation, or a refusal with a named alternative |
+| **AI IMPLEMENTATION IMPACT** | Identifier stability is a constitutional property; silent expansion breaks every downstream reference |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-471`…`VAL-VIS-478` |
+| **AI RELATED DOCUMENTS** | `MASTER_CONTEXT_RULES.md` PART 05 knowledge objects · `AOM-ARCH-001` Appendix B identifier ledger |
+
+> **`VIS-383`.** Two namespaces reached a declared ceiling in PART 03 and were closed:
+> **`FAL-VIS-` at 250** and **`IMG-VIS-` at 045**. A closed namespace may not be extended by writing
+> the next number. It is extended, if at all, by a decision record that states the reason, the
+> scope, the new ceiling, the owner, the compatibility position, the migration implications, and the
+> allocation policy that will apply afterwards. This section contains those records. **They appear
+> before any allocation in PART 04, and no identifier in either namespace is used above its old
+> ceiling anywhere earlier in this part.**
+
+> **`VIS-384`.** PART 04 also needs namespaces that have never existed — metrics, preconditions,
+> data-quality rules, observability signals, quality gates. Creating a new namespace is a smaller
+> act than reopening a closed one, but it is not a free act: every new prefix is a permanent
+> vocabulary commitment that future parts and future documents must respect. `DEC-VIS-036` records
+> all of them in one place rather than letting them accrete section by section.
+
+---
+
+### 04.0.1 — `DEC-VIS-036` — PART 04 Namespace Allocation Policy
+
+### TBL-VIS-396: Decision Record `DEC-VIS-036` — New Namespaces Introduced by PART 04
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-036` |
+| **Title** | Introduction of eleven measurement namespaces for PART 04 |
+| **Status** | `ACCEPTED` |
+| **Authority** | L1 — this document, under the identifier procedure of `DEC-VIS-021` |
+| **Context** | PART 04 defines measurement objects that have no existing namespace. Reusing `CMET-VIS-` or `DMET-VIS-` would be wrong: those are *scoped* metric namespaces owned by the capability and domain models respectively, and a repository-wide metric is neither. Reusing `VAL-VIS-` for data-quality rules would conflate document validation with data validation. |
+| **Decision** | Eleven namespaces are created, listed in `TBL-VIS-397`. Each is given an owner, a purpose, a first identifier, and a declared ceiling. No namespace is opened without a declared ceiling — the absence of a ceiling is what made the `FAL-VIS-` and `IMG-VIS-` situations require decision records in the first place. |
+| **Scope** | `AOM-VIS-001` PART 04 and all later parts. Other MASTER_CONTEXT documents may reference these identifiers but may not allocate within them without a further decision record. |
+| **Ownership** | Architecture Team / AI Repository Architect, per `CODEOWNERS`. Noting `OBL-22`: `CODEOWNERS` currently resolves every path to a single principal, so "owner" here is a role name, not an independent reviewer. |
+| **Compatibility** | Purely additive. No existing identifier changes meaning, position, or value. Every reference written in PARTS 01–03 continues to resolve. |
+| **Migration implications** | None for existing content. Future parts inherit the ceilings and must raise them by further decision record. |
+| **Allocation policy** | Sequential, dense, never reused, never renumbered. A gap is permitted **only** when explicitly declared `RESERVED` with a reason. Allocation happens at the point of definition, not the point of first mention. |
+| **Consequences if reversed** | Every measurement identifier in PART 04 becomes unresolvable. Reversal is therefore prohibited after this part is appended; supersession by a later decision is the only legal path. |
+| **Review trigger** | When any namespace reaches 80 percent of its declared ceiling. |
+
+### TBL-VIS-397: PART 04 Namespace Register
+
+| Prefix | Object | First ID | Ceiling | Owner role | Purpose | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `MPC-` | Measurement precondition | `MPC-01` | `MPC-60` | Architecture | Conditions that must hold before a metric may be trusted | `DEFINED` |
+| `EV` | Evidence class | `EV0` | `EV6` | Architecture | Seven-level evidence strength ladder | `DEFINED` — fixed size, not extensible |
+| `MET-VIS-` | Repository-wide metric | `MET-VIS-001` | `MET-VIS-200` | Architecture | Metrics whose subject is the repository, not one domain or capability | `DEFINED` |
+| `MCAT-` | Metric category | `MCAT-01` | `MCAT-30` | Architecture | Top-level metric taxonomy buckets | `DEFINED` |
+| `DQR-` | Data quality rule | `DQR-001` | `DQR-200` | Architecture | Rules governing the quality of measured data itself | `DEFINED` |
+| `AIO-` | AI observability signal | `AIO-001` | `AIO-150` | AI Governance | Telemetry emitted by or about agents, models, tools, and memory | `DEFINED` |
+| `QG-` | Quality gate | `QG-0` | `QG-8` | Architecture | Lifecycle gates from idea to optimisation | `DEFINED` — fixed size |
+| `TRC-` | Traceability mapping row | `TRC-001` | `TRC-400` | Architecture | End-to-end vision-to-evidence chains | `DEFINED` |
+| `DSH-` | Dashboard surface | `DSH-01` | `DSH-40` | Product | Dashboard layers and panels | `DEFINED` |
+| `MSC-` | Metric security class | `MSC-1` | `MSC-6` | Security | Sensitivity classification for measured values | `DEFINED` — fixed size |
+| `CORR-` | Correction lifecycle stage | `CORR-1` | `CORR-7` | Architecture | Stages of the measurement correction loop | `DEFINED` — fixed size |
+
+> **`VIS-385`.** Three of the eleven are declared **fixed size**: `EV`, `QG-`, `MSC-`, and `CORR-`.
+> A fixed-size namespace is one whose cardinality is part of its meaning. There are seven evidence
+> classes because the ladder from *nothing* to *observed in production* has seven rungs; adding an
+> eighth would not extend the ladder, it would redefine it, and that requires superseding the model
+> rather than appending to a list. This distinction — extensible register versus fixed enumeration —
+> is the one PART 03 lacked, and its absence is precisely why `FAL-VIS-` hit a ceiling nobody had
+> planned for.
+
+---
+
+### 04.0.2 — `DEC-VIS-037` — Evidence Class Collision Avoidance
+
+> **`VIS-386`.** A genuine collision was found during the PART 04 identifier audit and must be
+> recorded rather than worked around silently. PART 02 §02.7 defines **domain evolution levels
+> `E0`…`E7`** — the lifecycle ladder on which all 50 domains are placed, and on which the honest
+> finding "zero domains reach `E5`" rests. The natural naming for evidence classes is also
+> `E0`…`E6`. Using it would produce a document in which `E5` means two unrelated things fourteen
+> hundred lines apart, and in which any agent grepping for `E5` retrieves both.
+
+### TBL-VIS-398: Decision Record `DEC-VIS-037` — Evidence Classes Named `EV0`…`EV6`
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-037` |
+| **Title** | Evidence classes are named `EV0`…`EV6`, not `E0`…`E6` |
+| **Status** | `ACCEPTED` |
+| **Context** | `E0`…`E7` is already bound to domain evolution level by PART 02 §02.7 and is referenced 43 times across PARTS 02 and 03, including in the load-bearing finding that 28 domains are stuck at `E2`. A second meaning for the same token would be a terminology collision of exactly the kind `VIS-198` forbids. |
+| **Options considered** | **A** — use `E0`…`E6` and disambiguate by context. Rejected: context disambiguation fails under grep, under embedding retrieval, and under partial-document loading, which are the three ways an agent actually reads this file. **B** — rename the PART 02 evolution levels. Rejected: PARTS 01–03 are frozen; renaming is prohibited by the append-only constitution. **C** — name evidence classes `EV0`…`EV6`. Accepted. |
+| **Decision** | Evidence classes are `EV0` NONE, `EV1` ASSERTED, `EV2` DOCUMENTED, `EV3` REPOSITORY VERIFIED, `EV4` AUTOMATED VALIDATION, `EV5` RUNTIME VERIFIED, `EV6` PRODUCTION OBSERVED. |
+| **Scope** | Whole document and all downstream documents. |
+| **Compatibility** | No existing identifier changes. `E0`…`E7` retains its PART 02 meaning exclusively. |
+| **Migration implications** | Any external draft using `E0`…`E6` for evidence must be translated on ingestion. No such draft is known to exist in this repository — `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` for drafts outside it. |
+| **Ownership** | Architecture Team |
+| **Consequence** | The instruction that produced this part specified `E0`…`E6`. This record documents the deliberate deviation and its reason, so that the divergence between instruction and artifact is visible rather than accidental. |
+| **Review trigger** | Never — a fixed enumeration with a resolved collision does not require review. Supersede only if the evidence ladder itself is redefined. |
+
+---
+
+### 04.0.3 — `DEC-VIS-038` — Reopening the `FAL-VIS-` Namespace
+
+> **`VIS-387`.** `FAL-VIS-` closed at 250. PART 04 needs failure identifiers, and the question that
+> must be answered *before* reopening is the one the instruction sets out: **why is existing capacity
+> insufficient?** The answer is not that 250 is a small number. It is that all 250 existing failure
+> modes are failures of *the specified system* — a capability that cannot be built, a domain
+> boundary that is not enforced, a dependency that is circular. **Not one of them is a failure of
+> the measurement apparatus itself.** A metric with a silently changed baseline is not a capability
+> failure; it is a failure of the instrument, and an instrument failure is invisible to every rule
+> in `FAL-VIS-001`…`250` because those rules all assume the instrument is trustworthy.
+
+```mermaid
+flowchart TD
+    Q["Does PART 04 need new failure identifiers?"] --> A1["Can an existing FAL-VIS mode express measurement instrument failure?"]
+    A1 -->|"No - all 250 describe system failures, not instrument failures"| A2["Can measurement failures live in another namespace?"]
+    A2 -->|"VAL-VIS is rules that pass or fail, not modes that occur"| A3["Can they be prose without identifiers?"]
+    A3 -->|"No - VAL-VIS-471 onward must cite them by ID"| R["REOPEN with explicit ceiling"]
+    A1 -->|"Yes"| N1["Reuse - no reopening"]
+    A2 -->|"Yes"| N2["Relocate - no reopening"]
+    A3 -->|"Yes"| N3["Prose only - no reopening"]
+
+    R --> D["DEC-VIS-038 - new ceiling FAL-VIS-300"]
+    D --> P["Allocate FAL-VIS-251 to 290 in section 04.28"]
+    P --> RES["Ten identifiers left as headroom, not reserved"]
+
+    classDef q fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef no fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef yes fill:#e65100,stroke:#ffcc80,color:#ffffff
+    class Q,A1,A2,A3 q
+    class N1,N2,N3 no
+    class R,D,P,RES yes
+```
+
+> **Diagram ID:** `DGM-VIS-116` — **Namespace Reopening Decision Procedure**
+> **Explanation:** Three exits avoid reopening and one reaches it. This procedure is not specific to
+> `FAL-VIS-`; it is the general test any future part must run before extending a closed namespace,
+> and it is deliberately biased toward the green exits. The orange path was taken here only because
+> all three green exits were genuinely unavailable, and each unavailability is stated as a fact
+> about the existing 250 modes rather than as a preference.
+
+### TBL-VIS-399: Decision Record `DEC-VIS-038` — `FAL-VIS-` Ceiling Raised to 300
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-038` |
+| **Title** | Reopen the `FAL-VIS-` namespace and raise its ceiling from 250 to 300 |
+| **Status** | `ACCEPTED` |
+| **Reason** | All 250 existing failure modes describe failures of the *specified system*. PART 04 introduces a second failure surface — the *measurement apparatus* — whose failures are structurally different: they are failures that corrupt the observer rather than the observed, and they are invisible to instruments that assume the observer is sound. A metric with an undefined formula, a silently rebased baseline, or a hidden sampling bias cannot be expressed by any of `FAL-VIS-001`…`250`. |
+| **Why existing capacity is insufficient** | Not a numeric shortage. A categorical one. Reuse would require overloading an existing identifier with a second meaning, which `VIS-198` and `DEC-VIS-037` both forbid. Relocation to `VAL-VIS-` was considered and rejected: a `VAL-VIS-` rule is an assertion that can pass or fail, whereas a `FAL-VIS-` mode is a phenomenon that can occur — they are different object types, and the 40 anti-patterns of §04.28 are phenomena. |
+| **Scope** | Measurement, evidence, observability, and metric-governance failures only. System, capability, and domain failures continue to be `FAL-VIS-001`…`250` and must not be duplicated. |
+| **New ceiling** | `FAL-VIS-300`. Forty identifiers are allocated in §04.28 as `FAL-VIS-251`…`290`. Ten remain as headroom and are explicitly **not** reserved — they are unallocated and free. |
+| **Ownership** | Architecture Team / AI Repository Architect. Measurement-failure modes additionally require AI Governance review when they concern `AIO-` signals. |
+| **Compatibility** | Fully backward compatible. `FAL-VIS-001`…`250` are unchanged in number, meaning, wording, and section location. No existing cross-reference is affected. |
+| **Migration implications** | None. No existing failure mode is renumbered, merged, split, or deprecated. Any future consolidation between the two bands requires a further decision record and may not be done by editing. |
+| **Allocation policy** | Sequential from 251. Dense. A new measurement-failure mode must state its detection method and its evidence class, or it may not be allocated — this is an additional admission requirement not imposed on `FAL-VIS-001`…`250`. |
+| **Review trigger** | At `FAL-VIS-290`, being 80 percent of the new ceiling. |
+| **Consequences if reversed** | §04.28 and 22 validation rules in §04.19 become unresolvable. Supersession only. |
+
+---
+
+### 04.0.4 — `DEC-VIS-039` — Reopening the `IMG-VIS-` Namespace
+
+> **`VIS-388`.** `IMG-VIS-` was closed at 045 by `VIS-347`, which stated that PART 03 had specified
+> as many images as could be justified without any of them being rendered. That reasoning still
+> holds and is not overturned here. What changed is the subject matter: PART 04 specifies
+> **dashboards and graphs whose entire purpose is visual**, and a dashboard information architecture
+> described only in prose is a contradiction in terms. Four of the fifteen new specifications are
+> dashboards; the rest are evidence-graph and lifecycle renderings that the eleven-signal
+> observability architecture cannot convey in a table.
+
+### TBL-VIS-400: Decision Record `DEC-VIS-039` — `IMG-VIS-` Ceiling Raised to 060
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-039` |
+| **Title** | Reopen the `IMG-VIS-` namespace and raise its ceiling from 045 to 060 |
+| **Status** | `ACCEPTED` |
+| **Reason** | PART 04 specifies eight dashboard layers, an eleven-signal observability architecture, a repository-wide evidence graph, and an eight-dimension data-quality model. These are visual artifacts by nature. Specifying them without image specifications would either omit them or degrade them into tables that lose the spatial information that is their content. |
+| **Why not reuse `IMG-VIS-001`…`045`** | Each existing specification is bound to a specific subject — system identity, domain maps, capability trees, UX surfaces. None depicts a metric, a dashboard, an evidence chain, or a telemetry pipeline. Reuse would require rewriting a frozen specification, which the append-only constitution forbids. Where an existing specification *is* adequate, it is referenced rather than duplicated: §04.16 reuses `IMG-VIS-013` and §04.22 reuses `IMG-VIS-031`. |
+| **New ceiling** | `IMG-VIS-060`. Fifteen identifiers are allocated in §04.22 and §04.30 as `IMG-VIS-046`…`060`. |
+| **Standing constraint reaffirmed** | **No image file is produced.** Every specification is an eighteen-field textual contract. `VIS-088` prohibits committing generated binary imagery to this repository, and this decision does not touch that prohibition. The count of rendered images in `AOM-VIS-001` remains **zero** after PART 04, as it was after PART 03. |
+| **Ownership** | Design / Product for dashboard specifications; Architecture for graph and pipeline specifications. |
+| **Compatibility** | Fully backward compatible. `IMG-VIS-001`…`045` unchanged. `VIS-347` is not repealed — it is superseded in scope only, and its reasoning is explicitly preserved as still correct for the subject matter it addressed. |
+| **Migration implications** | None. |
+| **Allocation policy** | Sequential from 046. An `IMG-VIS-` specification may not be allocated unless all eighteen fields are populated; partial specifications are prohibited, which is the rule that kept the namespace honest through 045. |
+| **Review trigger** | At `IMG-VIS-055`. |
+
+---
+
+### 04.0.5 — `DEC-VIS-040` — Refusal to Create a `PRED-` Forecasting Namespace
+
+> **`VIS-389`.** One namespace was considered and **refused**, and the refusal is recorded because a
+> namespace decision section that only ever says yes is not a control. §04.24 defines forecasting,
+> prediction, estimation, projection, and scenario as five distinct terms. It would be natural to
+> give each forecast an identifier. That is refused.
+
+### TBL-VIS-401: Decision Record `DEC-VIS-040` — No Forecast Identifier Namespace
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-040` |
+| **Title** | No `PRED-` or `FCST-` namespace is created |
+| **Status** | `ACCEPTED — REFUSAL` |
+| **Reason** | An identifier confers durability and citability. A forecast about a repository with **zero baseline measurements** would be a fabricated number wearing a stable address, and the address is what makes it dangerous: once `FCST-007` exists, a later agent will cite it as though it were measured. `VIS-051` already prohibits dates; this extends the same reasoning to quantities. |
+| **Decision** | §04.24 defines the five terms and the conditions under which each becomes legitimate. It issues **no forecast values**. Every forward-looking quantity in PART 04 reads `NOT YET MEASURED`, `NOT APPLICABLE`, or `UNKNOWN — REQUIRES REPOSITORY VERIFICATION`. |
+| **Reopening condition** | This refusal may be reversed when, and only when, at least one `MET-VIS-` metric reaches evidence class `EV4` with three consecutive collected values. Until a trend exists, a forecast is arithmetic performed on nothing. |
+| **Ownership** | Architecture Team |
+| **Compatibility** | Not applicable — nothing is created. |
+| **Consequence** | PART 04 contains no projected completion percentage, no velocity figure, and no estimated date. Readers looking for one will find `NOT YET MEASURED` and a precondition list instead. |
+
+> **`VIS-390`.** The four accepted records and one refusal are now in force. Every identifier
+> allocated in the remainder of PART 04 is authorised by one of them. **`OBL-34`** is opened here:
+> a future part must add an automated check that no identifier in a closed or ceilinged namespace is
+> allocated without a matching `DEC-VIS-` record — the check that would have made this section
+> unnecessary.
+
+---
+
+## 04.1 — Measurement Preconditions
+
+### AI NAVIGATION METADATA — §04.1
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before trusting, repeating, or acting on any number** |
+| **AI DEPENDENCIES** | §04.0 namespace decisions · PART 02 §02.17 `DMET-VIS-` · PART 03 §03.16 `CMET-VIS-` |
+| **AI INPUTS** | A metric identifier, or a bare number encountered in any Oship artifact |
+| **AI OUTPUTS** | A verdict — TRUSTED, USABLE WITH CAVEAT, or UNTRUSTED — plus the specific unmet precondition |
+| **AI IMPLEMENTATION IMPACT** | An agent may not use an untrusted metric as an input to any decision at autonomy level `A2` or above |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-479`…`VAL-VIS-500` |
+| **AI RELATED DOCUMENTS** | `.ai/METRICS.md` · `MCX-MEM-001` PART 36 · `AOM-ARCH-001` §01.24 (read-only) |
+
+---
+
+### 04.1.0 — Identifier Allocation Note
+
+> **`VIS-391`.** The PART 04 brief specified table bindings beginning at `TBL-VIS-396` for the
+> Measurement Preconditions Register. That brief also required, correctly and with priority, that a
+> closed namespace be reopened by decision record **first**. Those decision records are themselves
+> tables, and they must appear before any allocation they authorise. The result is a forced shift:
+> §04.0 consumed `TBL-VIS-396`…`401`, so every requested table binding shifts forward, and each
+> shifted table is allocated sequentially where it actually appears rather than at a reserved number.
+> Diagram numbering is **unaffected** — `DGM-VIS-108`…`114` were held back and are bound exactly as
+> requested. The mapping is printed in full so that the shift is visible rather than discovered.
+
+### TBL-VIS-402: Requested-to-Allocated Identifier Mapping for PART 04
+
+| Requested in brief | Actually allocated | Artifact | Reason for shift |
+| :--- | :--- | :--- | :--- |
+| `TBL-VIS-396` | `TBL-VIS-403` | Measurement Preconditions Register | §04.0 decision records precede all allocation |
+| `TBL-VIS-397` | allocated in situ in §04.3 | Claim Evidence Contract | cascade — see the caption in that section |
+| `TBL-VIS-398` | allocated in situ in §04.4 | Metric Category Registry | cascade — see the caption in that section |
+| `TBL-VIS-399` | allocated in situ in §04.5 | Canonical Metric Contract | cascade — see the caption in that section |
+| `TBL-VIS-400` | allocated in situ in §04.7 | Data Quality Rule Register | cascade — see the caption in that section |
+| `TBL-VIS-XXX` | allocated in situ in §04.17 | Traceability Matrix | brief left this unbound |
+| `DGM-VIS-108` | `DGM-VIS-108` | Measurement Preconditions Pipeline | **no shift — reserved in advance** |
+| `DGM-VIS-109` | `DGM-VIS-109` | Claim Evidence Graph | **no shift** |
+| `DGM-VIS-110` | `DGM-VIS-110` | Enterprise Metric Taxonomy | **no shift** |
+| `DGM-VIS-111` | `DGM-VIS-111` | Data Quality Model | **no shift** |
+| `DGM-VIS-112` | `DGM-VIS-112` | Oship Observability Architecture | **no shift** |
+| `DGM-VIS-113` | `DGM-VIS-113` | Agent Trace Graph | **no shift** |
+| `DGM-VIS-114` | `DGM-VIS-114` | Enterprise Evidence Graph | **no shift** |
+| `VIS-376` | `VIS-376` | first PART 04 statement | **no shift** |
+| `OBL-34` | `OBL-34` | first PART 04 obligation | **no shift** |
+
+> **`VIS-392`.** `DGM-VIS-115` and `DGM-VIS-116` were allocated in the preamble and §04.0, ahead of
+> `DGM-VIS-108`…`114`. This is a **declared out-of-order allocation**, not a gap: all nine
+> identifiers are defined within PART 04, and the seven reserved ones are bound in the sections the
+> brief named. Numeric order and document order diverge here by design, and `VAL-VIS-477` permits
+> divergence only when it is declared, as it is now.
+
+---
+
+### 04.1.1 — Why Preconditions Exist Before Metrics
+
+> **`VIS-393`.** The instinct when asked to measure something is to define the metric. That instinct
+> is wrong, and PART 04 inverts it deliberately. A metric definition answers *what to compute*. It
+> says nothing about whether the computed value can be believed. The believability question is
+> answered entirely by conditions **outside** the formula: who owns it, what it was read from, when
+> it was read, over what window, by what method, and whether that method can be re-run by someone
+> else tomorrow and yield the same answer.
+
+> **`VIS-394`.** Consider the concrete case this document already produced. §03.21.6 counted
+> capability statuses. The formula was trivial — group by status column, count rows. Two competent
+> passes over the same file produced 12 `IMPLEMENTED` and 14 `IMPLEMENTED`. The formula was never in
+> doubt. What was missing was a pinned definition of `DOCUMENTED`, a recorded counting method, a
+> stated source range, and an owner. **Four preconditions, all unmet, all outside the formula.**
+> That single incident justifies this entire section better than any argument could.
+
+```mermaid
+flowchart LR
+    subgraph WRONG["THE COMMON ORDER - produces numbers nobody can defend"]
+        W1["Define metric"] --> W2["Compute value"] --> W3["Publish"] --> W4["Someone disputes it"] --> W5["Nobody can adjudicate"]
+    end
+
+    subgraph RIGHT["THE OSHIP ORDER - produces numbers with an address"]
+        R1["Establish preconditions"] --> R2["Define metric"] --> R3["Bind source"] --> R4["Compute"] --> R5["Attach provenance"] --> R6["Publish with evidence class"] --> R7["Dispute resolves by re-running"]
+    end
+
+    W5 -.->|"the failure that motivates the inversion"| R1
+
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class W1,W2,W3,W4,W5 bad
+    class R1,R2,R3,R4,R5,R6,R7 good
+```
+
+> **Diagram ID:** `DGM-VIS-117` — **Why Preconditions Precede Metric Definition**
+> **Explanation:** The red chain is not a strawman; it is what produced the `TBL-VIS-278` versus
+> `TBL-VIS-390` divergence inside this document. Its terminal state is the important one: *nobody
+> can adjudicate*. A disagreement about a number is healthy and cheap when the number has
+> provenance, because it resolves by re-running a command. It is corrosive and expensive when it
+> does not, because it resolves by seniority. The green chain has seven stages against the red
+> chain's three productive ones, and that ratio is the honest cost of trustworthy measurement.
+
+---
+
+### 04.1.2 — The Fifteen Precondition Dimensions
+
+> **`VIS-395`.** The brief names fifteen dimensions a metric must satisfy. They are not a flat list;
+> they form four bands with different costs and different failure consequences. Presenting them as
+> a flat list obscures the fact that four of them are free today and four of them are currently
+> impossible in this repository.
+
+```mermaid
+flowchart TD
+    subgraph B1["BAND 1 - IDENTITY - free today, pure documentation"]
+        D1["Metric identity - a stable unique ID"]
+        D2["Metric owner - a named accountable role"]
+        D3["Metric definition - unambiguous prose"]
+        D4["Unit - dimension and scale"]
+    end
+
+    subgraph B2["BAND 2 - DERIVATION - needs a decided method"]
+        D5["Source - the artifact or system read"]
+        D6["Collection method - how the value is obtained"]
+        D7["Sampling method - which subset and why"]
+        D8["Aggregation method - how many become one"]
+    end
+
+    subgraph B3["BAND 3 - TEMPORAL - needs a running collector"]
+        D9["Time window - the interval measured"]
+        D10["Freshness - age of the current value"]
+        D11["Provenance - the run that produced it"]
+    end
+
+    subgraph B4["BAND 4 - TRUST - needs storage and review"]
+        D12["Confidence - how strongly the value is held"]
+        D13["Validation - the check the value survived"]
+        D14["Storage - where history lives"]
+        D15["Interpretation - what a reader may conclude"]
+    end
+
+    B1 --> B2 --> B3 --> B4
+
+    B1 -.->|"achievable now - 100 percent"| S1["STATUS - satisfiable in PART 04"]
+    B2 -.->|"partially achievable - grep and wc are real sources"| S2["STATUS - partially satisfiable"]
+    B3 -.->|"requires CI - OUT-VIS-004 open"| S3["STATUS - NOT SATISFIABLE TODAY"]
+    B4 -.->|"requires storage - OBL-03 open"| S4["STATUS - NOT SATISFIABLE TODAY"]
+
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef part fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef no fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class D1,D2,D3,D4,S1 ok
+    class D5,D6,D7,D8,S2 part
+    class D9,D10,D11,D12,D13,D14,D15,S3,S4 no
+```
+
+> **Diagram ID:** `DGM-VIS-108` — **Measurement Preconditions Pipeline**
+> **Explanation:** This is the diagram the brief requested at this position, and its colouring is
+> the honest content. Band 1 is green because writing an identifier and naming an owner costs
+> nothing but discipline — PART 04 satisfies it in full. Band 2 is amber because some sources are
+> genuinely readable today: `wc -l`, `grep -c`, and `mermaid.parse()` are real collection methods
+> that this document has actually run. Bands 3 and 4 are red because a time window is meaningless
+> without repeated collection, and repeated collection requires the CI workflows that `OUT-VIS-004`
+> still has sitting uninstalled in `.github/workflow-skeletons/`. **Eleven of the fifteen dimensions
+> cannot be satisfied by any metric in this repository today.** That is the measurement reality, and
+> the register below records it per precondition rather than averaging it away.
+
+---
+
+### 04.1.3 — The Measurement Precondition Register
+
+> **`VIS-396`.** Thirty-two preconditions follow, `MPC-01`…`MPC-32`, exceeding the thirty required.
+> Each carries a **band**, a **blocking severity**, a **current repository state**, and — the field
+> that makes the register usable rather than decorative — **what specifically would satisfy it**.
+> A precondition without a satisfaction path is a complaint.
+
+### TBL-VIS-403: Measurement Preconditions Register
+
+| ID | Precondition | Band | Severity | Satisfied today | What would satisfy it |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `MPC-01` | The metric has a unique, permanent identifier that is never reused | Identity | **BLOCK** | **YES** — `MET-VIS-` under `DEC-VIS-036` | Already satisfied by the namespace register |
+| `MPC-02` | The metric has exactly one named accountable owner role | Identity | **BLOCK** | **PARTIAL** | `CODEOWNERS` resolving to more than one principal — blocked by `OBL-22` |
+| `MPC-03` | The metric has a definition that two readers cannot interpret differently | Identity | **BLOCK** | **PARTIAL** | The `DOCUMENTED` ambiguity of `OBL-33` is the live counter-example |
+| `MPC-04` | The metric declares a unit, and the unit has a dimension | Identity | **BLOCK** | **YES** | Satisfied by `TBL-VIS-412` field 5 |
+| `MPC-05` | Dimensionless ratios declare numerator and denominator separately | Identity | **BLOCK** | **YES** | Enforced by `VAL-VIS-482` |
+| `MPC-06` | The metric declares whether higher is better, lower is better, or neither | Identity | WARN | **YES** | Direction field in the metric contract |
+| `MPC-07` | The metric names the artifact, command, or system it is read from | Derivation | **BLOCK** | **PARTIAL** | 14 of 50 `MET-VIS-` metrics name a runnable command; 36 do not |
+| `MPC-08` | The named source is reachable by an agent with repository read access | Derivation | **BLOCK** | **PARTIAL** | Sources inside the repo qualify; runtime sources do not exist |
+| `MPC-09` | The collection method is stated as an executable procedure, not a description | Derivation | **BLOCK** | **PARTIAL** | `wc -l`, `grep -c`, `mermaid.parse()` qualify; "review" does not |
+| `MPC-10` | The collection method is deterministic given the same input | Derivation | **BLOCK** | **PARTIAL** | Text-counting methods qualify; any LLM-judged metric does not |
+| `MPC-11` | If the metric samples, the sampling frame is declared | Derivation | **BLOCK** | **NOT APPLICABLE** | No metric currently samples; all are full-population counts |
+| `MPC-12` | If the metric samples, the selection is not biased toward the desired answer | Derivation | **HALT** | **NOT APPLICABLE** | Becomes live the moment any metric samples |
+| `MPC-13` | The aggregation function is named — sum, mean, median, p95, max, count | Derivation | **BLOCK** | **YES** | Aggregation field of `TBL-VIS-412` |
+| `MPC-14` | Aggregation across incompatible units is prohibited and detectable | Derivation | **BLOCK** | **NO** | Requires a unit registry; none exists — `NOT YET MEASURED` |
+| `MPC-15` | The metric declares a time window with an explicit start and end semantics | Temporal | **BLOCK** | **NO** | Requires repeated collection — blocked on `OUT-VIS-004` |
+| `MPC-16` | Point-in-time and interval metrics are distinguished, never mixed | Temporal | **BLOCK** | **PARTIAL** | Declared in the contract; unenforceable without collection |
+| `MPC-17` | The value carries the timestamp at which it was collected | Temporal | **BLOCK** | **NO** | Requires a collector; `VIS-051` forbids dates in prose, not in machine records |
+| `MPC-18` | Freshness is computable as now minus collection time | Temporal | **BLOCK** | **NO** | Depends on `MPC-17` |
+| `MPC-19` | A staleness threshold is declared per metric, beyond which the value is void | Temporal | **BLOCK** | **PARTIAL** | Thresholds are declarable now; enforcement is not |
+| `MPC-20` | Provenance names the specific run, commit, and tool version | Temporal | **BLOCK** | **NO** | Requires CI run identifiers |
+| `MPC-21` | The same measurement re-run at the same commit yields the same value | Temporal | **HALT** | **PARTIAL** | True for the counting metrics; untested for everything else |
+| `MPC-22` | Confidence is stated as an evidence class, not as a percentage | Trust | **BLOCK** | **YES** | `EV0`…`EV6` under `DEC-VIS-037` |
+| `MPC-23` | A value may not claim an evidence class above what its source supports | Trust | **HALT** | **YES** | Enforced by `VAL-VIS-486`; this is the anti-inflation rule |
+| `MPC-24` | The metric names at least one validation rule it must survive | Trust | **BLOCK** | **YES** | Every `MET-VIS-` row cites a `VAL-VIS-` identifier |
+| `MPC-25` | Historical values are retained and never silently overwritten | Trust | **HALT** | **NO** | Requires storage — blocked on `OBL-03` |
+| `MPC-26` | A baseline change is a recorded event, not an edit | Trust | **HALT** | **NO** | Depends on `MPC-25` |
+| `MPC-27` | The metric states what a reader may legitimately conclude from it | Trust | **BLOCK** | **YES** | Interpretation field of the metric contract |
+| `MPC-28` | The metric states what a reader may **not** conclude from it | Trust | WARN | **YES** | The counter-interpretation field, added by PART 04 |
+| `MPC-29` | Missing data is representable and distinguishable from zero | Trust | **HALT** | **YES** | `NOT YET MEASURED` versus `0` — enforced by `VAL-VIS-489` |
+| `MPC-30` | The metric declares a failure condition under which it is known to be wrong | Trust | **BLOCK** | **YES** | Failure-condition field, cross-linked to `FAL-VIS-251`…`290` |
+| `MPC-31` | The metric is reproducible by a different agent with no additional context | Trust | **HALT** | **PARTIAL** | Satisfied for the 14 command-backed metrics only |
+| `MPC-32` | The metric causes a decision; a metric no decision consumes is deprecated | Trust | WARN | **NO** | No metric currently feeds any gate — this is the deepest gap |
+
+> **`VIS-397`.** Count the register honestly. **Twelve preconditions are satisfied today, ten are
+> partial, seven are not satisfied, and three are not applicable.** No metric in this repository
+> satisfies all thirty-two, and the reason is concentrated: everything in the Temporal band and most
+> of the Trust band depends on either a running collector or durable storage, and Oship has neither.
+
+### TBL-VIS-404: Precondition Satisfaction Summary
+
+| Band | Total | Satisfied | Partial | Not satisfied | Not applicable | Dominant blocker |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| Identity | 6 | 4 | 2 | 0 | 0 | `OBL-22` single-owner `CODEOWNERS`, `OBL-33` loose definitions |
+| Derivation | 8 | 1 | 5 | 1 | 2 | absence of a unit registry; non-executable collection methods |
+| Temporal | 7 | 0 | 2 | 5 | 0 | `OUT-VIS-004` — CI workflows not installed |
+| Trust | 11 | 7 | 1 | 3 | 0 | `OBL-03` — no persistence decision, therefore no history |
+| **Total** | **32** | **12** | **10** | **9** | **3** | two open obligations account for eight of the nine failures |
+
+> **`VIS-398`.** The last cell of that table is the finding worth carrying forward. **Eight of the
+> nine unsatisfied preconditions trace to exactly two open items** — `OUT-VIS-004` and `OBL-03`.
+> This is not a diffuse maturity problem requiring a broad programme. It is two decisions. Installing
+> the eight CI workflow skeletons already present in `.github/workflow-skeletons/` would move five
+> preconditions from red to green without any new technology, and it requires no persistence
+> decision at all.
+
+---
+
+### 04.1.4 — The Trust Verdict Procedure
+
+> **`VIS-399`.** An agent encountering a number needs a procedure, not a philosophy. The register
+> above compiles into three verdicts and one prohibition.
+
+```mermaid
+flowchart TD
+    N["An agent encounters a numeric value in an Oship artifact"] --> Q1{"Does the value cite a MET-VIS, CMET-VIS, or DMET-VIS identifier?"}
+    Q1 -->|"No"| U1["UNTRUSTED - it is prose, not a measurement"]
+    Q1 -->|"Yes"| Q2{"Does that metric satisfy all BLOCK-severity preconditions?"}
+    Q2 -->|"No"| U2["UNTRUSTED - name the failing MPC and stop"]
+    Q2 -->|"Yes"| Q3{"Does the value carry an evidence class of EV3 or above?"}
+    Q3 -->|"No"| C1["USABLE WITH CAVEAT - cite it only alongside its evidence class"]
+    Q3 -->|"Yes"| Q4{"Is the value within its declared staleness threshold?"}
+    Q4 -->|"Unknown - no timestamp exists"| C2["USABLE WITH CAVEAT - freshness unverifiable, MPC-18 unmet"]
+    Q4 -->|"No"| U3["UNTRUSTED - stale beyond threshold"]
+    Q4 -->|"Yes"| T["TRUSTED - may be used as a decision input at any autonomy level"]
+
+    U1 --> P["PROHIBITION - an untrusted value may never be used as an input to an A2 or higher autonomous action"]
+    U2 --> P
+    U3 --> P
+
+    classDef trusted fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef caveat fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef untrusted fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef q fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class T trusted
+    class C1,C2 caveat
+    class U1,U2,U3,P untrusted
+    class N,Q1,Q2,Q3,Q4 q
+```
+
+> **Diagram ID:** `DGM-VIS-118` — **Metric Trust Verdict Procedure**
+> **Explanation:** Run this procedure against any number in Oship today and it terminates at
+> `C2` — *usable with caveat, freshness unverifiable* — for the best-supported metrics, and at `U1`
+> for most. **Not one value in this repository currently reaches `TRUSTED`**, because `MPC-17` is
+> unsatisfied everywhere and the `Q4` branch therefore cannot return yes. That is stated plainly
+> rather than softened, and it is the direct reason `VIS-382` reports zero automatically collected
+> values.
+
+### TBL-VIS-405: Worked Verdicts Against Real Values From This Document
+
+| Value as published | Cited metric | `Q1` | `Q2` | `Q3` | `Q4` | Verdict |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| "13,749 lines" (PART 03 closure) | `MET-VIS-001` | yes | yes — `wc -l` is executable and deterministic | `EV3` | no timestamp | **USABLE WITH CAVEAT** |
+| "107 Mermaid diagrams, 0 failures" | `MET-VIS-004` | yes | yes — `mermaid.parse()` is executable | `EV4` | no timestamp | **USABLE WITH CAVEAT** — highest-evidence value in the document |
+| "394 tables" | `MET-VIS-002` | yes | yes — caption grep is executable | `EV3` | no timestamp | **USABLE WITH CAVEAT** |
+| "14 capabilities IMPLEMENTED" | `MET-VIS-021` | yes | **no** — `MPC-03` fails, `DOCUMENTED` is ambiguous | — | — | **UNTRUSTED** |
+| "148 dependency edges" | `MET-VIS-024` | yes | **no** — `MPC-09` fails, method was manual | — | — | **UNTRUSTED** |
+| "enterprise-grade repository" (`README.md`) | none | **no** | — | — | — | **UNTRUSTED — not a measurement** |
+| "Knowledge Domains 24 of 24" (`README.md` badge) | none | **no** | — | — | — | **UNTRUSTED** — already logged as `FAL-VIS-171` |
+
+> **`VIS-400`.** The fourth and fifth rows are the uncomfortable ones, because both figures were
+> produced by this document in PART 03 and both are cited in `.ai/PROJECT_STATUS.md`. Applying
+> PART 04's own procedure to PART 03's own outputs classifies them **UNTRUSTED**. That result is not
+> suppressed. It is the first genuine act of measurement this document has performed: an instrument
+> that cannot fail its own maker is not an instrument.
+
+> **`VIS-401`.** **`OBL-35`** is opened: the two `UNTRUSTED` verdicts above must be discharged by
+> either pinning the `DOCUMENTED` definition (`OBL-33`) and re-running the count with a recorded
+> command, or by relabelling both figures in `.ai/PROJECT_STATUS.md` with their evidence class. Until
+> one of those happens, neither number may be quoted without the caveat.
+
+---
+
+## 04.2 — Evidence Philosophy
+
+### AI NAVIGATION METADATA — §04.2
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before assigning any status label anywhere in Oship** |
+| **AI DEPENDENCIES** | §04.0 `DEC-VIS-037` naming decision · §04.1 preconditions · PART 01 §01.20 `EVD-VIS-001`…`026` |
+| **AI INPUTS** | A statement, a status label, or an artifact offered as proof |
+| **AI OUTPUTS** | An evidence class `EV0`…`EV6` and the specific artifact that justifies it |
+| **AI IMPLEMENTATION IMPACT** | Evidence class gates every quality gate `QG-0`…`QG-8` and every release decision |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-501`…`VAL-VIS-520` |
+| **AI RELATED DOCUMENTS** | PART 03 §03.21.6 status reconciliation · `.ai/DOCUMENTATION_COMPLETION_STANDARD.md` |
+
+---
+
+### 04.2.1 — Six Words That Are Not Synonyms
+
+> **`VIS-402`.** English lets a writer move from *claim* to *proof* in one sentence without noticing.
+> Technical documents exploit this constantly, usually without intent. Six words are used
+> interchangeably across most engineering prose, and they denote six genuinely different epistemic
+> states. Oship separates them permanently.
+
+### TBL-VIS-406: Six Epistemic States, Separated
+
+| Term | What it is | What produces it | What it justifies | Failure if confused |
+| :--- | :--- | :--- | :--- | :--- |
+| **Claim** | A statement offered as true | Anyone, at any time, at zero cost | Nothing by itself | Treating a claim as documentation — the origin of `FAL-VIS-171` |
+| **Assertion** | A claim made by a named party who accepts responsibility | An owner attaching their name | Knowing whom to ask | Treating an assertion as verification, because the asserter is senior |
+| **Documentation** | An assertion written into a durable, addressable artifact | Committing a file | Retrieval and citation | **The central confusion.** A written claim is still a claim; the file proves the writing, not the fact |
+| **Verification** | A check that the artifact matches an independent reality | Reading the repository and comparing | Believing the artifact describes something real | Treating verification of *existence* as verification of *function* |
+| **Observation** | A record of the system's behaviour while running | A running system emitting signal | Believing the thing works | Treating a test-environment observation as a production one |
+| **Proof** | A demonstration that the property holds for all admissible cases | Formal method, exhaustive enumeration, or type system | Believing it cannot fail | Calling a passing test a proof — a test samples, it does not quantify |
+
+> **`VIS-403`.** The third row is where Oship lives. This repository contains 34,000 lines of memory
+> constitution, 13,700 lines of vision, and 10,800 lines of architecture — an enormous quantity of
+> **documentation**, which the table places at rung three of six. Documentation is genuinely more
+> than assertion: it is durable, addressable, reviewable, and diffable. It is genuinely less than
+> verification: **writing that a boundary is enforced does not enforce it.** PART 02 found all 50
+> domains at boundary strength `B0` precisely because the documents describing boundaries were
+> mistaken, by readers, for the boundaries themselves.
+
+---
+
+### 04.2.2 — The Seven Evidence Classes
+
+> **`VIS-404`.** Six epistemic states compress into a seven-rung ladder because rung zero — the
+> absence of any claim at all — is a distinct and important state. `EV0` is not a failure; an
+> honestly empty field is better than a fabricated one, and much of PART 04's value is in making
+> `EV0` a legitimate, sayable answer.
+
+### TBL-VIS-407: Evidence Class Definitions — `EV0` … `EV6`
+
+| Class | Name | Definition | Required artifact | Who can grant it | Falsifiable by | Count in Oship today |
+| :---: | :--- | :--- | :--- | :--- | :--- | :---: |
+| `EV0` | **NONE** | No evidence exists and none is claimed | None — the field reads `NOT YET MEASURED` | Anyone | Nothing; it claims nothing | Majority of all metrics |
+| `EV1` | **ASSERTED** | A named party states it without supporting artifact | An attributable statement | Any owner | Contradiction by any higher class | Most PART 01–03 qualitative claims |
+| `EV2` | **DOCUMENTED** | Written into a durable, addressable artifact under version control | A file path plus a line or section anchor | Any contributor | Showing the artifact does not say it, or is stale | ~370 vision statements |
+| `EV3` | **REPOSITORY VERIFIED** | A deterministic read of repository state confirms it, and the read is re-runnable | A command and its output | Any agent with read access | Re-running the command and getting a different result | 14 metrics — the counting family |
+| `EV4` | **AUTOMATED VALIDATION** | A machine check runs unattended and fails loudly when the property breaks | A CI job, its config, and its run record | CI system only | The check passing while the property is false | **0 — no workflow is installed** |
+| `EV5` | **RUNTIME VERIFIED** | Observed in a running instance of the system under test conditions | A trace, log, or metric from an execution | Runtime telemetry only | Observation under different conditions | **0 — no runtime exists** |
+| `EV6` | **PRODUCTION OBSERVED** | Observed in production under real load with real users | Production telemetry with retention | Production observability only | Production incident contradicting it | **0 — no production exists** |
+
+> **`VIS-405`.** The right-hand column is the honest state of Oship's evidence base and it should be
+> read as a single sentence: **this repository's evidence ceiling is `EV3`, it reaches `EV3` for
+> fourteen metrics, and the three highest classes are structurally unreachable because the artifacts
+> that grant them — a CI run, a runtime, a production deployment — do not exist.** No amount of
+> further writing raises the ceiling. Only installing CI does, and that single act would open `EV4`.
+
+```mermaid
+stateDiagram-v2
+    [*] --> EV0
+    EV0 --> EV1 : "a named owner asserts it"
+    EV1 --> EV2 : "written to a versioned artifact"
+    EV2 --> EV3 : "a deterministic re-runnable read confirms it"
+    EV3 --> EV4 : "an unattended CI check enforces it"
+    EV4 --> EV5 : "observed in a running instance"
+    EV5 --> EV6 : "observed in production under real load"
+
+    EV1 --> EV0 : "owner withdraws or leaves"
+    EV2 --> EV1 : "artifact deleted or unreachable"
+    EV3 --> EV2 : "command no longer runs or is nondeterministic"
+    EV4 --> EV3 : "CI check disabled, skipped, or made non-blocking"
+    EV5 --> EV4 : "runtime decommissioned"
+    EV6 --> EV5 : "removed from production"
+
+    EV2 --> EV2 : "STALENESS - class retained, freshness lost"
+    EV6 --> [*] : "system retired, evidence archived"
+
+    note right of EV3
+        OSHIP CEILING TODAY
+        14 metrics reach here
+        Nothing above is attainable
+        until OUT-VIS-004 installs CI
+    end note
+
+    note left of EV0
+        EV0 is legitimate
+        An honest empty field
+        outranks a fabricated value
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-119` — **Evidence Maturity State Machine**
+> **Explanation:** Every upward transition has a named cost and every downward transition has a
+> named cause — evidence **decays**, and the downward edges are the ones most models omit. The
+> `EV4 → EV3` edge deserves particular attention: a CI check that is disabled, skipped on failure,
+> or configured as non-blocking silently demotes every property it guarded, while the badge and the
+> documentation continue to assert the higher class. The self-loop on `EV2` encodes staleness: an
+> artifact keeps its class while losing its currency, which is how a document becomes confidently
+> wrong.
+
+---
+
+### 04.2.3 — The Evidence Classification Matrix
+
+> **`VIS-406`.** Agents need to classify an artifact they are holding, not read a ladder in the
+> abstract. The matrix maps concrete artifact types found in this repository to the class they can
+> support — and, critically, to the class they are **commonly mistaken for**.
+
+### TBL-VIS-408: Evidence Classification Matrix
+
+| Artifact type | Real class | Commonly mistaken for | Why the mistake happens | Correct usage |
+| :--- | :---: | :---: | :--- | :--- |
+| A vision statement in this document | `EV1` | `EV2` | It *is* documented, but it documents an intention, not a fact | Cite as intent, never as state |
+| A status label `IMPLEMENTED` in a registry | `EV1` | `EV3` | The word implies verification that was never performed | Require an artifact path in the same row |
+| A file path that exists | `EV3` for existence | `EV3` for function | Existence is verifiable; behaviour is not | Say "the file exists", not "the capability works" |
+| `wc -l` output | `EV3` | `EV4` | It is deterministic but unattended only if CI runs it | Record the command with the value |
+| `mermaid.parse()` over all blocks | `EV3` | `EV4` | Run manually today; would be `EV4` inside CI | Highest-quality evidence currently in Oship |
+| A `.gitkeep` file in `services/` | `EV3` that the directory is **empty** | `EV2` that a service is planned | A placeholder proves absence, not intent | Cite as proof of non-implementation |
+| An ADR marked `APPROVED` | `EV2` | `EV4` | Approval is a social act, not an enforcement | Approval binds humans, not the build |
+| A `CODEOWNERS` entry | `EV2` | `EV4` | It configures review, but `OBL-22` makes it self-review | Cite with the single-owner caveat |
+| A workflow skeleton in `.github/workflow-skeletons/` | `EV2` | `EV4` | It looks exactly like an installed workflow | **Never cite as automation — it does not run** |
+| A README badge | `EV1` at best | `EV4` | Badges visually imitate CI output | Treat as decoration until wired to a check |
+| A passing test | `EV4` for the sampled cases | `EV6` for all cases | A test samples the input space | State coverage; never generalise |
+| A production trace | `EV6` for observed conditions | `EV6` universally | Unobserved conditions remain unobserved | Bound the claim by the conditions |
+| An LLM agent's summary of the repository | `EV1` | `EV3` | Fluency reads as authority | Require the underlying command output |
+
+> **`VIS-407`.** The ninth row is the sharpest hazard in this repository and it has been latent since
+> Phase 0. **`.github/workflow-skeletons/` contains eight complete workflow files — ci, cd, release,
+> security-scan, documentation, ai-governance, issue-triage, stale — and none is installed in
+> `.github/workflows/`.** They are syntactically valid, professionally written, and completely
+> inert. An agent listing repository contents will find them and may reasonably conclude that CI
+> exists. It does not. This is `EV2` masquerading as `EV4`, and it is registered as a measurement
+> failure mode in §04.28.
+
+> **`VIS-408`.** The last row generalises the hazard to agents themselves. An agent that reads this
+> document and reports "Oship has 470 validation rules" is producing `EV1` — its own assertion —
+> even though the underlying figure is `EV3`. **Evidence class does not survive summarisation
+> unless the summary carries the source.** This is the single most important rule for any agent
+> writing status reports, and it is why `AI-VIS-101` in §04.29 requires every reported number to
+> carry its origin.
+
+---
+
+### 04.2.4 — Class Inflation and the Anti-Inflation Rule
+
+> **`VIS-409`.** Evidence class inflation is the specific mechanism by which honest documents become
+> dishonest without anyone lying. It happens in four steps, each individually reasonable.
+
+```mermaid
+flowchart LR
+    S1["Step 1 - An owner asserts a property - EV1 - honest"] --> S2["Step 2 - The assertion is written into a document - EV2 - honest"]
+    S2 --> S3["Step 3 - A reader cites the document as the reason to believe the property - still EV2, but now feels like EV3"]
+    S3 --> S4["Step 4 - A summary reports the property as a fact with no class - reads as EV4"]
+    S4 --> S5["Result - an EV1 assertion is consumed as automated validation"]
+    S5 --> S6["A decision is made on it"]
+    S6 --> S7["The decision fails and nobody can find the original assertion"]
+
+    R["ANTI-INFLATION RULE - MPC-23 - a value may never claim a class above its weakest link"] -.->|"blocks"| S3
+    R -.->|"blocks"| S4
+
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef drift fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef rule fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    class S1,S2 ok
+    class S3,S4 drift
+    class S5,S6,S7 bad
+    class R rule
+```
+
+> **Diagram ID:** `DGM-VIS-120` — **Evidence Class Inflation Pathway**
+> **Explanation:** No step is a lie. Steps 1 and 2 are green and correct. The drift is entirely in
+> steps 3 and 4, where the *class* is dropped while the *content* is carried forward — and a claim
+> without a class is read at whatever class the reader's context suggests, which in a document this
+> confident is high. `MPC-23` blocks both drift steps by requiring the class to travel with the
+> value. The rule is stated as a weakest-link rule deliberately: a derived value inherits the
+> **lowest** class among its inputs, never the highest, and never an average.
+
+### TBL-VIS-409: Weakest-Link Propagation — Worked Examples
+
+| Derived value | Input classes | Resulting class | Common error |
+| :--- | :--- | :---: | :--- |
+| "394 tables, of which 153 in PART 03" | `EV3` count, `EV3` count | `EV3` | None — both inputs verified |
+| "60 percent of capabilities are PLANNED" | `EV3` row count, `EV1` status labels | **`EV1`** | Reporting `EV3` because the arithmetic was exact |
+| "Documentation is 87 percent complete" | `EV3` file count, `EV0` completeness definition | **`EV0`** | Publishing a precise number derived from an undefined term |
+| "Zero cycles in the dependency graph" | `EV3` edge extraction, `EV1` manual traversal | **`EV1`** | Graph algorithms feel authoritative even when hand-run |
+| "107 Mermaid blocks parse cleanly" | `EV3` extraction, `EV3` parser result | **`EV3`** | None — the strongest chain in the document |
+| "The repository is enterprise-grade" | `EV0` — no definition of enterprise-grade | **`EV0`** | The most confident sentence has the least evidence |
+
+> **`VIS-410`.** The third and sixth rows illustrate an inverse relationship that recurs throughout
+> Oship's documentation set: **the more sweeping the claim, the weaker its evidence chain.** Precise
+> mechanical counts reach `EV3`; broad qualitative assessments sit at `EV0` while occupying the most
+> prominent positions in the README and the executive summaries. PART 04 does not delete those
+> sentences — they express intent, which is legitimate — but it requires them to be marked as intent.
+
+> **`VIS-411`.** **`OBL-36`** is opened: every quantitative claim in `.ai/PROJECT_STATUS.md`,
+> `.ai/CURRENT_CONTEXT.md`, and `README.md` must carry an evidence class. The audit is mechanical
+> once `MET-VIS-` identifiers exist, and it is the first task that becomes possible the moment CI is
+> installed.
+
+---
+
+## 04.3 — The Claim-to-Evidence Binding Model
+
+### AI NAVIGATION METADATA — §04.3
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before writing any sentence that asserts a property of the system** |
+| **AI DEPENDENCIES** | §04.2 evidence classes · §04.1 preconditions · PART 01 §01.20 evidence anchors |
+| **AI INPUTS** | A claim requiring support, or an existing claim under audit |
+| **AI OUTPUTS** | A populated claim-evidence contract, or a `BLOCK` naming the unsatisfied binding rule |
+| **AI IMPLEMENTATION IMPACT** | Unbound claims may not enter `.ai/` status files or any release note |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-521`…`VAL-VIS-560` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` §01.20 (read-only) · `.ai/DECISION_LOG.md` |
+
+---
+
+### 04.3.1 — The Claim Evidence Graph
+
+> **`VIS-412`.** A claim is not a leaf. It sits in a graph whose other nodes are the source it was
+> read from, the method that read it, the evidence it produced, the validation that tested it, the
+> decision that consumed it, and the owner accountable for all of it. Most documentation records
+> only the claim node and discards the rest, which is why claims cannot be audited later — the graph
+> was never stored, only its output.
+
+```mermaid
+flowchart TD
+    OWNER["OWNER - a named accountable role"]:::own
+    CLAIM["CLAIM - the asserted property"]:::claim
+
+    SRC["SOURCE - the artifact, command, or system read"]:::src
+    METH["METHOD - the executable procedure applied to the source"]:::src
+    RUN["RUN - one execution of the method at a known commit"]:::src
+
+    EVD["EVIDENCE - the output of the run"]:::evd
+    CLS["EVIDENCE CLASS - EV0 to EV6 - the weakest link in the chain"]:::evd
+
+    VAL["VALIDATION - the rule the evidence must survive"]:::val
+    EXP["EXPIRATION - the condition under which this binding dies"]:::val
+
+    DEC["DECISION - the choice this claim is allowed to influence"]:::dec
+    ACT["ACTION - what changes as a result"]:::dec
+    RES["RESULT - the observed outcome"]:::dec
+
+    OWNER --> CLAIM
+    CLAIM --> SRC --> METH --> RUN --> EVD --> CLS
+    CLS --> VAL
+    VAL -->|"passes"| DEC
+    VAL -->|"fails"| REJ["REJECTED - claim demoted to EV1 and flagged"]:::rej
+    DEC --> ACT --> RES
+    RES -->|"becomes new evidence for the next cycle"| EVD
+    EXP -.->|"when triggered, invalidates"| CLS
+    OWNER -.->|"accountable for expiration review"| EXP
+    CLS -.->|"caps the autonomy level permitted for ACT"| ACT
+
+    classDef own fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef claim fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef src fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef evd fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef val fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef dec fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef rej fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-109` — **Claim Evidence Graph**
+> **Explanation:** Three edges carry most of the weight. The dotted edge from evidence class to
+> action encodes the governing constraint of the whole model: **the evidence class caps the autonomy
+> level at which the resulting action may be taken.** An `EV1` claim may inform an `A0` suggestion
+> and nothing more; only `EV4` and above may drive an `A2` autonomous change. The feedback edge from
+> result back to evidence is what makes this a cycle rather than a pipeline — an action's outcome is
+> itself evidence, usually stronger than the evidence that motivated it. And the expiration node is
+> the one almost every real system omits: without it, a binding that was true at one commit silently
+> persists into a repository where it no longer holds.
+
+---
+
+### 04.3.2 — The Claim Evidence Contract
+
+> **`VIS-413`.** Every claim admitted to an authoritative Oship artifact must be expressible in the
+> following eighteen fields. The contract is the storable form of the graph above. This is the table
+> the brief requested as `TBL-VIS-397`; it is allocated sequentially here.
+
+### TBL-VIS-410: Claim Evidence Contract — Field Definitions
+
+| # | Field | Type | Required | Purpose | Failure if omitted |
+| :---: | :--- | :--- | :---: | :--- | :--- |
+| 1 | `claim_id` | identifier | **yes** | Stable address for the claim | The claim cannot be cited, disputed, or retired |
+| 2 | `claim_text` | prose, one sentence | **yes** | The asserted property, stated falsifiably | Vague claims cannot be tested |
+| 3 | `claim_type` | enum — existence, behaviour, quantity, quality, intent | **yes** | Determines what evidence is admissible | Intent claims get audited as fact claims |
+| 4 | `subject` | identifier | **yes** | The `CAP-VIS-`, `CMP-ARCH-`, or `DOMAIN-VIS-` the claim is about | Claims float free of the model |
+| 5 | `owner` | role | **yes** | Who is accountable, never an agent per `VIS-032` | No one to ask when it breaks |
+| 6 | `source` | path, command, or system | **yes** | What was read | The claim cannot be re-derived |
+| 7 | `method` | executable procedure | **yes** | How the source produced the evidence | Irreproducible by definition |
+| 8 | `method_determinism` | enum — deterministic, stochastic, judgmental | **yes** | Whether re-running can differ | Silent nondeterminism |
+| 9 | `evidence_ref` | artifact reference | **yes** | The concrete output | The evidence is asserted, not held |
+| 10 | `evidence_class` | `EV0`…`EV6` | **yes** | Strength, as weakest link | Class inflation per `DGM-VIS-120` |
+| 11 | `confidence_basis` | prose | **yes** | Why this class and not the next one up | Class becomes a matter of taste |
+| 12 | `validation_rule` | `VAL-VIS-` reference | **yes** | What check the claim must survive | Nothing can fail it |
+| 13 | `validation_result` | enum — pass, fail, not run | **yes** | Present state of that check | "Not run" gets read as "pass" |
+| 14 | `expiration_trigger` | event condition | **yes** | What kills this binding | Stale claims persist indefinitely |
+| 15 | `staleness_state` | enum — fresh, stale, expired, unknown | **yes** | Present currency | `MPC-18` unmet |
+| 16 | `permitted_decisions` | list | **yes** | What this claim may be used to decide | Weak claims drive strong actions |
+| 17 | `counter_interpretation` | prose | **yes** | What the claim does **not** establish | Over-reading — the most common audit finding |
+| 18 | `supersedes` | `claim_id` or null | no | Prior claim replaced by this one | History lost on correction |
+
+> **`VIS-414`.** Field 17 is unusual and deliberate. Most evidence schemas record what a claim
+> supports; almost none record what it does not. The over-reading failure — concluding "the system
+> works" from "the file exists" — is not caught by any of fields 1 through 16, because every one of
+> them can be perfectly populated while the reader still draws an unsupported conclusion. Field 17 is
+> the only defence, and it costs one sentence.
+
+### TBL-VIS-411: Worked Contract — A Real Oship Claim, Fully Bound
+
+| Field | Value |
+| :--- | :--- |
+| `claim_id` | `CLM-VIS-EXAMPLE-01` |
+| `claim_text` | "All Mermaid diagram blocks in `SYSTEM_VISION.md` parse without error under Mermaid 11." |
+| `claim_type` | quality |
+| `subject` | `AOM-VIS-001` |
+| `owner` | Documentation Architecture role — currently unresolved, see `OBL-22` |
+| `source` | `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` |
+| `method` | Extract every fenced ```mermaid block, call `mermaid.parse()` on each under jsdom |
+| `method_determinism` | deterministic — same input, same parser version, same result |
+| `evidence_ref` | Validator output `checked 114 blocks, 0 failures` |
+| `evidence_class` | `EV3` — repository verified; **not `EV4`**, because the run is manual |
+| `confidence_basis` | The method is executable and deterministic, but unattended enforcement does not exist; no CI workflow is installed |
+| `validation_rule` | `VAL-VIS-533` |
+| `validation_result` | pass |
+| `expiration_trigger` | Any commit touching the file, or any change to the Mermaid major version |
+| `staleness_state` | **unknown** — no timestamp is recorded, `MPC-17` unmet |
+| `permitted_decisions` | May justify "diagrams are syntactically valid"; may gate `QG-2` |
+| `counter_interpretation` | **Does not establish that any diagram is correct, readable, useful, or consistent with the prose beside it.** Parsing is syntax only. |
+| `supersedes` | null |
+
+> **`VIS-415`.** This is the strongest claim in the entire document, and its contract still contains
+> one **unknown** and one refusal to claim `EV4`. That is what a well-formed claim looks like in an
+> honest system: fully specified, and visibly short of the top of the ladder.
+
+---
+
+### 04.3.3 — The Forty Binding Rules
+
+> **`VIS-416`.** Forty-two rules govern claim-evidence binding, grouped into the six families the
+> brief named. Each is stated as an enforceable condition with a severity.
+
+### TBL-VIS-412: Claim-Evidence Binding Rules — Source Family
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-521` | Every claim names at least one source; "general knowledge" is not a source | **BLOCK** |
+| `VAL-VIS-522` | A source must be addressable — a path, a command, a URL, or a system identifier | **BLOCK** |
+| `VAL-VIS-523` | A source internal to Oship must be under version control | **BLOCK** |
+| `VAL-VIS-524` | A source may not be another claim of equal or lower evidence class | **BLOCK** |
+| `VAL-VIS-525` | Circular source chains are prohibited and must be detected | **HALT** |
+| `VAL-VIS-526` | A document may not cite itself as the source for a factual claim about the system | **HALT** |
+| `VAL-VIS-527` | Where a source is external, its retrieval condition must be recorded | WARN |
+| `VAL-VIS-528` | A source that no longer resolves demotes every claim depending on it to `EV1` | **BLOCK** |
+
+### TBL-VIS-413: Claim-Evidence Binding Rules — Evidence Family
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-529` | Every claim carries exactly one evidence class | **BLOCK** |
+| `VAL-VIS-530` | A derived claim inherits the minimum class of its inputs, never the maximum or mean | **HALT** |
+| `VAL-VIS-531` | `EV4` may be claimed only when an installed, enabled, blocking CI check exists | **HALT** |
+| `VAL-VIS-532` | `EV5` and `EV6` may not be claimed while `services/` and `apps/` contain only `.gitkeep` | **HALT** |
+| `VAL-VIS-533` | Evidence must be reproducible from the recorded method with no undocumented context | **BLOCK** |
+| `VAL-VIS-534` | Absence of evidence is recorded as `EV0`, never as an omitted field | **BLOCK** |
+| `VAL-VIS-535` | `EV0` is a valid, publishable state and may not be padded with a plausible value | **HALT** |
+| `VAL-VIS-536` | Evidence produced by an LLM without a verifiable command is `EV1` regardless of confidence | **HALT** |
+
+### TBL-VIS-414: Claim-Evidence Binding Rules — Confidence Family
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-537` | Confidence is expressed as an evidence class, never as a bare percentage | **BLOCK** |
+| `VAL-VIS-538` | The reason for the class must be stated, not implied | **BLOCK** |
+| `VAL-VIS-539` | Numerical precision may not exceed what the method supports | **BLOCK** |
+| `VAL-VIS-540` | A claim may not be strengthened by repetition across documents | **HALT** |
+| `VAL-VIS-541` | Agreement between two `EV1` assertions does not produce `EV2` | **HALT** |
+| `VAL-VIS-542` | Confidence may not be raised by the seniority of the asserter | **HALT** |
+| `VAL-VIS-543` | A claim's class may only rise through a recorded promotion event | **BLOCK** |
+
+### TBL-VIS-415: Claim-Evidence Binding Rules — Verification Family
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-544` | Every claim names the validation rule that could falsify it | **BLOCK** |
+| `VAL-VIS-545` | A claim with no possible falsifier is not a claim; it is an intent, and must be relabelled | **HALT** |
+| `VAL-VIS-546` | Verification of existence may not be reported as verification of behaviour | **HALT** |
+| `VAL-VIS-547` | Verification of behaviour under test may not be reported as production behaviour | **HALT** |
+| `VAL-VIS-548` | `not run` is a distinct validation result and may not be rendered as blank or as pass | **BLOCK** |
+| `VAL-VIS-549` | Verification performed by the claim's own owner is admissible but must be marked self-verified | WARN |
+| `VAL-VIS-550` | A self-verified claim may not exceed `EV3` | **BLOCK** |
+
+### TBL-VIS-416: Claim-Evidence Binding Rules — Expiration Family
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-551` | Every binding declares an expiration trigger; "never expires" is prohibited | **BLOCK** |
+| `VAL-VIS-552` | The trigger is an event, not a date — `VIS-051` forbids dates in this document | **BLOCK** |
+| `VAL-VIS-553` | A commit touching the source expires every claim derived from it | **BLOCK** |
+| `VAL-VIS-554` | An expired claim retains its text and loses its class, dropping to `unknown` | **BLOCK** |
+| `VAL-VIS-555` | Expired claims may not gate any decision at any autonomy level | **HALT** |
+| `VAL-VIS-556` | Expiration state must be computable without human interpretation | **BLOCK** |
+| `VAL-VIS-557` | A tool-version change expires every claim whose method invoked that tool | WARN |
+
+### TBL-VIS-417: Claim-Evidence Binding Rules — Owner Family
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-558` | Every claim has exactly one accountable owner role | **BLOCK** |
+| `VAL-VIS-559` | The owner is a role, never an individual and never an agent, per `VIS-032` | **HALT** |
+| `VAL-VIS-560` | An unowned claim is inadmissible to any `.ai/` status file | **BLOCK** |
+| `VAL-VIS-561` | Ownership transfers are recorded events, not silent edits | **BLOCK** |
+| `VAL-VIS-562` | Where every role resolves to one principal, self-review must be disclosed on the claim | **BLOCK** |
+| `VAL-VIS-563` | An owner may not raise their own claim above `EV3` without external verification | **HALT** |
+| `VAL-VIS-564` | A claim whose owner role is undefined is `EV0` regardless of its supporting artifacts | **HALT** |
+
+> **`VIS-417`.** `VAL-VIS-562` and `VAL-VIS-564` are live against Oship today. `OBL-22` records that
+> `CODEOWNERS` routes every path to `@afshin-omnisystem`, so **every claim in this repository is
+> self-verified and every one is capped at `EV3` by `VAL-VIS-550`** — independent of CI. Installing
+> the workflows opens `EV4` for machine-checked properties specifically because a CI check is not the
+> owner; it is an indifferent third party. That is the deeper reason automation raises evidence class,
+> and it is worth more than the convenience.
+
+### TBL-VIS-418: Binding Rule Severity Distribution
+
+| Family | Rules | BLOCK | HALT | WARN | Currently violated by Oship |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| Source | 8 | 6 | 2 | 1 | none detected |
+| Evidence | 8 | 3 | 5 | 0 | none — `EV4`+ correctly unclaimed |
+| Confidence | 7 | 4 | 3 | 0 | `VAL-VIS-539` — "80 percent complete" style figures in `.ai/` |
+| Verification | 7 | 4 | 3 | 1 | `VAL-VIS-548` — unrun checks rendered as blanks |
+| Expiration | 7 | 6 | 0 | 1 | **`VAL-VIS-551` — no Oship claim declares an expiration trigger** |
+| Owner | 7 | 4 | 3 | 0 | **`VAL-VIS-562` — self-review undisclosed on ~370 claims** |
+| **Total** | **44** | **27** | **16** | **3** | three families clean, three violated |
+
+> **`VIS-418`.** Forty-four rules against a required forty. The two systemic violations are in the
+> Expiration and Owner families, and both are cheap to fix: a trigger field and a disclosure line.
+> Neither requires CI, storage, or a runtime. **`OBL-37`** is opened to add both fields to the
+> claim rows in `.ai/PROJECT_STATUS.md`.
+
+---
+
+## 04.4 — Enterprise Metric Taxonomy
+
+### AI NAVIGATION METADATA — §04.4
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before proposing any new metric** |
+| **AI DEPENDENCIES** | §04.1 preconditions · §04.2 evidence classes · PART 02 `DMET-VIS-` · PART 03 `CMET-VIS-` |
+| **AI INPUTS** | A proposed measurement, or an existing metric requiring placement |
+| **AI OUTPUTS** | A category assignment `MCAT-01`…`MCAT-15` and the collection tier it implies |
+| **AI IMPLEMENTATION IMPACT** | Category determines collection cost, evidence ceiling, and required instrumentation |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-565`…`VAL-VIS-578` |
+| **AI RELATED DOCUMENTS** | `.ai/METRICS.md` · `MCX-MEM-001` PART 36 |
+
+---
+
+### 04.4.1 — Fifteen Families, Three Collection Tiers
+
+> **`VIS-419`.** A taxonomy that only names categories is an index. A taxonomy worth writing tells an
+> agent what a category **costs**. The fifteen families below are therefore organised by collection
+> tier: what can be measured by reading files, what needs a build, and what needs a running system.
+> The tier determines the evidence ceiling before a single metric is defined.
+
+```mermaid
+flowchart TD
+    ROOT["OSHIP METRIC TAXONOMY - 15 families"]:::root
+
+    subgraph T1["TIER 1 - STATIC - readable from the repository - ceiling EV3"]
+        M1["MCAT-01 Structural - files, directories, layout conformance"]
+        M2["MCAT-02 Documentation - volume, coverage, density"]
+        M3["MCAT-03 Knowledge - identifier registries, cross-reference integrity"]
+        M4["MCAT-04 Governance - ownership, decision records, policy presence"]
+        M5["MCAT-05 Traceability - link resolution, orphan detection"]
+        M6["MCAT-06 AI Readability - navigability and context cost for agents"]
+    end
+
+    subgraph T2["TIER 2 - BUILD - requires CI execution - ceiling EV4"]
+        M7["MCAT-07 Code Quality - lint, complexity, duplication"]
+        M8["MCAT-08 Test - coverage, pass rate, flakiness"]
+        M9["MCAT-09 Security - vulnerabilities, secret exposure, dependency risk"]
+        M10["MCAT-10 Build - duration, reproducibility, artifact size"]
+        M11["MCAT-11 Compliance - gate results, policy enforcement outcomes"]
+    end
+
+    subgraph T3["TIER 3 - RUNTIME - requires a running system - ceiling EV6"]
+        M12["MCAT-12 Performance - latency, throughput, saturation"]
+        M13["MCAT-13 Reliability - availability, error rate, recovery"]
+        M14["MCAT-14 Agent Behaviour - autonomy exercised, intervention rate, trace quality"]
+        M15["MCAT-15 Business - value delivered, adoption, cost"]
+    end
+
+    ROOT --> T1
+    ROOT --> T2
+    ROOT --> T3
+
+    T1 -->|"MEASURABLE TODAY"| S1["6 families - 40 percent of the taxonomy"]:::ok
+    T2 -->|"BLOCKED ON OUT-VIS-004"| S2["5 families - one workflow install away"]:::warn
+    T3 -->|"BLOCKED ON ZERO CODE"| S3["4 families - structurally unreachable"]:::bad
+
+    classDef root fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-110` — **Enterprise Metric Taxonomy**
+> **Explanation:** The tier split is the actionable content. Six families are measurable today with
+> nothing more than a shell and this repository — and those six are, not coincidentally, exactly the
+> families that matter for a documentation-phase project. Five more unlock the moment CI is
+> installed. Four are unreachable until application code exists, and PART 04 does not pretend
+> otherwise: **it defines Tier 3 metrics as `PLANNED` with `EV0`, so the taxonomy is complete while
+> the measurement is honestly empty.** A taxonomy that only covered what is measurable today would
+> have to be rewritten the moment code appears.
+
+### TBL-VIS-419: Metric Category Registry
+
+| ID | Family | Tier | Evidence ceiling | Measures | Oship status | Metrics defined in §04.5 |
+| :--- | :--- | :---: | :---: | :--- | :--- | :---: |
+| `MCAT-01` | Structural | 1 | `EV3` | Repository shape against declared architecture | **MEASURABLE NOW** | 6 |
+| `MCAT-02` | Documentation | 1 | `EV3` | Volume, density, visual anchoring, completeness | **MEASURABLE NOW** | 8 |
+| `MCAT-03` | Knowledge | 1 | `EV3` | Identifier registries, uniqueness, allocation discipline | **MEASURABLE NOW** | 7 |
+| `MCAT-04` | Governance | 1 | `EV3` | Ownership resolution, decision coverage, policy presence | **MEASURABLE NOW** | 5 |
+| `MCAT-05` | Traceability | 1 | `EV3` | Cross-reference resolution, orphans, dangling links | **MEASURABLE NOW** | 5 |
+| `MCAT-06` | AI Readability | 1 | `EV3` | Navigability, context cost, chunk coherence | **MEASURABLE NOW** | 6 |
+| `MCAT-07` | Code Quality | 2 | `EV4` | Lint, complexity, duplication | `NOT APPLICABLE` — zero code | 3 |
+| `MCAT-08` | Test | 2 | `EV4` | Coverage, pass rate, flakiness | `NOT APPLICABLE` — zero tests | 3 |
+| `MCAT-09` | Security | 2 | `EV4` | Vulnerabilities, secrets, dependency risk | **PARTIALLY MEASURABLE** — dependency scan possible | 3 |
+| `MCAT-10` | Build | 2 | `EV4` | Duration, reproducibility, artifact size | `NOT APPLICABLE` — no build | 2 |
+| `MCAT-11` | Compliance | 2 | `EV4` | Gate outcomes, enforcement results | **BLOCKED** — gates defined in §04.18, none installed | 3 |
+| `MCAT-12` | Performance | 3 | `EV6` | Latency, throughput, saturation | `NOT APPLICABLE` — no runtime | 2 |
+| `MCAT-13` | Reliability | 3 | `EV6` | Availability, error rate, recovery time | `NOT APPLICABLE` — no runtime | 2 |
+| `MCAT-14` | Agent Behaviour | 3 | `EV6` | Autonomy exercised, intervention rate, trace completeness | **PARTIALLY MEASURABLE** — agent commits are observable | 3 |
+| `MCAT-15` | Business | 3 | `EV6` | Value delivered, adoption, cost per outcome | `NOT APPLICABLE` — no users | 2 |
+
+> **`VIS-420`.** **Thirty-seven of the fifty metrics defined in §04.5 sit in Tier 1**, and that
+> distribution is correct rather than lazy. Oship is a documentation-phase repository; its real
+> risks are identifier collision, unresolvable cross-references, undisclosed self-review, and
+> context cost for agents — all Tier 1 concerns. A taxonomy weighted toward latency percentiles
+> would be measuring a system that does not exist while ignoring the one that does.
+
+### TBL-VIS-420: Category Selection Decision Aid
+
+| If the proposed measurement… | Then the family is | And the collection method must be | Evidence ceiling |
+| :--- | :--- | :--- | :---: |
+| counts files, directories, or layout conformance | `MCAT-01` | `find`, `ls`, or a tree walk | `EV3` |
+| counts words, lines, diagrams, or tables in documents | `MCAT-02` | `wc`, `grep -c`, or a parser | `EV3` |
+| checks whether an identifier is unique or in range | `MCAT-03` | regex extraction plus set comparison | `EV3` |
+| asks who is accountable for something | `MCAT-04` | `CODEOWNERS` parse plus registry join | `EV3` |
+| follows a reference from one artifact to another | `MCAT-05` | link extraction plus resolution attempt | `EV3` |
+| estimates what an agent must read to act | `MCAT-06` | token counting over a defined slice | `EV3` |
+| requires compiling, linting, or executing source | `MCAT-07`…`MCAT-10` | a CI job — **unavailable today** | `EV4` |
+| requires a policy decision to be enforced, not just written | `MCAT-11` | a blocking gate — **unavailable today** | `EV4` |
+| requires the system to be running | `MCAT-12`, `MCAT-13` | runtime telemetry — **does not exist** | `EV6` |
+| observes what an agent actually did | `MCAT-14` | commit history, PR records, trace files | `EV3` partial, `EV6` full |
+| asks whether anyone benefited | `MCAT-15` | product analytics — **no users exist** | `EV6` |
+
+---
+
+## 04.5 — The Canonical Metric Contract and Metric Register
+
+### AI NAVIGATION METADATA — §04.5
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — the single most reused structure in PART 04** |
+| **AI DEPENDENCIES** | §04.1 `MPC-01`…`MPC-32` · §04.2 `EV0`…`EV6` · §04.4 `MCAT-01`…`MCAT-15` |
+| **AI INPUTS** | A metric to define, or a metric definition to audit |
+| **AI OUTPUTS** | A 21-field contract, or a `BLOCK` naming the missing field |
+| **AI IMPLEMENTATION IMPACT** | A metric without a complete contract may not be collected, published, or gated on |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-579`…`VAL-VIS-600` |
+| **AI RELATED DOCUMENTS** | `.ai/METRICS.md` · §04.6 lifecycle · §04.30 machine-readable form |
+
+---
+
+### 04.5.1 — The Twenty-One Fields
+
+> **`VIS-421`.** The contract has twenty-one fields because thirty-two preconditions collapse into
+> twenty-one storable slots — several preconditions are satisfied by a single well-chosen field, and
+> several fields satisfy more than one precondition. The mapping is printed so the contract can be
+> audited against §04.1 rather than taken on trust. This is the table the brief requested as
+> `TBL-VIS-399`.
+
+### TBL-VIS-421: Canonical Metric Contract — 21 Fields
+
+| # | Field | Type | Satisfies | Example value |
+| :---: | :--- | :--- | :--- | :--- |
+| 1 | `metric_id` | identifier | `MPC-01` | `MET-VIS-004` |
+| 2 | `name` | short phrase | `MPC-01` | Mermaid parse success count |
+| 3 | `category` | `MCAT-nn` | §04.4 | `MCAT-02` |
+| 4 | `definition` | one unambiguous sentence | `MPC-03` | Number of fenced mermaid blocks that `mermaid.parse()` accepts |
+| 5 | `unit` | dimension and scale | `MPC-04`, `MPC-05` | blocks — count, dimensionless |
+| 6 | `direction` | higher-better, lower-better, neutral | `MPC-06` | higher-better |
+| 7 | `owner` | role | `MPC-02` | Documentation Architecture |
+| 8 | `source` | path, command, or system | `MPC-07`, `MPC-08` | `SYSTEM_VISION.md` |
+| 9 | `collection_method` | executable procedure | `MPC-09` | `node /tmp/mmv/val.mjs <file>` |
+| 10 | `determinism` | deterministic, stochastic, judgmental | `MPC-10` | deterministic |
+| 11 | `sampling` | full population, or a declared frame | `MPC-11`, `MPC-12` | full population |
+| 12 | `aggregation` | count, sum, mean, median, p95, max, min | `MPC-13`, `MPC-14` | count |
+| 13 | `window` | point-in-time or interval semantics | `MPC-15`, `MPC-16` | point-in-time at a commit |
+| 14 | `collection_frequency` | per-commit, per-run, on-demand | `MPC-17` | on-demand — **no automation** |
+| 15 | `staleness_threshold` | event or elapsed condition | `MPC-19` | expires on any commit to the source |
+| 16 | `provenance` | run, commit, tool version | `MPC-20`, `MPC-21` | mermaid 11.16.1, manual run |
+| 17 | `evidence_class` | `EV0`…`EV6` | `MPC-22`, `MPC-23` | `EV3` |
+| 18 | `validation_rules` | `VAL-VIS-` list | `MPC-24` | `VAL-VIS-533`, `VAL-VIS-585` |
+| 19 | `storage` | where history lives | `MPC-25`, `MPC-26` | **none — `OBL-03` open** |
+| 20 | `interpretation` | what a reader may conclude | `MPC-27` | Diagrams are syntactically valid |
+| 21 | `counter_interpretation` | what a reader may **not** conclude | `MPC-28` | Says nothing about correctness or usefulness |
+
+> **`VIS-422`.** Fields 14, 16, and 19 will read the same way for **every metric defined below** —
+> on-demand, manual, none. Rather than repeat three dead fields fifty times, the register uses a
+> compact form and states the constant here: **no Oship metric has automated collection, CI
+> provenance, or historical storage.** Any future row that differs must say so explicitly, which
+> makes the first automated metric visible the moment it appears.
+
+### TBL-VIS-422: Metric Contract Completeness Audit — Against Existing Oship Metrics
+
+| Metric family already in the document | Count | Fields typically populated | Missing | Verdict |
+| :--- | :---: | :---: | :--- | :--- |
+| `DMET-VIS-001`…`061` — domain metrics, PART 02 | 61 | 6 of 21 | source, method, determinism, provenance, class, storage | **NON-CONFORMANT — definitions only** |
+| `CMET-VIS-001`…`050` — capability metrics, PART 03 | 50 | 7 of 21 | method, determinism, window, provenance, storage | **NON-CONFORMANT — definitions only** |
+| `MET-VIS-001`…`050` — repository metrics, §04.5.2 | 50 | 21 of 21 for Tier 1; 15 of 21 for Tier 3 | Tier 3 lacks source and method by necessity | **CONFORMANT** |
+
+> **`VIS-423`.** **`OBL-38`** is opened: 111 metrics defined in PARTS 02 and 03 do not satisfy the
+> contract this section establishes. They are not deleted — their definitions are sound — but they
+> are marked `PROPOSED` under §04.6's lifecycle until retrofitted. Declaring a contract and
+> exempting the prior work would make the contract decorative.
+
+---
+
+### 04.5.2 — The Repository Metric Register — `MET-VIS-001` … `MET-VIS-050`
+
+> **`VIS-424`.** Fifty metrics follow. Every Tier 1 row carries a **collection command that was
+> actually executed against this repository while writing this section**, and the value column
+> records what that command returned. Tier 2 and Tier 3 rows carry `NOT YET MEASURED` with the
+> specific blocker named. No value in this register is estimated, rounded for presentation, or
+> carried over from an earlier part of this document without re-running its command.
+
+> **`VIS-425`.** The compact register form omits fields 14, 16, and 19 of `TBL-VIS-421`, which are
+> constant across every row per `VIS-422`: collection frequency **on-demand**, provenance **manual
+> run at the current commit**, storage **none**. Full 21-field expansions for three representative
+> metrics appear in §04.5.3.
+
+### TBL-VIS-424: Metric Register — `MCAT-01` Structural
+
+| ID | Name | Definition | Unit | Method | Value | Class |
+| :--- | :--- | :--- | :--- | :--- | :---: | :---: |
+| `MET-VIS-001` | Markdown file count | Files matching `*.md` outside `.git` | files | `find . -name '*.md' -not -path './.git/*' \| wc -l` | **87** | `EV3` |
+| `MET-VIS-002` | Placeholder directory count | Directories held open by a `.gitkeep` and nothing else | dirs | `find . -name '.gitkeep' \| wc -l` | **73** | `EV3` |
+| `MET-VIS-003` | Application source file count | Files with a recognised source extension | files | `find . -type f \( -name '*.ts' -o -name '*.js' -o -name '*.py' -o -name '*.go' -o -name '*.java' \)` | **0** | `EV3` |
+| `MET-VIS-004` | Structural placeholder ratio | `MET-VIS-002` divided by directories that contain any file | ratio | derived | **1.00** — every code directory is empty | `EV3` |
+| `MET-VIS-005` | Knowledge domain directory count | Subdirectories of `docs/MASTER_CONTEXT/` | dirs | `ls -d docs/MASTER_CONTEXT/*/ \| wc -l` | **24** | `EV3` |
+| `MET-VIS-006` | Domain index presence | `INDEX.md` files under `docs/MASTER_CONTEXT/` | files | `find docs/MASTER_CONTEXT -name 'INDEX.md' \| wc -l` | **25** — 24 domains plus the root | `EV3` |
+
+> **`VIS-426`.** `MET-VIS-003` returning **0** and `MET-VIS-004` returning **1.00** are the two most
+> important numbers in this register. Together they are the `EV3`-verified statement that Oship
+> contains no application code whatsoever. Every claim about system behaviour anywhere in this
+> repository is bounded by those two values, and they are cheap to re-run — which is precisely why
+> they are the right foundation for the honesty this document depends on.
+
+### TBL-VIS-425: Metric Register — `MCAT-02` Documentation
+
+| ID | Name | Definition | Unit | Method | Value | Class |
+| :--- | :--- | :--- | :--- | :--- | :---: | :---: |
+| `MET-VIS-007` | Total documentation lines | Lines across all `*.md` outside `.git` | lines | `find ... -exec cat {} + \| wc -l` | **127,285** | `EV3` |
+| `MET-VIS-008` | Vision document lines | Lines in `SYSTEM_VISION.md` | lines | `wc -l` | **15,083** at time of collection | `EV3` |
+| `MET-VIS-009` | Vision document words | Words in `SYSTEM_VISION.md` | words | `wc -w` | **168,420** at time of collection | `EV3` |
+| `MET-VIS-010` | Mermaid block count | Fenced ```mermaid blocks in the vision document | blocks | `grep -c '^```mermaid'` | **116** | `EV3` |
+| `MET-VIS-011` | Mermaid parse success rate | Blocks accepted by `mermaid.parse()` over total blocks | ratio | validator script | **1.00** — 116 of 116 | `EV3` |
+| `MET-VIS-012` | Captioned table count | Lines matching the `### TBL-VIS-` caption convention | tables | `grep -cE '^### TBL-VIS-'` | **419** | `EV3` |
+| `MET-VIS-013` | Visual anchor interval | `MET-VIS-008` divided by the sum of diagrams and tables | lines per visual | derived | **28.2** — inside the 20–60 target | `EV3` |
+| `MET-VIS-014` | Section heading count | `##`-level headings in the vision document | headings | `grep -cE '^## '` | **88** | `EV3` |
+
+> **`VIS-427`.** `MET-VIS-013` is the direct mechanisation of the standing NO WALL OF TEXT rule.
+> At **28.2 lines per visual anchor**, the vision document satisfies it with margin, and the metric
+> makes the rule enforceable rather than aspirational — a future part that drifts past 60 fails a
+> command, not a reviewer's patience. `MET-VIS-011` at **1.00** is the highest-evidence quality
+> signal Oship currently possesses.
+
+### TBL-VIS-426: Metric Register — `MCAT-03` Knowledge
+
+| ID | Name | Definition | Unit | Method | Value | Class |
+| :--- | :--- | :--- | :--- | :--- | :---: | :---: |
+| `MET-VIS-015` | Distinct `VIS-` statements | Unique `VIS-nnn` identifiers | ids | regex extract, deduplicate | **423** | `EV3` |
+| `MET-VIS-016` | Distinct validation rules | Unique `VAL-VIS-nnn` identifiers | ids | regex extract | **530** | `EV3` |
+| `MET-VIS-017` | Distinct capability identifiers | Unique `CAP-VIS-nnn` identifiers | ids | regex extract | **171** | `EV3` |
+| `MET-VIS-018` | Distinct failure modes | Unique `FAL-VIS-nnn` identifiers | ids | regex extract | **253** | `EV3` |
+| `MET-VIS-019` | Distinct decision records | Unique `DEC-VIS-nnn` identifiers | ids | regex extract | **40** | `EV3` |
+| `MET-VIS-020` | Identifier collision count | Identifiers bound to more than one definition | collisions | extract plus group | **NOT YET MEASURED** — requires a definition parser, `MPC-09` unmet | `EV0` |
+| `MET-VIS-021` | Namespace ceiling headroom | Allocated identifiers over declared ceiling, per namespace | ratio | register join | `VAL-VIS` **530 of 620** — 85 percent consumed | `EV3` |
+
+> **`VIS-428`.** `MET-VIS-021` is an early-warning metric and it is already amber. The `VAL-VIS-`
+> namespace is **85 percent consumed** with §04.6 through §04.31 still unwritten. Under
+> `DEC-VIS-036` a ceiling breach requires a new decision record, so this is not a crisis — but it is
+> the kind of signal that only exists because someone defined it before it mattered. `MET-VIS-020`
+> returning `EV0` is recorded rather than skipped, per `VAL-VIS-534`.
+
+### TBL-VIS-427: Metric Register — `MCAT-04` Governance
+
+| ID | Name | Definition | Unit | Method | Value | Class |
+| :--- | :--- | :--- | :--- | :--- | :---: | :---: |
+| `MET-VIS-022` | `CODEOWNERS` rule count | Non-comment, non-blank lines in `.github/CODEOWNERS` | rules | `grep -cv '^#\|^$'` | **20** | `EV3` |
+| `MET-VIS-023` | Distinct owning principals | Unique `@`-handles across all `CODEOWNERS` rules | principals | `grep -ohE '@[A-Za-z0-9_/-]+' \| sort -u \| wc -l` | **1** | `EV3` |
+| `MET-VIS-024` | Review independence | Paths whose owner differs from their likely author | ratio | derived from `MET-VIS-023` | **0.00** — structurally impossible today | `EV3` |
+| `MET-VIS-025` | Architecture decision record count | Files under `docs/ADR/` | records | `ls docs/ADR \| wc -l` | **3** | `EV3` |
+| `MET-VIS-026` | Metadata conformance | `*.md` files under `docs/` and `.ai/` opening with `---` | files | `head -1` scan | **77 of 87** | `EV3` |
+
+> **`VIS-429`.** `MET-VIS-024` at **0.00** is the quantified form of `OBL-22`. It is not a criticism
+> of a single-maintainer project — that is a normal and legitimate state — but it is the reason
+> `VAL-VIS-550` caps self-verified claims at `EV3`, and the reason installing CI raises evidence
+> class for structural rather than merely convenient reasons. **A machine check is the only
+> independent reviewer this repository can currently obtain.**
+
+### TBL-VIS-428: Metric Register — `MCAT-05` Traceability
+
+| ID | Name | Definition | Unit | Method | Value | Class |
+| :--- | :--- | :--- | :--- | :--- | :---: | :---: |
+| `MET-VIS-027` | Internal reference count | Distinct cross-part identifier citations in the vision document | refs | regex extract | **NOT YET MEASURED** — needs a citation-versus-definition parser | `EV0` |
+| `MET-VIS-028` | Dangling reference count | Cited identifiers with no definition anywhere | refs | extract, join, difference | **NOT YET MEASURED** — same blocker | `EV0` |
+| `MET-VIS-029` | Orphan identifier count | Defined identifiers cited nowhere else | ids | inverse of `MET-VIS-028` | **NOT YET MEASURED** | `EV0` |
+| `MET-VIS-030` | Cross-document link resolution | Relative markdown links resolving to an existing path | ratio | link extract plus `test -f` | **NOT YET MEASURED** | `EV0` |
+| `MET-VIS-031` | Registered-document conformance | Documents listed in a domain `INDEX.md` that exist on disk | ratio | index parse plus `test -f` | **NOT YET MEASURED** | `EV0` |
+
+> **`VIS-430`.** The entire `MCAT-05` family is `EV0`, and this is the register's most useful
+> finding. Traceability is the property Oship claims most often and measures least — five metrics,
+> five unmeasured. Each is a **Tier 1** metric, meaning none is blocked by CI, storage, or missing
+> code. They are unmeasured only because nobody has written the parser. **`OBL-39`** is opened: the
+> traceability family is the highest value-per-effort measurement work available in this repository.
+
+### TBL-VIS-429: Metric Register — `MCAT-06` AI Readability
+
+| ID | Name | Definition | Unit | Method | Value | Class |
+| :--- | :--- | :--- | :--- | :--- | :---: | :---: |
+| `MET-VIS-032` | Vision document byte size | Characters in `SYSTEM_VISION.md` | bytes | `wc -c` | **1,064,792** | `EV3` |
+| `MET-VIS-033` | Estimated full-load token cost | Bytes divided by 4, the conventional English approximation | tokens | derived | **~266,000** | `EV2` — the divisor is a convention, not a measurement |
+| `MET-VIS-034` | Navigation metadata coverage | `##` sections carrying an AI NAVIGATION METADATA table | ratio | grep pairing | **NOT YET MEASURED** | `EV0` |
+| `MET-VIS-035` | Mean section size | Document lines divided by `##` heading count | lines | derived | **171** | `EV3` |
+| `MET-VIS-036` | Largest single section | Lines between consecutive `##` headings, maximum | lines | derived | **NOT YET MEASURED** | `EV0` |
+| `MET-VIS-037` | Chunk-independence score | Sections comprehensible without loading a prior section | ratio | judgmental | **NOT YET MEASURED** — `MPC-10` fails, no deterministic method exists | `EV0` |
+
+> **`VIS-431`.** `MET-VIS-033` is deliberately assigned **`EV2`, not `EV3`**, despite being computed
+> by a command. The command is exact; the *divisor* is a rule of thumb. Under `VAL-VIS-530` the
+> derived value inherits the weaker input, and the weaker input here is a convention borrowed from
+> outside this repository. This is the weakest-link rule doing real work on a real row — most
+> systems would have published `266,000` at `EV3` without noticing.
+
+> **`VIS-432`.** `MET-VIS-037` is marked `NOT YET MEASURED` with the honest reason that **no
+> deterministic method exists**, not that nobody has built one. Chunk independence is a judgmental
+> property. Under `MPC-10` a judgmental metric may still be defined, but it may never exceed `EV1`
+> and may never gate a decision. Defining it anyway is worthwhile: it names a real quality and
+> prevents someone later inventing a fake score for it.
+
+### TBL-VIS-430: Metric Register — Tier 2 Families `MCAT-07` … `MCAT-11`
+
+| ID | Name | Family | Unit | Value | Blocker | Class |
+| :--- | :--- | :---: | :--- | :---: | :--- | :---: |
+| `MET-VIS-038` | Lint violation count | `MCAT-07` | violations | `NOT APPLICABLE` | `MET-VIS-003` is 0 — no source to lint | `EV0` |
+| `MET-VIS-039` | Cyclomatic complexity, p95 | `MCAT-07` | index | `NOT APPLICABLE` | no source | `EV0` |
+| `MET-VIS-040` | Duplication ratio | `MCAT-07` | ratio | `NOT APPLICABLE` | no source | `EV0` |
+| `MET-VIS-041` | Test coverage | `MCAT-08` | percent | `NOT APPLICABLE` | `tests/` is `.gitkeep`-only | `EV0` |
+| `MET-VIS-042` | Test pass rate | `MCAT-08` | ratio | `NOT APPLICABLE` | no tests | `EV0` |
+| `MET-VIS-043` | Flaky test count | `MCAT-08` | tests | `NOT APPLICABLE` | no tests | `EV0` |
+| `MET-VIS-044` | Known vulnerable dependencies | `MCAT-09` | count | **NOT YET MEASURED** | no manifest exists to scan | `EV0` |
+| `MET-VIS-045` | Committed secret count | `MCAT-09` | count | **NOT YET MEASURED** | scanner runnable today — **this one is achievable now** | `EV0` |
+| `MET-VIS-046` | Build duration | `MCAT-10` | seconds | `NOT APPLICABLE` | no build | `EV0` |
+| `MET-VIS-047` | Quality gate pass rate | `MCAT-11` | ratio | **NOT YET MEASURED** | gates defined in §04.18; none installed — `OUT-VIS-004` | `EV0` |
+
+### TBL-VIS-431: Metric Register — Tier 3 Families `MCAT-12` … `MCAT-15`
+
+| ID | Name | Family | Unit | Value | Blocker | Class |
+| :--- | :--- | :---: | :--- | :---: | :--- | :---: |
+| `MET-VIS-048` | Request latency p95 | `MCAT-12` | milliseconds | `NOT APPLICABLE` | no runtime exists | `EV0` |
+| `MET-VIS-049` | Service availability | `MCAT-13` | ratio | `NOT APPLICABLE` | no runtime exists | `EV0` |
+| `MET-VIS-050` | Agent-authored merged change count | `MCAT-14` | changes | **0** — observable from commit history | none — measurable now, and currently zero | `EV3` |
+
+> **`VIS-433`.** `MET-VIS-050` is the metric that matters most in the long run and it currently reads
+> **0**. `OUT-VIS-015` names an agent-authored, human-reviewed, merged pull request as Oship's first
+> falsifiable proof that any of this works. That outcome has exactly one metric, it is measurable
+> today with `git log`, and its present value is zero. **This is the single number against which the
+> entire vision will eventually be judged**, and PART 04's contribution is to have defined it before
+> there was any temptation to define it favourably.
+
+### TBL-VIS-432: Register Summary by Evidence Class
+
+| Evidence class | Metrics | Share | Interpretation |
+| :---: | :---: | :---: | :--- |
+| `EV3` — repository verified | **21** | 42% | Real, re-runnable, command-backed values |
+| `EV2` — documented | **1** | 2% | `MET-VIS-033`, weakened by a borrowed constant |
+| `EV1` — asserted | **0** | 0% | No metric rests on assertion alone — by design |
+| `EV0` — none | **28** | 56% | 12 not applicable, 16 measurable but unmeasured |
+| `EV4`+ | **0** | 0% | **Structurally unreachable — no CI, no runtime, no production** |
+
+> **`VIS-434`.** Twenty-one of fifty metrics carry a real value. That is the true measurement
+> capability of this repository, stated without inflation: **42 percent coverage, zero automation,
+> ceiling `EV3`.** Sixteen of the twenty-eight `EV0` rows are Tier 1 and blocked on nothing but
+> effort. If those sixteen were collected, coverage would reach 74 percent without installing a
+> single tool — and that, not a dashboard, is the next real measurement milestone.
+
+---
+
+### 04.5.3 — Three Full Contract Expansions
+
+> **`VIS-435`.** The compact register is for scanning. The full contract is what an implementation
+> consumes. Three metrics are expanded completely — one exemplary, one honest failure, one
+> structurally impossible — because those three shapes cover every row above.
+
+### TBL-VIS-433: Full Contract — `MET-VIS-011`, the Exemplary Case
+
+| Field | Value |
+| :--- | :--- |
+| `metric_id` | `MET-VIS-011` |
+| `name` | Mermaid parse success rate |
+| `category` | `MCAT-02` Documentation |
+| `definition` | The count of fenced mermaid blocks that `mermaid.parse()` accepts without throwing, divided by the total count of fenced mermaid blocks in the target file |
+| `unit` | ratio, dimensionless, range 0 to 1 |
+| `direction` | higher-better |
+| `owner` | Documentation Architecture role — **self-verified**, disclosed per `VAL-VIS-562` |
+| `source` | `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` |
+| `collection_method` | Extract every ```mermaid fence, call `mermaid.parse()` on each under a jsdom global, count non-throwing invocations |
+| `determinism` | deterministic for a pinned parser version |
+| `sampling` | full population — every block, no sampling |
+| `aggregation` | count, then ratio |
+| `window` | point-in-time, evaluated at one commit |
+| `collection_frequency` | on-demand — **no automation exists** |
+| `staleness_threshold` | expires on any commit touching the source, or any Mermaid major-version change |
+| `provenance` | mermaid 11.16.1, jsdom, manual invocation |
+| `evidence_class` | `EV3` — capped below `EV4` because the run is manual and self-performed |
+| `validation_rules` | `VAL-VIS-533`, `VAL-VIS-550`, `VAL-VIS-585` |
+| `storage` | **none** — no history retained, `OBL-03` open |
+| `interpretation` | Every diagram in the document is syntactically valid under the pinned parser |
+| `counter_interpretation` | **Establishes nothing about whether any diagram is correct, legible, useful, or consistent with its surrounding prose.** A diagram that parses may still be wrong. |
+
+### TBL-VIS-434: Full Contract — `MET-VIS-037`, the Honest Failure
+
+| Field | Value |
+| :--- | :--- |
+| `metric_id` | `MET-VIS-037` |
+| `name` | Chunk-independence score |
+| `category` | `MCAT-06` AI Readability |
+| `definition` | The proportion of `##` sections a competent agent can act on correctly without loading any other section |
+| `unit` | ratio, dimensionless |
+| `direction` | higher-better |
+| `owner` | Documentation Architecture role |
+| `source` | `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` |
+| `collection_method` | **NONE EXISTS.** Requires a judgment about comprehension that no deterministic procedure can render |
+| `determinism` | judgmental |
+| `sampling` | undefined |
+| `aggregation` | undefined |
+| `window` | undefined |
+| `collection_frequency` | never collected |
+| `staleness_threshold` | not applicable |
+| `provenance` | none |
+| `evidence_class` | `EV0` |
+| `validation_rules` | `VAL-VIS-587` — a judgmental metric may never exceed `EV1` and may never gate a decision |
+| `storage` | none |
+| `interpretation` | **None permitted.** The metric is defined so that the quality is named and so that no one invents a score for it later |
+| `counter_interpretation` | This metric being undefined does **not** mean the document is poorly chunked; it means the property is unmeasured, which is a different and honest statement |
+
+### TBL-VIS-435: Full Contract — `MET-VIS-048`, the Structurally Impossible
+
+| Field | Value |
+| :--- | :--- |
+| `metric_id` | `MET-VIS-048` |
+| `name` | Request latency, 95th percentile |
+| `category` | `MCAT-12` Performance |
+| `definition` | The 95th percentile of end-to-end request duration measured at the service boundary over the collection window |
+| `unit` | milliseconds, interval scale |
+| `direction` | lower-better |
+| `owner` | Platform Engineering role — **role does not exist yet** |
+| `source` | Runtime telemetry from a deployed service |
+| `collection_method` | Histogram aggregation over request spans |
+| `determinism` | stochastic — depends on load and environment |
+| `sampling` | declared frame required; not yet designed |
+| `aggregation` | p95 |
+| `window` | interval, rolling |
+| `collection_frequency` | continuous, once a runtime exists |
+| `staleness_threshold` | one collection interval |
+| `provenance` | would carry deployment identifier and build SHA |
+| `evidence_class` | `EV0` — reachable class would be `EV6` |
+| `validation_rules` | `VAL-VIS-532` — `EV5` and above may not be claimed while `services/` is `.gitkeep`-only |
+| `storage` | none |
+| `interpretation` | **None available.** `NOT APPLICABLE` until a service exists |
+| `counter_interpretation` | The absence of this metric is not a gap in measurement discipline; it is the correct state for a repository with `MET-VIS-003` equal to zero |
+
+> **`VIS-436`.** These three contracts encode the whole posture of PART 04. One metric is fully
+> specified and genuinely useful at `EV3`. One is fully specified and honestly unmeasurable. One is
+> fully specified and correctly empty. **A measurement system is mature when it can say all three
+> things with equal comfort**, and immature when every metric mysteriously has a value.
+
+---
