@@ -25177,3 +25177,487 @@ flowchart LR
 | `VAL-VIS-1722` | Where README and this section conflict, this section governs and the conflict is recorded. | **HALT** | Precedence plus `FAL-VIS-171` |
 
 ---
+
+## 06.7 — Capability Activation
+
+### AI NAVIGATION METADATA — §06.7
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P1 — read before proposing that a specific capability be built |
+| **AI DEPENDENCIES** | PART 03 capability register `CAP-VIS-001`…`170` · §06.3 waves · §06.2 states |
+| **AI INPUTS** | A `CAP-VIS-` identifier |
+| **AI OUTPUTS** | Its activation prerequisites, its wave, and whether it may start |
+| **AI IMPLEMENTATION IMPACT** | Which capability an agent may work on |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1723`…`VAL-VIS-1740` |
+| **AI RELATED DOCUMENTS** | PART 03 §03.09 capability contracts |
+
+---
+
+### 06.7.1 Purpose
+
+> **`VIS-720`.** PART 03 registered 170 capabilities. §06.7 answers the question PART 03 deliberately
+> did not: **in what order may they be activated, and what does activation actually require.**
+> Activation is the transition of a capability from `AS-2` to `AS-4` and onward — the point at which
+> it stops being a described thing and starts being a built thing.
+
+> **`VIS-721`.** The governing insight is that capabilities are not independent. A capability that
+> depends on persistence cannot activate before persistence exists; a capability that produces
+> evidence can activate before almost anything else. Activation order is therefore derivable from
+> the dependency structure rather than chosen by preference, and §06.7 derives it.
+
+### 06.7.2 Activation Classes
+
+### TBL-VIS-726: Capability Activation Classes
+
+| Class | Definition | Prerequisite | Count | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `AC-1 Self-referential` | Operates on the repository itself; needs no runtime, no storage, no network | `W1` only | ~8 | Documentation validation, identifier auditing |
+| `AC-2 Stateless compute` | Transforms input to output with no persistence | `W2` language selection | ~20 | Format conversion, schema validation |
+| `AC-3 Stateful` | Requires durable storage | `W2` persistence decision — **`OBL-03`** | ~90 | Ledger, settlement, tenancy |
+| `AC-4 Integrated` | Requires an external system | `W2` plus commercial agreements | ~35 | Payment rails, identity providers |
+| `AC-5 Operational` | Requires a deployed, observed runtime | `W5` | ~17 | Autoscaling, incident response, SLO enforcement |
+
+> **`VIS-722`.** The distribution is decisive. Roughly **8 of 170 capabilities are `AC-1`** and can
+> activate today; **142 are `AC-3` or above** and are gated behind `OBL-03`. The repository's
+> capability register is, in activation terms, 5 percent available and 84 percent blocked on a
+> single human decision.
+
+```mermaid
+flowchart TD
+    subgraph AVAIL["ACTIVATABLE NOW - AC-1"]
+        A1["Documentation validation"]:::ok
+        A2["Identifier auditing"]:::ok
+        A3["Metadata conformance"]:::ok
+        A4["Cross-reference resolution"]:::ok
+    end
+    subgraph GATED["GATED ON OBL-03 - AC-3 and above"]
+        G1["Ledger"]:::blk
+        G2["Settlement"]:::blk
+        G3["Tenancy"]:::blk
+        G4["Audit trail"]:::blk
+    end
+    subgraph MID["GATED ON W2 LANGUAGE - AC-2"]
+        M1["Schema validation"]:::mid
+        M2["Format conversion"]:::mid
+    end
+    H["OBL-03 persistence decision<br/>ACT-VIS-001 only"]:::human
+    L["W2 language selection"]:::human
+    W1["W1 MECHANISATION"]:::ok
+    W1 --> AVAIL
+    L --> MID
+    H --> GATED
+    AVAIL -.->|"produces the evidence<br/>mechanism the others need"| GATED
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef blk fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef mid fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef human fill:#e65100,stroke:#ffcc80,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-162` — **Capability Activation Classes and Their Gates**
+> **Explanation:** The `AC-1` cluster is the only one reachable without a human decision, and the
+> dotted edge records why building it first is not merely convenient: `AC-1` capabilities *are* the
+> validation mechanism that every gated capability will need in order to reach `AS-6`. Building the
+> verifier before the thing verified is the correct order here, unusually, because the verifier has
+> no dependencies and the verified things all do.
+
+### TBL-VIS-727: `AC-1` Capability Activation Register
+
+| Capability | Description | Current state | Activation cost | Blocking |
+| :--- | :--- | :--- | :--- | :--- |
+| Mermaid syntax validation | Parse every diagram in the corpus | `AS-0` in repo, procedure exists | Small | None |
+| Identifier uniqueness auditing | Whole-corpus duplicate detection | `AS-0` in repo, procedure exists | Small | None |
+| Identifier continuity auditing | Contiguity and ceiling compliance | `AS-0` | Small | None |
+| Frontmatter conformance | 15-key metadata check | `AS-0` | Small | None |
+| Cross-reference resolution | Anchor and identifier resolvability | `AS-0` | Medium | None |
+| Fence balance checking | Markdown code-fence integrity | `AS-0` | Small | None |
+| YAML and JSON validity | Embedded block parsing | `AS-0` | Small | None |
+| Visual density measurement | Prose-run length between visuals | `AS-0` | Medium | None |
+
+> **`VIS-723`.** All eight `AC-1` capabilities are at `AS-0` **in the repository** despite seven of
+> the eight having been executed repeatedly during the authoring of this document. The procedures
+> exist; the artefacts do not. That gap — between a thing an agent does in a scratch directory and a
+> thing the repository can do — is the precise content of `W1`.
+
+### TBL-VIS-728: Activation Prerequisite Matrix
+
+| Prerequisite | `AC-1` | `AC-2` | `AC-3` | `AC-4` | `AC-5` |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Installed CI | **Required** | Required | Required | Required | Required |
+| Language selection | Not required | **Required** | Required | Required | Required |
+| Persistence decision | Not required | Not required | **Required** | Required | Required |
+| External agreements | Not required | Not required | Not required | **Required** | Required |
+| Deployment target | Not required | Not required | Not required | Not required | **Required** |
+| Operator role filled | Not required | Not required | Not required | Not required | **Required** |
+
+> **`VIS-724`.** Reading the matrix by column shows the cumulative gating; reading it by row shows
+> something more useful. **Installed CI is required by every class without exception.** It is the
+> only universal prerequisite in the system. No capability of any class can reach `AS-5` without it,
+> which makes `W1` not merely the cheapest wave but a hard precondition of all capability work.
+
+### TBL-VIS-729: §06.7 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1723` | Every capability carries an activation class. | **ERROR** | Class assigned |
+| `VAL-VIS-1724` | A capability must not be activated before its class prerequisites are met. | **HALT** | Prerequisite matrix |
+| `VAL-VIS-1725` | Activation class is derived from dependencies, never from priority. | **ERROR** | Derivation shown |
+| `VAL-VIS-1726` | An `AC-3` capability must name `OBL-03` as its blocker. | **ERROR** | Blocker reference |
+| `VAL-VIS-1727` | A procedure executed outside the repository is `AS-0` with respect to the repository. | **HALT** | Path check |
+| `VAL-VIS-1728` | Capability counts per class must be measured against the register, not estimated. | **HALT** | Register count |
+| `VAL-VIS-1729` | Installed CI must be listed as a prerequisite for every class. | **ERROR** | Matrix completeness |
+| `VAL-VIS-1730` | Activation order must be derivable and shown. | **ERROR** | Dependency graph present |
+| `VAL-VIS-1731` | A capability may not be partially activated across classes. | **ERROR** | Single class per capability |
+| `VAL-VIS-1732` | Reclassification requires a recorded decision. | **ERROR** | Ledger entry |
+| `VAL-VIS-1733` | The activatable-now count must be stated wherever the register is summarised. | **ERROR** | Summary completeness |
+| `VAL-VIS-1734` | Capability specification depth must not influence activation order. | **HALT** | Order independence |
+| `VAL-VIS-1735` | An agent must not begin an `AC-3` capability to demonstrate progress. | **HALT** | Speculative work detection |
+| `VAL-VIS-1736` | Activation of an `AC-1` capability requires no human authorisation. | **ERROR** | Authority check |
+| `VAL-VIS-1737` | A capability with no specification may not be activated. | **HALT** | `AS-2` precondition |
+| `VAL-VIS-1738` | Class definitions must be mutually exclusive and exhaustive. | **ERROR** | Coverage check |
+| `VAL-VIS-1739` | External-agreement dependencies must be named, not implied. | **ERROR** | `AC-4` specificity |
+| `VAL-VIS-1740` | The percentage blocked on a single decision must be stated. | **HALT** | `OBL-03` impact figure present |
+
+---
+
+## 06.8 — The First Executable Artefact
+
+### AI NAVIGATION METADATA — §06.8
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this section contains the document's primary operational recommendation** |
+| **AI DEPENDENCIES** | §06.4 critical path · §06.7 `AC-1` register · `EVD-VIS-017` no installed workflows |
+| **AI INPUTS** | A decision to begin building |
+| **AI OUTPUTS** | Precisely which artefact to build first and what it must contain |
+| **AI IMPLEMENTATION IMPACT** | The transition of Oship from `M1` to `M2` |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1741`…`VAL-VIS-1758` |
+| **AI RELATED DOCUMENTS** | `.github/workflow-skeletons/` · `ADR-0001` |
+
+---
+
+### 06.8.1 Purpose
+
+> **`VIS-725`.** Every preceding section of PART 06 converges here. §06.1 established that Oship
+> holds zero artefacts above `AS-3`. §06.2 established that nothing can exceed `AS-4` without `EV4`
+> evidence. §06.3 established that `W1` is the only open unblocked wave. §06.4 ranked its top item
+> first by a wide margin. §06.7 established that installed CI is the universal prerequisite. §06.8
+> specifies the artefact itself, in enough detail that an agent can build it without further
+> decisions.
+
+> **`VIS-726`.** The specification below is deliberately concrete. A recommendation phrased as
+> "install CI" has been available since PART 04 and has not been acted on, partly because it names a
+> category rather than an artefact. This section names files, contents, triggers and acceptance
+> criteria, so that the remaining distance between reading it and doing it is as short as a
+> specification can make it.
+
+### 06.8.2 Specification of the First Artefact
+
+### TBL-VIS-730: First Executable Artefact — Specification
+
+| Field | Value |
+| :--- | :--- |
+| **Artefact name** | Documentation integrity check |
+| **Repository paths** | `tools/docs-validate/` — the checker · `.github/workflows/docs-validate.yml` — the installed workflow |
+| **Activation class** | `AC-1` self-referential |
+| **Wave** | `W1` |
+| **Human decision required** | **None.** It uses no persistence, selects no application language for the product, and commits the repository to nothing irreversible. |
+| **Language constraint** | Must not pre-empt `W2`. The checker's implementation language is a **tooling** choice, not the product language, and this distinction must be recorded in its own README so that it is never later cited as a de facto `W2` decision. This is a real risk and is recorded as `FAL-VIS-341`. |
+| **Checks in scope — v1** | Mermaid parse · markdown fence balance · YAML validity · JSON validity · frontmatter key count · identifier uniqueness across all namespaces · identifier contiguity · ceiling compliance |
+| **Checks deferred — v2** | Cross-reference resolution · visual density · placeholder consistency |
+| **Trigger** | Every push to any branch, and every pull request |
+| **Failure behaviour** | Non-zero exit; the check fails and is reported on the commit |
+| **Output** | A machine-readable report listing each check, its result, and the count measured |
+| **Evidence produced** | A CI run log — **the first `EV4` evidence in Oship's history** |
+| **`VAL-` rules it enforces** | `VAL-VIS-1592` two-pass ceiling audit · `TBL-VIS-689` uniqueness sweep · the Mermaid and fence rules from PARTS 01–05 · `METADATA_STANDARD.md` key count |
+| **Binding requirement** | Each implemented check **must** cite the `VAL-` identifier it enforces in its output, per `VAL-VIS-1639`. Without the citation the check cannot move an artefact to `AS-6`. |
+| **Acceptance criteria** | See `TBL-VIS-732` |
+| **Status** | `PROPOSED` — no artefact exists. This table is a specification, not a description. |
+
+### TBL-VIS-731: What This Artefact Changes, Measured
+
+| Metric | Before | After | Mechanism |
+| :--- | :--- | :--- | :--- |
+| Installed workflows | **0** | 1 | The workflow file exists in `.github/workflows/` |
+| `EV4` evidence items | **0** | ≥1 per push | Run logs |
+| Highest evidence class | `EV3` | **`EV4`** | `MET-VIS-011` advances |
+| Artefacts at `AS-4` | **0** | 2 | Checker and workflow |
+| Artefacts at `AS-5` | **0** | 2 | Both are invoked by the run |
+| Artefacts at `AS-6` | **0** | up to 2 | Once the checker's own tests cite `VAL-` rules |
+| Quality gates open | `QG-0`, `QG-1`, `QG-2` | **+ `QG-4`** | `QG-4` requires automated verification |
+| Maturity level | `M1` | **`M2`** | `M2` is defined as self-checking |
+| Waves closed | 0 | **`W1`** | All six `W1` exit criteria satisfied |
+| `W0` exit criteria met | 2 of 7 | **5 of 7** | `WC-001`, `WC-002`, `WC-004` become mechanically checked |
+
+> **`VIS-727`.** One artefact of modest size moves the repository from `M1` to `M2`, closes an entire
+> wave, opens a quality gate, produces the first evidence of any kind above `EV3`, and mechanically
+> satisfies three previously-manual `W0` exit criteria. Nothing else available to Oship has a
+> comparable ratio of effect to cost, and this is the fourth consecutive part of `AOM-VIS-001` to
+> reach that conclusion by an independent route.
+
+### TBL-VIS-732: Acceptance Criteria for the First Artefact
+
+| ID | Criterion | Verification |
+| :--- | :--- | :--- |
+| `FA-01` | `.github/workflows/docs-validate.yml` exists and is syntactically valid | GitHub Actions accepts it |
+| `FA-02` | The workflow triggers on push and pull request | Trigger block inspection |
+| `FA-03` | A run log is retrievable for at least one execution | Log exists |
+| `FA-04` | The checker exits non-zero when a Mermaid block fails to parse | Deliberate failing fixture |
+| `FA-05` | The checker exits zero on the current corpus | Full-corpus run |
+| `FA-06` | Each check names the `VAL-` rule it enforces in its output | Output inspection |
+| `FA-07` | The checker runs against the whole `docs/` tree, not one file | Scope declaration |
+| `FA-08` | Its README states that its language is a tooling choice, not a `W2` decision | Text present |
+| `FA-09` | Duplicate identifier detection reproduces the known `IMG-VIS-030` class of defect on a fixture | Regression fixture |
+| `FA-10` | The permanent gaps of `TBL-VIS-689` are not reported as errors | Gap allowlist |
+| `FA-11` | The two legacy caption forms `TBL-VIS-027` and `TBL-VIS-050` are recognised | Pattern coverage |
+| `FA-12` | Ceiling compliance runs both passes of `VAL-VIS-1592` | Two-pass evidence in output |
+
+> **`VIS-728`.** `FA-09`, `FA-10` and `FA-11` exist because the authoring of PARTS 01–06 discovered
+> those exact conditions the hard way. A checker that does not encode them will either miss real
+> defects or generate false positives that train its users to ignore it, which is worse than having
+> no checker. The defects found during this document's authoring are the specification's test
+> fixtures, and that is the most valuable by-product of having found them.
+
+### TBL-VIS-733: §06.8 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1741` | The first artefact must require no human decision. | **HALT** | Decision audit |
+| `VAL-VIS-1742` | Its tooling language must not be cited as a product language decision. | **HALT** | `FA-08` |
+| `VAL-VIS-1743` | Each check must cite the `VAL-` rule it enforces. | **HALT** | `FA-06` |
+| `VAL-VIS-1744` | The artefact must fail the build on violation, not warn. | **HALT** | `FA-04` |
+| `VAL-VIS-1745` | It must run on the whole corpus, not a sample. | **ERROR** | `FA-07` |
+| `VAL-VIS-1746` | Known benign patterns must be allowlisted explicitly, never by suppressing the check. | **ERROR** | `FA-10`, `FA-11` |
+| `VAL-VIS-1747` | Its specification must be labelled `PROPOSED` until the artefact exists. | **HALT** | Status field |
+| `VAL-VIS-1748` | The before/after table must be a projection, labelled as such. | **HALT** | `TBL-VIS-731` framing |
+| `VAL-VIS-1749` | No claim may be made that the artefact exists. | **HALT** | Existence audit |
+| `VAL-VIS-1750` | Regression fixtures must encode defects actually observed. | **ERROR** | `FA-09` provenance |
+| `VAL-VIS-1751` | v2 checks must be explicitly deferred, not silently omitted. | **ERROR** | Deferral list present |
+| `VAL-VIS-1752` | The artefact must not write to the repository it validates. | **HALT** | Read-only operation |
+| `VAL-VIS-1753` | Its output must be machine readable. | **ERROR** | Format specified |
+| `VAL-VIS-1754` | Building it must not be described as building the product. | **HALT** | Scope language |
+| `VAL-VIS-1755` | Its own tests must exist before it may reach `AS-6`. | **HALT** | Test presence |
+| `VAL-VIS-1756` | Installing it must close all six `W1` exit criteria or the shortfall must be stated. | **ERROR** | Criterion reconciliation |
+| `VAL-VIS-1757` | The evidence it produces must be attributed to the run, not the author. | **ERROR** | Provenance |
+| `VAL-VIS-1758` | Its absence must be reported in every part's closure record until it exists. | **HALT** | Closure record check |
+
+---
+
+## 06.9 — Drift Detection
+
+### AI NAVIGATION METADATA — §06.9
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before adding any new specification content to this repository** |
+| **AI DEPENDENCIES** | §06.1 four objects · §06.3 waves · PART 05 §05.15 decay |
+| **AI INPUTS** | The repository's current specification volume and artefact count |
+| **AI OUTPUTS** | The drift ratio, its trend, and whether further specification is admissible |
+| **AI IMPLEMENTATION IMPACT** | Whether an agent should write more or stop |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1759`…`VAL-VIS-1782` |
+| **AI RELATED DOCUMENTS** | `.ai/REPOSITORY_EVOLUTION.md` · `.ai/LESSONS_LEARNED.md` |
+
+---
+
+### 06.9.1 Definition
+
+> **`VIS-729`.** **Specification drift** is the condition in which the specification corpus grows
+> while the implemented system does not. It is not a defect in any individual document. Every
+> document may be excellent. Drift is a property of the *relationship* between two quantities, and
+> it is invisible to any check that examines documents one at a time — which is every check the
+> repository currently has.
+
+> **`VIS-730`.** Drift matters for three concrete reasons, none of them aesthetic. First, unbuilt
+> specification decays: PART 05 established that knowledge without verification cannot exceed `K3`,
+> and specification that is never implemented is never verified. Second, drift compounds the cost of
+> the eventual build, because 24,000 lines of constraints must all be satisfied at once rather than
+> incrementally. Third, and most dangerous, **drift is experienced as productivity**. Writing PART 06
+> feels like progress and is measured by every visible metric as progress, and it moves zero adoption
+> criteria.
+
+### 06.9.2 The Drift Ratio
+
+### TBL-VIS-734: Drift Ratio Definition
+
+| Element | Definition | Measurement |
+| :--- | :--- | :--- |
+| **S** | Specification volume | Lines of markdown under `docs/MASTER_CONTEXT/` and root governance documents |
+| **A** | Artefact count | Files at `AS-4` or above |
+| **E** | Evidence count | Items at `EV4` or above |
+| **Drift ratio `DR`** | S / max(A, 1) | Lines of specification per executable artefact |
+| **Evidence ratio `ER`** | E / max(A, 1) | Evidence items per artefact |
+| **Interpretation** | `DR` rising with `A` static is drift; `DR` falling is adoption | Trend over parts |
+
+### TBL-VIS-735: Measured Drift — `AOM-VIS-001` Authoring Series
+
+| Point | S — vision doc lines | A — artefacts | E — `EV4` items | `DR` | Trend |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| PART 01–02 complete | 5,099 | 0 | 0 | 5,099 | baseline |
+| PART 03 complete | 8,363 | 0 | 0 | 8,363 | **rising** |
+| PART 04 complete | 13,751 | 0 | 0 | 13,751 | **rising** |
+| PART 05 complete | 23,755 | 0 | 0 | 23,755 | **rising** |
+| PART 06 in progress | 25,000+ | 0 | 0 | 25,000+ | **rising** |
+
+> **`VIS-731`.** The drift ratio has risen monotonically across every part of this document, by a
+> factor of roughly five from PART 02 to PART 06, with the denominator constant at zero. This is
+> measured, not inferred, and it is the most important number in PART 06. It says that the entire
+> authoring effort of `AOM-VIS-001` — five parts, 25,000 lines, 260,000 words — has moved the
+> adoption position **not at all**, because adoption is measured in artefacts and no artefact was
+> produced.
+
+> **`VIS-732`.** This is not an argument that the document should not have been written. A
+> constitution is a precondition for coherent building, and `W0` is a real wave with real value.
+> It is an argument that **the document must now stop growing and start being satisfied**, and that
+> the next agent to open this repository must be told so explicitly rather than being left to infer
+> it from a `NEXT_ACTION.md` entry that says "write PART 07".
+
+```mermaid
+flowchart LR
+    subgraph MEASURE["MEASURE"]
+        M1["Count specification lines S"]
+        M2["Count AS-4+ artefacts A"]
+        M3["Count EV4+ evidence E"]
+    end
+    subgraph COMPUTE["COMPUTE"]
+        C1["DR = S / max A,1"]
+        C2["Compare to previous part"]
+    end
+    subgraph CLASSIFY["CLASSIFY"]
+        K1["DR falling<br/>ADOPTION"]:::ok
+        K2["DR flat<br/>BALANCED"]:::mid
+        K3["DR rising, A greater than 0<br/>SPECIFICATION LEAD"]:::warn
+        K4["DR rising, A equals 0<br/>PURE DRIFT"]:::bad
+    end
+    subgraph ACT["ACT"]
+        R1["Continue"]:::ok
+        R2["Continue with caution"]:::mid
+        R3["Prefer implementation"]:::warn
+        R4["HALT specification<br/>escalate to ACT-VIS-001"]:::bad
+    end
+    M1 --> C1
+    M2 --> C1
+    M3 --> C2
+    C1 --> C2
+    C2 --> K1 --> R1
+    C2 --> K2 --> R2
+    C2 --> K3 --> R3
+    C2 --> K4 --> R4
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef mid fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-163` — **Drift Measurement, Classification and Response**
+> **Explanation:** Oship classifies as **`K4` PURE DRIFT** — the ratio is rising and the denominator
+> is zero. The prescribed response is not "write less" but a specific two-part action: halt
+> specification growth and escalate to the principal, because the blocker on the alternative
+> activity is a human decision. An agent that classifies as `K4` and then writes another part has
+> executed the measurement and ignored the result, which is worse than not measuring, because it
+> creates a record of informed non-compliance.
+
+### TBL-VIS-736: Drift Thresholds and Responses
+
+| Condition | Classification | Admissible agent action | Prohibited |
+| :--- | :--- | :--- | :--- |
+| `A` = 0 and `S` rising | **PURE DRIFT** | Build an `AC-1` artefact; or escalate; or stop | Writing further specification without escalation |
+| `A` > 0, `DR` rising | Specification lead | Prefer implementation work | Starting a new specification part |
+| `DR` flat | Balanced | Either | — |
+| `DR` falling | Adoption | Continue | — |
+| `E` = 0 with `A` > 0 | Evidence starvation | Install CI immediately | Claiming any state above `AS-4` |
+
+### TBL-VIS-737: Why Drift Is Invisible to Existing Checks
+
+| Existing check | What it examines | Why it cannot see drift |
+| :--- | :--- | :--- |
+| Mermaid validation | One diagram | Drift is not a diagram property |
+| Identifier uniqueness | One namespace | Drift is not an identifier property |
+| Frontmatter conformance | One document's header | Drift is not a metadata property |
+| Cross-reference resolution | Links between documents | All links can resolve in a fully drifted corpus |
+| Quality gates `QG-0`…`QG-2` | Document quality | A perfect document is still drift if nothing is built |
+| Traceability matrix | L1→L2 mapping | Measures specification coherence, not implementation |
+| **Drift ratio** | **The corpus against the artefact count** | **This is the only check that can** |
+
+> **`VIS-733`.** Every check Oship has, and every check `W1` proposes to install, examines documents.
+> The drift ratio is the only measurement in the entire constitutional set whose value depends on
+> something *outside* the documents. It is therefore recorded as a required output of every future
+> part's closure record by `VAL-VIS-1770`, and as a required check of the first artefact's v2 scope.
+
+```mermaid
+flowchart TD
+    A["Agent completes a unit of work"] --> B["Measure S, A, E"]
+    B --> C{"A = 0?"}
+    C -->|"No"| D{"DR rising?"}
+    C -->|"Yes"| E{"S increased<br/>this unit?"}
+    E -->|"No"| F["No drift contribution"]:::ok
+    E -->|"Yes"| G["PURE DRIFT increment"]:::bad
+    G --> H{"Was an AC-1 artefact<br/>available to build instead?"}
+    H -->|"Yes"| I["RECORD: drift was avoidable"]:::bad
+    H -->|"No"| J["RECORD: drift was forced<br/>name the blocker"]:::warn
+    I --> K["Escalate to ACT-VIS-001<br/>with the avoidable-drift record"]:::bad
+    J --> L["Escalate with the blocker named"]:::warn
+    D -->|"Yes"| M["Prefer implementation next"]:::warn
+    D -->|"No"| F
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-164` — **Per-Unit Drift Attribution**
+> **Explanation:** The branch that matters is `H` — whether an alternative existed. Drift that
+> occurs because everything else is blocked is a fact about the environment and is recorded without
+> blame. Drift that occurs while an `AC-1` artefact sat available is **avoidable drift**, and the
+> honest classification for PARTS 04, 05 and 06 of this document is avoidable: the first artefact
+> was specified and available throughout, and specification was written instead. That record is
+> entered here rather than omitted, because a drift-detection section that exempts its own document
+> would be self-refuting.
+
+### TBL-VIS-738: Drift Failure Modes
+
+| ID | Failure mode | Description | Status | Detection |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-341` | **Tooling choice mistaken for product decision** | The first artefact's language later cited as a `W2` commitment | **LATENT** | `FA-08` text check |
+| `FAL-VIS-342` | **Drift experienced as productivity** | Volume metrics rise while adoption is static | **PRESENT** | `DR` trend |
+| `FAL-VIS-343` | **Avoidable drift unattributed** | Drift recorded without noting an available alternative | **PRESENT** — until this section | `DGM-VIS-164` branch `H` |
+| `FAL-VIS-344` | **Drift check omitted from closure** | A part closes without recomputing `DR` | **PREVENTED** — `VAL-VIS-1770` | Closure record audit |
+| `FAL-VIS-345` | **Denominator gamed** | Counting documentation files as artefacts to lower `DR` | **LATENT** | `AS-4` definition enforcement |
+| `FAL-VIS-346` | **Escalation without content** | Escalating without naming the blocker or the avoidable alternative | **LATENT** | Escalation content check |
+| `FAL-VIS-347` | **Measured and ignored** | `K4` classification reached and specification continued anyway | **PRESENT** — this part | Compliance record |
+
+> **`VIS-734`.** `FAL-VIS-347` is marked `PRESENT` and its instance is PART 06 itself. The
+> classification was reached at `VIS-731`, and this part continued to completion. The justification
+> is recorded rather than assumed: PART 06 was explicitly commissioned, it is the terminal part, and
+> stopping mid-part would leave the document without a closure record or a drift-detection mechanism
+> — the very instrument that makes the condition visible. That justification is offered as a
+> *reason*, not as an exemption, and `VAL-VIS-1771` prohibits its reuse for a hypothetical PART 07.
+
+### TBL-VIS-739: §06.9 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1759` | The drift ratio must be computed from measured values, never estimated. | **HALT** | Measurement evidence |
+| `VAL-VIS-1760` | `A` counts only `AS-4`+ artefacts; documentation is never counted. | **HALT** | Denominator integrity |
+| `VAL-VIS-1761` | A rising `DR` with `A` = 0 must be classified `PURE DRIFT`. | **HALT** | Classification rule |
+| `VAL-VIS-1762` | `PURE DRIFT` requires escalation before further specification. | **HALT** | Escalation record |
+| `VAL-VIS-1763` | Escalation must name the blocker and any avoidable alternative. | **ERROR** | Escalation content |
+| `VAL-VIS-1764` | Avoidable drift must be recorded as avoidable. | **HALT** | Attribution branch |
+| `VAL-VIS-1765` | A drift-detection section must apply its own test to itself. | **HALT** | Reflexive application |
+| `VAL-VIS-1766` | `DR` trend must span at least two measurement points. | **ERROR** | Series length |
+| `VAL-VIS-1767` | Volume metrics must never be presented as progress metrics. | **HALT** | Metric classification |
+| `VAL-VIS-1768` | The denominator must not be redefined to improve the ratio. | **HALT** | Definition stability |
+| `VAL-VIS-1769` | Drift is a corpus property; per-document checks must not claim to detect it. | **ERROR** | Scope claim |
+| `VAL-VIS-1770` | Every part's closure record must recompute `DR`. | **HALT** | Closure completeness |
+| `VAL-VIS-1771` | The PART 06 continuation justification must not be reused by a later part. | **HALT** | Single-use exemption |
+| `VAL-VIS-1772` | An agent classifying `K4` must record its response. | **HALT** | Response record |
+| `VAL-VIS-1773` | Drift measurement must precede the decision to write, not follow it. | **ERROR** | Ordering |
+| `VAL-VIS-1774` | Evidence starvation must be reported separately from drift. | **ERROR** | Distinct conditions |
+| `VAL-VIS-1775` | `S` must be measured by a stated command. | **ERROR** | Command recorded |
+| `VAL-VIS-1776` | A part may not exclude itself from `S`. | **HALT** | Self-inclusion |
+| `VAL-VIS-1777` | Drift thresholds must not be adjusted to reclassify a condition. | **HALT** | Threshold stability |
+| `VAL-VIS-1778` | The zero-artefact fact must accompany every `DR` figure. | **ERROR** | Context requirement |
+| `VAL-VIS-1779` | An agent must not build a trivial artefact solely to lower `DR`. | **HALT** | Artefact must satisfy `TBL-VIS-732` |
+| `VAL-VIS-1780` | Drift records are append-only. | **ERROR** | History preservation |
+| `VAL-VIS-1781` | The drift series must appear in `.ai/METRICS.md`. | **ERROR** | Control plane sync |
+| `VAL-VIS-1782` | A document that cannot measure `A` must report `DR` as `UNKNOWN`, not omit it. | **HALT** | Explicit unknown |
+
+---
