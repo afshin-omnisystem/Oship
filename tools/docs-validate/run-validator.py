@@ -361,6 +361,18 @@ def _run_fixture(validator: str, fixtures_dir: str, fixture: str, config):
     return mod.run(fixtures_dir, cfg)
 
 
+def _run_fixture_multi(validator: str, fixtures_dir: str, fixtures, config):
+    """Run one validator over a specific set of fixture files."""
+    mod = VALIDATORS[validator]
+    cfg = dict((config.get("validation", {}) or {}).get(validator, {}) or {})
+    cfg.pop("enabled", None)
+    cfg["include_paths"] = list(fixtures)
+    cfg["exclude_paths"] = ()
+    cfg["check_local_targets"] = False
+    cfg.setdefault("thresholds", config.get("thresholds", {}) or {})
+    return mod.run(fixtures_dir, cfg)
+
+
 def _check_by_name(result, name: str):
     return next((c for c in result.checks if c.name == name), None)
 
@@ -405,9 +417,18 @@ def self_test(root: str, config: Dict[str, Any]) -> int:
     # ---- FA-09 --------------------------------------------------------------
     r = _run_fixture("identifiers", fixtures_dir, "duplicate-ids.md", config)
     uniq = _check_by_name(r, "ID-UNIQUE")
+    # Matches every duplicate class emitted under DEC-VIS-052:
+    #   "DOUBLE ALLOCATION of 'X'", "SEMANTIC DUPLICATE of 'X'",
+    #   "CROSS-FILE DUPLICATE of 'X'", and the legacy strict-policy wording.
     dup_ids = set()
     for f in (uniq.errors if uniq else []):
-        dup_ids.update(re.findall(r"duplicate definition of '([A-Z0-9\-]+)'", f.message))
+        dup_ids.update(
+            re.findall(
+                r"(?:DOUBLE ALLOCATION|SEMANTIC DUPLICATE|CROSS-FILE DUPLICATE|"
+                r"duplicate definition) of '([A-Z0-9\-]+)'",
+                f.message,
+            )
+        )
     record(
         "FA-09",
         "duplicate detection reproduces the IMG-VIS-030 class of defect",
@@ -473,6 +494,100 @@ def self_test(root: str, config: Dict[str, Any]) -> int:
         "malformed embedded JSON is detected",
         "MD-EMBEDDED-JSON" in failing,
         f"failing checks: {sorted(failing)}",
+    )
+
+    # ---- DEC-VIS-052: definition vs reference semantics ---------------------
+    idsem = _run_fixture_multi(
+        "identifiers",
+        fixtures_dir,
+        ["identifier-semantics.md", "identifier-semantics-second-file.md"],
+        config,
+    )
+    cls = idsem.metrics.get("classification", {})
+    uniq = _check_by_name(idsem, "ID-UNIQUE")
+    errs = [f.message for f in (uniq.errors if uniq else [])]
+    infos = [f for f in (uniq.findings if uniq else []) if f.severity == Severity.INFO]
+
+    def _flagged(ident: str, kind: str) -> bool:
+        return any(ident in m and kind in m for m in errs)
+
+    record(
+        "DEC-052-C1",
+        "case 1: allocation table rows are DEFINITIONS",
+        cls.get("DEFINITION", 0) >= 10,
+        f"definitions={cls.get('DEFINITION', 0)}",
+    )
+    record(
+        "DEC-052-C2",
+        "case 2: legitimate registry row -> PASS (republication, not error)",
+        not _flagged("VAL-FIX-002", "DOUBLE") and not _flagged("VAL-FIX-002", "SEMANTIC"),
+        f"republications={cls.get('REPUBLICATION', 0)}",
+    )
+    record(
+        "DEC-052-C3",
+        "case 3: legitimate evidence mapping -> PASS",
+        not _flagged("VAL-FIX-003", "SEMANTIC"),
+        "evidence table with a summary column raises nothing",
+    )
+    record(
+        "DEC-052-C4",
+        "case 4: true duplicate definition -> FAIL",
+        _flagged("VAL-FIX-004", "DOUBLE ALLOCATION"),
+        f"double_allocation={cls.get('DOUBLE_ALLOCATION', 0)}",
+    )
+    record(
+        "DEC-052-C5/6",
+        "cases 5 and 6: semantic redefinition, incl. across table shapes -> FAIL",
+        _flagged("VAL-FIX-001", "SEMANTIC DUPLICATE"),
+        f"semantic_duplicate={cls.get('SEMANTIC_DUPLICATE', 0)}",
+    )
+    record(
+        "DEC-052-C7",
+        "case 7: same identifier + exact normative text -> PASS",
+        not _flagged("VAL-FIX-002", "SEMANTIC"),
+        "verbatim restatement is a reference",
+    )
+    record(
+        "DEC-052-C8",
+        "case 8: identifier in ToC / range declaration is NOT a definition",
+        not _flagged("VAL-FIX-006", "DOUBLE") and not _flagged("VAL-FIX-005", "DOUBLE"),
+        "ToC rows allocate nothing",
+    )
+    record(
+        "DEC-052-C9",
+        "case 9: next-free pointer is NOT a definition",
+        not _flagged("VAL-FIX-006", "SEMANTIC"),
+        "NEXT_ID pointers allocate nothing",
+    )
+    record(
+        "DEC-052-C10",
+        "case 10: forward allocation is NOT a definition",
+        not _flagged("VAL-FIX-007", "DOUBLE"),
+        "reserved-for-future prose allocates nothing",
+    )
+    record(
+        "DEC-052-C11",
+        "case 11: duplicate definition across two files -> FAIL",
+        _flagged("DGM-FIX-001", "CROSS-FILE DUPLICATE"),
+        f"cross_file={cls.get('CROSS_FILE_DUPLICATE', 0)}",
+    )
+    record(
+        "DEC-052-C12",
+        "case 12: duplicate definition inside one file -> FAIL",
+        _flagged("IMG-FIX-001", "DOUBLE ALLOCATION"),
+        "IMG-FIX-001 allocated twice in one document",
+    )
+    record(
+        "DEC-052-DERIV",
+        "control: derived table restating its range is NOT a double allocation",
+        not _flagged("VAL-FIX-003", "DOUBLE"),
+        "TBL-FIX-008 mirrors the real TBL-VIS-223 pattern",
+    )
+    record(
+        "DEC-052-EVID",
+        "republications are preserved as INFO evidence, not deleted",
+        len(infos) >= 5,
+        f"INFO republication records={len(infos)}",
     )
 
     # ---- VAL-VIS-1639: every check cites the rule it enforces ---------------

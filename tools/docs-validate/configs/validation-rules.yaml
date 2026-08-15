@@ -100,6 +100,14 @@ validation:
         - CAP-VIS-059
     # Reference resolution is a v2 check per TBL-VIS-730; off by default.
     check_undefined_references: false
+    # DEC-VIS-052 — identifier definition versus reference semantics.
+    #   dec-vis-052 : the first authoritative allocation owns the identifier; later
+    #                 row-class occurrences are REPUBLICATION (reported as INFO with
+    #                 their definition site named), unless they allocate again or
+    #                 diverge semantically, which remain ERRORs.
+    #   strict      : pre-decision behaviour — every duplicate occurrence is an ERROR.
+    #                 Retained so the decision is fully reversible and auditable.
+    republication_policy: dec-vis-052
 
   anchors:
     enabled: true
