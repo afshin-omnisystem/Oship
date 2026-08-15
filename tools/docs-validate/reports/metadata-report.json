@@ -1,0 +1,108 @@
+{
+  "validator": "metadata",
+  "title": "Frontmatter Metadata Validator",
+  "status": "PASS",
+  "skipped": false,
+  "skip_reason": "",
+  "errors": 0,
+  "warnings": 2,
+  "metrics": {
+    "files_scanned": 93,
+    "constitutional_files": 54,
+    "files_with_frontmatter": 93,
+    "conformant_constitutional_files": 52,
+    "non_conformant_constitutional_files": 2,
+    "conformance_pct": 96.3,
+    "missing_required_by_field": {},
+    "constitutional_paths": [
+      "docs/MASTER_CONTEXT",
+      "docs/ADR",
+      ".ai"
+    ]
+  },
+  "checks": [
+    {
+      "check": "META-PRESENT",
+      "rule": "VAL-VIS-001",
+      "description": "Every constitutional Markdown file opens with a delimited YAML frontmatter block.",
+      "status": "PASS",
+      "measured": 93,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "META-PARSE",
+      "rule": "VAL-VIS-001",
+      "description": "The frontmatter block parses as a YAML mapping.",
+      "status": "PASS",
+      "measured": 93,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "META-REQUIRED",
+      "rule": "MCX-23-002",
+      "description": "All required canonical metadata fields are present (aliases honoured).",
+      "status": "PASS",
+      "measured": 270,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "META-VALUES",
+      "rule": "MCX-23-002",
+      "description": "Enumerated metadata fields carry an allowed value.",
+      "status": "PASS",
+      "measured": 186,
+      "errors": 0,
+      "warnings": 2,
+      "findings": [
+        {
+          "rule": "MCX-23-002",
+          "check": "META-VALUES",
+          "severity": "WARNING",
+          "message": "field 'STATUS' has value 'APPROVED' outside the allowed set ['ACTIVE', 'PROPOSED', 'DRAFT', 'DEPRECATED', 'COMPLETE', 'RELEASED', 'FROZEN', 'SUPERSEDED', 'IN PROGRESS', 'PLANNED']",
+          "file": "docs/ADR/ADR-0001-ai-native-repository-architecture.md",
+          "line": 1
+        },
+        {
+          "rule": "MCX-23-002",
+          "check": "META-VALUES",
+          "severity": "WARNING",
+          "message": "field 'STATUS' has value 'IN_PROGRESS' outside the allowed set ['ACTIVE', 'PROPOSED', 'DRAFT', 'DEPRECATED', 'COMPLETE', 'RELEASED', 'FROZEN', 'SUPERSEDED', 'IN PROGRESS', 'PLANNED']",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 1
+        }
+      ],
+      "extra": {}
+    },
+    {
+      "check": "META-DATES",
+      "rule": "MCX-23-002",
+      "description": "Date metadata fields use ISO-8601 YYYY-MM-DD.",
+      "status": "PASS",
+      "measured": 99,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "META-SEMVER",
+      "rule": "MCX-23-002",
+      "description": "VERSION is a semantic version.",
+      "status": "PASS",
+      "measured": 93,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    }
+  ]
+}

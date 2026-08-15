@@ -1,0 +1,335 @@
+{
+  "meta": {
+    "root": "/home/user/Oship",
+    "scope": "<whole repository>",
+    "timestamp": "2026-08-15T07:00:27Z",
+    "version": "1.0.0",
+    "max_findings": 25,
+    "show_warnings": false
+  },
+  "metrics": {
+    "markdown": {
+      "files_scanned": 93,
+      "code_fences": 4112,
+      "headings": 10411,
+      "links": 648
+    },
+    "mermaid": {
+      "files_scanned": 93,
+      "total_diagrams": 1998,
+      "valid": 1993,
+      "invalid": 5,
+      "unsupported_by_validator": 0,
+      "engine": "mermaid.parse",
+      "authoritative": true,
+      "invalid_diagrams": [
+        {
+          "file": ".ai/AI_AGENT_OPERATING_MANUAL.md",
+          "line": 188,
+          "error": "Parse error on line 7:",
+          "rule": "VAL-VIS-MERMAID-PARSE"
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
+          "line": 5123,
+          "error": "Parse error on line 6:",
+          "rule": "VAL-VIS-MERMAID-PARSE"
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "line": 365,
+          "error": "Parse error on line 3:",
+          "rule": "VAL-VIS-MERMAID-PARSE"
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "line": 9120,
+          "error": "Parsing failed:  Parse error on line 5, column 20: Expecting token of type ':' but found `db`.",
+          "rule": "VAL-VIS-MERMAID-PARSE"
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "line": 9132,
+          "error": "Parse error on line 6:",
+          "rule": "VAL-VIS-MERMAID-PARSE"
+        }
+      ],
+      "unsupported_by_file": {}
+    },
+    "identifiers": {
+      "files_scanned": 93,
+      "namespaces": [
+        "ADR",
+        "DEC",
+        "DGM",
+        "FAL",
+        "IMG",
+        "OBL",
+        "TBL",
+        "VAL"
+      ],
+      "occurrences_per_namespace": {
+        "ADR": 4,
+        "DEC": 21,
+        "DGM": 1922,
+        "FAL": 758,
+        "IMG": 33,
+        "OBL": 55,
+        "TBL": 2368,
+        "VAL": 2427
+      },
+      "definitions_per_namespace": {
+        "ADR": 4,
+        "DEC": 21,
+        "DGM": 1922,
+        "FAL": 627,
+        "IMG": 33,
+        "OBL": 55,
+        "TBL": 2368,
+        "VAL": 2399
+      },
+      "total_occurrences": 7588,
+      "classification": {
+        "DEFINITION": 7369,
+        "REPUBLICATION": 156,
+        "SEMANTIC_DUPLICATE": 3,
+        "DOUBLE_ALLOCATION": 0,
+        "CROSS_FILE_DUPLICATE": 0
+      },
+      "republication_policy": "dec-vis-052",
+      "republication_count": 156,
+      "allocation_header_signatures": {
+        "VAL": [
+          "| ID | Rule | Applies to | Failure severity | Currently checkable? |",
+          "| ID | Rule | Grade | Mechanisation |",
+          "| ID | Rule | Rationale |",
+          "| ID | Rule | Severity |",
+          "| ID | Rule | Severity | Automatable |",
+          "| Rule | Statement | Severity |"
+        ],
+        "FAL": [
+          "| ID | Anti-pattern | Symptom | Cause | Impact |",
+          "| ID | Anti-pattern | Symptom | Impact | Detection | Remediation |",
+          "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+          "| ID | Anti-pattern | Why it is attractive | Detection | In Oship |",
+          "| ID | Failure | Class | Consequence | Control |",
+          "| ID | Failure | Mechanism | Consequence | Guard |",
+          "| ID | Failure | Mechanism | Guard |"
+        ]
+      },
+      "permanent_gaps_honoured": {
+        "TBL": [
+          "TBL-VIS-244",
+          "TBL-VIS-423"
+        ],
+        "DEC": [
+          "DEC-VIS-008",
+          "DEC-VIS-009"
+        ],
+        "CAP": [
+          "CAP-VIS-057",
+          "CAP-VIS-058",
+          "CAP-VIS-059"
+        ]
+      },
+      "decision_record": "DEC-VIS-052"
+    },
+    "anchors": {
+      "files_scanned": 93,
+      "anchors_defined": 10411,
+      "internal_anchor_links": 586,
+      "cross_file_anchor_links": 0,
+      "broken_anchors": 8,
+      "broken_internal_anchors": 8,
+      "broken_cross_file_anchors": 0,
+      "duplicate_h2_slugs": 4
+    },
+    "metadata": {
+      "files_scanned": 93,
+      "constitutional_files": 54,
+      "files_with_frontmatter": 93,
+      "conformant_constitutional_files": 52,
+      "non_conformant_constitutional_files": 2,
+      "conformance_pct": 96.3,
+      "missing_required_by_field": {},
+      "constitutional_paths": [
+        "docs/MASTER_CONTEXT",
+        "docs/ADR",
+        ".ai"
+      ]
+    },
+    "metrics": {
+      "markdown_files": 93,
+      "total_lines": 140876,
+      "total_words": 835570,
+      "total_bytes": 5469937,
+      "mermaid_diagrams": 1998,
+      "diagram_identifiers": 1922,
+      "tables": 3747,
+      "captioned_tables": 2368,
+      "code_blocks": 4112,
+      "headings": 10411,
+      "validation_rules": 2427,
+      "failure_modes": 758,
+      "largest_documents": [
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_MEMORY_SYSTEM.md",
+          "lines": 34427
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "lines": 27193
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "lines": 14548
+        },
+        {
+          "file": "PROJECT_PHILOSOPHY.md",
+          "lines": 12666
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "lines": 10844
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/INDEX.md",
+          "lines": 8168
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
+          "lines": 8073
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "lines": 8044
+        },
+        {
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RULES.md",
+          "lines": 5615
+        },
+        {
+          "file": "README.md",
+          "lines": 1959
+        }
+      ],
+      "visual_density_ceiling": 120,
+      "visual_density_violations": 0,
+      "two_pass_ceiling_audit": {
+        "pass_1_declarations": {
+          "performed": true,
+          "hits": 12
+        },
+        "pass_2_decisions": {
+          "performed": true,
+          "hits": 17
+        },
+        "both_passes_performed": true,
+        "declaration_samples": [
+          {
+            "file": ".ai/PROJECT_STATUS.md",
+            "line": 193,
+            "value": 1600
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 4561,
+            "value": 200
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 12961,
+            "value": 200
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 12963,
+            "value": 200
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 12976,
+            "value": 200
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 13742,
+            "value": 200
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 16171,
+            "value": 620
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 19255,
+            "value": 1000
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 19255,
+            "value": 300
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 19255,
+            "value": 60
+          }
+        ],
+        "decision_samples": [
+          {
+            "file": ".ai/NEXT_ACTION.md",
+            "line": 70,
+            "value": null
+          },
+          {
+            "file": ".ai/NEXT_ACTION.md",
+            "line": 77,
+            "value": null
+          },
+          {
+            "file": ".ai/PROJECT_STATUS.md",
+            "line": 131,
+            "value": null
+          },
+          {
+            "file": ".ai/PROJECT_STATUS.md",
+            "line": 212,
+            "value": null
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 12962,
+            "value": null
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 14064,
+            "value": 300
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 14094,
+            "value": 60
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 16955,
+            "value": null
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 16961,
+            "value": 1000
+          },
+          {
+            "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+            "line": 16968,
+            "value": null
+          }
+        ]
+      }
+    }
+  }
+}

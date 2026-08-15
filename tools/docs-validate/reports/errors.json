@@ -1,0 +1,122 @@
+{
+  "count": 13,
+  "findings": [
+    {
+      "rule": "VAL-VIS-MERMAID-PARSE",
+      "check": "MMD-PARSE",
+      "severity": "ERROR",
+      "message": "INVALID: Parse error on line 7:",
+      "file": ".ai/AI_AGENT_OPERATING_MANUAL.md",
+      "line": 188,
+      "validator": "mermaid"
+    },
+    {
+      "rule": "VAL-VIS-MERMAID-PARSE",
+      "check": "MMD-PARSE",
+      "severity": "ERROR",
+      "message": "INVALID: Parse error on line 6:",
+      "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
+      "line": 5123,
+      "validator": "mermaid"
+    },
+    {
+      "rule": "VAL-VIS-MERMAID-PARSE",
+      "check": "MMD-PARSE",
+      "severity": "ERROR",
+      "message": "INVALID: Parse error on line 3:",
+      "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+      "line": 365,
+      "validator": "mermaid"
+    },
+    {
+      "rule": "VAL-VIS-MERMAID-PARSE",
+      "check": "MMD-PARSE",
+      "severity": "ERROR",
+      "message": "INVALID: Parsing failed:  Parse error on line 5, column 20: Expecting token of type ':' but found `db`.",
+      "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+      "line": 9120,
+      "validator": "mermaid"
+    },
+    {
+      "rule": "VAL-VIS-MERMAID-PARSE",
+      "check": "MMD-PARSE",
+      "severity": "ERROR",
+      "message": "INVALID: Parse error on line 6:",
+      "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+      "line": 9132,
+      "validator": "mermaid"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "ERROR",
+      "message": "SEMANTIC DUPLICATE of 'VAL-VIS-381' at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13679: same identifier, divergent normative content against the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12017 (DEC-VIS-052 \u00a75.3b)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 13679,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "ERROR",
+      "message": "SEMANTIC DUPLICATE of 'VAL-VIS-437' at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13674: same identifier, divergent normative content against the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12166 (DEC-VIS-052 \u00a75.3b)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 13674,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "ERROR",
+      "message": "SEMANTIC DUPLICATE of 'VAL-VIS-456' at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13676: same identifier, divergent normative content against the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12207 (DEC-VIS-052 \u00a75.3b)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 13676,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "VAL-VIS-ID-CONTIG",
+      "check": "ID-CONTIGUITY",
+      "severity": "ERROR",
+      "message": "TBL-ARCH namespace has 3 gap(s) between 1 and 263: TBL-ARCH-258, TBL-ARCH-259, TBL-ARCH-261",
+      "file": null,
+      "line": null,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "VAL-VIS-ID-CONTIG",
+      "check": "ID-CONTIGUITY",
+      "severity": "ERROR",
+      "message": "TBL-MCR namespace has 1 gap(s) between 1 and 82: TBL-MCR-063",
+      "file": null,
+      "line": null,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "VAL-VIS-ID-CONTIG",
+      "check": "ID-CONTIGUITY",
+      "severity": "ERROR",
+      "message": "TBL-MCS namespace has 1 gap(s) between 1 and 191: TBL-MCS-149",
+      "file": null,
+      "line": null,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "VAL-VIS-ID-CONTIG",
+      "check": "ID-CONTIGUITY",
+      "severity": "ERROR",
+      "message": "DGM-MCS namespace has 1 gap(s) between 1 and 138: DGM-MCS-013",
+      "file": null,
+      "line": null,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "VAL-VIS-ID-CONTIG",
+      "check": "ID-CONTIGUITY",
+      "severity": "ERROR",
+      "message": "DGM-MEM namespace has 175 gap(s) between 1 and 959: DGM-MEM-305, DGM-MEM-306, DGM-MEM-307, DGM-MEM-308, DGM-MEM-309, DGM-MEM-310, DGM-MEM-311, DGM-MEM-312, DGM-MEM-313, DGM-MEM-314, DGM-MEM-315, DGM-MEM-316 \u2026",
+      "file": null,
+      "line": null,
+      "validator": "identifiers"
+    }
+  ]
+}

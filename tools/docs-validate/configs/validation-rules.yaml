@@ -1,0 +1,195 @@
+# ==============================================================================
+# Oship Documentation Validation Rules
+# ------------------------------------------------------------------------------
+# Artefact:      ADOPT-01 — Documentation Validation Infrastructure
+# Specification: TBL-VIS-730 (First Executable Artefact)
+# Acceptance:    TBL-VIS-732 (FA-01 … FA-12)
+# Control:       TBL-VIS-689 (whole-file identifier uniqueness sweep)
+# Consumed by:   tools/docs-validate/run-validator.py
+#
+# LANGUAGE NOTE (FA-08)
+#   The validator's implementation language is a TOOLING choice. It is not a
+#   product implementation-language decision and must never be cited as a de
+#   facto Wave W2 decision (FAL-VIS-341).
+#
+# HONEST-FAILURE NOTE (VAL-VIS-1746, worked scenario SC-04)
+#   This configuration is expected to FAIL on the current corpus. Do not relax a
+#   threshold or add an exclusion to reach green — record an obligation instead.
+#   Every relaxation below is annotated with the reason it is legitimate.
+# ==============================================================================
+
+metadata:
+  config_id: ADOPT-01-CFG-001
+  version: 1.0.0
+  status: ACTIVE
+  owner: Architecture Team / AI Repository Architect
+  specification: TBL-VIS-730
+  last_updated: 2026-08-15
+
+# ------------------------------------------------------------------------------
+# Global scope — FA-07 requires the whole docs tree, not one file.
+# ------------------------------------------------------------------------------
+global:
+  # include_paths: leave empty to scan the entire repository.
+  include_paths: []
+  exclude_paths:
+    - .git
+    - node_modules
+    - __pycache__
+    - .venv
+    - dist
+    - build
+    - tools/docs-validate/reports
+    - tools/docs-validate/fixtures
+
+# ------------------------------------------------------------------------------
+# Validator switches and per-validator settings
+# ------------------------------------------------------------------------------
+validation:
+
+  markdown:
+    enabled: true
+    # Relative link targets are reported as WARNING, never ERROR: the corpus
+    # deliberately links to planned artefacts that do not exist yet.
+    check_local_targets: true
+
+  mermaid:
+    enabled: true
+    # engine: auto | node | mmdc | structural
+    #   auto       — mermaid.parse() via node when resolvable, else mmdc, else the
+    #                structural fallback
+    #   node       — require mermaid.parse(); fail the run if unavailable
+    #   mmdc       — require @mermaid-js/mermaid-cli
+    #   structural — force the built-in fallback (no Node required)
+    #
+    # ADOPT-OBL-01a: the structural fallback is a FALLBACK. Validated against
+    # mermaid.parse() over 2,006 corpus diagrams, the v1.0.0 parser was wrong in
+    # both directions — 4 false positives on valid erDiagram crow's-foot notation
+    # and 4 false negatives on genuinely broken diagrams. It now reports
+    # UNSUPPORTED_BY_VALIDATOR for anything it cannot decide, and only
+    # graph/flowchart are decidable without a grammar.
+    engine: auto
+    # Where to resolve the `mermaid` and `jsdom` packages from, when not on NODE_PATH.
+    node_modules: ""
+
+  identifiers:
+    enabled: true
+    # Namespaces validated for uniqueness, format and contiguity.
+    namespaces:
+      - DGM
+      - TBL
+      - VAL
+      - FAL
+      - IMG
+      - DEC
+      - ADR
+      - OBL
+    # Contiguity enforcement per namespace. Namespaces whose identifiers are
+    # allocated in summary tables before a full record exists are WARNING only.
+    strict_contiguity:
+      DGM: true
+      TBL: true
+      VAL: true
+      FAL: true
+      IMG: false
+      DEC: false
+      ADR: false
+      OBL: false
+    # FA-10 — permanent gaps recorded by TBL-VIS-689 / VIS-347. Never fill,
+    # never report. Additional entries here are merged with the built-in list.
+    permanent_gaps:
+      TBL:
+        - TBL-VIS-244
+        - TBL-VIS-423
+      DEC:
+        - DEC-VIS-008
+        - DEC-VIS-009
+      CAP:
+        - CAP-VIS-057
+        - CAP-VIS-058
+        - CAP-VIS-059
+    # Reference resolution is a v2 check per TBL-VIS-730; off by default.
+    check_undefined_references: false
+    # DEC-VIS-052 — identifier definition versus reference semantics.
+    #   dec-vis-052 : the first authoritative allocation owns the identifier; later
+    #                 row-class occurrences are REPUBLICATION (reported as INFO with
+    #                 their definition site named), unless they allocate again or
+    #                 diverge semantically, which remain ERRORs.
+    #   strict      : pre-decision behaviour — every duplicate occurrence is an ERROR.
+    #                 Retained so the decision is fully reversible and auditable.
+    republication_policy: dec-vis-052
+
+  anchors:
+    enabled: true
+    # Cross-reference resolution is deferred to v2 by TBL-VIS-730. It is
+    # implemented and reported now, at WARNING severity, so that installing the
+    # checker cannot be mistaken for widening v1 scope.
+    fail_on_internal: false
+    fail_on_cross_file: false
+
+  metadata:
+    enabled: true
+    schema_path: tools/docs-validate/schemas/metadata-schema.yaml
+    constitutional_paths:
+      - docs/MASTER_CONTEXT
+      - docs/ADR
+      - .ai
+    # VAL-VIS-1746 / SC-04: the corpus is known to be non-conformant. Set this to
+    # true to make frontmatter conformance BLOCKING once the obligation is
+    # discharged. Until then the gap is reported as a warning and counted, so the
+    # measurement is honest without silently passing.
+    fail_on_missing_fields: false
+
+  metrics:
+    enabled: true
+    # Visual-density ceiling breaches are BLOCKING: this is the VAL-VIS-1592 rule.
+    fail_on_density: true
+
+# ------------------------------------------------------------------------------
+# Thresholds
+# ------------------------------------------------------------------------------
+thresholds:
+  # VAL-VIS-1592 — longest unbroken non-visual prose run, constitutional limit.
+  visual_density_max_lines: 120
+  # TBL-VIS-689 — pass criterion is zero duplicate definitions in every namespace.
+  max_duplicate_ids: 0
+  # AI-MET-001 MET failure boundary for documentation count.
+  min_markdown_files: 50
+  # Reported, not enforced in v1.
+  max_broken_anchors: 0
+  min_metadata_conformance_pct: 100
+
+# ------------------------------------------------------------------------------
+# Rule citation register — VAL-VIS-1639 makes the citation binding: a check that
+# does not name the rule it enforces cannot move an artefact to AS-6.
+# ------------------------------------------------------------------------------
+rule_citations:
+  MD-FENCE-BALANCE: VAL-VIS-1592-FENCE
+  MD-EMPTY-HEADING: DOC-STD-HEADING
+  MD-HEADING-FORM: DOC-STD-HEADING
+  MD-CODE-FENCE: DOC-STD-FENCE
+  MD-LINK-SYNTAX: MET-05
+  MD-EMBEDDED-YAML: TBL-VIS-730-YAML
+  MD-EMBEDDED-JSON: TBL-VIS-730-JSON
+  MD-TABLE-SHAPE: DOC-STD-TABLE
+  MMD-NONEMPTY: VAL-VIS-MERMAID-EMPTY
+  MMD-TYPE: VAL-VIS-MERMAID-TYPE
+  MMD-SYNTAX: VAL-VIS-MERMAID-PARSE
+  MMD-NODES: VAL-VIS-MERMAID-NODE
+  ID-FORMAT: VAL-VIS-ID-FORMAT
+  ID-UNIQUE: TBL-VIS-689
+  ID-CONTIGUITY: VAL-VIS-ID-CONTIG
+  ID-UNDEFINED: VAL-VIS-ID-DEFINED
+  ANC-INTERNAL: MET-05
+  ANC-CROSSFILE: MET-05
+  ANC-TOC: MET-05
+  ANC-DUPLICATE: DOC-STD-ANCHOR
+  META-PRESENT: VAL-VIS-001
+  META-PARSE: VAL-VIS-001
+  META-REQUIRED: MCX-23-002
+  META-VALUES: MCX-23-002
+  META-DATES: MCX-23-002
+  META-SEMVER: MCX-23-002
+  MET-COUNTS: AI-MET-001
+  MET-VISUAL-DENSITY: VAL-VIS-1592
+  MET-DOC-COUNT: AI-MET-001

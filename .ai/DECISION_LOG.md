@@ -30,3 +30,72 @@ This decision log records all architectural, structural, and governance trade-of
 | `DEC-008` | 2026-08-04 | PROJECT_PHILOSOPHY Part 04 Extension | Completed repository bounded domains & knowledge layers with 20 additional sections covering DDD, repository DNA, multi-agent coordination, and sustainability. | N/A | `APPROVED` |
 | `DEC-009` | 2026-08-12 | MCX-MEM-001 Memory Constitution as single authoritative memory artifact | Single canonical `MASTER_CONTEXT_MEMORY_SYSTEM.md` (50 parts) defined as the Memory Constitution, avoiding duplicate/parallel memory specifications; all other MASTER_CONTEXT docs reference it. | N/A | `APPROVED` |
 | `DEC-010` | 2026-08-12 | MCX-MEM-001 released via PR #5 + tag `mcx-mem-001-v1.0.0` | Document, control-plane, and index validation gates all passed; merged into `main` (merge commit `e3fb4d4`) and released as a tag for immutable reconstruction reference. | N/A | `RELEASED` |
+
+---
+
+## 3. Adoption-Phase Decision Register (ADOPT-01 and later)
+
+Appended 2026-08-15. Decisions here follow the `DEC-VIS-` namespace of
+`AOM-VIS-001` when they bind the constitutional corpus, and the local `DEC-0NN`
+namespace when they bind only the AI workspace.
+
+| ID | Date (UTC) | Decision Title | Rationale | Formal record | Status |
+| :--- | :---: | :--- | :--- | :--- | :---: |
+| `DEC-VIS-052` | 2026-08-15 | Identifier Definition versus Reference Semantics | Resolves `ADOPT-OBL-03a`. The first authoritative allocation owns an identifier; later row-class occurrences are references, unless they allocate again or change normative content. Settled empirically: allocation-table and derived-table header signatures are **disjoint** across all 154 findings in both `SYSTEM_VISION.md` and `SYSTEM_ARCHITECTURE.md`. | [`docs/reports/DEC-VIS-052-identifier-definition-reference-semantics.md`](../docs/reports/DEC-VIS-052-identifier-definition-reference-semantics.md) | `ACTIVE` |
+| `DEC-053` | 2026-08-15 | `mermaid.parse()` is the authoritative Mermaid engine | Resolves `ADOPT-OBL-01a`. The v1.0.0 structural parser was verified against the reference implementation over 2,006 diagrams and found wrong in **both** directions — 4 false positives on valid `erDiagram` crow's-foot notation and 4 false negatives on genuinely broken diagrams. The structural parser is demoted to a fallback that reports `UNSUPPORTED_BY_VALIDATOR` rather than guessing. | `tools/docs-validate/validators/mermaid_validator.py` | `ACTIVE` |
+
+### Namespace audit for `DEC-VIS-052` — `VAL-VIS-1592` two-pass
+
+| Pass | Result |
+| :--- | :--- |
+| Pass 1 — declarations | `DEC-VIS-` ceiling **150** |
+| Pass 2 — decisions | `DEC-VIS-050` is the most recent ceiling record; 150 confirmed |
+
+`DEC-VIS-051` was **not** taken: it is reserved by `OBL-60` for the `VAL-VIS-` ceiling
+raise and exists only as a forward pointer, with no definition. `DEC-VIS-052` is the next
+genuinely free identifier. Post-allocation: 52 of 150, no raise required.
+
+> That forward pointer is itself an instance of the distinction `DEC-VIS-052` defines — a
+> reference that allocates nothing. A checker treating it as a definition would have
+> reported a phantom.
+
+### `DEC-054` — Owner Override of `VAL-ARCH-301` for PR #8
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-054` |
+| **Date (UTC)** | 2026-08-15 |
+| **Decision** | Merge PR #8 (`ADOPT-01` documentation validation infrastructure) into `main`. |
+| **Requested by** | Repository owner and sole `CODEOWNERS` principal (`@afshin-omnisystem`), explicitly and on repetition after a recorded refusal. |
+| **Rule engaged** | `VAL-ARCH-301` "No agent merges to `main`" — `TBL-ARCH-237` Non-Negotiable Set, severity **CRITICAL**. |
+| **Status** | `APPROVED BY OWNER` |
+
+#### Why the rule exists, and what the owner's instruction changes
+
+`VAL-ARCH-301` protects **"the only human gate"** (`TBL-ARCH-237`), and `FAL-ARCH-196`
+records the failure mode it guards: *"agent given merge rights for convenience."*
+
+The gate is a **human decision point**, not a prohibition on the outcome. The owner is
+that human and has exercised the decision directly. This is therefore an **owner-executed
+gate**, not a bypassed one. It is recorded here because the distinction is only legible
+if it is written down — an unrecorded override is indistinguishable from the failure mode.
+
+#### What this override does NOT authorise
+
+| Constraint | State after this merge |
+| :--- | :--- |
+| `TBL-VIS-757` — `AOM-VIS-001` release prohibition | **UNAFFECTED.** `SYSTEM_VISION.md` is byte-identical to `main`; this is not a release of `AOM-VIS-001`. No tag, no release. |
+| `QG-3` / `VAL-VIS-1632` author-not-verifier | **STILL FAILING.** One principal; author equals verifier. `OBL-55` remains open. |
+| `QG-4` / `EV4` | **STILL CLOSED / NONE.** Merging produces no CI run; the workflow is not installed (`ADOPT-OBL-13`). |
+| Wave `W1` | **NOT CLOSED.** |
+| `ADOPT-07` second `CODEOWNERS` principal | **STILL THE HIGHEST-LEVERAGE HUMAN ACTION.** |
+
+#### Residual risk, stated plainly
+
+The merged change reaches `main` with **zero independent review**: all 8 commits were
+authored by the same agent that verified them. `QG-3` is recorded as `FAIL` for precisely
+this reason. The merge does not repair that; it lands the work with the gap documented.
+
+The corpus result at merge time is **FAIL — 13 errors, 441 warnings**, and that is the
+intended state under `VAL-VIS-1746` / `SC-04`. Merging a red baseline is deliberate: the
+13 findings are real and are tracked as `ADOPT-OBL-01`…`13`.
