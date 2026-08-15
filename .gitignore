@@ -1,0 +1,28 @@
+# ==============================================================================
+# Oship repository ignore rules
+# Introduced by ADOPT-01 (Documentation Validation Infrastructure), 2026-08-15.
+# The repository had no .gitignore before its first executable artefact, because
+# it had no executable artefacts.
+# ==============================================================================
+
+# --- Python tooling byproducts (tools/docs-validate) --------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# --- Validator output ---------------------------------------------------------
+# Committed baselines (reports/BASELINE-*.md) are append-only evidence and are
+# NOT ignored. Transient per-run reports are.
+tools/docs-validate/reports/validation-report.*
+
+# --- Editor and OS noise -------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

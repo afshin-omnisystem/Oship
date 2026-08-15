@@ -1,0 +1,189 @@
+# ==============================================================================
+# Oship Constitutional Metadata Schema
+# ------------------------------------------------------------------------------
+# Artefact:      ADOPT-01 — Documentation Validation Infrastructure
+# Specification: TBL-VIS-730 ("frontmatter key count")
+# Authority:     docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md (MCX-23-002)
+# Rule:          VAL-VIS-001 — the document has YAML frontmatter with the canonical keys
+# Consumed by:   tools/docs-validate/validators/metadata_validator.py
+#
+# PURPOSE
+#   Declare the canonical metadata field set that every constitutional Markdown
+#   file must support, and map it onto the header dialects that already exist in
+#   the repository. The schema DESCRIBES the contract; it does not rewrite a
+#   single frozen document. Aliases exist so that conformance can be MEASURED on
+#   the corpus as it stands — they are not a relaxation of MCX-23-002.
+#
+# TWO EXISTING DIALECTS
+#   1. `Document ID:` … — METADATA_STANDARD.md (MCX-23-002), used under
+#      docs/MASTER_CONTEXT/.
+#   2. `File ID:` …     — the .ai/ control plane.
+#   Both are accepted through the alias table below.
+#
+# HONEST-FAILURE NOTE (VAL-VIS-1746, SC-04)
+#   Conformance is expected to be incomplete. Report the gap; do not shrink the
+#   schema to make it disappear.
+# ==============================================================================
+
+schema:
+  id: ADOPT-01-SCHEMA-001
+  title: Oship Constitutional Metadata Schema
+  version: 1.0.0
+  status: ACTIVE
+  authority: docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md
+  enforces: VAL-VIS-001, MCX-23-002
+  last_updated: 2026-08-15
+
+# The canonical block every constitutional document must support:
+#
+#   ---
+#   ID:
+#   TITLE:
+#   VERSION:
+#   STATUS:
+#   OWNER:
+#   AUTHORITY:
+#   DOMAIN:
+#   AI_PRIORITY:
+#   CREATED:
+#   UPDATED:
+#   DEPENDENCIES:
+#   RELATED:
+#   ---
+
+fields:
+
+  ID:
+    required: true
+    description: Unique machine-readable document identifier.
+    aliases:
+      - ID
+      - Document ID
+      - File ID
+      - document_id
+      - DOC_ID
+
+  TITLE:
+    required: true
+    description: Human-readable document title.
+    aliases:
+      - TITLE
+      - Title
+      - title
+
+  VERSION:
+    required: true
+    description: Semantic version of the document content.
+    format: semver
+    aliases:
+      - VERSION
+      - Version
+      - version
+
+  STATUS:
+    required: true
+    description: Lifecycle state of the document.
+    allowed:
+      - ACTIVE
+      - PROPOSED
+      - DRAFT
+      - DEPRECATED
+      - COMPLETE
+      - RELEASED
+      - FROZEN
+      - SUPERSEDED
+      - IN PROGRESS
+      - PLANNED
+    aliases:
+      - STATUS
+      - Status
+      - status
+
+  OWNER:
+    required: true
+    description: Team or role accountable for the document.
+    aliases:
+      - OWNER
+      - Owner
+      - owner
+
+  AUTHORITY:
+    required: false
+    description: >-
+      Authority level of the document. Maps onto the Oship knowledge layers
+      L1 Constitutional … L5 Ephemeral (PROJECT_PHILOSOPHY.md section 130).
+    aliases:
+      - AUTHORITY
+      - Authority
+      - Knowledge Layer
+      - authority
+
+  DOMAIN:
+    required: false
+    description: MASTER_CONTEXT knowledge domain the file belongs to, e.g. 01_PRODUCT.
+    aliases:
+      - DOMAIN
+      - Domain
+      - Knowledge Domain
+      - domain
+
+  AI_PRIORITY:
+    required: false
+    description: Reading priority for AI agents.
+    allowed:
+      - CRITICAL
+      - HIGH
+      - MEDIUM
+      - LOW
+      - P0
+      - P1
+      - P2
+      - P3
+    aliases:
+      - AI_PRIORITY
+      - AI Priority
+      - AI Importance
+      - ai_priority
+
+  CREATED:
+    required: false
+    description: Creation date, ISO-8601 YYYY-MM-DD.
+    format: date
+    aliases:
+      - CREATED
+      - Created
+      - Created Date
+
+  UPDATED:
+    required: false
+    description: Date of last substantive edit, ISO-8601 YYYY-MM-DD.
+    format: date
+    aliases:
+      - UPDATED
+      - Updated
+      - Last Updated
+      - Review Date
+
+  DEPENDENCIES:
+    required: false
+    description: Upstream files this document depends on.
+    aliases:
+      - DEPENDENCIES
+      - Dependencies
+      - dependencies
+
+  RELATED:
+    required: false
+    description: Downstream consumers and related documents.
+    aliases:
+      - RELATED
+      - Related
+      - Related Files
+      - Required By
+
+# Paths whose documents are treated as constitutional and therefore must carry
+# the required fields above.
+constitutional_paths:
+  - docs/MASTER_CONTEXT
+  - docs/ADR
+  - .ai

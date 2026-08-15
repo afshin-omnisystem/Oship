@@ -164,3 +164,64 @@ These operational metrics track the health of the repository and the knowledge i
 | **Architecture Consistency** | 98/100 | Knowledge-layer graph, dependency tables, ADR traceability |
 | **Navigation Quality** | 97/100 | ≤2-hop routing, 31 diagrams, no dead links |
 | **Future Expansion Score** | 95/100 | Extension flow + identifier registry + domain-scaling rules |
+
+---
+
+## 5. Machine-Measured Metrics — ADOPT-01
+
+As of 2026-08-15 the metrics in this document are **no longer hand-maintained**. They are
+produced by `tools/docs-validate/` (`ADOPT-01`, specification `TBL-VIS-730`).
+
+```bash
+python3 tools/docs-validate/run-validator.py --only metrics
+python3 tools/docs-validate/run-validator.py --format json   # full machine-readable output
+```
+
+The checker replaces the unimplemented pipeline described in §1 and §3. `MET-01`…`MET-05`
+were defined here but computed by nothing; `.ai/MEMORY/realtime-metrics.json` was cited
+but never existed and still has no producer — that gap is now tracked rather than assumed
+(`ADOPT-OBL-04` in the inspection report).
+
+### 5.1 Measured baseline — 2026-08-15
+
+| Metric | Measured | Source check |
+| :--- | ---: | :--- |
+| Markdown files | **87** | `MET-COUNTS` |
+| Total lines | **139,529** | `MET-COUNTS` |
+| Total words | **825,137** | `MET-COUNTS` |
+| Total bytes | **5,398,598** | `MET-COUNTS` |
+| Mermaid diagrams | **1,998** | `MET-COUNTS` |
+| Mermaid diagrams structurally valid | **1,992** (99.7 %) | `MMD-*` |
+| Tables | **3,704** | `MET-COUNTS` |
+| Captioned tables (`TBL-`) | **2,368** | `MET-COUNTS` |
+| Code blocks | **4,106** | `MET-COUNTS` |
+| Headings | **10,322** | `MET-COUNTS` |
+| Validation rules (`VAL-`) | **2,427** | `MET-COUNTS` |
+| Failure modes (`FAL-`) | **758** | `MET-COUNTS` |
+| Identifier definitions | **7,587** across 8 namespaces | `ID-UNIQUE` |
+| Metadata conformance | **52 / 54** constitutional files (96.3 %) | `META-*` |
+| Broken anchors | **8** | `ANC-*` |
+| Visual-density breaches (120-line ceiling) | **0** | `MET-VISUAL-DENSITY` |
+
+### 5.2 Correction to §4
+
+§4 records **Documentation Count = 85**. The measured value is **87**. The §4 figure was
+hand-asserted and had drifted. Tracked as `ADOPT-OBL-07`; §4 is left unedited so the
+drift stays visible, which is the whole argument for machine measurement.
+
+Likewise the `~85%`, `~90%`, `~2.1` and `~95%` figures in §4 are **estimates**, not
+measurements. Of them only metadata completeness is now machine-computed, at **96.3 %**
+against an asserted `~95%`. The rest remain unverified and must be labelled as such
+until a check exists for each.
+
+### 5.3 Metric provenance rule
+
+> **`ADOPT-R5`.** Any metric published anywhere in this repository must either cite the
+> check that produced it, or be explicitly labelled an estimate. A bare number with no
+> provenance is an unsupported claim (`OBL-46`).
+
+### 5.4 Two-pass ceiling audit — `VAL-VIS-1592`, `FA-12`
+
+Every run performs both passes and evidences both in its output: pass 1 searches for
+ceiling **declarations**, pass 2 for ceiling **decisions**. A run reporting only one pass
+has not performed the audit.

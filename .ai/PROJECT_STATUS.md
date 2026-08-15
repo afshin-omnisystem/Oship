@@ -234,3 +234,76 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 | **Open obligations** | **60 recorded, 59 open, 1 discharged — a discharge rate of 1.7 percent.** `OBL-03` persistence decision (human, gates 142 of 170 capabilities) · `OBL-44` widen identifier audit regexes · `OBL-46` provenance keystone · `OBL-48` no live measurement mechanism · `OBL-51` PART 04 release-gate finding · `OBL-53` and `OBL-59` identifier forecast divergence · `OBL-54` ceiling lapse regularised · `OBL-55` author-not-verifier unsatisfiable with one principal · `OBL-56` `ACT-VIS-004` unfilled · `OBL-57` mechanise `WC-006` · `OBL-58` README completion-claim non-conformance · `OBL-60` `VAL-VIS-` at 90 percent of ceiling. |
 | **Mandatory next-session protocol** | `TBL-VIS-777` — read `.ai/NEXT_ACTION.md` and the closure record · verify `HEAD` against the remote · **recount** the five load-bearing measurements rather than carrying documented numbers forward (`VAL-VIS-1745`) · compute `S`, `A`, `E` and `DR` · classify the failure mode `AF-1`…`AF-7` · consult `TBL-VIS-713` · check the twenty anti-patterns in `TBL-VIS-772` · act or escalate via `TBL-VIS-764` / `TBL-VIS-765`. |
 | **Next Objective** | **Not another specification document, and not a PART 07.** Worked scenario `SC-01` and `VAL-VIS-1771` both rule against continuing to specify while `A = 0`. The queued next action is `ADOPT-01` in `.ai/NEXT_ACTION.md`: build `tools/docs-validate/` per `TBL-VIS-730`. `AOM-ARCH-001` PART 02 remains queued as `ARCH-02` but is subject to the same subordination rule. |
+
+---
+
+## Milestone Register — ADOPT-01 (Documentation Validation Infrastructure)
+
+| Field | Value |
+| :--- | :--- |
+| **Milestone ID** | `ADOPT-01` |
+| **Specification** | `TBL-VIS-730` — First Executable Artefact |
+| **Acceptance** | `TBL-VIS-732` — `FA-01`…`FA-12` |
+| **STATUS** | **`EXECUTED`** — 2026-08-15 |
+| **Branch** | `arena/01a003bd-oship` (feature branch; **no direct commit to `main`**) |
+| **Artefact class** | `AC-1` self-referential · Wave `W1` |
+| **Human decision required** | **None**, as `TBL-VIS-730` predicted |
+| **Self-test** | **11 of 11 PASS** |
+| **First full-corpus run** | **FAIL — 165 errors, 441 warnings** (the intended outcome under `VAL-VIS-1746` / `SC-04`) |
+| **Obligations recorded** | `ADOPT-OBL-01`…`12` in `docs/reports/ADOPT-01-VALIDATION-BASELINE.md` |
+
+### Phase 0 gate checklist — new entries
+
+- [x] Execute `ADOPT-01`: build `tools/docs-validate/` per `TBL-VIS-730` — six validators, config, schema, fixtures, reports.
+- [x] Install `.github/workflows/docs-validate.yml` — **the first installed workflow in repository history**.
+- [x] Produce and commit the first validation baseline (`reports/BASELINE-2026-08-15.md`).
+- [x] Record every first-run finding as a tracked obligation rather than relaxing a check.
+- [ ] Discharge `ADOPT-OBL-01`…`06` (the 165 blocking errors) and flip `FA-05` to MET.
+- [ ] `ADOPT-07`: add a second `CODEOWNERS` principal — unchanged, still the highest-leverage **human** action.
+
+### Measured state transition — `TBL-VIS-731`
+
+| Metric | Before | After |
+| :--- | :---: | :---: |
+| Installed workflows | **0** | **1** |
+| `EV4` evidence items | **0** | **≥1 per push** |
+| Highest evidence class | `EV3` | **`EV4`** |
+| Artefacts at `AS-4` | **0** | **2** |
+| Artefacts at `AS-5` | **0** | **2** |
+| Quality gates open | `QG-0`, `QG-1`, `QG-2` | **+ `QG-4`** |
+| Maturity level | **`M1` SPECIFIED** | **`M2` SELF-CHECKING** |
+| Waves closed | **0** | **`W1`** |
+| Drift denominator `A` | **0** | **non-zero for the first time** |
+| Executable files in repository | **0** | **9** |
+
+`DR = S / max(A,1)` now has a real denominator, so the `K4` PURE DRIFT classification can
+be **recomputed** rather than asserted. The `AF-1` STALL failure mode is interrupted: the
+repository's most recent work unit produced a mechanism, not more specification.
+
+### Recounted corpus measurements — `VAL-VIS-1745`
+
+Measured 2026-08-15 by `tools/docs-validate/run-validator.py`, not carried forward:
+
+| Measurement | Value |
+| :--- | ---: |
+| Markdown files | **87** |
+| Total lines | **139,529** |
+| Total words | **825,137** |
+| Mermaid diagrams | **1,998** (1,992 structurally valid) |
+| Tables | **3,704** (2,368 captioned) |
+| `VAL-` rules | **2,427** |
+| `FAL-` failure modes | **758** |
+| Identifier definitions | **7,587** across 8 namespaces |
+| Metadata conformance | **52 of 54** constitutional files (96.3 %) |
+| Visual-density breaches | **0** against the 120-line `VAL-VIS-1592` ceiling |
+
+`.ai/METRICS.md` records a documentation count of 85 against a measured 87. Recorded as
+`ADOPT-OBL-07`.
+
+### Constraints honoured
+
+- No frozen documentation content modified. `docs/MASTER_CONTEXT/` is **byte-identical**.
+- No `AOM-VIS-001` part rewritten. No PART 07 opened.
+- Additions only, except `.ai/` control-plane status updates, which these documents exist to receive.
+- No commit to `main`.
+- `AOM-VIS-001` release remains **PROHIBITED** under `TBL-VIS-757`. `ADOPT-01` opens `QG-4`; `QG-5` stays closed, so the prohibition does **not** lift.

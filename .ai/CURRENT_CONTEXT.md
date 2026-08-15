@@ -140,3 +140,72 @@ Oship/
 - Ensure all GitHub issue forms in `.github/ISSUE_TEMPLATE/` conform to modern GitHub YAML syntax.
 - Every AI agent must follow the boot sequence and gates defined in `.ai/AI_AGENT_OPERATING_MANUAL.md`.
 - Every documentation artifact must satisfy the DoD in `.ai/DOCUMENTATION_COMPLETION_STANDARD.md`.
+
+---
+
+## Context Update — 2026-08-15 — ADOPT-01 Executed
+
+**Oship is no longer a documentation-only repository.** It now validates itself.
+
+`ADOPT-01` has been **executed**, not refused. `tools/docs-validate/` and
+`.github/workflows/docs-validate.yml` exist on branch `arena/01a003bd-oship`. The
+subordination rule that blocked all new specification work is therefore **discharged**:
+`AOM-ARCH-001` PART 02 (`ARCH-02`) is unblocked, and a PART 07 of `AOM-VIS-001` is no
+longer categorically barred — though `TBL-VIS-778` still advises against one until an
+artefact reaches `AS-5`.
+
+### What changed, in the terms the corpus uses
+
+- **Maturity `M1` SPECIFIED → `M2` SELF-CHECKING.**
+- **Wave `W1` closed.** Zero waves closed → one.
+- **Quality gate `QG-4` opens.** It requires automated verification, which now exists.
+- **First `EV4` evidence in repository history** on the first CI run. The evidence ceiling rises `EV3` → `EV4`.
+- **Two artefacts reach `AS-4` and `AS-5`** — the checker and the workflow.
+- **The drift denominator `A` is non-zero for the first time.** `DR = S / max(A,1)` is computable rather than degenerate, so the `K4` PURE DRIFT classification can be recomputed instead of asserted.
+- **`AF-1` STALL is interrupted.** The most recent work unit produced a mechanism, not more specification.
+
+### What did **not** change — stated plainly
+
+- **`OBL-03` is untouched.** The persistence decision still gates 142 of 170 capabilities and still needs a human.
+- **`QG-3` remains structurally unreachable.** It needs a second `CODEOWNERS` principal. There is still exactly one.
+- **Knowledge trust ceiling stays `K3`**; `K4` needs the second principal.
+- **Completion claim stays `CC-1` AUTHORED.** `CC-2` needs a second principal; `CC-3` VALIDATED needs the checker to pass, and it does not.
+- **`AOM-VIS-001` release remains PROHIBITED** under `TBL-VIS-757`. `QG-4` opening is necessary, not sufficient; `QG-5` is still closed. An agent asked to tag, PR, merge or release `AOM-VIS-001` must still refuse.
+- **Zero application source files.** `ADOPT-01` is `AC-1` self-referential tooling. It validates the specification; it does not implement the product.
+
+### First-run result — read this before quoting any metric
+
+**FAIL: 165 errors, 441 warnings** across 87 files. This is the **correct** result.
+`VAL-VIS-1746` and worked scenario `SC-04` both anticipated it and ruled in advance:
+keep it failing, record obligations, do not relax checks. Findings are itemised as
+`ADOPT-OBL-01`…`12` in `docs/reports/ADOPT-01-VALIDATION-BASELINE.md`.
+
+Concentration matters more than the total: **154 of the 159 identifier errors** turn on a
+single unresolved reading of `TBL-VIS-689` — whether a rule identifier republished as a
+row in a second table is a re-definition — and **4 of the 6 Mermaid errors** are checker
+over-strictness about `erDiagram` crow's-foot notation, disclosed rather than silently
+patched. The genuine, unambiguous defects number in the single digits.
+
+### Measurements — recounted per `VAL-VIS-1745`, not carried forward
+
+87 Markdown files · 139,529 lines · 825,137 words · 1,998 Mermaid diagrams (1,992 valid)
+· 3,704 tables · 2,427 `VAL-` rules · 758 `FAL-` modes · 7,587 identifier definitions ·
+52 of 54 constitutional files metadata-conformant · zero visual-density breaches.
+
+**Any agent reading this section must still recount rather than quote it.** The corpus
+count is **87**; `.ai/METRICS.md` says 85. Two days of documented metrics were already
+wrong, which is precisely the argument for the artefact just installed.
+
+### Standing rules added
+
+`ADOPT-R1` the validator must not be weakened to reach green · `ADOPT-R2` every new check
+needs a regression fixture · `ADOPT-R3` baselines are append-only · `ADOPT-R4` Python is a
+tooling choice and never a Wave `W2` product-language decision (`FA-08`, `FAL-VIS-341`).
+
+### Next action
+
+`ADOPT-OBL-03a` — a **human decision** on the `TBL-VIS-689` row-class reading, which
+clears 154 of 165 errors in one ruling. Then `ADOPT-OBL-01a` (`erDiagram` grammar) and
+`ADOPT-OBL-02` (the `F{Mount]` typo). `ADOPT-07`, the second `CODEOWNERS` principal,
+remains the highest-leverage human action in the repository and is unaffected by any of
+this.
