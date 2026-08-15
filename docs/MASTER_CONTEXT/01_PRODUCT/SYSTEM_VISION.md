@@ -23753,3 +23753,629 @@ knowledge_object:
 | **DEPENDENCIES_LOADED** | `MASTER_CONTEXT_RULES.md` · `METADATA_STANDARD.md` · `.github/CODEOWNERS` · `ADR-0001` · `04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` — read-only · `.ai/` control plane |
 
 ---
+
+# PART 06 — SYSTEM EVOLUTION AND ADOPTION ARCHITECTURE
+
+> **Document:** `AOM-VIS-001` · **Part:** 06 of a planned 6 — **the final part** · **Authority:** L1 — Strategic / Constitutional
+> **Appended after** the PART 05 continuation point. **PARTS 01–05 are frozen** — nothing above this
+> line is rewritten, reordered, renumbered, or squashed by this part. The PART 05 continuation marker
+> remains exactly as written; the marker at the end of *this* part becomes the authoritative one.
+
+---
+
+## PART 06 — PREAMBLE
+
+### AI NAVIGATION METADATA — PART 06
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before proposing, sequencing, scheduling, or claiming completion of any work in this repository** |
+| **AI DEPENDENCIES** | PART 01 §01.5 actors · PART 02 §02.03 domain decomposition · PART 03 §03.09 capability contracts · PART 04 §04.2 evidence classes and §04.17 traceability · PART 05 §05.8 trust levels and §05.18 governance |
+| **AI INPUTS** | A proposed action, a roadmap item, a completion claim, a release request, a deprecation, or a question of the form "what should be built next" |
+| **AI OUTPUTS** | Whether the action is admissible now, which wave it belongs to, what must precede it, what evidence closes it, and what the repository is permitted to claim about itself afterwards |
+| **AI IMPLEMENTATION IMPACT** | Governs sequencing of all future work, the maturity claim the repository may make, the conditions under which `AOM-VIS-001` may be released, and the conditions under which any part of it may be superseded |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1590`…`VAL-VIS-1960` |
+| **AI RELATED DOCUMENTS** | `AOM-ARCH-001` `04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` — read-only · `docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md` · `.ai/NEXT_ACTION.md` · `.ai/PROJECT_STATUS.md` · `.ai/REPOSITORY_EVOLUTION.md` · `docs/ADR/ADR-0001-ai-native-repository-architecture.md` |
+
+---
+
+### What PART 06 Is For
+
+> **`VIS-677`.** PART 01 said *what Oship is*. PART 02 said *what Oship is made of*. PART 03 said
+> *what Oship can do*. PART 04 said *what Oship can prove*. PART 05 said *what Oship knows*. PART 06
+> says the only thing left, and it is the thing every one of the previous five parts is useless
+> without: **how any of it actually happens, in what order, under whose authority, and how the
+> repository is prevented from lying to itself about its own progress.**
+
+> **`VIS-678`.** This is not a roadmap. A roadmap is a list of intentions with dates attached, and
+> `VIS-051` prohibits dates in this document. PART 06 is an **adoption architecture**: a structural
+> account of the ordering constraints that exist between the things Oship must become, the evidence
+> that closes each transition, and the failure modes that make a repository *appear* to advance while
+> advancing nothing. Order is a fact about dependencies. Dates are a guess about capacity. This part
+> specifies only the first.
+
+> **`VIS-679`.** The distinction matters more here than anywhere else in the document, because the
+> gap between `AOM-VIS-001` and the Oship repository is currently enormous and entirely honest. As
+> measured in PART 04 and re-measured for this part, the repository contains **zero lines of
+> application source**, **zero installed CI workflows**, and **one CODEOWNERS principal**. Five parts
+> of constitutional specification now sit on top of that. PART 06 exists so that this gap is
+> *governed* rather than *forgotten* — so that the next agent to open this repository is told, in
+> machine-checkable form, that specification is not implementation and which of the two it is
+> currently doing.
+
+> **`VIS-680`.** The central assertion of PART 06 is this: **a vision document that cannot detect
+> its own non-adoption is a liability, not an asset.** A specification that grows while the system
+> it specifies does not is accumulating unbacked promises. PART 05 gave that phenomenon a trust
+> vocabulary; PART 06 gives it a detection mechanism, an escalation path, and a set of gates that
+> refuse to open. §06.9 defines drift detection, §06.13 defines the release gate architecture, and
+> §06.19 closes the document with a full-corpus inventory measured at authoring time.
+
+---
+
+### 06.0.1 Namespace Headroom Audit — Executed Before Allocation
+
+> **`VIS-681`.** Following the procedure established by `VIS-581` in PART 05 and mandated by
+> `VAL-VIS-948`, the headroom audit below was executed against the document body **before a single
+> PART 06 identifier was written**. The figures are extraction results, not recollections. The
+> distinction between an **allocation** and a **mention** is enforced exactly as `VAL-VIS-949`
+> requires: a number appearing in a continuation marker, a ceiling declaration, a redirection table,
+> or a cross-reference is a mention and is **not** counted as consumed.
+
+### TBL-VIS-683: PART 06 Namespace Headroom Audit
+
+| Namespace | Last allocated | Next free | Declared ceiling | Headroom | PART 06 projected demand | Verdict |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `VIS-` | `VIS-676` | `VIS-677` | none declared | unbounded | ~200 statements | **SUFFICIENT** |
+| `TBL-VIS-` | `TBL-VIS-682` | `TBL-VIS-683` | none declared | unbounded | ~150 tables | **SUFFICIENT** |
+| `DGM-VIS-` | `DGM-VIS-152` | `DGM-VIS-153` | none declared | unbounded | ~28 diagrams | **SUFFICIENT** |
+| `VAL-VIS-` | `VAL-VIS-1589` | `VAL-VIS-1590` | **1600** under `DEC-VIS-044` | **11** | ~370 rules | **INSUFFICIENT — ceiling raise required, `DEC-VIS-048`** |
+| `FAL-VIS-` | `FAL-VIS-328` | `FAL-VIS-329` | **400** under `DEC-VIS-045` | **72** | ~95 failure modes | **INSUFFICIENT — ceiling raise required, `DEC-VIS-049`** |
+| `IMG-VIS-` | `IMG-VIS-053` | `IMG-VIS-054` | **060** under `DEC-VIS-039` | **7** | 6 specifications | **SUFFICIENT — 1 slot will remain** |
+| `DEC-VIS-` | `DEC-VIS-047` | `DEC-VIS-048` | none declared | unbounded | 6 decisions | **SUFFICIENT** |
+| `AI-VIS-` | `AI-VIS-115` | `AI-VIS-116` | none declared | unbounded | ~40 directives | **SUFFICIENT** |
+| `OBL-` | `OBL-51` | `OBL-52` | none declared | unbounded | ~14 obligations | **SUFFICIENT** |
+| `CAP-VIS-` | `CAP-VIS-170` | `CAP-VIS-171` | none declared | unbounded | 0 — PART 06 defines no new capabilities | **NOT USED** |
+| `ACT-VIS-` | `ACT-VIS-016` | `ACT-VIS-017` | **030** under PART 01 §01.5 | 14 | 0 — PART 06 reuses existing actors | **NOT USED** |
+| `MET-VIS-` | `MET-VIS-050` | `MET-VIS-051` | none declared | unbounded | ~6 metrics | **SUFFICIENT** |
+
+> **`VIS-682`.** Two namespaces fail the audit and are therefore blocked. Under `VAL-VIS-948` and the
+> standing rule in `TBL-VIS-129` that a ceiling is never silently exceeded, **no `VAL-VIS-1600`+ or
+> `FAL-VIS-400`+ identifier may be written until the two decision records below exist in this file**.
+> They are written first, in this preamble, before any content section. That ordering is itself the
+> compliance evidence.
+
+```mermaid
+flowchart TD
+    A["PART 06 authoring begins"] --> B["Execute headroom audit against document body"]
+    B --> C{"Every required namespace<br/>has headroom?"}
+    C -->|"Yes"| D["Allocate freely from next free"]:::ok
+    C -->|"No"| E["Identify each insufficient namespace"]:::warn
+    E --> F["Write DEC-VIS ceiling raise BEFORE any allocation"]:::warn
+    F --> G{"Decision states rationale, new ceiling,<br/>policy, collision prevention, expansion?"}
+    G -->|"No"| H["HALT - incomplete decision record"]:::bad
+    G -->|"Yes"| I["Record in ledger and closure record"]:::ok
+    I --> D
+    D --> J["Reconcile projected against actual in closure record"]:::ok
+    J --> K{"Actual exceeds new ceiling?"}
+    K -->|"Yes"| H
+    K -->|"No"| L["PART 06 namespace compliance PASS"]:::ok
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-153` — **Ceiling Compliance Gate for PART 06 Allocation**
+> **Explanation:** The gate has one property that makes it worth drawing: the ceiling-raise decision
+> is a **precondition of allocation**, not a retrospective justification for it. An agent that writes
+> `VAL-VIS-1601` and then authors `DEC-VIS-048` to cover it has produced a document that passes a
+> naive final check and fails `VAL-VIS-948`'s intent entirely, because the deliberation the ceiling
+> exists to force never occurred. The closure-record reconciliation at the bottom of the flow is the
+> second half of the control: a projection that is never compared against the actual outcome is a
+> guess dressed as governance.
+
+---
+
+### 06.0.2 DEC-VIS-048 — Raise the `VAL-VIS-` Ceiling from 1600 to 2200
+
+### TBL-VIS-684: DEC-VIS-048 Decision Record
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-VIS-048` |
+| **Title** | Raise the `VAL-VIS-` validation-rule namespace ceiling from 1600 to 2200 |
+| **Status** | `ACCEPTED` |
+| **Authority** | L1 — Strategic / Constitutional. Binding on `AOM-VIS-001` and on any document that cites `VAL-VIS-` identifiers. |
+| **Supersedes** | `DEC-VIS-044` — **ceiling provision only**. Every other provision of `DEC-VIS-044` remains in force, including the contiguity requirement, the no-reuse rule, and `OBL-44`'s regex-widening obligation. `DEC-VIS-042`, already superseded on the same narrow ground by `DEC-VIS-044`, is unaffected in its surviving provisions. |
+| **Context** | PART 05 closed at `VAL-VIS-1589`. The ceiling set by `DEC-VIS-044` is 1600, leaving **11 slots**. PART 06 specifies adoption sequencing, maturity gating, drift detection, supersession, decommissioning, release gating, risk management and the AI execution contract — every one of which is rule-dense by nature, because a sequencing constraint that is not machine-checkable is a suggestion. Projected demand is ~370 rules across ~20 sections. Eleven slots is not a shortfall to be worked around; it is a hard stop three rules into §06.1. |
+| **Options considered** | **(a)** Raise the ceiling to 2200. **(b)** Raise to exactly 1960, the projected end point. **(c)** Create a separate `AVAL-` namespace for adoption rules. **(d)** Reduce rule density in PART 06 to fit 11 slots. |
+| **Decision** | **Option (a).** The `VAL-VIS-` ceiling is raised to **2200**, giving 611 slots against a projected demand of 370 and leaving ~240 slots of reserve. |
+| **Rationale — why 1600 is insufficient** | 1600 was sized in PART 05 against a projection that explicitly reserved "roughly 310 for PART 06" — see `DEC-VIS-044`'s decision field. That reservation was consumed by PART 05 itself, which allocated 645 rules against a projection of 345. The reserve was therefore notional, not held. This is a real forecasting defect and is recorded as such: it is logged as `OBL-53` and as failure mode `FAL-VIS-329`. The honest statement is not "1600 turned out to be slightly small" but "the PART 05 projection under-estimated its own demand by 87 percent and silently spent the successor's reserve." |
+| **Rationale — why 2200** | 2200 = 1589 allocated + 370 projected + 241 reserve. The reserve is deliberately larger than the PART 05 reserve in absolute terms and is sized against the observed 87 percent projection error: 370 × 1.87 ≈ 692, which would land at 2281. 2200 does not fully cover a repeat of that error, and this is stated rather than hidden — if PART 06 repeats the PART 05 forecasting failure at full magnitude it will exhaust 2200 and require a further record. That outcome is acceptable because it is **detectable**; a silently-exceeded ceiling is not. |
+| **Rejected — (b)** | Sizing a ceiling to the projection is sizing it to the estimate that has already been demonstrated to be wrong once in this same document. It converts every estimation error into a governance event. |
+| **Rejected — (c)** | A parallel `AVAL-` namespace would split the validation corpus across two numbering schemes, breaking `VAL-VIS-949`-style whole-corpus audits and every existing tool, regex and cross-reference that assumes one validation namespace. `DEC-VIS-044` rejected the same option on the same ground; rejecting it consistently matters more than the marginal tidiness. |
+| **Rejected — (d)** | Prohibited in principle. `DEC-VIS-044` established that "ceilings exist to force deliberation, not to cap work." Deleting specified constraints to satisfy an arbitrary numeric bound inverts the control: the bound would then be governing content rather than governing carelessness. |
+| **New ceiling** | **`VAL-VIS-2200`** |
+| **Allocation policy** | Contiguous ascending from `VAL-VIS-1590`. No gaps. No reservations. No forward allocation. Each rule is allocated at the point of definition in a table row of the form `\| \`VAL-VIS-nnnn\` \| statement \| severity \| check \|`. A rule referenced before it is defined is a forward reference and is prohibited by `VAL-VIS-1591`. |
+| **Collision prevention** | Before every commit, the whole-file uniqueness sweep specified in `TBL-VIS-689` is executed across **all** namespaces, not only the ones the current chunk touched. This control is not theoretical: the `IMG-VIS-030` collision repaired during PART 05 was invisible to section-local reasoning and was caught only by the whole-file sweep. The sweep is mandatory, is listed as check 6 of the 16-point suite, and its output is recorded in the closure record. |
+| **Future expansion policy** | The ceiling may be raised again by a further `DEC-VIS-` record that names this decision as superseded on the ceiling provision only. It may **never** be lowered below `max(allocated)`. Any future raise must state the observed projection error of the preceding part, as this record does, so that the error trend is visible across the decision series rather than re-discovered each time. |
+| **Reversibility** | Irreversible in the downward direction. Reversible upward. |
+| **Ledger entry** | Recorded in `TBL-VIS-686` — PART 06 Ceiling Ledger. |
+| **Consequences** | `OBL-44`'s obligation to widen `[0-9]{3}` audit regexes to `[0-9]{3,4}` remains in force and is **still sufficient** — 2200 is a four-digit number and needs no further widening. No tooling change is required by this raise beyond what `OBL-44` already mandates. |
+
+---
+
+### 06.0.3 DEC-VIS-049 — Raise the `FAL-VIS-` Ceiling from 400 to 600
+
+### TBL-VIS-685: DEC-VIS-049 Decision Record
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-VIS-049` |
+| **Title** | Raise the `FAL-VIS-` failure-mode namespace ceiling from 400 to 600 |
+| **Status** | `ACCEPTED` |
+| **Authority** | L1 — Strategic / Constitutional |
+| **Supersedes** | `DEC-VIS-045` — **ceiling provision only**. `DEC-VIS-038`, superseded on the same narrow ground by `DEC-VIS-045`, is unaffected in its surviving provisions. |
+| **Context** | PART 05 closed at `FAL-VIS-328`, leaving 72 slots under the 400 ceiling. PART 06 is the part in which failure analysis is densest, for a structural reason: adoption is the phase where the largest number of things can go wrong invisibly. A capability that does not exist fails loudly. An adoption that has stalled fails silently, and the repository keeps producing documents. §06.9 drift detection, §06.16 adoption failure and recovery, and §06.17 adoption anti-patterns together project ~95 failure modes. |
+| **Options considered** | **(a)** Raise to 600. **(b)** Raise to 430, covering the projection exactly. **(c)** Fold adoption failures into the existing `FAL-VIS-` entries by extending their descriptions. |
+| **Decision** | **Option (a).** The `FAL-VIS-` ceiling is raised to **600**, giving 272 slots against a projected demand of 95. |
+| **Rationale — why 400 is insufficient** | 72 slots against 95 projected is a 23-slot shortfall. Unlike the `VAL-VIS-` case the shortfall is modest, but the rule is absolute: a ceiling that will be exceeded must be raised before allocation begins, not when the allocation reaches it. Raising at the boundary mid-part would fragment the part's authoring across a governance event and create exactly the "ceiling raised retrospectively" pattern that `DGM-VIS-153` prohibits. |
+| **Rationale — why 600** | This is the terminal part of `AOM-VIS-001`. The ceiling should be sized to survive not only PART 06 but the document's entire maintenance life — every future correction, supersession record and post-release amendment that adds a failure mode without adding a part. 600 provides 272 slots of which ~95 are consumed now, leaving ~177 for the document's post-release life. Sizing this ceiling to PART 06 alone would guarantee a further governance event during maintenance, when there is no part boundary at which to place it. |
+| **Rejected — (b)** | Same defect as `DEC-VIS-048` option (b): sizes the bound to an estimate rather than to the variance of estimates. |
+| **Rejected — (c)** | Overloading existing failure modes destroys their identity. `FAL-VIS-171` means one specific thing — the false "24 of 24" README badge — and is cited as such from PART 04 and PART 05. Extending it to also mean "adoption stalled" would break every citation and violate `VIS-347`. |
+| **New ceiling** | **`FAL-VIS-600`** |
+| **Allocation policy** | Contiguous ascending from `FAL-VIS-329`. Each failure mode is allocated at the point of definition in a row of the form `\| \`FAL-VIS-nnn\` \| **Name** \| description \| status \| detection \|`. Status is drawn from the closed vocabulary `PRESENT` / `ABSENT` / `LATENT` / `PREVENTED` / `UNKNOWN`. |
+| **Collision prevention** | Whole-file uniqueness sweep per `TBL-VIS-689`, identical control to `DEC-VIS-048`. |
+| **Future expansion policy** | Raisable by further record; never lowerable below `max(allocated)`. Any future raise must state the maintenance-life reserve it leaves, not merely the immediate demand it satisfies. |
+| **Reversibility** | Irreversible downward. |
+| **Ledger entry** | `TBL-VIS-686`. |
+| **Consequences** | `FAL-VIS-` remains three-digit at 600. Audit regexes of the form `FAL-VIS-[0-9]{3}` continue to work. No tooling obligation arises. |
+
+---
+
+### TBL-VIS-686: PART 06 Ceiling Ledger — Complete History of Every Ceiling in `AOM-VIS-001`
+
+| Namespace | Original ceiling | Raise 1 | Raise 2 | Raise 3 | Current ceiling | Allocated at PART 06 open | Governing record |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `VAL-VIS-` | 200 — PART 01 `TBL-VIS-128` | 1000 — `DEC-VIS-042` | 1600 — `DEC-VIS-044` | **2200 — `DEC-VIS-048`** | **2200** | 1589 | `DEC-VIS-048` |
+| `FAL-VIS-` | 200 — PART 01 | 300 — `DEC-VIS-038` | 400 — `DEC-VIS-045` | **600 — `DEC-VIS-049`** | **600** | 328 | `DEC-VIS-049` |
+| `IMG-VIS-` | 40 — PART 01 | 060 — `DEC-VIS-039` | — | — | **060** | 53 | `DEC-VIS-039` |
+| `DGM-VIS-` | 200 — PART 01 | none — declaration lapsed | — | — | **none declared** | 152 | `TBL-VIS-561` records it as unbounded |
+| `TBL-VIS-` | 200 — PART 01 | none — declaration lapsed | — | — | **none declared** | 682 | `TBL-VIS-561` |
+| `VIS-` | none | — | — | — | **none declared** | 676 | — |
+| `DEC-VIS-` | 40 — PART 01 | none — declaration lapsed | — | — | **none declared** | 47 | `TBL-VIS-561` |
+| `AI-VIS-` | 60 — PART 01 | none — declaration lapsed | — | — | **none declared** | 115 | `TBL-VIS-561` |
+| `CAP-VIS-` | none | — | — | — | **none declared** | 170 | — |
+| `ACT-VIS-` | 030 — PART 01 §01.5 | — | — | — | **030** | 16 | PART 01 |
+
+> **`VIS-683`.** The ledger exposes a governance defect that no previous part stated plainly, and it
+> is stated here because concealing it would violate the no-fabrication rule: **five namespaces
+> declared a ceiling in PART 01 and then exceeded it without a raising record.** `TBL-VIS-` declared
+> 200 and stands at 682. `DGM-VIS-` declared 200 and stands at 152 — under, but only by luck of
+> volume. `DEC-VIS-` declared 40 and stands at 47. `AI-VIS-` declared 60 and stands at 115. The
+> mechanism of the breach was not deliberate: `TBL-VIS-561` in PART 05 recorded these namespaces as
+> "none declared / unbounded", which was **incorrect** — PART 01's `TBL-VIS-128` did declare ceilings
+> for all four. The audit that produced `TBL-VIS-561` searched for active ceiling *decisions* and
+> found none, rather than searching for the original *declarations*.
+
+> **`VIS-684`.** This is a real, material defect in the document's own governance, discovered by the
+> PART 06 audit and repaired by `DEC-VIS-050` below rather than by editing the frozen parts. It is
+> recorded as failure mode `FAL-VIS-330` and obligation `OBL-54`. Three properties of it are worth
+> the reader's attention, because they generalise:
+>
+> 1. **The breach was invisible to every check that ran.** Every part validated identifier
+>    uniqueness and contiguity. None validated identifiers against a ceiling declared four parts
+>    earlier in a table that had since scrolled out of working context.
+> 2. **The incorrect audit was itself the concealment.** `TBL-VIS-561` did not omit the ceilings; it
+>    positively asserted their absence. A wrong measurement is worse than a missing one, because a
+>    missing measurement invites a search and a wrong one terminates it. This is `KAP-`-class
+>    behaviour and is why PART 05's `VAL-VIS-949` exists in the first place.
+> 3. **It was found only because PART 06 audited the ledger historically rather than currently.**
+>    The `TBL-VIS-686` column "Original ceiling" has no operational purpose except to make lapses
+>    visible. It found four.
+
+```mermaid
+flowchart TD
+    subgraph DECL["PART 01 - ceilings declared"]
+        D1["TBL-VIS-128 declares<br/>TBL 200, DGM 200, DEC 40, AI 60"]
+    end
+    subgraph DRIFT["PARTS 02 to 05 - allocation proceeds"]
+        D2["Each part checks uniqueness"]:::ok
+        D3["Each part checks contiguity"]:::ok
+        D4["No part checks against PART 01 ceilings"]:::bad
+    end
+    subgraph AUDIT["PART 05 - audit executed"]
+        D5["TBL-VIS-561 searches for ceiling DECISIONS"]:::warn
+        D6["Finds none for TBL, DGM, DEC, AI"]:::warn
+        D7["Records 'none declared - unbounded'"]:::bad
+    end
+    subgraph FOUND["PART 06 - historical ledger audit"]
+        D8["TBL-VIS-686 reconstructs ORIGINAL declarations"]:::ok
+        D9["Four lapsed ceilings surfaced"]:::ok
+        D10["DEC-VIS-050 regularises them"]:::ok
+    end
+    D1 --> D2 --> D3 --> D4 --> D5 --> D6 --> D7 --> D8 --> D9 --> D10
+    D7 -.->|"wrong measurement<br/>terminated the search"| D4
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-154` — **How Four Ceiling Declarations Lapsed Undetected Across Four Parts**
+> **Explanation:** The dotted feedback edge is the important one. `TBL-VIS-561`'s incorrect
+> "unbounded" finding did not merely fail to catch the drift — it **retroactively legitimised** it,
+> so that PART 05 allocated `TBL-VIS-559`…`682` in documented good faith against a ceiling it had
+> been told did not exist. This is why `VAL-VIS-1592` below requires ceiling audits to search
+> declarations and decisions as two separate passes with two separate patterns: the decision pass
+> alone returns a confident wrong answer.
+
+---
+
+### 06.0.4 DEC-VIS-050 — Regularise the Four Lapsed Ceilings
+
+### TBL-VIS-687: DEC-VIS-050 Decision Record
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-VIS-050` |
+| **Title** | Retrospectively regularise the `TBL-VIS-`, `DGM-VIS-`, `DEC-VIS-` and `AI-VIS-` ceilings lapsed since PART 01 |
+| **Status** | `ACCEPTED` |
+| **Authority** | L1 — Strategic / Constitutional |
+| **Supersedes** | The ceiling provisions of PART 01 `TBL-VIS-128` for the four named namespaces, and the "none declared" rows of PART 05 `TBL-VIS-561` for the same four. **Neither table is edited** — both are in frozen parts. This record supersedes them in force while leaving them intact on the page, exactly as `DEC-VIS-047` did for the prose-created namespaces. |
+| **Context** | The PART 06 historical ledger audit (`TBL-VIS-686`) established that PART 01 declared ceilings of `TBL-VIS-` 200, `DGM-VIS-` 200, `DEC-VIS-` 40 and `AI-VIS-` 60, and that three of the four were exceeded during PARTS 02–05 without any raising record. Current allocation: `TBL-VIS-` 682 against 200 — **exceeded by 482**; `DGM-VIS-` 152 against 200 — **within, 48 remaining**; `DEC-VIS-` 47 against 40 — **exceeded by 7**; `AI-VIS-` 115 against 60 — **exceeded by 55**. |
+| **Options considered** | **(a)** Set new ceilings sized for the document's full life and record the breach openly. **(b)** Declare the four namespaces formally unbounded. **(c)** Renumber the over-ceiling identifiers to fit. |
+| **Decision** | **Option (a).** New ceilings are set as specified in `TBL-VIS-688`, and the historical breach is recorded as `FAL-VIS-330` with obligation `OBL-54` rather than erased. |
+| **Rejected — (b)** | An unbounded namespace cannot be audited for exhaustion and provides no forcing function for deliberation. `TBL-VIS-561`'s de facto "unbounded" treatment is precisely what allowed the breach to persist. Formalising the accident would be governance by ratification of error. |
+| **Rejected — (c)** | Absolutely prohibited. `VIS-347` states identifiers are never reused; renumbering 482 tables would invalidate every cross-reference in a 23,000-line document and every external citation. The identifiers are correct; the ceiling was wrong. Fix the ceiling. |
+| **Allocation policy** | Unchanged for all four namespaces — contiguous ascending from the current next-free value, no reuse, no forward allocation. Only the bound changes. |
+| **Collision prevention** | `TBL-VIS-689` whole-file sweep, unchanged. |
+| **Future expansion policy** | All four namespaces are now subject to the **two-pass ceiling audit** mandated by `VAL-VIS-1592`: pass 1 searches for ceiling *declarations* in any part; pass 2 searches for ceiling *decisions*. The effective ceiling is the one from the most recent record of either kind. A part that runs only pass 2 has not performed the audit. |
+| **Reversibility** | Irreversible downward. |
+| **Ledger entry** | `TBL-VIS-688`. |
+| **Honest statement of effect** | This record does **not** undo the breach. `TBL-VIS-201`…`682`, `DEC-VIS-041`…`047` and `AI-VIS-061`…`115` were allocated over a declared ceiling with no authorising record at the time of allocation. Their content is unaffected and their identifiers stand. What this record does is make the current bound true, make the historical breach visible, and make its recurrence detectable. Presenting it as a repair of the past would be fabrication. |
+
+### TBL-VIS-688: Regularised Ceilings Under `DEC-VIS-050`
+
+| Namespace | PART 01 ceiling | Allocated now | Breach | New ceiling | Headroom after PART 06 projection | Sizing rationale |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `TBL-VIS-` | 200 | 682 | **+482** | **1200** | ~368 after ~150 projected | Terminal part plus full maintenance life; table density is the document's highest-volume artefact class |
+| `DGM-VIS-` | 200 | 152 | none | **400** | ~220 after ~28 projected | Not breached, but 48 slots would not survive maintenance; sized to double current usage |
+| `DEC-VIS-` | 40 | 47 | **+7** | **150** | ~97 after ~6 projected | Decisions accrue for the life of the document, including post-release supersession records |
+| `AI-VIS-` | 60 | 115 | **+55** | **400** | ~245 after ~40 projected | Directive density grows with every part; sized against the observed growth rate of ~29 per part across four parts |
+| `VIS-` | none ever declared | 676 | n/a | **1500** | ~624 after ~200 projected | First ceiling ever declared for this namespace; closes the last unbounded gap |
+| `MET-VIS-` | none ever declared | 50 | n/a | **150** | ~94 after ~6 projected | Closes an unbounded gap; metrics accrue slowly |
+| `OBL-` | none ever declared | 51 | n/a | **200** | ~135 after ~14 projected | Obligations accrue until closed; closure is slow and blocked in several cases |
+| `ACT-VIS-` | 030 | 16 | none | **030 — unchanged** | 14 | Actor taxonomy is stable; PART 06 adds none |
+
+> **`VIS-685`.** After `DEC-VIS-048`, `DEC-VIS-049` and `DEC-VIS-050`, **every identifier namespace in
+> `AOM-VIS-001` carries an explicit, current, audited ceiling.** Before this preamble, four carried
+> lapsed ceilings and four carried none at all. That is the single most consequential governance
+> change PART 06 makes, and it is made in the preamble rather than in a content section because
+> every subsequent allocation in this part depends on it.
+
+---
+
+### TBL-VIS-689: Whole-File Identifier Uniqueness Sweep — Mandatory Pre-Commit Control
+
+| Field | Specification |
+| :--- | :--- |
+| **Control ID** | `TBL-VIS-689` |
+| **Purpose** | Detect identifier collisions that section-local reasoning cannot see |
+| **Scope** | The **entire** `SYSTEM_VISION.md` file, all parts, frozen and active alike — never only the newly written chunk |
+| **Trigger** | Before every commit, without exception. Check 6 of the 16-point suite. |
+| **Namespaces covered** | Every namespace listed in `TBL-VIS-688`, plus every namespace created by `DEC-VIS-046` and regularised by `DEC-VIS-047` |
+| **Definition pattern — caption class** | `^### (TBL-VIS-[0-9]{1,4}):` · `^> \*\*Diagram ID:\*\* \`(DGM-VIS-[0-9]{1,4})\`` · `^> \*\*\`(VIS-[0-9]{1,4})\`\.\*\*` |
+| **Definition pattern — row class** | `^\| \`(NS-[0-9]{1,4})\` \|` where `NS` is the namespace prefix |
+| **Definition pattern — field class** | `^\| \*\*ID\*\* \| \`(DEC-VIS-[0-9]{1,3})\` \|` · `^\| \*\*ID\*\* \| \`(IMG-VIS-[0-9]{1,3})\` \|` |
+| **Mention exclusion** | A hit is a definition only if it matches a definition pattern above. Occurrences inside prose, continuation markers, ceiling tables, redirection tables and cross-reference cells are **mentions** and are excluded. Enforced by `VAL-VIS-949`. |
+| **Pass criterion** | Zero duplicate definitions in every namespace |
+| **Failure action** | **HALT.** No commit. Reassign the later-allocated identifier to the current next-free value, never the earlier one, and re-run. |
+| **Evidence of necessity** | The `IMG-VIS-030` collision repaired during PART 05 — allocated in PART 03 `TBL-VIS-315`, re-used by §05.16, invisible to every section-local check, caught only by this sweep |
+| **Known benign exceptions** | `TBL-VIS-027` and `TBL-VIS-050` use the legacy inline `> **Table ID:**` caption form rather than `###`. Both patterns are in scope; neither is a collision. |
+| **Permanent gaps — never fill** | `TBL-VIS-244` · `TBL-VIS-423` · `DEC-VIS-008` · `DEC-VIS-009` · `CAP-VIS-057`…`059`. A sweep that reports these as gaps is correct; a sweep that fills them violates `VIS-347`. |
+
+---
+
+## Table of Contents — PART 06
+
+| § | Title | Primary identifiers | AI priority |
+| :--- | :--- | :--- | :--- |
+| [06.1](#061--the-adoption-model) | The Adoption Model — specification versus system | `VIS-686`…`700`, `TBL-VIS-690`…`697` | **P0** |
+| [06.2](#062--the-adoption-state-machine) | The Adoption State Machine | `DGM-VIS-155`…`157`, `TBL-VIS-698`…`704` | **P0** |
+| [06.3](#063--wave-architecture) | Wave Architecture — the ordering of becoming | `TBL-VIS-705`…`714`, `DGM-VIS-158` | **P0** |
+| [06.4](#064--the-critical-path) | The Critical Path and What Blocks It | `DGM-VIS-159`…`160`, `TBL-VIS-715`…`720` | **P0** |
+| [06.5](#065--entry-and-exit-criteria) | Entry and Exit Criteria per Wave | `TBL-VIS-721`…`732` | **P0** |
+| [06.6](#066--the-maturity-model) | The Maturity Model | `TBL-VIS-733`…`742`, `DGM-VIS-161` | P1 |
+| [06.7](#067--capability-activation) | Capability Activation Sequencing | `TBL-VIS-743`…`752` | P1 |
+| [06.8](#068--the-first-executable-artefact) | The First Executable Artefact | `TBL-VIS-753`…`760`, `DGM-VIS-162` | **P0** |
+| [06.9](#069--drift-detection) | Drift Detection — specification outrunning system | `TBL-VIS-761`…`772`, `DGM-VIS-163`…`164` | **P0** |
+| [06.10](#0610--the-completion-claim-contract) | The Completion Claim Contract | `TBL-VIS-773`…`782` | **P0** |
+| [06.11](#0611--supersession-and-amendment) | Supersession and Amendment | `TBL-VIS-783`…`792`, `DGM-VIS-165` | P1 |
+| [06.12](#0612--deprecation-and-decommissioning) | Deprecation and Decommissioning | `TBL-VIS-793`…`800`, `DGM-VIS-166` | P1 |
+| [06.13](#0613--the-release-gate-architecture) | The Release Gate Architecture | `TBL-VIS-801`…`812`, `DGM-VIS-167` | **P0** |
+| [06.14](#0614--the-risk-register) | The Adoption Risk Register | `TBL-VIS-813`…`822` | P1 |
+| [06.15](#0615--the-human-dependency) | The Human Dependency | `TBL-VIS-823`…`830`, `DGM-VIS-168` | **P0** |
+| [06.16](#0616--adoption-failure-and-recovery) | Adoption Failure and Recovery | `FAL-VIS-`, `TBL-VIS-831`…`844`, `DGM-VIS-169`…`170` | **P0** |
+| [06.17](#0617--adoption-anti-patterns) | Adoption Anti-Patterns | `TBL-VIS-845`…`852` | P1 |
+| [06.18](#0618--the-ai-execution-contract) | The AI Execution Contract for PART 06 | `AI-VIS-116`…`155`, `TBL-VIS-853`…`862` | **P0** |
+| [06.19](#0619--document-closure-inventory) | Document Closure Inventory | `TBL-VIS-863`…`875` | **P0** |
+| [06.A](#06a--appendix--worked-adoption-scenarios) | Appendix — Worked Adoption Scenarios | `TBL-VIS-876`+ | P2 |
+
+---
+
+## 06.1 — The Adoption Model
+
+### AI NAVIGATION METADATA — §06.1
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before answering any question of the form "is Oship X yet"** |
+| **AI DEPENDENCIES** | PART 04 §04.2 evidence classes · PART 05 §05.8 trust levels · `EVD-VIS-011` no application source · `EVD-VIS-017` no installed workflows |
+| **AI INPUTS** | A claim about what Oship is, has, does, or supports |
+| **AI OUTPUTS** | The adoption state that claim actually occupies, and whether the claim is admissible |
+| **AI IMPLEMENTATION IMPACT** | Every status field, every badge, every completion percentage, every README assertion |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1590`…`VAL-VIS-1618` |
+| **AI RELATED DOCUMENTS** | `README.md` — **read as evidence, never as context**, per `FAL-VIS-171` · `.ai/PROJECT_STATUS.md` |
+
+---
+
+### 06.1.1 Purpose
+
+> **`VIS-686`.** §06.1 exists to destroy one specific and very common confusion: the belief that a
+> repository containing a detailed specification of a capability is a repository that *has* that
+> capability in some partial sense. It does not. It has a specification. The two are different
+> objects with different properties, different failure modes, and different truth conditions, and
+> `AOM-VIS-001` is at this moment overwhelmingly composed of the first kind.
+
+> **`VIS-687`.** The confusion is not a matter of sloppy language. It is structurally induced by the
+> medium: a specification and an implementation are both **text in the same repository**, indexed by
+> the same search, retrieved by the same context assembly, and rendered by the same viewer. An agent
+> retrieving `CAP-VIS-062 Financial Factory domain` gets a rich, confident, well-structured
+> description whose textual properties are indistinguishable from documentation of a working system.
+> Nothing in the retrieval channel carries the fact that the described thing does not exist. PART 05
+> addressed this at the level of trust; §06.1 addresses it at the level of **existence**.
+
+### 06.1.2 Definition
+
+### TBL-VIS-690: The Four Objects That Must Never Be Conflated
+
+| Object | Definition | Truth condition | Where it lives in Oship | Current volume |
+| :--- | :--- | :--- | :--- | :--- |
+| **Intention** | A statement that something should exist | The author wanted it | `.ai/ROADMAP_AI.md`, `NEXT_ACTION.md` | ~40 items |
+| **Specification** | A statement of what something must be if it exists | The statement is internally consistent and derivable from authority | `docs/MASTER_CONTEXT/`, this document | **24,000+ lines** |
+| **Implementation** | An artefact that executes and produces effects | Running it produces the specified effect | `apps/`, `services/`, `packages/` | **0 lines of application source** |
+| **Evidence** | An observation that an implementation produced a specified effect | The observation was recorded by something other than the author's assertion | CI logs, test results, telemetry | **0 — no CI installed** |
+
+> **`VIS-688`.** Read the volume column as a single sentence: **Oship has 24,000 lines of
+> specification, zero implementation, and zero evidence.** That is not a criticism of the work; the
+> work is a specification and it is doing what specifications do. It is a statement of the adoption
+> position, and every claim the repository makes must be consistent with it.
+
+> **`VIS-689`.** The four objects form a strict chain in which each stage can exist without the next
+> but not without the previous. There is no such thing as evidence for an unimplemented
+> specification, and no such thing as an implementation of nothing. This chain is the backbone of
+> the entire part.
+
+```mermaid
+flowchart LR
+    I["INTENTION<br/>should exist"]:::i --> S["SPECIFICATION<br/>what it must be"]:::s
+    S --> M["IMPLEMENTATION<br/>artefact that runs"]:::m
+    M --> E["EVIDENCE<br/>observed effect"]:::e
+    S -.->|"FORBIDDEN<br/>FAL-VIS-331"| E
+    I -.->|"FORBIDDEN<br/>FAL-VIS-332"| M
+    E --> C["ADMISSIBLE CLAIM"]:::c
+    S -.->|"claim without<br/>implementation"| X["FABRICATION"]:::x
+    classDef i fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef s fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef m fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef e fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef c fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef x fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-155` — **The Intention → Specification → Implementation → Evidence Chain**
+> **Explanation:** The two dotted forbidden edges are the whole point of the diagram. The
+> specification-to-evidence shortcut (`FAL-VIS-331`) is the pattern in which a document asserts a
+> measured outcome for a system that was never built — the README badge "Knowledge Domains 24 of 24"
+> is a live instance already recorded as `FAL-VIS-171`. The intention-to-implementation shortcut
+> (`FAL-VIS-332`) is the pattern in which work begins from a wish without a specification, producing
+> artefacts nothing can validate. Oship is structurally protected against the second and structurally
+> exposed to the first, because it has an enormous specification corpus and no execution.
+
+### 06.1.3 Scope
+
+### TBL-VIS-691: §06.1 Scope Boundaries
+
+| In scope | Out of scope | Why out |
+| :--- | :--- | :--- |
+| The adoption state of any Oship artefact | Effort estimation for reaching a state | Estimation requires capacity data the repository does not hold |
+| The evidence that closes each state transition | Dates on which transitions occur | `VIS-051` prohibits dates |
+| Rules governing what may be claimed at each state | Marketing positioning | `AOM-VIS-001` is a specification, not collateral |
+| Detection of stalled adoption | Remediation of organisational causes | Outside the repository's control surface |
+| The order in which capabilities may activate | Selection of specific technologies | Deferred to `AOM-ARCH-001` PART 02 |
+
+### 06.1.4 System Role
+
+> **`VIS-690`.** Within the constitutional set, §06.1 is the **admissibility filter for status
+> language**. `METADATA_STANDARD.md` defines the shape of a status field; PART 04 defines the
+> evidence classes that back it; PART 05 defines the trust that may be placed in it; §06.1 defines
+> which value it is permitted to hold given what actually exists. An agent that must write a status
+> field consults this section last and lets it override.
+
+### 06.1.5 Architectural Position
+
+### TBL-VIS-692: Position of the Adoption Model in the Authority Stack
+
+| Layer | Instrument | What it contributes to a status claim |
+| :--- | :--- | :--- |
+| L1 — Constitutional | `AOM-VIS-001` §06.1 | Which status values are admissible given the existence facts |
+| L1 — Constitutional | `AOM-VIS-001` PART 05 §05.8 | The trust level attachable to the claim |
+| L1 — Constitutional | `AOM-ARCH-001` | Structural constraints on the implementation, when one exists — **read-only from here** |
+| L2 — Standard | `23_STANDARDS/METADATA_STANDARD.md` | The syntactic form of the status field |
+| L3 — Control plane | `.ai/PROJECT_STATUS.md` | The current recorded value |
+| L4 — Artefact | Any document's frontmatter | The instance |
+
+> **`VIS-691`.** The stack is strictly ordered and a lower layer never overrides a higher one. When
+> `.ai/PROJECT_STATUS.md` records a status that §06.1 makes inadmissible, **the control plane is
+> wrong**, not the constitution. `VAL-VIS-1595` makes that precedence explicit because the opposite
+> reading — treating the recorded status as the ground truth — is the mechanism by which an incorrect
+> claim becomes self-perpetuating.
+
+### 06.1.6 Inputs, Outputs, Dependencies
+
+### TBL-VIS-693: §06.1 Interface Contract
+
+| Direction | Item | Type | Source or sink | Required |
+| :--- | :--- | :--- | :--- | :--- |
+| Input | Artefact path | string | Caller | Yes |
+| Input | Claimed status | enum | Caller or existing frontmatter | Yes |
+| Input | Existence facts | measurement | Live repository inspection | Yes |
+| Input | Evidence references | `EVD-VIS-` list | PART 04 evidence register | If status ≥ `IMPLEMENTED` |
+| Output | Admissible status | enum | Caller | Yes |
+| Output | Rejection reason | string | Caller | If claim rejected |
+| Output | Required evidence to advance | `EVD-VIS-` list | Caller | Always |
+| Dependency | PART 04 evidence classes | document | `AOM-VIS-001` §04.2 | Hard |
+| Dependency | Live repository measurement | tooling | `git`, filesystem | Hard — **`OBL-48` open: not embedded** |
+
+> **`VIS-692`.** The last row is an open wound and is labelled as one. §06.1 requires live existence
+> facts, and the document cannot obtain them at read time. Every existence fact in this part was
+> measured by the authoring agent at authoring time and is a **point-in-time observation**, not a
+> live value. `OBL-48` records the absence of live-measurement embedding; until it closes, every
+> figure in PART 06 carries the implicit qualifier "as measured at commit `1b80a62`+1".
+
+### 06.1.7 Actors
+
+### TBL-VIS-694: Actors in the Adoption Model
+
+| Actor | Role in adoption | Authority | Current availability |
+| :--- | :--- | :--- | :--- |
+| `ACT-VIS-001` Lead Architect | Ratifies wave transitions | Full | Available — sole principal |
+| `ACT-VIS-002` Repository Maintainer | Merges the artefacts that advance state | Full | Available — same person |
+| `ACT-VIS-005` Autonomous Coding Agent | Produces specification and, when unblocked, implementation | Bounded by `CON-VIS-` constraints | Available |
+| `ACT-VIS-011` CI/CD Automation | Produces the evidence that closes transitions | None — mechanical | **UNAVAILABLE — not installed** |
+| `ACT-VIS-008` Auditor | Verifies claims independently | Verification only | **UNAVAILABLE — role unfilled** |
+
+> **`VIS-693`.** Two of the five adoption actors do not exist, and they are precisely the two that
+> produce **independent** verification. This is the same structural finding PART 05 reached from the
+> knowledge side when it established `K4` as unreachable: the repository has no verifier distinct
+> from its author. §06.15 treats this as the single most consequential adoption constraint in the
+> system.
+
+### 06.1.8 State Model
+
+> **`VIS-694`.** Every Oship artefact occupies exactly one of eight adoption states at any time. The
+> states are total and mutually exclusive: an artefact is never in two, and never in none. The full
+> state machine, with transitions and guards, is §06.2; the states themselves are defined here.
+
+### TBL-VIS-695: The Eight Adoption States
+
+| State | Definition | Admissible claim | Evidence required to enter | Count in Oship now |
+| :--- | :--- | :--- | :--- | :--- |
+| `AS-0 ABSENT` | Nothing exists, not even an intention | None | — | Unbounded |
+| `AS-1 INTENDED` | Recorded as desired in a control-plane file | "planned" | A line in `NEXT_ACTION.md` or `ROADMAP_AI.md` | ~40 items |
+| `AS-2 SPECIFIED` | A constitutional or standard document defines it | "specified" | A `docs/MASTER_CONTEXT/` section with identifiers | **~900 identified constructs** |
+| `AS-3 SCAFFOLDED` | A structural placeholder exists | "scaffolded" | A directory, file, or `.gitkeep` | **73 `.gitkeep` directories** |
+| `AS-4 IMPLEMENTED` | Executable artefact exists in the repository | "implemented" | Source file that is not documentation | **0** |
+| `AS-5 EXERCISED` | The artefact has been run at least once by automation | "exercised" | A CI run log | **0** |
+| `AS-6 VERIFIED` | Its behaviour matched the specification under automated check | "verified" | A passing test bound to a `VAL-` rule | **0** |
+| `AS-7 OPERATED` | It runs continuously and is observed | "operational" | Telemetry from a deployed instance | **0** |
+
+> **`VIS-695`.** The distribution is the finding. Oship holds roughly 900 constructs at `AS-2`, 73
+> at `AS-3`, and **nothing at all above `AS-3`**. The repository is not partially built. It is
+> comprehensively specified and entirely unbuilt, and those are different conditions requiring
+> different next actions. A partially built system needs completion; a comprehensively specified
+> unbuilt system needs **its first executable artefact**, which is why §06.8 is devoted to that
+> single question.
+
+### TBL-VIS-696: State-to-Status-Vocabulary Mapping
+
+| Adoption state | Permitted `Status:` values | Prohibited values | Enforcing rule |
+| :--- | :--- | :--- | :--- |
+| `AS-0` | — | all | `VAL-VIS-1596` |
+| `AS-1` | `PLANNED`, `PROPOSED` | `IMPLEMENTED`, `PARTIALLY IMPLEMENTED` | `VAL-VIS-1597` |
+| `AS-2` | `DOCUMENTED`, `VISION`, `PLANNED`, `PROPOSED` | `IMPLEMENTED` | `VAL-VIS-1598` |
+| `AS-3` | `DOCUMENTED`, `PLANNED` | `IMPLEMENTED`, `PARTIALLY IMPLEMENTED` | `VAL-VIS-1599` |
+| `AS-4` | `PARTIALLY IMPLEMENTED` | `IMPLEMENTED` — requires `AS-6` | `VAL-VIS-1600` |
+| `AS-5` | `PARTIALLY IMPLEMENTED` | `IMPLEMENTED` | `VAL-VIS-1601` |
+| `AS-6` | `IMPLEMENTED` | — | `VAL-VIS-1602` |
+| `AS-7` | `IMPLEMENTED` | — | `VAL-VIS-1603` |
+| any | `UNKNOWN — REQUIRES REPOSITORY VERIFICATION` when unmeasured | any measured-sounding value | `VAL-VIS-1604` |
+
+> **`VIS-696`.** Note the deliberate severity of the `AS-4` row: **an executable artefact that exists
+> but has never been verified may not be called `IMPLEMENTED`.** The threshold for `IMPLEMENTED` is
+> `AS-6`, not `AS-4`. Code that exists and has never run is a claim, not a capability. This is
+> stricter than common industry usage and it is intentional — the entire point of the eight-state
+> model is to make the gap between "written" and "working" nameable.
+
+### 06.1.9 Validation Rules
+
+### TBL-VIS-697: §06.1 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1590` | Every artefact status claim must be traceable to an adoption state in `TBL-VIS-695`. | **ERROR** | Status field maps to a state |
+| `VAL-VIS-1591` | A validation rule must be defined before it is referenced. | **ERROR** | First occurrence is a definition row |
+| `VAL-VIS-1592` | A ceiling audit must run two passes — declarations and decisions — with distinct patterns. | **HALT** | Both passes evidenced in the audit table |
+| `VAL-VIS-1593` | A specification may never be cited as evidence of implementation. | **HALT** | Evidence references resolve to `EVD-VIS-` observations, not to `docs/` sections |
+| `VAL-VIS-1594` | The four objects of `TBL-VIS-690` must not be conflated in any status sentence. | **HALT** | Sentence names which object it describes |
+| `VAL-VIS-1595` | Where the control plane and §06.1 disagree on admissibility, §06.1 governs. | **HALT** | Precedence check |
+| `VAL-VIS-1596` | An `AS-0` artefact carries no status because it does not exist. | **ERROR** | No frontmatter for non-existent artefacts |
+| `VAL-VIS-1597` | An `AS-1` artefact must not claim implementation. | **HALT** | Vocabulary check |
+| `VAL-VIS-1598` | An `AS-2` artefact must not claim implementation regardless of specification depth. | **HALT** | Vocabulary check |
+| `VAL-VIS-1599` | A `.gitkeep`-only directory is `AS-3` and must not be described as a component. | **ERROR** | Directory content inspection |
+| `VAL-VIS-1600` | Executable code without a passing bound test is at most `PARTIALLY IMPLEMENTED`. | **HALT** | Test binding check |
+| `VAL-VIS-1601` | Having run once is not verification. | **ERROR** | Distinguish run log from assertion result |
+| `VAL-VIS-1602` | `IMPLEMENTED` requires `AS-6` — automated behavioural confirmation. | **HALT** | Evidence class ≥ `EV4` |
+| `VAL-VIS-1603` | `AS-7` requires telemetry from a deployed instance, not a local run. | **ERROR** | Telemetry source check |
+| `VAL-VIS-1604` | Unmeasured facts are written `UNKNOWN — REQUIRES REPOSITORY VERIFICATION`, never estimated. | **HALT** | No unsourced numerals |
+| `VAL-VIS-1605` | Existence facts in this part carry a point-in-time qualifier until `OBL-48` closes. | **ERROR** | Qualifier present |
+| `VAL-VIS-1606` | An aggregate completion percentage over mixed adoption states is prohibited. | **HALT** | Extends `VAL-VIS-719` |
+| `VAL-VIS-1607` | A count of specified constructs must never be presented as a count of features. | **HALT** | Noun check on count captions |
+| `VAL-VIS-1608` | `.gitkeep` directory counts must not be summed into implementation metrics. | **ERROR** | Metric composition audit |
+| `VAL-VIS-1609` | A capability with no `AS-4` artefact is reported at its true state even when fully specified. | **HALT** | Per-capability state lookup |
+| `VAL-VIS-1610` | The adoption state of the document itself must be stated in its closure record. | **ERROR** | `TBL-VIS-863` present |
+| `VAL-VIS-1611` | An agent must not advance an artefact's recorded state without the entry evidence for the target state. | **HALT** | Evidence presence check |
+| `VAL-VIS-1612` | State regression must be recorded, never silently applied. | **ERROR** | A regression carries a `DEC-VIS-` or ledger note |
+| `VAL-VIS-1613` | Two artefacts in the same directory may hold different adoption states. | **ERROR** | No directory-level state inference |
+| `VAL-VIS-1614` | The phrase "in progress" is prohibited as a status value; it names no state. | **ERROR** | Vocabulary check |
+| `VAL-VIS-1615` | A roadmap item is `AS-1` even when its specification is complete. | **ERROR** | Intention and specification are separate objects |
+| `VAL-VIS-1616` | Adoption state is a property of an artefact, never of a person or a team. | **ERROR** | Subject check |
+| `VAL-VIS-1617` | The count of `AS-4`+ artefacts must be re-measured, never carried forward from a prior part. | **HALT** | Re-measurement evidence in closure record |
+| `VAL-VIS-1618` | Any claim that Oship "has" a capability requires that capability at `AS-6` or above. | **HALT** | Verb check on capability sentences |
+
+### 06.1.10 AI Interpretation Notes
+
+### TBL-VIS-698: AI Directives for the Adoption Model
+
+| ID | Directive | Class |
+| :--- | :--- | :--- |
+| `AI-VIS-116` | When asked whether Oship supports something, answer with its adoption state, not yes or no. | **MUST** |
+| `AI-VIS-117` | Never infer implementation from specification depth, formatting quality, or identifier density. | **MUST NOT** |
+| `AI-VIS-118` | Treat `.gitkeep` directories as `AS-3` structural placeholders and say so explicitly. | **MUST** |
+| `AI-VIS-119` | When the user's question presupposes a capability exists, correct the presupposition before answering. | **MUST** |
+| `AI-VIS-120` | Do not soften an `AS-2` finding into "partially available" or "in early stages". | **MUST NOT** |
+| `AI-VIS-121` | Re-measure existence facts rather than quoting them from this document when tooling permits. | **SHOULD** |
+| `AI-VIS-122` | State the point-in-time qualifier whenever quoting a figure from PART 06. | **MUST** |
+
+> **`VIS-697`.** `AI-VIS-119` deserves emphasis because it governs the most frequent real
+> interaction. A question of the form "how do I configure the Oship settlement engine" contains an
+> embedded false premise. Answering it helpfully — producing plausible configuration for a
+> non-existent engine — is the single highest-frequency fabrication risk this repository presents to
+> an agent, because the specification corpus is rich enough to make the fabrication *coherent*. The
+> required response names the state first: settlement is `AS-2 SPECIFIED`, `CAP-VIS-062`, no artefact
+> exists, and here is what specification says it must be when built.
+
+### 06.1.11 Anti-Patterns
+
+### TBL-VIS-699: §06.1 Anti-Patterns
+
+| ID | Anti-pattern | Why it is harmful | Present in Oship |
+| :--- | :--- | :--- | :--- |
+| `AAP-01` | Specification counted as progress | Produces a growing progress figure with a static system | **PRESENT** — 5 parts authored, 0 artefacts built |
+| `AAP-02` | Directory scaffolding described as architecture | 73 empty directories read as 73 components | **PRESENT** — mitigated by `VAL-VIS-1599` |
+| `AAP-03` | Badge asserting a measured value never measured | Front-page fabrication with maximum reach | **PRESENT** — `FAL-VIS-171` |
+| `AAP-04` | Status inherited from a sibling document | One `IMPLEMENTED` propagates to a whole directory | **LATENT** |
+| `AAP-05` | Aggregate percentage across mixed states | Hides that the numerator and denominator count different objects | **PREVENTED** — `VAL-VIS-719`, `VAL-VIS-1606` |
+| `AAP-06` | "Nearly done" applied to unstarted work | Confuses specification completeness with build completeness | **LATENT** |
+| `AAP-07` | Point-in-time measurement quoted as current | Facts silently expire | **PRESENT** — unavoidable while `OBL-48` is open |
+
+---
