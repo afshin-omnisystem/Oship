@@ -5,12 +5,12 @@
   "skipped": false,
   "skip_reason": "",
   "errors": 0,
-  "warnings": 424,
+  "warnings": 426,
   "metrics": {
     "files_scanned": 93,
-    "code_fences": 4112,
-    "headings": 10411,
-    "links": 648
+    "code_fences": 4113,
+    "headings": 10439,
+    "links": 650
   },
   "checks": [
     {
@@ -18,7 +18,7 @@
       "rule": "VAL-VIS-1592-FENCE",
       "description": "Every fenced code block opened in a Markdown file is closed.",
       "status": "PASS",
-      "measured": 4112,
+      "measured": 4113,
       "errors": 0,
       "warnings": 0,
       "findings": [],
@@ -29,7 +29,7 @@
       "rule": "DOC-STD-HEADING",
       "description": "No ATX heading may have an empty text body.",
       "status": "PASS",
-      "measured": 10411,
+      "measured": 10439,
       "errors": 0,
       "warnings": 0,
       "findings": [],
@@ -40,7 +40,7 @@
       "rule": "DOC-STD-HEADING",
       "description": "ATX headings are well formed: a space follows the hashes, depth is 1..6.",
       "status": "PASS",
-      "measured": 10411,
+      "measured": 10439,
       "errors": 0,
       "warnings": 0,
       "findings": [],
@@ -51,7 +51,7 @@
       "rule": "DOC-STD-FENCE",
       "description": "Fence info strings are well formed (no stray backticks, no whitespace-only tag).",
       "status": "PASS",
-      "measured": 4112,
+      "measured": 4113,
       "errors": 0,
       "warnings": 0,
       "findings": [],
@@ -62,9 +62,9 @@
       "rule": "MET-05",
       "description": "Link and image syntax is well formed; targets are non-empty; relative file targets resolve on disk.",
       "status": "PASS",
-      "measured": 648,
+      "measured": 650,
       "errors": 0,
-      "warnings": 424,
+      "warnings": 426,
       "findings": [
         {
           "rule": "MET-05",
@@ -1110,6 +1110,14 @@
           "rule": "MET-05",
           "check": "MD-LINK-SYNTAX",
           "severity": "WARNING",
+          "message": "link with empty text pointing at '../docs/reports/DEC-VIS-052-identifier-definition-reference-'",
+          "file": ".ai/DECISION_LOG.md",
+          "line": 44
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
           "message": "link with empty text pointing at '../PROJECT_PHILOSOPHY.md'",
           "file": ".ai/DOCUMENTATION_COMPLETION_STANDARD.md",
           "line": 56
@@ -1265,6 +1273,14 @@
           "message": "link with empty text pointing at '../docs/MASTER_CONTEXT/INDEX.md'",
           "file": ".ai/METRICS.md",
           "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../docs/reports/ADOPT-01-BASELINE-DELTA-2026-08-15.md'",
+          "file": ".ai/PROJECT_STATUS.md",
+          "line": 348
         },
         {
           "rule": "MET-05",
@@ -3456,7 +3472,7 @@
           "severity": "WARNING",
           "message": "link with empty text pointing at '../../docs/reports/ADOPT-01-VALIDATION-BASELINE.md'",
           "file": "tools/docs-validate/README.md",
-          "line": 153
+          "line": 169
         }
       ],
       "extra": {}
@@ -3466,13 +3482,11 @@
       "rule": "TBL-VIS-730-YAML",
       "description": "Every ```yaml fenced block parses as YAML.",
       "status": "PASS",
-      "measured": 0,
+      "measured": 779,
       "errors": 0,
       "warnings": 0,
       "findings": [],
-      "extra": {
-        "skipped": "PyYAML not installed; embedded YAML parsing not performed"
-      }
+      "extra": {}
     },
     {
       "check": "MD-EMBEDDED-JSON",
@@ -3490,7 +3504,7 @@
       "rule": "DOC-STD-TABLE",
       "description": "A GFM table header row is followed by a delimiter row.",
       "status": "PASS",
-      "measured": 3747,
+      "measured": 3758,
       "errors": 0,
       "warnings": 0,
       "findings": [],

@@ -14,6 +14,8 @@
     "unsupported_by_validator": 0,
     "engine": "mermaid.parse",
     "authoritative": true,
+    "engine_required": true,
+    "engine_diagnostics": {},
     "invalid_diagrams": [
       {
         "file": ".ai/AI_AGENT_OPERATING_MANUAL.md",
@@ -127,6 +129,17 @@
       "check": "MMD-COVERAGE",
       "rule": "VAL-VIS-MERMAID-COVER",
       "description": "Diagrams the active engine cannot decide are reported as UNSUPPORTED_BY_VALIDATOR, never as INVALID.",
+      "status": "PASS",
+      "measured": 1998,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "MMD-ENGINE",
+      "rule": "VAL-VIS-MERMAID-PARSE",
+      "description": "An authoritative Mermaid engine (mermaid.parse or mmdc) is active. The structural fallback abstains on most diagram families, so a PASS under it is not evidence that the corpus parses (ADOPT-OBL-01b).",
       "status": "PASS",
       "measured": 1998,
       "errors": 0,

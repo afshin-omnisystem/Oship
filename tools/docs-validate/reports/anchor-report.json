@@ -8,7 +8,7 @@
   "warnings": 12,
   "metrics": {
     "files_scanned": 93,
-    "anchors_defined": 10411,
+    "anchors_defined": 10439,
     "internal_anchor_links": 586,
     "cross_file_anchor_links": 0,
     "broken_anchors": 8,
@@ -120,7 +120,7 @@
       "rule": "DOC-STD-ANCHOR",
       "description": "No duplicate H2 heading slugs, which would make an anchor ambiguous.",
       "status": "PASS",
-      "measured": 3863,
+      "measured": 3868,
       "errors": 0,
       "warnings": 4,
       "findings": [
