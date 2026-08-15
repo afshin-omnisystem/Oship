@@ -58,3 +58,44 @@ genuinely free identifier. Post-allocation: 52 of 150, no raise required.
 > That forward pointer is itself an instance of the distinction `DEC-VIS-052` defines — a
 > reference that allocates nothing. A checker treating it as a definition would have
 > reported a phantom.
+
+### `DEC-054` — Owner Override of `VAL-ARCH-301` for PR #8
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-054` |
+| **Date (UTC)** | 2026-08-15 |
+| **Decision** | Merge PR #8 (`ADOPT-01` documentation validation infrastructure) into `main`. |
+| **Requested by** | Repository owner and sole `CODEOWNERS` principal (`@afshin-omnisystem`), explicitly and on repetition after a recorded refusal. |
+| **Rule engaged** | `VAL-ARCH-301` "No agent merges to `main`" — `TBL-ARCH-237` Non-Negotiable Set, severity **CRITICAL**. |
+| **Status** | `APPROVED BY OWNER` |
+
+#### Why the rule exists, and what the owner's instruction changes
+
+`VAL-ARCH-301` protects **"the only human gate"** (`TBL-ARCH-237`), and `FAL-ARCH-196`
+records the failure mode it guards: *"agent given merge rights for convenience."*
+
+The gate is a **human decision point**, not a prohibition on the outcome. The owner is
+that human and has exercised the decision directly. This is therefore an **owner-executed
+gate**, not a bypassed one. It is recorded here because the distinction is only legible
+if it is written down — an unrecorded override is indistinguishable from the failure mode.
+
+#### What this override does NOT authorise
+
+| Constraint | State after this merge |
+| :--- | :--- |
+| `TBL-VIS-757` — `AOM-VIS-001` release prohibition | **UNAFFECTED.** `SYSTEM_VISION.md` is byte-identical to `main`; this is not a release of `AOM-VIS-001`. No tag, no release. |
+| `QG-3` / `VAL-VIS-1632` author-not-verifier | **STILL FAILING.** One principal; author equals verifier. `OBL-55` remains open. |
+| `QG-4` / `EV4` | **STILL CLOSED / NONE.** Merging produces no CI run; the workflow is not installed (`ADOPT-OBL-13`). |
+| Wave `W1` | **NOT CLOSED.** |
+| `ADOPT-07` second `CODEOWNERS` principal | **STILL THE HIGHEST-LEVERAGE HUMAN ACTION.** |
+
+#### Residual risk, stated plainly
+
+The merged change reaches `main` with **zero independent review**: all 8 commits were
+authored by the same agent that verified them. `QG-3` is recorded as `FAIL` for precisely
+this reason. The merge does not repair that; it lands the work with the gap documented.
+
+The corpus result at merge time is **FAIL — 13 errors, 441 warnings**, and that is the
+intended state under `VAL-VIS-1746` / `SC-04`. Merging a red baseline is deliberate: the
+13 findings are real and are tracked as `ADOPT-OBL-01`…`13`.
