@@ -1,0 +1,2796 @@
+{
+  "validator": "identifiers",
+  "title": "Identifier Namespace Validator",
+  "status": "FAIL",
+  "skipped": false,
+  "skip_reason": "",
+  "errors": 8,
+  "warnings": 3,
+  "metrics": {
+    "files_scanned": 93,
+    "namespaces": [
+      "ADR",
+      "DEC",
+      "DGM",
+      "FAL",
+      "IMG",
+      "OBL",
+      "TBL",
+      "VAL"
+    ],
+    "occurrences_per_namespace": {
+      "ADR": 4,
+      "DEC": 21,
+      "DGM": 1922,
+      "FAL": 758,
+      "IMG": 33,
+      "OBL": 55,
+      "TBL": 2368,
+      "VAL": 2427
+    },
+    "definitions_per_namespace": {
+      "ADR": 4,
+      "DEC": 21,
+      "DGM": 1922,
+      "FAL": 627,
+      "IMG": 33,
+      "OBL": 55,
+      "TBL": 2368,
+      "VAL": 2399
+    },
+    "total_occurrences": 7588,
+    "classification": {
+      "DEFINITION": 7369,
+      "REPUBLICATION": 156,
+      "SEMANTIC_DUPLICATE": 3,
+      "DOUBLE_ALLOCATION": 0,
+      "CROSS_FILE_DUPLICATE": 0
+    },
+    "republication_policy": "dec-vis-052",
+    "republication_count": 156,
+    "allocation_header_signatures": {
+      "VAL": [
+        "| ID | Rule | Applies to | Failure severity | Currently checkable? |",
+        "| ID | Rule | Grade | Mechanisation |",
+        "| ID | Rule | Rationale |",
+        "| ID | Rule | Severity |",
+        "| ID | Rule | Severity | Automatable |",
+        "| Rule | Statement | Severity |"
+      ],
+      "FAL": [
+        "| ID | Anti-pattern | Symptom | Cause | Impact |",
+        "| ID | Anti-pattern | Symptom | Impact | Detection | Remediation |",
+        "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+        "| ID | Anti-pattern | Why it is attractive | Detection | In Oship |",
+        "| ID | Failure | Class | Consequence | Control |",
+        "| ID | Failure | Mechanism | Consequence | Guard |",
+        "| ID | Failure | Mechanism | Guard |"
+      ]
+    },
+    "permanent_gaps_honoured": {
+      "TBL": [
+        "TBL-VIS-244",
+        "TBL-VIS-423"
+      ],
+      "DEC": [
+        "DEC-VIS-008",
+        "DEC-VIS-009"
+      ],
+      "CAP": [
+        "CAP-VIS-057",
+        "CAP-VIS-058",
+        "CAP-VIS-059"
+      ]
+    },
+    "decision_record": "DEC-VIS-052"
+  },
+  "checks": [
+    {
+      "check": "ID-FORMAT",
+      "rule": "VAL-VIS-ID-FORMAT",
+      "description": "Every namespaced identifier occurrence matches PREFIX-SCOPE-NNN with zero-padded numbering.",
+      "status": "PASS",
+      "measured": 13169,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "ID-UNIQUE",
+      "rule": "TBL-VIS-689",
+      "description": "Zero duplicate identifier DEFINITIONS in every namespace (whole-corpus sweep; mentions excluded per VAL-VIS-949; definitions distinguished from references per DEC-VIS-052).",
+      "status": "FAIL",
+      "measured": 7588,
+      "errors": 3,
+      "warnings": 0,
+      "findings": [
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-022' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9458 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:2283 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9458
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-030' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9459 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:3098 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9459
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-035' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9460 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:3103 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9460
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-123' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9461 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:5351 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9461
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-153' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9462 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:5946 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9462
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-238' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9463 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:7688 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9463
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-278' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9464 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8340 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9464
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-288' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9465 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8576 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9465
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-301' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9466 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8738 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9466
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-311' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9467 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8748 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9467
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-328' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9468 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9128 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9468
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-ARCH-337' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9469 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9302 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+          "line": 9469
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-381' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12237 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12017 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12237
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "ERROR",
+          "message": "SEMANTIC DUPLICATE of 'VAL-VIS-381' at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13679: same identifier, divergent normative content against the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12017 (DEC-VIS-052 \u00a75.3b)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 13679
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-425' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12238 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12100 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12238
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-425' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13678 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12100 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 13678
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-432' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12245 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12156 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12245
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-434' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12246 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12158 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12246
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-437' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12239 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12166 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12239
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "ERROR",
+          "message": "SEMANTIC DUPLICATE of 'VAL-VIS-437' at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13674: same identifier, divergent normative content against the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12166 (DEC-VIS-052 \u00a75.3b)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 13674
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-443' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12240 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12172 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12240
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-443' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13675 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12172 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 13675
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-449' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12241 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12195 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12241
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-451' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12242 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12197 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12242
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-455' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12243 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12201 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12243
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-456' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12244 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12207 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 12244
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "ERROR",
+          "message": "SEMANTIC DUPLICATE of 'VAL-VIS-456' at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13676: same identifier, divergent normative content against the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12207 (DEC-VIS-052 \u00a75.3b)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 13676
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'VAL-VIS-470' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13677 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12221 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 13677
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-001' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3749 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3729 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3749
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-002' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3750 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3730 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3750
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-003' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3751 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3731 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3751
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-004' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3752 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3732 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3752
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-005' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3753 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3733 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3753
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-006' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3754 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3734 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3754
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-007' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3755 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3735 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3755
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-008' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3756 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3736 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3756
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-009' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3757 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3737 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3757
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-010' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3758 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3738 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3758
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-011' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3759 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3739 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3759
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-012' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3760 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3740 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3760
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-013' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3761 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3741 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3761
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-014' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3762 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3742 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3762
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-015' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3763 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3743 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3763
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-016' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3791 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3771 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3791
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-017' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3792 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3772 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3792
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-018' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3793 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3773 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3793
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-019' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3794 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3774 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3794
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-020' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3795 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3775 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3795
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-021' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3796 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3776 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3796
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-022' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3797 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3777 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3797
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-023' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3798 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3778 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3798
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-024' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3799 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3779 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3799
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-025' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3800 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3780 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3800
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-026' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3801 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3781 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3801
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-027' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3802 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3782 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3802
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-028' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3803 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3783 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3803
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-029' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3804 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3784 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3804
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-030' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3805 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3785 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3805
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-031' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3833 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3813 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3833
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-032' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3834 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3814 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3834
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-033' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3835 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3815 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3835
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-034' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3836 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3816 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3836
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-035' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3837 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3817 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3837
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-036' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3838 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3818 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3838
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-037' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3839 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3819 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3839
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-038' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3840 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3820 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3840
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-039' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3841 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3821 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3841
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-040' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3842 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3822 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3842
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-041' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3843 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3823 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3843
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-042' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3844 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3824 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3844
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-043' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3845 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3825 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3845
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-044' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3846 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3826 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3846
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-045' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3847 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3827 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3847
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-046' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3875 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3855 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3875
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-047' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3876 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3856 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3876
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-048' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3877 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3857 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3877
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-049' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3878 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3858 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3878
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-050' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3879 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3859 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3879
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-051' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3880 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3860 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3880
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-052' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3881 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3861 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3881
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-053' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3882 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3862 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3882
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-054' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3883 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3863 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3883
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-055' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3884 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3864 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3884
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-056' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3885 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3865 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3885
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-057' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3886 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3866 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3886
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-058' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3887 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3867 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3887
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-059' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3888 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3868 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3888
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-060' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3889 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3869 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3889
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-061' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3940 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3920 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3940
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-062' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3941 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3921 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3941
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-063' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3942 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3922 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3942
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-064' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3943 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3923 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3943
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-065' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3944 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3924 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3944
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-066' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3945 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3925 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3945
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-067' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3946 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3926 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3946
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-068' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3947 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3927 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3947
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-069' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3948 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3928 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3948
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-070' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3949 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3929 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3949
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-071' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3950 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3930 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3950
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-072' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3951 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3931 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3951
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-073' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3952 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3932 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3952
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-074' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3953 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3933 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3953
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-075' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3954 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3934 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3954
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-076' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3982 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3962 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3982
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-077' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3983 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3963 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3983
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-078' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3984 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3964 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3984
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-079' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3985 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3965 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3985
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-080' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3986 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3966 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3986
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-081' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3987 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3967 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3987
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-082' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3988 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3968 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3988
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-083' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3989 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3969 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3989
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-084' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3990 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3970 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3990
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-085' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3991 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3971 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3991
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-086' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3992 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3972 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3992
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-087' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3993 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3973 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3993
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-088' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3994 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3974 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3994
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-089' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3995 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3975 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3995
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-090' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3996 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3976 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 3996
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-091' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4024 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4004 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4024
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-092' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4025 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4005 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4025
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-093' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4026 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4006 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4026
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-094' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4027 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4007 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4027
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-095' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4028 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4008 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4028
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-096' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4029 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4009 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4029
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-097' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4030 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4010 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4030
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-098' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4031 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4011 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4031
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-099' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4032 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4012 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4032
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-100' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4033 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4013 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4033
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-101' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4034 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4014 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4034
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-102' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4035 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4015 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4035
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-103' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4036 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4016 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4036
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-104' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4037 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4017 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4037
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-105' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4038 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4018 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4038
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-106' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4066 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4046 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4066
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-107' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4067 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4047 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4067
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-108' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4068 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4048 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4068
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-109' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4069 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4049 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4069
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-110' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4070 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4050 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4070
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-111' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4071 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4051 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4071
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-112' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4072 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4052 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4072
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-113' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4073 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4053 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4073
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-114' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4074 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4054 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4074
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-115' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4075 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4055 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4075
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-116' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4076 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4056 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4076
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-117' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4077 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4057 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4077
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-118' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4078 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4058 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4078
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-119' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4079 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4059 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4079
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-120' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4080 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4060 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 4080
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-121' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7779 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7763 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7779
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-122' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7780 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7764 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7780
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-123' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7781 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7765 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7781
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-124' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7782 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7766 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7782
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-125' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7783 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7767 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7783
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-126' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7784 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7768 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7784
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-127' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7785 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7769 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7785
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-128' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7786 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7770 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7786
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-129' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7787 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7771 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7787
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-130' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7788 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7772 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7788
+        },
+        {
+          "rule": "TBL-VIS-689",
+          "check": "ID-UNIQUE",
+          "severity": "INFO",
+          "message": "'FAL-VIS-131' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7789 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7773 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+          "line": 7789
+        }
+      ],
+      "extra": {
+        "classification": {
+          "DEFINITION": 7369,
+          "REPUBLICATION": 156,
+          "SEMANTIC_DUPLICATE": 3,
+          "DOUBLE_ALLOCATION": 0,
+          "CROSS_FILE_DUPLICATE": 0
+        },
+        "republication_policy": "dec-vis-052",
+        "republications": [
+          {
+            "identifier": "VAL-ARCH-022",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:2283",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9458",
+            "definition_header": "| ID | Rule | Principle | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-030",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:3098",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9459",
+            "definition_header": "| ID | Rule | Principle | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-035",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:3103",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9460",
+            "definition_header": "| ID | Rule | Principle | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-123",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:5351",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9461",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-153",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:5946",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9462",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-238",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:7688",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9463",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-278",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8340",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9464",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-288",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8576",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9465",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-301",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8738",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9466",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-311",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8748",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9467",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-328",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9128",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9468",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-ARCH-337",
+            "definition": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9302",
+            "republication": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9469",
+            "definition_header": "| ID | Rule | Detection | Severity |",
+            "republication_header": "| ID | Rule summary | Why no override exists |"
+          },
+          {
+            "identifier": "VAL-VIS-381",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12017",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12237",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-425",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12100",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12238",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-425",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12100",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13678",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Failing rule | Grade | What it requires | Why it fails today | Can PART 04 fix it? |"
+          },
+          {
+            "identifier": "VAL-VIS-432",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12156",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12245",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-434",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12158",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12246",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-437",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12166",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12239",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-443",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12172",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12240",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-443",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12172",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13675",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Failing rule | Grade | What it requires | Why it fails today | Can PART 04 fix it? |"
+          },
+          {
+            "identifier": "VAL-VIS-449",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12195",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12241",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-451",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12197",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12242",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-455",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12201",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12243",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-456",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12207",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12244",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Rule | What fails | Grade | Recorded as |"
+          },
+          {
+            "identifier": "VAL-VIS-470",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12221",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13677",
+            "definition_header": "| ID | Rule | Grade | Mechanisation |",
+            "republication_header": "| Failing rule | Grade | What it requires | Why it fails today | Can PART 04 fix it? |"
+          },
+          {
+            "identifier": "FAL-VIS-001",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3729",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3749",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-002",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3730",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3750",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-003",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3731",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3751",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-004",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3732",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3752",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-005",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3733",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3753",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-006",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3734",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3754",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-007",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3735",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3755",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-008",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3736",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3756",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-009",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3737",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3757",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-010",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3738",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3758",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-011",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3739",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3759",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-012",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3740",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3760",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-013",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3741",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3761",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-014",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3742",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3762",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-015",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3743",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3763",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-016",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3771",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3791",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-017",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3772",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3792",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-018",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3773",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3793",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-019",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3774",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3794",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-020",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3775",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3795",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-021",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3776",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3796",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-022",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3777",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3797",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-023",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3778",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3798",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-024",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3779",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3799",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-025",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3780",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3800",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-026",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3781",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3801",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-027",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3782",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3802",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-028",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3783",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3803",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-029",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3784",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3804",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-030",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3785",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3805",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-031",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3813",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3833",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-032",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3814",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3834",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-033",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3815",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3835",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-034",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3816",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3836",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-035",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3817",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3837",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-036",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3818",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3838",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-037",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3819",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3839",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-038",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3820",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3840",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-039",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3821",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3841",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-040",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3822",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3842",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-041",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3823",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3843",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-042",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3824",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3844",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-043",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3825",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3845",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-044",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3826",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3846",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-045",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3827",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3847",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-046",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3855",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3875",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-047",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3856",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3876",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-048",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3857",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3877",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-049",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3858",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3878",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-050",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3859",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3879",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-051",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3860",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3880",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-052",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3861",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3881",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-053",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3862",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3882",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-054",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3863",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3883",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-055",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3864",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3884",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-056",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3865",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3885",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-057",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3866",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3886",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-058",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3867",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3887",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-059",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3868",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3888",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-060",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3869",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3889",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-061",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3920",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3940",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-062",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3921",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3941",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-063",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3922",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3942",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-064",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3923",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3943",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-065",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3924",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3944",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-066",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3925",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3945",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-067",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3926",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3946",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-068",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3927",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3947",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-069",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3928",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3948",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-070",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3929",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3949",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-071",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3930",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3950",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-072",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3931",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3951",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-073",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3932",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3952",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-074",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3933",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3953",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-075",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3934",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3954",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-076",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3962",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3982",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-077",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3963",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3983",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-078",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3964",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3984",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-079",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3965",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3985",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-080",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3966",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3986",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-081",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3967",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3987",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-082",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3968",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3988",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-083",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3969",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3989",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-084",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3970",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3990",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-085",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3971",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3991",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-086",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3972",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3992",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-087",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3973",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3993",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-088",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3974",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3994",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-089",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3975",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3995",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-090",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3976",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3996",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-091",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4004",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4024",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-092",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4005",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4025",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-093",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4006",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4026",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-094",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4007",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4027",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-095",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4008",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4028",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-096",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4009",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4029",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-097",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4010",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4030",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-098",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4011",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4031",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-099",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4012",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4032",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-100",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4013",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4033",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-101",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4014",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4034",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-102",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4015",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4035",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-103",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4016",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4036",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-104",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4017",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4037",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-105",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4018",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4038",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-106",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4046",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4066",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-107",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4047",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4067",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-108",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4048",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4068",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-109",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4049",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4069",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-110",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4050",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4070",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-111",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4051",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4071",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-112",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4052",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4072",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-113",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4053",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4073",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-114",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4054",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4074",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-115",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4055",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4075",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-116",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4056",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4076",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-117",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4057",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4077",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-118",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4058",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4078",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-119",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4059",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4079",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-120",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4060",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4080",
+            "definition_header": "| ID | Anti-pattern | Symptom | Root cause | Impact | Sev |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-121",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7763",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7779",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-122",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7764",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7780",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-123",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7765",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7781",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-124",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7766",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7782",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-125",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7767",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7783",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-126",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7768",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7784",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-127",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7769",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7785",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-128",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7770",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7786",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-129",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7771",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7787",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-130",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7772",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7788",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          },
+          {
+            "identifier": "FAL-VIS-131",
+            "definition": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7773",
+            "republication": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7789",
+            "definition_header": "| ID | Anti-pattern | Symptom | Cause | Impact |",
+            "republication_header": "| ID | Detection | Prevention | Remediation | AI warning |"
+          }
+        ],
+        "republication_count": 156
+      }
+    },
+    {
+      "check": "ID-CONTIGUITY",
+      "rule": "VAL-VIS-ID-CONTIG",
+      "description": "Strict namespaces are contiguous from their minimum to their maximum, excluding the permanent gaps of TBL-VIS-689 (FA-10).",
+      "status": "FAIL",
+      "measured": 7411,
+      "errors": 5,
+      "warnings": 3,
+      "findings": [
+        {
+          "rule": "VAL-VIS-ID-CONTIG",
+          "check": "ID-CONTIGUITY",
+          "severity": "ERROR",
+          "message": "TBL-ARCH namespace has 3 gap(s) between 1 and 263: TBL-ARCH-258, TBL-ARCH-259, TBL-ARCH-261",
+          "file": null,
+          "line": null
+        },
+        {
+          "rule": "VAL-VIS-ID-CONTIG",
+          "check": "ID-CONTIGUITY",
+          "severity": "ERROR",
+          "message": "TBL-MCR namespace has 1 gap(s) between 1 and 82: TBL-MCR-063",
+          "file": null,
+          "line": null
+        },
+        {
+          "rule": "VAL-VIS-ID-CONTIG",
+          "check": "ID-CONTIGUITY",
+          "severity": "ERROR",
+          "message": "TBL-MCS namespace has 1 gap(s) between 1 and 191: TBL-MCS-149",
+          "file": null,
+          "line": null
+        },
+        {
+          "rule": "VAL-VIS-ID-CONTIG",
+          "check": "ID-CONTIGUITY",
+          "severity": "ERROR",
+          "message": "DGM-MCS namespace has 1 gap(s) between 1 and 138: DGM-MCS-013",
+          "file": null,
+          "line": null
+        },
+        {
+          "rule": "VAL-VIS-ID-CONTIG",
+          "check": "ID-CONTIGUITY",
+          "severity": "ERROR",
+          "message": "DGM-MEM namespace has 175 gap(s) between 1 and 959: DGM-MEM-305, DGM-MEM-306, DGM-MEM-307, DGM-MEM-308, DGM-MEM-309, DGM-MEM-310, DGM-MEM-311, DGM-MEM-312, DGM-MEM-313, DGM-MEM-314, DGM-MEM-315, DGM-MEM-316 \u2026",
+          "file": null,
+          "line": null
+        },
+        {
+          "rule": "VAL-VIS-ID-CONTIG",
+          "check": "ID-CONTIGUITY",
+          "severity": "WARNING",
+          "message": "IMG-VIS namespace has 20 gap(s) between 1 and 53: IMG-VIS-003, IMG-VIS-005, IMG-VIS-008, IMG-VIS-009, IMG-VIS-010, IMG-VIS-011, IMG-VIS-012, IMG-VIS-014, IMG-VIS-016, IMG-VIS-018, IMG-VIS-019, IMG-VIS-021 \u2026",
+          "file": null,
+          "line": null
+        },
+        {
+          "rule": "VAL-VIS-ID-CONTIG",
+          "check": "ID-CONTIGUITY",
+          "severity": "WARNING",
+          "message": "DEC-VIS namespace has 4 gap(s) between 31 and 52: DEC-VIS-032, DEC-VIS-033, DEC-VIS-034, DEC-VIS-051",
+          "file": null,
+          "line": null
+        },
+        {
+          "rule": "VAL-VIS-ID-CONTIG",
+          "check": "ID-CONTIGUITY",
+          "severity": "WARNING",
+          "message": "OBL-ROOT namespace has 17 gap(s) between 1 and 59: OBL-019, OBL-020, OBL-021, OBL-022, OBL-023, OBL-024, OBL-025, OBL-026, OBL-027, OBL-028, OBL-029, OBL-030 \u2026",
+          "file": null,
+          "line": null
+        }
+      ],
+      "extra": {
+        "ranges": {
+          "TBL-AIM": {
+            "min": 1,
+            "max": 24,
+            "count": 24,
+            "gaps": 0,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-ARCH": {
+            "min": 1,
+            "max": 263,
+            "count": 260,
+            "gaps": 3,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-DOC": {
+            "min": 1,
+            "max": 16,
+            "count": 16,
+            "gaps": 0,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-EXEC": {
+            "min": 1,
+            "max": 118,
+            "count": 118,
+            "gaps": 0,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-MCR": {
+            "min": 1,
+            "max": 82,
+            "count": 81,
+            "gaps": 1,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-MCS": {
+            "min": 1,
+            "max": 191,
+            "count": 190,
+            "gaps": 1,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-MCX": {
+            "min": 1,
+            "max": 132,
+            "count": 132,
+            "gaps": 0,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-MEM": {
+            "min": 1,
+            "max": 619,
+            "count": 619,
+            "gaps": 0,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-REL": {
+            "min": 1,
+            "max": 131,
+            "count": 131,
+            "gaps": 0,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "TBL-VIS": {
+            "min": 1,
+            "max": 799,
+            "count": 797,
+            "gaps": 0,
+            "permanent_gaps_honoured": [
+              "TBL-VIS-244",
+              "TBL-VIS-423"
+            ]
+          },
+          "DGM-AIM": {
+            "min": 1,
+            "max": 30,
+            "count": 30,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-ARCH": {
+            "min": 1,
+            "max": 152,
+            "count": 152,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-DOC": {
+            "min": 1,
+            "max": 20,
+            "count": 20,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-EXEC": {
+            "min": 1,
+            "max": 150,
+            "count": 150,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-MCR": {
+            "min": 1,
+            "max": 148,
+            "count": 148,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-MCS": {
+            "min": 1,
+            "max": 138,
+            "count": 137,
+            "gaps": 1,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-MCX": {
+            "min": 1,
+            "max": 206,
+            "count": 206,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-MEM": {
+            "min": 1,
+            "max": 959,
+            "count": 784,
+            "gaps": 175,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-REL": {
+            "min": 1,
+            "max": 126,
+            "count": 126,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "DGM-VIS": {
+            "min": 1,
+            "max": 169,
+            "count": 169,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "VAL-ARCH": {
+            "min": 1,
+            "max": 395,
+            "count": 395,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "VAL-VIS": {
+            "min": 1,
+            "max": 2004,
+            "count": 2004,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "FAL-ARCH": {
+            "min": 1,
+            "max": 267,
+            "count": 267,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "FAL-VIS": {
+            "min": 1,
+            "max": 360,
+            "count": 360,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "IMG-VIS": {
+            "min": 1,
+            "max": 53,
+            "count": 33,
+            "gaps": 20,
+            "permanent_gaps_honoured": []
+          },
+          "DEC-VIS": {
+            "min": 31,
+            "max": 52,
+            "count": 18,
+            "gaps": 4,
+            "permanent_gaps_honoured": [
+              "DEC-VIS-008",
+              "DEC-VIS-009"
+            ]
+          },
+          "ADR": {
+            "min": 0,
+            "max": 1,
+            "count": 2,
+            "gaps": 0,
+            "permanent_gaps_honoured": []
+          },
+          "OBL": {
+            "min": 1,
+            "max": 59,
+            "count": 42,
+            "gaps": 17,
+            "permanent_gaps_honoured": []
+          }
+        }
+      }
+    }
+  ]
+}

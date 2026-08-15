@@ -1,0 +1,1409 @@
+{
+  "count": 156,
+  "findings": [
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-022' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9458 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:2283 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9458,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-030' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9459 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:3098 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9459,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-035' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9460 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:3103 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9460,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-123' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9461 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:5351 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9461,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-153' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9462 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:5946 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9462,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-238' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9463 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:7688 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9463,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-278' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9464 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8340 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9464,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-288' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9465 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8576 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9465,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-301' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9466 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8738 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9466,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-311' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9467 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:8748 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9467,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-328' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9468 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9128 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9468,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-ARCH-337' republished at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9469 \u2014 reference to the definition at docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md:9302 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md",
+      "line": 9469,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-381' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12237 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12017 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12237,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-425' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12238 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12100 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12238,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-425' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13678 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12100 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 13678,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-432' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12245 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12156 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12245,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-434' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12246 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12158 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12246,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-437' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12239 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12166 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12239,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-443' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12240 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12172 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12240,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-443' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13675 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12172 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 13675,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-449' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12241 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12195 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12241,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-451' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12242 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12197 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12242,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-455' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12243 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12201 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12243,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-456' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12244 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12207 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 12244,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'VAL-VIS-470' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:13677 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:12221 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 13677,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-001' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3749 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3729 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3749,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-002' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3750 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3730 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3750,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-003' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3751 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3731 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3751,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-004' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3752 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3732 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3752,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-005' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3753 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3733 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3753,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-006' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3754 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3734 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3754,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-007' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3755 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3735 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3755,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-008' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3756 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3736 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3756,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-009' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3757 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3737 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3757,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-010' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3758 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3738 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3758,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-011' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3759 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3739 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3759,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-012' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3760 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3740 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3760,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-013' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3761 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3741 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3761,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-014' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3762 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3742 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3762,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-015' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3763 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3743 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3763,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-016' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3791 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3771 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3791,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-017' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3792 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3772 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3792,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-018' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3793 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3773 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3793,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-019' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3794 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3774 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3794,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-020' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3795 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3775 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3795,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-021' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3796 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3776 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3796,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-022' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3797 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3777 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3797,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-023' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3798 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3778 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3798,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-024' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3799 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3779 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3799,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-025' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3800 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3780 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3800,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-026' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3801 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3781 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3801,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-027' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3802 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3782 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3802,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-028' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3803 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3783 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3803,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-029' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3804 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3784 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3804,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-030' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3805 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3785 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3805,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-031' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3833 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3813 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3833,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-032' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3834 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3814 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3834,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-033' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3835 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3815 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3835,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-034' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3836 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3816 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3836,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-035' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3837 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3817 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3837,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-036' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3838 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3818 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3838,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-037' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3839 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3819 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3839,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-038' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3840 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3820 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3840,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-039' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3841 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3821 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3841,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-040' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3842 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3822 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3842,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-041' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3843 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3823 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3843,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-042' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3844 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3824 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3844,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-043' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3845 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3825 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3845,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-044' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3846 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3826 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3846,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-045' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3847 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3827 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3847,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-046' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3875 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3855 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3875,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-047' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3876 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3856 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3876,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-048' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3877 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3857 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3877,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-049' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3878 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3858 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3878,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-050' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3879 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3859 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3879,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-051' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3880 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3860 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3880,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-052' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3881 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3861 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3881,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-053' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3882 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3862 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3882,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-054' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3883 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3863 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3883,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-055' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3884 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3864 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3884,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-056' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3885 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3865 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3885,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-057' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3886 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3866 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3886,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-058' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3887 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3867 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3887,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-059' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3888 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3868 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3888,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-060' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3889 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3869 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3889,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-061' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3940 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3920 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3940,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-062' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3941 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3921 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3941,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-063' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3942 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3922 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3942,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-064' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3943 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3923 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3943,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-065' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3944 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3924 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3944,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-066' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3945 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3925 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3945,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-067' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3946 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3926 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3946,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-068' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3947 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3927 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3947,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-069' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3948 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3928 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3948,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-070' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3949 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3929 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3949,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-071' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3950 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3930 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3950,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-072' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3951 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3931 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3951,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-073' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3952 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3932 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3952,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-074' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3953 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3933 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3953,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-075' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3954 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3934 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3954,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-076' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3982 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3962 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3982,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-077' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3983 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3963 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3983,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-078' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3984 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3964 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3984,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-079' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3985 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3965 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3985,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-080' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3986 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3966 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3986,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-081' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3987 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3967 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3987,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-082' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3988 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3968 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3988,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-083' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3989 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3969 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3989,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-084' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3990 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3970 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3990,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-085' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3991 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3971 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3991,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-086' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3992 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3972 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3992,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-087' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3993 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3973 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3993,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-088' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3994 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3974 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3994,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-089' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3995 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3975 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3995,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-090' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3996 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:3976 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 3996,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-091' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4024 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4004 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4024,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-092' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4025 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4005 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4025,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-093' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4026 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4006 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4026,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-094' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4027 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4007 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4027,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-095' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4028 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4008 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4028,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-096' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4029 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4009 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4029,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-097' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4030 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4010 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4030,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-098' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4031 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4011 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4031,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-099' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4032 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4012 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4032,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-100' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4033 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4013 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4033,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-101' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4034 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4014 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4034,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-102' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4035 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4015 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4035,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-103' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4036 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4016 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4036,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-104' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4037 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4017 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4037,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-105' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4038 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4018 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4038,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-106' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4066 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4046 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4066,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-107' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4067 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4047 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4067,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-108' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4068 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4048 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4068,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-109' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4069 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4049 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4069,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-110' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4070 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4050 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4070,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-111' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4071 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4051 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4071,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-112' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4072 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4052 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4072,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-113' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4073 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4053 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4073,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-114' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4074 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4054 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4074,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-115' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4075 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4055 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4075,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-116' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4076 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4056 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4076,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-117' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4077 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4057 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4077,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-118' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4078 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4058 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4078,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-119' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4079 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4059 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4079,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-120' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4080 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:4060 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 4080,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-121' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7779 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7763 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7779,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-122' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7780 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7764 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7780,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-123' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7781 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7765 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7781,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-124' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7782 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7766 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7782,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-125' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7783 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7767 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7783,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-126' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7784 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7768 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7784,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-127' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7785 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7769 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7785,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-128' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7786 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7770 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7786,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-129' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7787 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7771 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7787,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-130' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7788 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7772 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7788,
+      "validator": "identifiers"
+    },
+    {
+      "rule": "TBL-VIS-689",
+      "check": "ID-UNIQUE",
+      "severity": "INFO",
+      "message": "'FAL-VIS-131' republished at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7789 \u2014 reference to the definition at docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md:7773 (DEC-VIS-052 REPUBLICATION, not a redefinition)",
+      "file": "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md",
+      "line": 7789,
+      "validator": "identifiers"
+    }
+  ]
+}

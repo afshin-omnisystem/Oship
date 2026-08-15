@@ -1,0 +1,3500 @@
+{
+  "validator": "markdown",
+  "title": "Markdown Structural Validator",
+  "status": "PASS",
+  "skipped": false,
+  "skip_reason": "",
+  "errors": 0,
+  "warnings": 424,
+  "metrics": {
+    "files_scanned": 93,
+    "code_fences": 4112,
+    "headings": 10411,
+    "links": 648
+  },
+  "checks": [
+    {
+      "check": "MD-FENCE-BALANCE",
+      "rule": "VAL-VIS-1592-FENCE",
+      "description": "Every fenced code block opened in a Markdown file is closed.",
+      "status": "PASS",
+      "measured": 4112,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "MD-EMPTY-HEADING",
+      "rule": "DOC-STD-HEADING",
+      "description": "No ATX heading may have an empty text body.",
+      "status": "PASS",
+      "measured": 10411,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "MD-HEADING-FORM",
+      "rule": "DOC-STD-HEADING",
+      "description": "ATX headings are well formed: a space follows the hashes, depth is 1..6.",
+      "status": "PASS",
+      "measured": 10411,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "MD-CODE-FENCE",
+      "rule": "DOC-STD-FENCE",
+      "description": "Fence info strings are well formed (no stray backticks, no whitespace-only tag).",
+      "status": "PASS",
+      "measured": 4112,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "MD-LINK-SYNTAX",
+      "rule": "MET-05",
+      "description": "Link and image syntax is well formed; targets are non-empty; relative file targets resolve on disk.",
+      "status": "PASS",
+      "measured": 648,
+      "errors": 0,
+      "warnings": 424,
+      "findings": [
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/INDEX.md'",
+          "file": "README.md",
+          "line": 22
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 118
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/INDEX.md'",
+          "file": "README.md",
+          "line": 133
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/INDEX.md'",
+          "file": "README.md",
+          "line": 134
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/INDEX.md'",
+          "file": "README.md",
+          "line": 135
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './architecture/INDEX.md'",
+          "file": "README.md",
+          "line": 136
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './design/INDEX.md'",
+          "file": "README.md",
+          "line": 137
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/ADR/INDEX.md'",
+          "file": "README.md",
+          "line": 138
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/CODEOWNERS'",
+          "file": "README.md",
+          "line": 142
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/CONTRIBUTING.md'",
+          "file": "README.md",
+          "line": 159
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/development/INDEX.md'",
+          "file": "README.md",
+          "line": 159
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/labels.yml'",
+          "file": "README.md",
+          "line": 196
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/milestones.yml'",
+          "file": "README.md",
+          "line": 209
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/projects.yml'",
+          "file": "README.md",
+          "line": 210
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/roadmap/MILESTONES.md'",
+          "file": "README.md",
+          "line": 241
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/PROJECT_STATUS.md'",
+          "file": "README.md",
+          "line": 241
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/roadmap/MILESTONES.md'",
+          "file": "README.md",
+          "line": 245
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/milestones.yml'",
+          "file": "README.md",
+          "line": 245
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/INDEX.md'",
+          "file": "README.md",
+          "line": 292
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/CURRENT_CONTEXT.md'",
+          "file": "README.md",
+          "line": 293
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/PROJECT_STATUS.md'",
+          "file": "README.md",
+          "line": 294
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/CONTEXT_ROUTER.md'",
+          "file": "README.md",
+          "line": 295
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/INDEX.md'",
+          "file": "README.md",
+          "line": 296
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md'",
+          "file": "README.md",
+          "line": 297
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/05_AI/INDEX.md'",
+          "file": "README.md",
+          "line": 298
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/CONTEXT_ROUTER.md'",
+          "file": "README.md",
+          "line": 370
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/INDEX.md'",
+          "file": "README.md",
+          "line": 559
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md'",
+          "file": "README.md",
+          "line": 602
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md'",
+          "file": "README.md",
+          "line": 663
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md'",
+          "file": "README.md",
+          "line": 664
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/03_USERS/INDEX.md'",
+          "file": "README.md",
+          "line": 665
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md'",
+          "file": "README.md",
+          "line": 666
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/05_AI/INDEX.md'",
+          "file": "README.md",
+          "line": 667
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/06_DATABASE/INDEX.md'",
+          "file": "README.md",
+          "line": 668
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md'",
+          "file": "README.md",
+          "line": 669
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/08_BACKEND/INDEX.md'",
+          "file": "README.md",
+          "line": 670
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md'",
+          "file": "README.md",
+          "line": 671
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/10_SECURITY/INDEX.md'",
+          "file": "README.md",
+          "line": 672
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md'",
+          "file": "README.md",
+          "line": 673
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md'",
+          "file": "README.md",
+          "line": 674
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md'",
+          "file": "README.md",
+          "line": 675
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md'",
+          "file": "README.md",
+          "line": 676
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/15_API/INDEX.md'",
+          "file": "README.md",
+          "line": 677
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md'",
+          "file": "README.md",
+          "line": 678
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md'",
+          "file": "README.md",
+          "line": 679
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/18_TESTING/INDEX.md'",
+          "file": "README.md",
+          "line": 680
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md'",
+          "file": "README.md",
+          "line": 681
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md'",
+          "file": "README.md",
+          "line": 682
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md'",
+          "file": "README.md",
+          "line": 683
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md'",
+          "file": "README.md",
+          "line": 684
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md'",
+          "file": "README.md",
+          "line": 685
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md'",
+          "file": "README.md",
+          "line": 686
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/INDEX.md'",
+          "file": "README.md",
+          "line": 772
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md'",
+          "file": "README.md",
+          "line": 881
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md'",
+          "file": "README.md",
+          "line": 931
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/ADR/INDEX.md'",
+          "file": "README.md",
+          "line": 931
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md'",
+          "file": "README.md",
+          "line": 998
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/08_BACKEND/INDEX.md'",
+          "file": "README.md",
+          "line": 999
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md'",
+          "file": "README.md",
+          "line": 1000
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/15_API/INDEX.md'",
+          "file": "README.md",
+          "line": 1001
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/06_DATABASE/INDEX.md'",
+          "file": "README.md",
+          "line": 1002
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md'",
+          "file": "README.md",
+          "line": 1003
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md'",
+          "file": "README.md",
+          "line": 1004
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md'",
+          "file": "README.md",
+          "line": 1005
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 1059
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/development/BRANCH_STRATEGY.md'",
+          "file": "README.md",
+          "line": 1084
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/development/BRANCH_STRATEGY.md'",
+          "file": "README.md",
+          "line": 1130
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/development/LABELS.md'",
+          "file": "README.md",
+          "line": 1131
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/BEST_PRACTICES.md'",
+          "file": "README.md",
+          "line": 1132
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/COMMON_MISTAKES.md'",
+          "file": "README.md",
+          "line": 1133
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/ADR/INDEX.md'",
+          "file": "README.md",
+          "line": 1152
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md'",
+          "file": "README.md",
+          "line": 1152
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 1178
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 1216
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/INDEX.md'",
+          "file": "README.md",
+          "line": 1239
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/INDEX.md'",
+          "file": "README.md",
+          "line": 1240
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/ADR/INDEX.md'",
+          "file": "README.md",
+          "line": 1241
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/architecture/INDEX.md'",
+          "file": "README.md",
+          "line": 1242
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/deployment/INDEX.md'",
+          "file": "README.md",
+          "line": 1243
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/security/INDEX.md'",
+          "file": "README.md",
+          "line": 1244
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/roadmap/INDEX.md'",
+          "file": "README.md",
+          "line": 1245
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/glossary/INDEX.md'",
+          "file": "README.md",
+          "line": 1246
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 1278
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/INDEX.md'",
+          "file": "README.md",
+          "line": 1279
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/INDEX.md'",
+          "file": "README.md",
+          "line": 1280
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 1304
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/INDEX.md'",
+          "file": "README.md",
+          "line": 1304
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/CONTRIBUTING.md'",
+          "file": "README.md",
+          "line": 1305
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/glossary/ENTERPRISE_GLOSSARY.md'",
+          "file": "README.md",
+          "line": 1306
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './design/INDEX.md'",
+          "file": "README.md",
+          "line": 1307
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/SECURITY.md'",
+          "file": "README.md",
+          "line": 1308
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/CODE_OF_CONDUCT.md'",
+          "file": "README.md",
+          "line": 1309
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/INDEX.md'",
+          "file": "README.md",
+          "line": 1421
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md'",
+          "file": "README.md",
+          "line": 1422
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/CONTEXT_ROUTER.md'",
+          "file": "README.md",
+          "line": 1423
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/PROJECT_STATUS.md'",
+          "file": "README.md",
+          "line": 1424
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/NEXT_ACTION.md'",
+          "file": "README.md",
+          "line": 1425
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/ADR/INDEX.md'",
+          "file": "README.md",
+          "line": 1426
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/roadmap/INDEX.md'",
+          "file": "README.md",
+          "line": 1427
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/SECURITY.md'",
+          "file": "README.md",
+          "line": 1428
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/REPOSITORY_EVOLUTION.md'",
+          "file": "README.md",
+          "line": 1434
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/METRICS.md'",
+          "file": "README.md",
+          "line": 1434
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/REPOSITORY_EVOLUTION.md'",
+          "file": "README.md",
+          "line": 1463
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/METRICS.md'",
+          "file": "README.md",
+          "line": 1463
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md'",
+          "file": "README.md",
+          "line": 1493
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/INDEX.md'",
+          "file": "README.md",
+          "line": 1494
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 1495
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/ENTERPRISE_ARCHITECTURE_CONTEXT.md'",
+          "file": "README.md",
+          "line": 1496
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/METRICS.md'",
+          "file": "README.md",
+          "line": 1497
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/REPOSITORY_EVOLUTION.md'",
+          "file": "README.md",
+          "line": 1499
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md'",
+          "file": "README.md",
+          "line": 1503
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/METRICS.md'",
+          "file": "README.md",
+          "line": 1525
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/CONTRIBUTING.md'",
+          "file": "README.md",
+          "line": 1566
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/ADR/INDEX.md'",
+          "file": "README.md",
+          "line": 1572
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/CONTRIBUTING.md'",
+          "file": "README.md",
+          "line": 1601
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/INDEX.md'",
+          "file": "README.md",
+          "line": 1651
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md'",
+          "file": "README.md",
+          "line": 1651
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.github/SECURITY.md'",
+          "file": "README.md",
+          "line": 1681
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/security/SECURITY_ARCHITECTURE.md'",
+          "file": "README.md",
+          "line": 1682
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/10_SECURITY/INDEX.md'",
+          "file": "README.md",
+          "line": 1683
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 1684
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md'",
+          "file": "README.md",
+          "line": 1725
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/MASTER_CONTEXT/18_TESTING/INDEX.md'",
+          "file": "README.md",
+          "line": 1725
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/roadmap/MILESTONES.md'",
+          "file": "README.md",
+          "line": 1782
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/PROJECT_STATUS.md'",
+          "file": "README.md",
+          "line": 1782
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/deployment/RELEASE_STRATEGY.md'",
+          "file": "README.md",
+          "line": 1820
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './docs/deployment/RELEASE_STRATEGY.md'",
+          "file": "README.md",
+          "line": 1845
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_PHILOSOPHY.md'",
+          "file": "README.md",
+          "line": 1924
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './.ai/REPOSITORY_EVOLUTION.md'",
+          "file": "README.md",
+          "line": 1959
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../docs/MASTER_CONTEXT/INDEX.md'",
+          "file": ".ai/CONTEXT_ROUTER.md",
+          "line": 50
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../PROJECT_PHILOSOPHY.md'",
+          "file": ".ai/DOCUMENTATION_COMPLETION_STANDARD.md",
+          "line": 56
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md'",
+          "file": ".ai/DOCUMENTATION_COMPLETION_STANDARD.md",
+          "line": 247
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INDEX.md'",
+          "file": ".ai/INDEX.md",
+          "line": 48
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './CURRENT_CONTEXT.md'",
+          "file": ".ai/INDEX.md",
+          "line": 49
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SESSION_MEMORY.md'",
+          "file": ".ai/INDEX.md",
+          "line": 50
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_STATUS.md'",
+          "file": ".ai/INDEX.md",
+          "line": 51
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ROADMAP_AI.md'",
+          "file": ".ai/INDEX.md",
+          "line": 52
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './REPOSITORY_EVOLUTION.md'",
+          "file": ".ai/INDEX.md",
+          "line": 53
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './METRICS.md'",
+          "file": ".ai/INDEX.md",
+          "line": 54
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './REPOSITORY_DNA.md'",
+          "file": ".ai/INDEX.md",
+          "line": 55
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './CONTEXT_ROUTER.md'",
+          "file": ".ai/INDEX.md",
+          "line": 56
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './NEXT_ACTION.md'",
+          "file": ".ai/INDEX.md",
+          "line": 57
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DECISION_LOG.md'",
+          "file": ".ai/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './LESSONS_LEARNED.md'",
+          "file": ".ai/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BEST_PRACTICES.md'",
+          "file": ".ai/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './COMMON_MISTAKES.md'",
+          "file": ".ai/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './OPTIMIZATION_IDEAS.md'",
+          "file": ".ai/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DOCUMENTATION_COMPLETION_STANDARD.md'",
+          "file": ".ai/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './AI_AGENT_OPERATING_MANUAL.md'",
+          "file": ".ai/INDEX.md",
+          "line": 64
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../docs/MASTER_CONTEXT/INDEX.md'",
+          "file": ".ai/METRICS.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../docs/INDEX.md'",
+          "file": ".github/SUPPORT.md",
+          "line": 37
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../.ai/INDEX.md'",
+          "file": ".github/SUPPORT.md",
+          "line": 38
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../docs/ADR/INDEX.md'",
+          "file": ".github/SUPPORT.md",
+          "line": 39
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DOMAIN_MODEL.md'",
+          "file": "architecture/INDEX.md",
+          "line": 22
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 46
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ADR/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 47
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './architecture/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 48
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './development/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 49
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './deployment/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 50
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './roadmap/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 51
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './security/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 52
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ai/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 53
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './diagrams/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 54
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './wiki/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 55
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './community/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 56
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './glossary/INDEX.md'",
+          "file": "docs/INDEX.md",
+          "line": 57
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ADR-0000-architecture-decision-record-template.md'",
+          "file": "docs/ADR/INDEX.md",
+          "line": 23
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ADR-0001-ai-native-repository-architecture.md'",
+          "file": "docs/ADR/INDEX.md",
+          "line": 24
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/INDEX.md",
+          "line": 8168
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../README.md'",
+          "file": "docs/MASTER_CONTEXT/INDEX.md",
+          "line": 8168
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
+          "line": 8073
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
+          "line": 8073
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_SCHEMA.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
+          "line": 8073
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_RELATIONSHIPS.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
+          "line": 8073
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../README.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
+          "line": 8073
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "line": 7986
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "line": 7986
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_SCHEMA.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "line": 7986
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../README.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "line": 7986
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "line": 8044
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "line": 8044
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_SCHEMA.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "line": 8044
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../README.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RELATIONSHIPS.md",
+          "line": 8044
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RULES.md",
+          "line": 5615
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../README.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_RULES.md",
+          "line": 5615
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "line": 9936
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "line": 9937
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "line": 14548
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "line": 14548
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../README.md'",
+          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
+          "line": 14548
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SYSTEM_VISION.md'",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './VALUE_PROPOSITION.md'",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './VALUE_PROPOSITION.md'",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PRODUCT_STRATEGY.md'",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './PRODUCT_STRATEGY.md'",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './FEATURE_REGISTRY.md'",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md",
+          "line": 64
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './FEATURE_REGISTRY.md'",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md",
+          "line": 64
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md",
+          "line": 113
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BUSINESS_MODEL.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './BUSINESS_MODEL.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './VALUE_STREAMS.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './VALUE_STREAMS.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BUSINESS_METRICS.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './BUSINESS_METRICS.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './STAKEHOLDERS.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './STAKEHOLDERS.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md",
+          "line": 110
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PERSONAS.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './PERSONAS.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './USER_JOURNEYS.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './USER_JOURNEYS.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './JOBS_TO_BE_DONE.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './JOBS_TO_BE_DONE.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './RESEARCH_INSIGHTS.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './RESEARCH_INSIGHTS.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/03_USERS/INDEX.md",
+          "line": 110
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SYSTEM_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BOUNDED_CONTEXTS.md'",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './BOUNDED_CONTEXTS.md'",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './C4_MODEL.md'",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './C4_MODEL.md'",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './TECHNOLOGY_STACK.md'",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './TECHNOLOGY_STACK.md'",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/04_ARCHITECTURE/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './AI_ONBOARDING.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './AI_ONBOARDING.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './AI_ROUTING.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './AI_ROUTING.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './AI_GOVERNANCE.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './AI_GOVERNANCE.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './AI_METRICS.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './AI_METRICS.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/05_AI/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DATA_MODEL.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DATA_MODEL.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SCHEMA_REGISTRY.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './SCHEMA_REGISTRY.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MIGRATIONS.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './MIGRATIONS.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DATA_GOVERNANCE.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DATA_GOVERNANCE.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/06_DATABASE/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './FRONTEND_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './FRONTEND_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './STATE_MANAGEMENT.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './STATE_MANAGEMENT.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './COMPONENTS.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './COMPONENTS.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PERFORMANCE.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './PERFORMANCE.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/07_FRONTEND/INDEX.md",
+          "line": 112
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BACKEND_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './BACKEND_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SERVICE_BOUNDARIES.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './SERVICE_BOUNDARIES.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BUSINESS_LOGIC.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './BUSINESS_LOGIC.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INTEGRATIONS.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './INTEGRATIONS.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/08_BACKEND/INDEX.md",
+          "line": 112
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INFRASTRUCTURE_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './INFRASTRUCTURE_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './IAAS_MANIFESTS.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './IAAS_MANIFESTS.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ENVIRONMENTS.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './ENVIRONMENTS.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './NETWORKING.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './NETWORKING.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 63
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/09_INFRASTRUCTURE/INDEX.md",
+          "line": 112
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './THREAT_MODEL.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './THREAT_MODEL.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SECURITY_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './SECURITY_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './IDENTITY_AUTH.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './IDENTITY_AUTH.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './COMPLIANCE.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './COMPLIANCE.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/10_SECURITY/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './RELEASE_STRATEGY.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './RELEASE_STRATEGY.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './CI_CD_PIPELINE.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './CI_CD_PIPELINE.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ENVIRONMENT_PROMOTION.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './ENVIRONMENT_PROMOTION.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ROLLBACK_PLAYBOOK.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './ROLLBACK_PLAYBOOK.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/11_DEPLOYMENT/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './RUNBOOKS.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './RUNBOOKS.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INCIDENT_MANAGEMENT.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './INCIDENT_MANAGEMENT.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ONCALL.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './ONCALL.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './CAPACITY_PLANNING.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './CAPACITY_PLANNING.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/12_OPERATIONS/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './TELEMETRY_STANDARDS.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './TELEMETRY_STANDARDS.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DASHBOARDS.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DASHBOARDS.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ALERTING.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './ALERTING.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SLOS.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './SLOS.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/13_OBSERVABILITY/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DESIGN_TOKENS.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DESIGN_TOKENS.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './COMPONENT_LIBRARY.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './COMPONENT_LIBRARY.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BRAND_GUIDELINES.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './BRAND_GUIDELINES.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ACCESSIBILITY.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './ACCESSIBILITY.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/14_DESIGN_SYSTEM/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './API_STANDARDS.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './API_STANDARDS.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './API_CONTRACTS.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './API_CONTRACTS.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './API_SECURITY.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './API_SECURITY.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SDK_STRATEGY.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './SDK_STRATEGY.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/15_API/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PLUGIN_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './PLUGIN_ARCHITECTURE.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PLUGIN_SDK.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './PLUGIN_SDK.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PLUGIN_LIFECYCLE.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './PLUGIN_LIFECYCLE.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INTEGRATIONS.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './INTEGRATIONS.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/16_PLUGINS/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './CI_CD_AUTOMATION.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './CI_CD_AUTOMATION.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './GITOPS.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './GITOPS.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BOT_AUTOMATION.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './BOT_AUTOMATION.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SELF_HEALING.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './SELF_HEALING.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/17_AUTOMATION/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './TESTING_STRATEGY.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './TESTING_STRATEGY.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './TEST_LEVELS.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './TEST_LEVELS.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './COVERAGE.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './COVERAGE.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './TEST_DATA.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './TEST_DATA.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/18_TESTING/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ROADMAP.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './ROADMAP.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PHASES.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './PHASES.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MILESTONES.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './MILESTONES.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PRIORITIES.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './PRIORITIES.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './GLOSSARY.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './GLOSSARY.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './QUICK_REFERENCES.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './QUICK_REFERENCES.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './TEMPLATES.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './TEMPLATES.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './CHECKLISTS.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './CHECKLISTS.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/20_APPENDIX/INDEX.md",
+          "line": 110
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './RESEARCH_INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 57
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './RESEARCH_INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 57
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './EXPERIMENTS.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './EXPERIMENTS.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './COMPETITIVE_ANALYSIS.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './COMPETITIVE_ANALYSIS.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './IDEAS_BACKLOG.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './IDEAS_BACKLOG.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/21_RESEARCH/INDEX.md",
+          "line": 109
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ADR_REGISTRY.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './ADR_REGISTRY.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 58
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DECISION_LOG.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DECISION_LOG.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DECISION_TEMPLATE.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DECISION_TEMPLATE.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DECISION_REVIEWS.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DECISION_REVIEWS.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/22_DECISIONS/INDEX.md",
+          "line": 110
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './METADATA_STANDARD.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DOCUMENTATION_STANDARDS.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DOCUMENTATION_STANDARDS.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './NAMING_CONVENTIONS.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './NAMING_CONVENTIONS.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './QUALITY_GATES.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './QUALITY_GATES.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/INDEX.md",
+          "line": 111
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../ENTERPRISE_ARCHITECTURE_CONTEXT.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md",
+          "line": 25
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../ENTERPRISE_ARCHITECTURE_CONTEXT.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md",
+          "line": 85
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md",
+          "line": 86
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DIAGRAM_REGISTRY.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DIAGRAM_REGISTRY.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 59
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DIAGRAM_STANDARDS.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './DIAGRAM_STANDARDS.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 60
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './CATEGORY_GUIDES.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './CATEGORY_GUIDES.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 61
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './RENDERING.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "relative link target does not exist: './RENDERING.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 62
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../INDEX.md'",
+          "file": "docs/MASTER_CONTEXT/24_DIAGRAMS/INDEX.md",
+          "line": 154
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../README.md'",
+          "file": "docs/README/INDEX.md",
+          "line": 15
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './AI_AGENT_GUIDELINES.md'",
+          "file": "docs/ai/INDEX.md",
+          "line": 18
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SYSTEM_ARCHITECTURE.md'",
+          "file": "docs/architecture/INDEX.md",
+          "line": 22
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './DISCUSSIONS.md'",
+          "file": "docs/community/INDEX.md",
+          "line": 18
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './RELEASE_STRATEGY.md'",
+          "file": "docs/deployment/INDEX.md",
+          "line": 18
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './BRANCH_STRATEGY.md'",
+          "file": "docs/development/INDEX.md",
+          "line": 18
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './LABELS.md'",
+          "file": "docs/development/INDEX.md",
+          "line": 19
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../.github/labels.yml'",
+          "file": "docs/development/LABELS.md",
+          "line": 17
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './ENTERPRISE_GLOSSARY.md'",
+          "file": "docs/glossary/INDEX.md",
+          "line": 18
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../tools/docs-validate/reports/BASELINE-2026-08-15.md'",
+          "file": "docs/reports/ADOPT-01-VALIDATION-BASELINE.md",
+          "line": 50
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './MILESTONES.md'",
+          "file": "docs/roadmap/INDEX.md",
+          "line": 18
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './PROJECT_BOARDS.md'",
+          "file": "docs/roadmap/INDEX.md",
+          "line": 19
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../.github/milestones.yml'",
+          "file": "docs/roadmap/MILESTONES.md",
+          "line": 17
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../.github/projects.yml'",
+          "file": "docs/roadmap/PROJECT_BOARDS.md",
+          "line": 17
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './SECURITY_ARCHITECTURE.md'",
+          "file": "docs/security/INDEX.md",
+          "line": 18
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../.github/SECURITY.md'",
+          "file": "docs/security/INDEX.md",
+          "line": 19
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at './WIKI_STRUCTURE.md'",
+          "file": "docs/wiki/INDEX.md",
+          "line": 18
+        },
+        {
+          "rule": "MET-05",
+          "check": "MD-LINK-SYNTAX",
+          "severity": "WARNING",
+          "message": "link with empty text pointing at '../../docs/reports/ADOPT-01-VALIDATION-BASELINE.md'",
+          "file": "tools/docs-validate/README.md",
+          "line": 153
+        }
+      ],
+      "extra": {}
+    },
+    {
+      "check": "MD-EMBEDDED-YAML",
+      "rule": "TBL-VIS-730-YAML",
+      "description": "Every ```yaml fenced block parses as YAML.",
+      "status": "PASS",
+      "measured": 0,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {
+        "skipped": "PyYAML not installed; embedded YAML parsing not performed"
+      }
+    },
+    {
+      "check": "MD-EMBEDDED-JSON",
+      "rule": "TBL-VIS-730-JSON",
+      "description": "Every ```json fenced block parses as JSON.",
+      "status": "PASS",
+      "measured": 798,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    },
+    {
+      "check": "MD-TABLE-SHAPE",
+      "rule": "DOC-STD-TABLE",
+      "description": "A GFM table header row is followed by a delimiter row.",
+      "status": "PASS",
+      "measured": 3747,
+      "errors": 0,
+      "warnings": 0,
+      "findings": [],
+      "extra": {}
+    }
+  ]
+}

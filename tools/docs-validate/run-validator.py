@@ -58,7 +58,7 @@ from validators import (  # noqa: E402
 )
 from validators.base import ValidatorResult, Severity  # noqa: E402
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 VALIDATORS = {
     "markdown": markdown_validator,
@@ -697,6 +697,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     parser.add_argument("--skip", default=None, help="comma-separated validators to skip")
     parser.add_argument("--format", choices=("text", "json", "markdown"), default="text")
     parser.add_argument("--report", default=None, help="write a JSON report to this path")
+    parser.add_argument(
+        "--reports-dir",
+        default=None,
+        help="write the full report set (baseline-summary, errors, warnings, info, "
+             "metrics, and per-validator reports) into this directory",
+    )
     parser.add_argument("--markdown-report", default=None, help="write a Markdown report to this path")
     parser.add_argument("--max-findings", type=int, default=25, help="findings printed per check")
     parser.add_argument("--show-warnings", action="store_true", help="print WARNING findings too")
@@ -822,6 +828,59 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(render_markdown(results, meta))
     else:
         print(render_text(results, meta, color=not args.no_color and sys.stdout.isatty()))
+
+    if args.reports_dir:
+        rd = (
+            args.reports_dir
+            if os.path.isabs(args.reports_dir)
+            else os.path.join(root, args.reports_dir)
+        )
+        os.makedirs(rd, exist_ok=True)
+
+        def _dump(name: str, obj: Any) -> None:
+            with open(os.path.join(rd, name), "w", encoding="utf-8") as fh:
+                json.dump(obj, fh, indent=2)
+
+        by_name = {r.validator: r for r in results}
+
+        errors: List[Dict[str, Any]] = []
+        warnings: List[Dict[str, Any]] = []
+        infos: List[Dict[str, Any]] = []
+        for r in results:
+            for c in r.checks:
+                for f in c.findings:
+                    row = dict(f.to_dict(), validator=r.validator)
+                    if f.severity == Severity.ERROR:
+                        errors.append(row)
+                    elif f.severity == Severity.WARNING:
+                        warnings.append(row)
+                    else:
+                        infos.append(row)
+
+        _dump("baseline-summary.json", payload)
+        _dump("errors.json", {"count": len(errors), "findings": errors})
+        _dump("warnings.json", {"count": len(warnings), "findings": warnings})
+        _dump("info.json", {"count": len(infos), "findings": infos})
+        _dump(
+            "metrics.json",
+            {
+                "meta": meta,
+                "metrics": {r.validator: r.metrics for r in results},
+            },
+        )
+        for key, fname in (
+            ("identifiers", "identifier-report.json"),
+            ("mermaid", "mermaid-report.json"),
+            ("anchors", "anchor-report.json"),
+            ("metadata", "metadata-report.json"),
+            ("markdown", "markdown-report.json"),
+        ):
+            if key in by_name:
+                _dump(fname, by_name[key].to_dict())
+
+        with open(os.path.join(rd, "baseline-summary.md"), "w", encoding="utf-8") as fh:
+            fh.write(render_markdown(results, meta))
+        print(f"\nReport set written to {rd}", file=sys.stderr)
 
     if args.report:
         rp = args.report if os.path.isabs(args.report) else os.path.join(root, args.report)

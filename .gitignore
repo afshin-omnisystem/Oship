@@ -16,8 +16,11 @@ __pycache__/
 venv/
 
 # --- Validator output ---------------------------------------------------------
-# Committed baselines (reports/BASELINE-*.md) are append-only evidence and are
-# NOT ignored. Transient per-run reports are.
+# Committed evidence, NOT ignored:
+#   reports/BASELINE-*.md         append-only baselines (ADOPT-R3)
+#   reports/baseline-summary.*    the current run
+#   reports/{errors,warnings,info,metrics,*-report}.json
+# Transient ad-hoc output is ignored:
 tools/docs-validate/reports/validation-report.*
 
 # --- Editor and OS noise -------------------------------------------------------
