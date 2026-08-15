@@ -24379,3 +24379,397 @@ flowchart LR
 | `AAP-07` | Point-in-time measurement quoted as current | Facts silently expire | **PRESENT** — unavoidable while `OBL-48` is open |
 
 ---
+
+## 06.2 — The Adoption State Machine
+
+### AI NAVIGATION METADATA — §06.2
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before recording any state change for any artefact** |
+| **AI DEPENDENCIES** | §06.1 `TBL-VIS-695` eight states · PART 04 §04.2 evidence classes |
+| **AI INPUTS** | An artefact, its current state, a proposed transition |
+| **AI OUTPUTS** | Whether the transition is permitted, what evidence it requires, what it invalidates |
+| **AI IMPLEMENTATION IMPACT** | Every status change, every regression, every completion record |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1619`…`VAL-VIS-1645` |
+| **AI RELATED DOCUMENTS** | `.ai/PROJECT_STATUS.md` · `.ai/REPOSITORY_EVOLUTION.md` |
+
+---
+
+### 06.2.1 Purpose and Definition
+
+> **`VIS-698`.** The eight states of `TBL-VIS-695` are useless without transition rules, because the
+> failure mode they exist to prevent is not *occupying the wrong state* but *moving between states
+> without earning it*. §06.2 specifies every legal transition, its guard, its evidence, and — the
+> part most systems omit — the **backward** transitions, which are legal, common, and must be
+> recorded rather than hidden.
+
+> **`VIS-699`.** A state machine that only moves forward is a progress bar, and a progress bar is a
+> lie about a system that can regress. Oship artefacts can and will regress: a workflow can be
+> uninstalled, a test can be deleted, a specification can be superseded. `AS-6 → AS-4` on test
+> deletion is a real transition and it is drawn.
+
+### 06.2.2 Lifecycle Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> AS0
+    AS0: AS-0 ABSENT
+    AS1: AS-1 INTENDED
+    AS2: AS-2 SPECIFIED
+    AS3: AS-3 SCAFFOLDED
+    AS4: AS-4 IMPLEMENTED
+    AS5: AS-5 EXERCISED
+    AS6: AS-6 VERIFIED
+    AS7: AS-7 OPERATED
+    DEP: DEPRECATED
+    AS0 --> AS1: recorded in control plane
+    AS1 --> AS2: specification section written
+    AS2 --> AS3: directory or file created
+    AS2 --> AS4: artefact written directly
+    AS3 --> AS4: executable content added
+    AS4 --> AS5: automation runs it
+    AS5 --> AS6: bound assertion passes
+    AS6 --> AS7: deployed and observed
+    AS4 --> AS3: executable content removed
+    AS5 --> AS4: automation removed
+    AS6 --> AS4: bound test deleted
+    AS7 --> AS6: deployment retired
+    AS2 --> AS1: specification superseded
+    AS6 --> DEP: decommission decision
+    AS7 --> DEP: decommission decision
+    DEP --> AS0: artefact deleted
+    note right of AS4
+        Oship holds ZERO artefacts
+        at this state or above
+    end note
+    note left of AS2
+        Oship holds roughly 900
+        constructs at this state
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-156` — **The Adoption State Machine with Regression Paths**
+> **Explanation:** Four properties are load-bearing. First, `AS-2 → AS-4` exists: an artefact may be
+> written directly from specification without a scaffolding step, and Oship's 73 `.gitkeep`
+> directories are therefore not on anyone's critical path. Second, every forward transition above
+> `AS-3` has a **mechanical** guard — automation runs it, an assertion passes, telemetry arrives —
+> none of which a human or agent can satisfy by assertion. Third, the regression edges outnumber
+> nothing: four of them exist and all four are one step, meaning state is lost gradually rather than
+> catastrophically. Fourth, the two notes record the live distribution, which places the entire
+> repository on the left half of the diagram.
+
+### 06.2.3 Transition Table
+
+### TBL-VIS-700: Complete Transition Specification
+
+| From | To | Trigger | Guard | Evidence required | Evidence class | Reversible |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `AS-0` | `AS-1` | Intention recorded | Named in a control-plane file | Line reference | `EV1` | Yes |
+| `AS-1` | `AS-2` | Specification authored | Section carries identifiers and validation rules | Section anchor | `EV2` | Yes |
+| `AS-2` | `AS-3` | Structure created | Path exists in the repository | `git ls-files` hit | `EV3` | Yes |
+| `AS-2` | `AS-4` | Artefact authored directly | File is executable content, not documentation | File path plus non-doc extension | `EV3` | Yes |
+| `AS-3` | `AS-4` | Executable content added | Directory contains a non-`.gitkeep` executable file | Directory listing | `EV3` | Yes |
+| `AS-4` | `AS-5` | Automation executes it | A CI run invoked it and produced a log | Run log identifier | `EV4` | Yes |
+| `AS-5` | `AS-6` | Bound assertion passes | The assertion cites a `VAL-` rule and passed | Test result plus rule binding | `EV5` | Yes |
+| `AS-6` | `AS-7` | Deployed and observed | Telemetry received from a running instance | Telemetry sample | `EV5` | Yes |
+| `AS-4` | `AS-3` | Content removed | No executable file remains | Directory listing | `EV3` | — |
+| `AS-5` | `AS-4` | Automation removed | No workflow invokes it | Workflow inspection | `EV3` | — |
+| `AS-6` | `AS-4` | Bound test deleted | No assertion cites the rule | Test inventory | `EV3` | — |
+| `AS-7` | `AS-6` | Deployment retired | No telemetry for the observation window | Absence of telemetry | `EV4` | — |
+| `AS-2` | `AS-1` | Specification superseded | A `DEC-VIS-` record supersedes the section | Decision record | `EV2` | — |
+| `AS-6`/`AS-7` | `DEPRECATED` | Decommission decision | `DEC-` record with rationale | Decision record | `EV2` | — |
+| `DEPRECATED` | `AS-0` | Artefact deleted | Path absent from the working tree | `git ls-files` miss | `EV3` | — |
+
+> **`VIS-700`.** The evidence-class column is the enforcement mechanism and it makes an
+> uncomfortable fact explicit: **no Oship artefact can currently transition above `AS-4`, because
+> `AS-4 → AS-5` requires `EV4` and PART 04 measured zero `EV4` evidence anywhere in the
+> repository.** The ceiling is not a matter of effort. It is a missing mechanism, and §06.8
+> identifies that mechanism precisely.
+
+### TBL-VIS-701: Illegal Transitions and Why They Are Illegal
+
+| Attempted transition | Why illegal | Failure mode | Detection |
+| :--- | :--- | :--- | :--- |
+| `AS-2 → AS-6` | Cannot verify what does not execute | `FAL-VIS-331` | Missing `AS-4` and `AS-5` evidence |
+| `AS-1 → AS-4` | Building without specification produces unvalidatable artefacts | `FAL-VIS-332` | No specification anchor for the artefact |
+| `AS-3 → AS-6` | A placeholder cannot pass an assertion | `FAL-VIS-333` | Directory contains only `.gitkeep` |
+| `AS-4 → AS-7` | Skipping verification deploys unverified code | `FAL-VIS-334` | No test binding |
+| any → any, silently | Unrecorded state change destroys the audit trail | `FAL-VIS-335` | Diff of recorded state without ledger entry |
+| `AS-0 → AS-2` | A specification of nothing names nothing | `FAL-VIS-336` | No intention record precedes the section |
+| forward, on assertion alone | Assertion is not evidence | `FAL-VIS-337` | Evidence class below the required threshold |
+
+### 06.2.4 Failure and Recovery for State Transitions
+
+```mermaid
+flowchart TD
+    N["NORMAL - state matches evidence"]:::ok
+    N --> D1{"Recorded state exceeds<br/>evidence-supported state?"}
+    D1 -->|"No"| N
+    D1 -->|"Yes"| DEG["DEGRADED - overclaim present"]:::warn
+    DEG --> DET["DETECTION - state audit compares<br/>recorded state to evidence inventory"]:::warn
+    DET --> ISO["ISOLATION - mark the claim<br/>UNVERIFIED, do not delete history"]:::warn
+    ISO --> SEV{"Claim published<br/>outside the repository?"}
+    SEV -->|"Yes"| F["FAILURE - external fabrication"]:::bad
+    SEV -->|"No"| REC["RECOVERY - regress recorded state<br/>to the evidence-supported value"]:::ok
+    F --> REC
+    REC --> LOG["Record regression in ledger<br/>with cause and evidence"]:::ok
+    LOG --> VER["VERIFICATION - re-run state audit"]:::ok
+    VER --> RES["RESUMPTION - normal operation"]:::ok
+    RES --> N
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-157` — **Overclaim Detection, Isolation and Recovery**
+> **Explanation:** Recovery is **regression of the record**, never retroactive construction of the
+> missing evidence. The distinction is everything: an agent discovering that a document claims
+> `IMPLEMENTED` for an unbuilt capability must lower the claim, not build something quickly to make
+> the claim true, and must not delete the incorrect claim's history. `ISO` explicitly preserves it,
+> because a repository that erases its overclaims cannot measure its own overclaim rate.
+
+### TBL-VIS-702: State Transition Failure Modes
+
+| ID | Failure mode | Description | Status in Oship | Detection signal |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-329` | **Successor reserve silently consumed** | A part allocates against headroom reserved for the next part | **PRESENT** — PART 05 consumed PART 06's `VAL-VIS-` reserve | Projected versus actual reconciliation |
+| `FAL-VIS-330` | **Ceiling declaration lapses** | A declared ceiling is exceeded because later audits search only for decisions | **PRESENT** — four namespaces, repaired by `DEC-VIS-050` | Two-pass ceiling audit |
+| `FAL-VIS-331` | **Specification cited as evidence** | A doc section is offered as proof of implementation | **LATENT** | Evidence reference resolves to `docs/` |
+| `FAL-VIS-332` | **Build without specification** | Artefact created with no specification anchor | **ABSENT** — nothing is built | Artefact has no `CAP-VIS-` binding |
+| `FAL-VIS-333` | **Placeholder verified** | A `.gitkeep` directory reported as passing | **ABSENT** | Directory content check |
+| `FAL-VIS-334` | **Verification skipped** | Deployment without a bound test | **ABSENT** — no deployment exists | Test binding absent |
+| `FAL-VIS-335` | **Silent state change** | State altered with no ledger entry | **LATENT** | Ledger diff |
+| `FAL-VIS-336` | **Specification of nothing** | A section specifies a construct no intention records | **LATENT** | Intention lookup |
+| `FAL-VIS-337` | **Assertion treated as evidence** | Author's statement accepted in place of an observation | **PRESENT** — pervasive while `EV4` is unavailable | Evidence class check |
+| `FAL-VIS-338` | **Regression concealed** | State lowered without recording why | **LATENT** | Ledger completeness |
+| `FAL-VIS-339` | **Directory-level state inference** | One file's state applied to its siblings | **LATENT** | Per-file state check |
+| `FAL-VIS-340` | **Point-in-time fact aged into falsehood** | A measured figure quoted long after measurement | **PRESENT** — structural while `OBL-48` is open | Qualifier presence |
+
+### TBL-VIS-703: §06.2 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1619` | Every state change carries a ledger entry naming the trigger and evidence. | **HALT** | Ledger completeness |
+| `VAL-VIS-1620` | A transition must satisfy its guard before its state is recorded. | **HALT** | Guard evaluation precedes record |
+| `VAL-VIS-1621` | Evidence class must meet or exceed the transition's requirement. | **HALT** | Class comparison |
+| `VAL-VIS-1622` | Illegal transitions in `TBL-VIS-701` are refused, not warned about. | **HALT** | Transition legality lookup |
+| `VAL-VIS-1623` | Regression is recorded with cause; concealment is a defect. | **ERROR** | Ledger entry present for downward moves |
+| `VAL-VIS-1624` | No artefact may be recorded above `AS-4` while zero `EV4` evidence exists. | **HALT** | Repository-wide evidence inventory |
+| `VAL-VIS-1625` | A transition record must name the artefact by path, not by description. | **ERROR** | Path resolvability |
+| `VAL-VIS-1626` | Two transitions may not be recorded as one. | **ERROR** | Single-step ledger entries |
+| `VAL-VIS-1627` | The state machine is total; every artefact resolves to exactly one state. | **ERROR** | State assignment coverage |
+| `VAL-VIS-1628` | `DEPRECATED` is reachable only from `AS-6` or `AS-7`. | **ERROR** | Source-state check |
+| `VAL-VIS-1629` | Deletion from `DEPRECATED` requires the artefact absent from the working tree. | **ERROR** | `git ls-files` |
+| `VAL-VIS-1630` | A superseded specification returns to `AS-1`, not to `AS-0`. | **ERROR** | Supersession handling |
+| `VAL-VIS-1631` | Evidence for a transition must be re-resolvable by a third party. | **HALT** | Evidence reference is a path, log ID or commit, never prose |
+| `VAL-VIS-1632` | An agent may not both perform and verify the same transition above `AS-4`. | **HALT** | Separation of actor — **currently unsatisfiable, `OBL-55`** |
+| `VAL-VIS-1633` | Transition evidence must postdate the artefact it concerns. | **ERROR** | Commit ordering |
+| `VAL-VIS-1634` | A failed transition attempt is recorded, not discarded. | **ERROR** | Attempt log |
+| `VAL-VIS-1635` | State audits run against the whole repository, never a subtree. | **ERROR** | Audit scope declaration |
+| `VAL-VIS-1636` | The distribution of artefacts across states must be recomputed per part. | **HALT** | Closure record contains a fresh distribution |
+| `VAL-VIS-1637` | An artefact's state must not be inferred from its neighbours. | **ERROR** | Per-artefact evaluation |
+| `VAL-VIS-1638` | A CI run log satisfies `AS-5` only if it invoked the artefact, not merely the repository. | **ERROR** | Log names the artefact |
+| `VAL-VIS-1639` | An assertion satisfies `AS-6` only if it cites a `VAL-` identifier. | **HALT** | Rule binding present |
+| `VAL-VIS-1640` | Telemetry satisfies `AS-7` only from a deployed instance, never a local process. | **ERROR** | Source attribution |
+| `VAL-VIS-1641` | The zero-artefact finding must be restated wherever a state distribution appears. | **ERROR** | Distribution includes the `AS-4`+ count |
+| `VAL-VIS-1642` | A guard that cannot currently be satisfied must be labelled as such. | **ERROR** | Unsatisfiable guards carry an `OBL-` |
+| `VAL-VIS-1643` | State machine changes require a `DEC-VIS-` record. | **HALT** | Decision presence |
+| `VAL-VIS-1644` | No state may be added without defining its entry evidence and its regressions. | **HALT** | Completeness check |
+| `VAL-VIS-1645` | The recorded state of `AOM-VIS-001` itself is subject to this machine. | **ERROR** | Reflexive application in `TBL-VIS-863` |
+
+### TBL-VIS-704: Worked Transition Examples
+
+| Artefact | Current state | Proposed transition | Verdict | Reasoning |
+| :--- | :--- | :--- | :--- | :--- |
+| `apps/` directory | `AS-3` | → `AS-4` | **REFUSED** | Contains only `.gitkeep`; no executable content |
+| `.github/workflow-skeletons/ci.yml` | `AS-2` | → `AS-4` | **PERMITTED** | Copying it to `.github/workflows/` creates executable content |
+| `.github/workflows/ci.yml` after install | `AS-4` | → `AS-5` | **PERMITTED** on first run | A run log would be the repository's first `EV4` evidence |
+| `AOM-VIS-001` PART 05 | `AS-2` | → `AS-6` | **REFUSED** | A specification is not executable; `AS-6` is not defined for prose |
+| `CAP-VIS-062` Financial Factory | `AS-2` | → `AS-4` | **REFUSED** in practice | Permitted by the machine, blocked by `OBL-03` and Wave 3 entry criteria |
+| Mermaid validator script | `AS-0` | → `AS-4` | **PERMITTED** | It exists as a procedure in tooling notes but not as a repository artefact |
+
+> **`VIS-701`.** The last row is the most actionable line in §06.2. The Mermaid validator has been
+> executed against this document repeatedly during authoring, but it lives in `/tmp` and is
+> **`AS-0` with respect to the repository** — it is not committed, not installed, not runnable by
+> anyone else. Committing it would move it `AS-0 → AS-4` in one step, and installing a workflow that
+> runs it would move it to `AS-5`, producing Oship's **first `EV4` evidence of any kind**. §06.8
+> develops this into the document's primary recommendation.
+
+---
+
+## 06.3 — Wave Architecture
+
+### AI NAVIGATION METADATA — §06.3
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before proposing what to build next** |
+| **AI DEPENDENCIES** | §06.2 state machine · PART 03 capability register · PART 04 quality gates |
+| **AI INPUTS** | A proposed unit of work |
+| **AI OUTPUTS** | The wave it belongs to and whether that wave is open |
+| **AI IMPLEMENTATION IMPACT** | All sequencing decisions |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1646`…`VAL-VIS-1668` |
+| **AI RELATED DOCUMENTS** | `.ai/NEXT_ACTION.md` · `19_ROADMAP/INDEX.md` |
+
+---
+
+### 06.3.1 Purpose
+
+> **`VIS-702`.** A wave is a set of work items that share entry conditions and can proceed
+> concurrently. Waves are **not** phases, sprints, milestones or releases. They carry no dates, no
+> durations and no capacity assumptions. A wave is open when its entry criteria are met and closed
+> when its exit criteria are met, and it may stay open indefinitely; that is a fact about the world,
+> not a schedule slip.
+
+> **`VIS-703`.** The reason to model adoption as waves rather than a linear plan is that Oship's
+> dependencies are genuinely partial-ordered. Installing CI does not depend on choosing a database.
+> Choosing a database does not depend on writing PART 02 of the architecture. Several things can
+> proceed at once, and a linear plan would impose false ordering that then gets violated, teaching
+> everyone that the plan is decorative.
+
+### 06.3.2 The Six Waves
+
+### TBL-VIS-705: Wave Register
+
+| Wave | Name | Purpose | Entry condition | Exit condition | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `W0` | **Constitution** | Establish the governing specification corpus | Repository exists | Constitutional set complete and internally consistent | **OPEN — substantially advanced** |
+| `W1` | **Mechanisation** | Give the repository the ability to check itself | `W0` sufficient for one checkable rule | At least one automated check runs on every change | **OPEN — nothing done** |
+| `W2` | **Foundation** | Persistent decisions that everything else depends on | `W1` closed | Technology and persistence decisions ratified as ADRs | **BLOCKED — `OBL-03`** |
+| `W3` | **First Capability** | One capability from `AS-2` to `AS-6` | `W2` closed | One capability verified end to end | **BLOCKED** |
+| `W4` | **Platform** | The remaining core-platform capabilities | `W3` closed | Core platform capabilities at `AS-6` | **BLOCKED** |
+| `W5` | **Operation** | Deployment, telemetry, and continuous observation | `W4` closed | Capabilities at `AS-7` | **BLOCKED** |
+
+> **`VIS-704`.** Five of six waves are blocked and the blocking is not a resourcing problem. `W2`
+> cannot open because `OBL-03` — the persistence-technology decision — requires a human principal
+> with the authority to make an irreversible architectural commitment, and no agent may make it.
+> `W1`, by contrast, is **open and entirely unblocked**, requires no human decision, and nothing has
+> been done in it. That asymmetry is the single most important sequencing fact in the document.
+
+```mermaid
+flowchart TD
+    W0["W0 CONSTITUTION<br/>specification corpus"]:::open
+    W1["W1 MECHANISATION<br/>self-checking"]:::open
+    W2["W2 FOUNDATION<br/>persistence and stack"]:::blocked
+    W3["W3 FIRST CAPABILITY<br/>one thing verified"]:::blocked
+    W4["W4 PLATFORM<br/>core capabilities"]:::blocked
+    W5["W5 OPERATION<br/>deployed and observed"]:::blocked
+    H["HUMAN DECISION REQUIRED<br/>OBL-03 persistence"]:::human
+    W0 --> W1
+    W1 --> W2
+    H --> W2
+    W2 --> W3
+    W3 --> W4
+    W4 --> W5
+    W0 -.->|"can continue<br/>in parallel"| W1
+    W1 -.->|"produces first<br/>EV4 evidence"| E["EVIDENCE CAPABILITY<br/>unlocks AS-5 and above"]:::ok
+    classDef open fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef blocked fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef human fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef ok fill:#004d40,stroke:#80cbc4,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-158` — **Wave Dependency Graph with the Human Gate**
+> **Explanation:** The amber node is not a work item and cannot be scheduled — it is a decision that
+> only `ACT-VIS-001` can make, and every wave from `W2` onward sits behind it. The dotted edge from
+> `W1` to the evidence capability explains why `W1` is disproportionately valuable relative to its
+> size: it is small, unblocked, and it is the only wave that changes what the repository is *capable
+> of proving* rather than what it contains.
+
+### TBL-VIS-706: Wave Contents — `W0` Constitution
+
+| Item | Adoption state | Blocking | Notes |
+| :--- | :--- | :--- | :--- |
+| `AOM-VIS-001` PARTS 01–06 | `AS-2` | — | This document; complete at PART 06 |
+| `AOM-ARCH-001` PART 01 | `AS-2` | — | Complete, 10,844 lines |
+| `AOM-ARCH-001` PART 02 | `AS-1` | Depends on `W2` decisions | Cannot specify a stack before the stack is chosen |
+| `MASTER_CONTEXT` constitutional set | `AS-2` | — | Rules, schema, relationships, execution model, memory |
+| 24 domain `INDEX.md` files | `AS-2` | — | Present; several carry stale statuses |
+| `ADR-0001` | `AS-2` | — | Approved |
+
+### TBL-VIS-707: Wave Contents — `W1` Mechanisation
+
+| Item | Adoption state | Effort class | Human decision required | Value |
+| :--- | :--- | :--- | :--- | :--- |
+| Commit the Mermaid validator as a repository artefact | `AS-0` | Small | **No** | Makes an existing procedure reproducible |
+| Install one CI workflow that runs it | `AS-2` skeleton exists | Small | **No** | **First `EV4` evidence in repository history** |
+| Bind the validator to `VAL-VIS-` rules it checks | `AS-0` | Small | No | Enables `AS-6` for the validator itself |
+| Install the frontmatter key-count check | `AS-0` | Small | No | Closes the 51/87 metadata gap detection |
+| Install the identifier uniqueness sweep as CI | `AS-0` | Medium | No | Mechanises `TBL-VIS-689` |
+| Install a link and anchor resolver | `AS-0` | Medium | No | Mechanises cross-reference validation |
+
+> **`VIS-705`.** Every row of `TBL-VIS-707` has "No" in the human-decision column. `W1` is the only
+> wave in the entire architecture with that property. It requires no irreversible commitment, no
+> technology selection, no budget, and no second principal. It is available now.
+
+### TBL-VIS-708: Wave Contents — `W2` Foundation
+
+| Item | Adoption state | Blocking obligation | Why an agent may not decide it |
+| :--- | :--- | :--- | :--- |
+| Persistence technology selection | `AS-1` | **`OBL-03`** | Irreversible, cost-bearing, operationally binding |
+| Language and runtime selection | `AS-1` | `OBL-03` adjacent | Determines hiring, tooling and ecosystem for the system's life |
+| Deployment target selection | `AS-1` | `OBL-03` adjacent | Commercial commitment |
+| Compliance framework selection | `AS-1` | `PROB-VIS-023` `UNKNOWN` | Legal exposure; requires counsel |
+| `AOM-ARCH-001` PART 02 | `AS-1` | All of the above | Cannot specify what has not been chosen |
+
+### TBL-VIS-709: Wave Contents — `W3` First Capability
+
+| Candidate capability | Specification depth | Why it is or is not the right first | Verdict |
+| :--- | :--- | :--- | :--- |
+| `CAP-VIS-061` Core Platform | Deep | Too broad to verify end to end as a first artefact | Not first |
+| `CAP-VIS-062` Financial Factory | Deep | Highest value, highest risk, deepest dependency on `W2` | Not first |
+| `CAP-VIS-063` Observability | Moderate | Produces evidence for everything else; low blast radius | **Strong candidate** |
+| Documentation validation capability | Deep, and `W1` builds it | Already the subject of `W1`; would be verified, not built | **Already in flight** |
+
+> **`VIS-706`.** `W3`'s selection is deliberately left as a **candidate set with a recommendation**
+> rather than a decision, because selecting the first capability is a `W2`-class commitment and
+> `DEC-VIS-` records in this document may not pre-empt `ACT-VIS-001`. The recommendation is
+> `CAP-VIS-063` Observability, on the ground that it is the only candidate whose output is *evidence*,
+> and evidence is the scarcest resource in the repository.
+
+### TBL-VIS-710: Wave Concurrency Matrix
+
+| | `W0` | `W1` | `W2` | `W3` | `W4` | `W5` |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **`W0`** | — | **Concurrent** | Concurrent | Concurrent | Concurrent | Concurrent |
+| **`W1`** | **Concurrent** | — | Precedes | Precedes | Precedes | Precedes |
+| **`W2`** | Concurrent | Follows | — | Precedes | Precedes | Precedes |
+| **`W3`** | Concurrent | Follows | Follows | — | Precedes | Precedes |
+| **`W4`** | Concurrent | Follows | Follows | Follows | — | Precedes |
+| **`W5`** | Concurrent | Follows | Follows | Follows | Follows | — |
+
+> **`VIS-707`.** `W0` is concurrent with everything, which is both its strength and its danger. The
+> constitution can always be extended, and extending it always feels productive. §06.9 defines the
+> drift condition that arises when `W0` advances while `W1`–`W5` do not, which is precisely the
+> repository's current condition.
+
+### TBL-VIS-711: §06.3 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1646` | Every proposed work item is assigned to exactly one wave. | **ERROR** | Wave assignment present |
+| `VAL-VIS-1647` | Work in a closed or unopened wave is refused. | **HALT** | Wave status check |
+| `VAL-VIS-1648` | A wave opens only when every entry criterion is evidenced. | **HALT** | Entry criteria evaluation |
+| `VAL-VIS-1649` | A wave closes only when every exit criterion is evidenced. | **HALT** | Exit criteria evaluation |
+| `VAL-VIS-1650` | Waves carry no dates, durations or capacity estimates. | **HALT** | No temporal tokens in wave records |
+| `VAL-VIS-1651` | A blocked wave names its blocking obligation by identifier. | **ERROR** | `OBL-` reference present |
+| `VAL-VIS-1652` | `W1` items must not require a human decision; any that does belongs in `W2`. | **ERROR** | Human-decision column check |
+| `VAL-VIS-1653` | Wave concurrency claims must match `TBL-VIS-710`. | **ERROR** | Matrix consistency |
+| `VAL-VIS-1654` | Continuing `W0` while `W1` is untouched must be reported as drift. | **ERROR** | §06.9 drift check |
+| `VAL-VIS-1655` | A capability may not be selected for `W3` by an agent. | **HALT** | Actor authority check |
+| `VAL-VIS-1656` | Wave membership is a property of work, not of documents. | **ERROR** | Subject check |
+| `VAL-VIS-1657` | An item may move between waves only via a recorded decision. | **ERROR** | Ledger entry |
+| `VAL-VIS-1658` | The wave register must be re-evaluated in every part's closure record. | **HALT** | Closure record includes wave status |
+| `VAL-VIS-1659` | A wave with zero completed items must not be described as "underway". | **HALT** | Vocabulary check |
+| `VAL-VIS-1660` | Blocking by human decision is never described as a delay. | **ERROR** | It is a structural gate, not a schedule event |
+| `VAL-VIS-1661` | `W2` items must not be started speculatively to appear productive. | **HALT** | Speculative work detection |
+| `VAL-VIS-1662` | Exit criteria must be mechanically checkable once `W1` closes. | **ERROR** | Criterion form |
+| `VAL-VIS-1663` | A wave's contents table must state adoption state per item. | **ERROR** | Column presence |
+| `VAL-VIS-1664` | The unblocked-wave count must be stated wherever wave status is summarised. | **ERROR** | Summary completeness |
+| `VAL-VIS-1665` | No wave may be added without entry and exit criteria. | **HALT** | Completeness |
+| `VAL-VIS-1666` | Wave numbering is stable and never reused. | **ERROR** | `VIS-347` applies |
+| `VAL-VIS-1667` | A recommendation is labelled as a recommendation, never as a decision. | **HALT** | Label check |
+| `VAL-VIS-1668` | The current wave distribution must be measured, not recalled. | **HALT** | Re-measurement evidence |
+
+---
