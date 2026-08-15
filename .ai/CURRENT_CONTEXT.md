@@ -406,3 +406,32 @@ exist** (HTTP 404); that owner's only repository is `afshin0095-lang/Omnis`, an 
 JS monorepo. The GitHub App installation can see exactly one repository:
 `afshin-omnisystem/Oship`. Work therefore continued on the real repository, and this
 deviation from the instruction is recorded rather than silently resolved.
+
+---
+
+## Session update — 2026-08-15, ADOPT-OBL-13 third attempt (post-grant)
+
+Appended. Nothing above is edited.
+
+`ADOPT-OBL-13` is **still OPEN**. The reported grant of the `workflows` permission was
+verified empirically and **has not reached the credential in use**.
+
+Both installation paths were rejected again, and a retry after a delay was rejected
+identically. A control probe proved the credential can push non-workflow files on the
+same branch — so the blocker is precisely and only the missing `workflows` permission,
+not a stale token, not connectivity, not general write access.
+
+**`EV4` remains NOT ACHIEVED.** No workflow exists remotely; no run exists. Verified via
+the Actions API rather than inferred.
+
+### What a principal needs to do
+
+The permission must be **approved on the installation**, not only changed on the App
+definition:
+
+> GitHub → the repository or org → **Settings → GitHub Apps** (Installed GitHub Apps) →
+> the Arena installation → **Review request / Configure** → approve **Workflows: Read and
+> write**.
+
+A pending permission request leaves installation tokens on the old permission set, which
+matches the observed behaviour exactly.

@@ -525,3 +525,69 @@ was lost and the working tree was never touched by a destructive command.
 | PART 07 | **not created** |
 
 Every expected count reproduced exactly. No validator was weakened; no finding was hidden.
+
+---
+
+## ADOPT-OBL-13 Installation Attempt — 2026-08-15 (third attempt, post-grant)
+
+Appended. Nothing above is edited.
+
+### Result: **STILL BLOCKED — `ADOPT-OBL-13` remains `OPEN`**
+
+The session instruction stated that the `workflows` permission had been granted. That
+claim was **tested, not trusted**, and it does not hold for the credential in use.
+
+| Attempt | Result |
+| :--- | :--- |
+| `git push` with the workflow committed | `! [remote rejected] ... refusing to allow a GitHub App to create or update workflow '.github/workflows/docs-validate.yml' without 'workflows' permission` |
+| REST `PUT /contents/.github/workflows/docs-validate.yml` | **HTTP 403** `Resource not accessible by integration` |
+| `git push` retried after a delay (propagation allowance) | **same rejection** |
+
+### The isolating control test
+
+To rule out a stale token, a network fault or a general loss of write access, a
+**non-workflow** file was committed and pushed on the same branch with the same
+credential:
+
+```
+def9291  probe: verify non-workflow write access   -> PUSH SUCCEEDED
+b41a33a  probe: remove scope-test artefact         -> PUSH SUCCEEDED
+```
+
+**The credential has `contents: write` and can push freely. It is rejected only for paths
+under `.github/workflows/`.** This isolates the blocker to exactly one missing
+permission — `workflows` — and rules out every alternative explanation. The probe artefact
+was removed in the same session; it leaves no residue beyond two commits in the branch
+history.
+
+### Verified remote state
+
+| Field | Value |
+| :--- | :--- |
+| `.github/workflows/docs-validate.yml` | **does not exist** (HTTP 404) |
+| Workflows on the repository | **1** — dynamic Dependabot only |
+| Documentation-check runs | **0** |
+| **`EV4`** | **NOT ACHIEVED** |
+| **`QG-4`** | **CLOSED** |
+
+### Why the grant may not have taken effect
+
+The permission was likely granted on the GitHub App **definition** but not **accepted on
+the installation**, or the installation token predates the change. A GitHub App
+permission change raises a pending request that an org/repo admin must **approve on the
+installation itself**; until approval, installation tokens continue to be minted with the
+old permission set. The `x-accepted-github-permissions: metadata=read` header on the
+current token is consistent with a token issued before any new grant.
+
+### Validation gate re-run at `b41a33a`
+
+| Check | Result |
+| :--- | :--- |
+| Validator self-test | **33 / 33 PASS** |
+| Full corpus | **FAIL — 13 errors, 443 warnings** (expected; RED IS VALID) |
+| Mermaid engine | `mermaid.parse`, **authoritative: true** |
+| Diagrams parsed | **1,998 / 1,998**, 0 abstentions |
+| `SYSTEM_VISION.md` | **byte-identical** to `main` — blob `8181f72ec1dd2448fa2f96fa57bf63411b116ff1` |
+| PART 07 | **not created** |
+
+No validator was weakened, no finding hidden, no check relaxed.

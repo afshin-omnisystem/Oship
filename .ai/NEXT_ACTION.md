@@ -263,3 +263,45 @@ gh run list --repo afshin-omnisystem/Oship --workflow docs-validate.yml
 `ADOPT-02` blocks new specification work, including PART 07, until the `ADOPT-01`
 obligations are discharged. None was performed this session. `SYSTEM_VISION.md` is
 byte-identical to `main` (blob `8181f72e`).
+
+---
+
+## Queue update — 2026-08-15, ADOPT-OBL-13 third attempt (post-grant)
+
+Appended. Nothing above is edited.
+
+| Priority | Task ID | Description | Owner | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **P0** | `ADOPT-OBL-13` | Install `.github/workflows/docs-validate.yml` | **Human principal / org admin** | **`OPEN` — STILL BLOCKED** after the reported grant. Re-tested three ways; a control probe isolates the cause to the missing `workflows` permission alone. |
+
+### The exact next action
+
+**Approve the `workflows` permission on the App _installation_, not just the App
+definition.** Changing an App's declared permissions raises a request that must be
+approved where the App is installed; until then, tokens keep the old scope — which is
+exactly what was observed.
+
+> GitHub → repository (or org) **Settings → GitHub Apps** → the Arena installation →
+> **Review request / Configure** → approve **Workflows: Read and write**.
+
+Confirm the grant took effect before re-running the agent:
+
+```bash
+gh api -X PUT /repos/afshin-omnisystem/Oship/contents/.github/workflows/probe.yml \
+  -f message="probe" -f branch="arena/01a0046f-oship" -f content="$(echo 'name: probe' | base64 -w0)"
+```
+
+HTTP 201 means the scope is live. HTTP 403 means it is not.
+
+**Fallback — a human installs it directly** from a clone of `arena/01a0046f-oship`:
+
+```bash
+cp tools/docs-validate/ci/docs-validate.yml .github/workflows/docs-validate.yml
+git add .github/workflows/docs-validate.yml
+git commit -m "ci: install documentation integrity check (ADOPT-OBL-13)"
+git push origin arena/01a0046f-oship
+```
+
+**Expected first run: RED — `FAIL`, 13 errors / 443 warnings**, engine `mermaid.parse`,
+1,998 / 1,998 diagrams parsed. Correct under `VAL-VIS-1746` / `SC-04`. **The retrievable
+run — not a green run — is `EV4`.**
