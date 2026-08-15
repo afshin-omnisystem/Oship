@@ -25661,3 +25661,397 @@ flowchart TD
 | `VAL-VIS-1782` | A document that cannot measure `A` must report `DR` as `UNKNOWN`, not omit it. | **HALT** | Explicit unknown |
 
 ---
+
+## 06.10 — The Completion Claim Contract
+
+### AI NAVIGATION METADATA — §06.10
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before writing the word "complete" anywhere in this repository** |
+| **AI DEPENDENCIES** | §06.2 adoption states · §06.5 exit criteria · §06.6 maturity levels · PART 04 evidence classes |
+| **AI INPUTS** | A proposed completion claim |
+| **AI OUTPUTS** | ADMIT or REFUSE, with the qualifying clause the claim must carry |
+| **AI IMPLEMENTATION IMPACT** | Governs all status language in all Oship documents |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1783`…`VAL-VIS-1806` |
+| **AI RELATED DOCUMENTS** | `.ai/PROJECT_STATUS.md` · `README.md` · `.ai/DOCUMENTATION_COMPLETION_STANDARD.md` |
+
+---
+
+### 06.10.1 The Problem This Section Solves
+
+> **`VIS-735`.** "Complete" is the most overloaded word in this repository. It is currently used to
+> mean at least five different things: a document has all its planned sections; a part has been
+> committed; a domain folder exists; a checklist has been ticked; and — never yet truthfully — a
+> capability works. A reader cannot distinguish these from the word alone, and neither can an agent.
+
+> **`VIS-736`.** The contract in §06.10 is therefore not a style rule. It is a **type system for
+> status language**. Each claim type has a defined subject, a defined evidence requirement, and a
+> mandatory qualifying clause. A claim made without its clause is not a weaker claim; it is an
+> **invalid** claim, and `VAL-VIS-1784` classifies it as `HALT`.
+
+### TBL-VIS-740: The Five Completion Claim Types
+
+| Type | Subject | Means | Minimum evidence | Mandatory clause | Legitimately usable in Oship today |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `CC-1 Authored` | A document or part | The text was written and committed | `EV1` — the file exists | "authored, not implemented" | **Yes** |
+| `CC-2 Reviewed` | A document | A second principal examined it | `EV2` — a review record by a different principal | "reviewed by <principal>" | **No** — one CODEOWNERS principal |
+| `CC-3 Validated` | A document or artefact | Automated checks passed | `EV4` — a CI run log | "validated by <check> at <SHA>" | **No** — zero installed workflows |
+| `CC-4 Implemented` | A capability | Executable code exists and runs | `EV4` plus `AS-6` | "implemented at <SHA>" | **No** — zero application source |
+| `CC-5 Operated` | A system | It runs in an environment under observation | `EV5` — production telemetry | "operated since <SHA>, observed by <mechanism>" | **No** — `AS-7` unreached |
+
+> **`VIS-737`.** Exactly one of the five claim types is currently admissible in Oship, and it is the
+> weakest. Every completion statement this repository is entitled to make reduces to **"this text was
+> written"**. That is a real achievement and the contract does not diminish it; the contract only
+> forbids it from being dressed as one of the other four.
+
+```mermaid
+flowchart TD
+    A["Proposed completion claim"] --> B{"What is the subject?"}
+    B -->|"A document"| C{"Has a second principal<br/>reviewed it?"}
+    B -->|"A capability"| D{"Does executable code<br/>exist for it?"}
+    B -->|"A system"| E{"Is it deployed and<br/>observed?"}
+    C -->|"No"| F["CC-1 AUTHORED<br/>clause required"]:::ok
+    C -->|"Yes"| G{"Did automated checks run?"}
+    G -->|"No"| H["CC-2 REVIEWED"]:::mid
+    G -->|"Yes"| I["CC-3 VALIDATED"]:::mid
+    D -->|"No"| J["REFUSE<br/>claim is CC-1 at most"]:::bad
+    D -->|"Yes"| K{"Is there EV4 evidence<br/>of it running?"}
+    K -->|"No"| L["AS-4 only<br/>REFUSE CC-4"]:::bad
+    K -->|"Yes"| M["CC-4 IMPLEMENTED"]:::ok2
+    E -->|"No"| N["REFUSE"]:::bad
+    E -->|"Yes"| O["CC-5 OPERATED"]:::ok2
+    classDef ok fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef ok2 fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef mid fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-165` — **Completion Claim Admission Decision Tree**
+> **Explanation:** Every path in Oship's current state terminates at `CC-1` or at a refusal. The
+> tree is drawn in full rather than pruned to the reachable branches so that it remains correct as
+> the repository advances, and so that an agent can see exactly which question it would have to
+> answer differently to earn a stronger claim. The question that unlocks the most branches is `K` —
+> the existence of `EV4` evidence — which is what §06.8 proposes to create.
+
+### TBL-VIS-741: Prohibited Formulations and Their Admissible Replacements
+
+| Prohibited | Why | Admissible replacement |
+| :--- | :--- | :--- |
+| "Oship is complete" | No subject; conflates all five types | "PART 06 of `AOM-VIS-001` is authored" |
+| "24 of 24 domains complete" | Counts folders, implies capability | "24 of 24 domain folders exist with an `INDEX.md`" |
+| "Production ready" | `CC-5`; unreachable at `M1` | Not replaceable — remove |
+| "Fully documented" | Unqualified totality claim | "documented to `K3`; unverifiable above `K3` with one principal" |
+| "Validated" | `CC-3`; requires `EV4` | "checked by an uncommitted procedure at `<SHA>`; not `EV4`" |
+| "Enterprise grade" | Unmeasurable | Not replaceable — remove |
+| "Implemented" for a specification | `CC-4` misuse | "specified" |
+| "100 percent coverage" | Unqualified percentage — `VAL-VIS-719` | "8 of 8 `AC-1` checks specified; 0 installed" |
+| "Battle tested" | `CC-5` with no telemetry | Not replaceable — remove |
+| "The system does X" | Present tense implies existence | "the specification requires that the system do X" |
+
+> **`VIS-738`.** The most insidious entry is the last. **Present-tense description of a specified
+> behaviour is the default register of technical writing**, and it silently converts `CC-1` into
+> `CC-4` in the reader's mind without any individual sentence being false in intent. `AOM-VIS-001`
+> handles this by reserving present tense for measured facts about the repository and using
+> "shall", "must" or "the specification requires" for everything else, and `VAL-VIS-1791` makes
+> that binding on future documents.
+
+### TBL-VIS-742: Completion Claim Audit — Existing Oship Documents
+
+| Document | Claim made | Type asserted | Type earned | Verdict |
+| :--- | :--- | :--- | :--- | :--- |
+| `README.md` badge "Knowledge Domains 24 of 24" | Totality | Reads as `CC-4` | `CC-1` | **Non-conforming** |
+| `README.md` "Enterprise Money Factory" | Category | Reads as `CC-5` | `CC-1` | **Non-conforming** |
+| `.ai/PROJECT_STATUS.md` part statuses | Authored | `CC-1` | `CC-1` | Conforming |
+| `AOM-ARCH-001` "PART 01 COMPLETE" | Authored | `CC-1` | `CC-1` | Conforming — the part is explicitly scoped |
+| `AOM-VIS-001` PARTS 01–05 "FROZEN" | Authored plus immutability | `CC-1` | `CC-1` | Conforming |
+| `ADR-0001` "APPROVED" | Decision status, not completion | Not a completion claim | — | Out of scope |
+| Domain `INDEX.md` files listing `PLANNED` items | Explicitly planned | Not a completion claim | — | Conforming |
+
+> **`VIS-739`.** Two non-conformances exist, both in `README.md`, both in the project's most-read
+> file. Neither is repaired by this document, because `README.md` is outside `AOM-VIS-001`'s scope
+> and `FAL-VIS-171` records that it is never loaded as agent context in any case. The remediation is
+> recorded as **`OBL-58`** and assigned to the `README.md` owner.
+
+### TBL-VIS-743: `OBL-58` — README Completion Claim Non-Conformance
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `OBL-58` |
+| **Statement** | `README.md` contains two completion claims that assert a claim type the repository has not earned. |
+| **Instances** | The "24 of 24" badge; the "Enterprise Money Factory" positioning line at L19 and the identity statement at L55 |
+| **Required action** | Re-express both per `TBL-VIS-741`, or add an explicit status qualifier adjacent to each |
+| **Authority** | `README.md` owner — the CODEOWNERS principal |
+| **Blocked by** | Nothing. This is an `AC-1`-class edit requiring no decision. |
+| **Severity** | Medium — the file is human-facing and not agent-loaded |
+| **Status** | **OPEN** |
+
+### TBL-VIS-744: §06.10 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1783` | Every completion claim must declare its type. | **HALT** | Type declared |
+| `VAL-VIS-1784` | A claim without its mandatory clause is invalid, not merely weak. | **HALT** | Clause present |
+| `VAL-VIS-1785` | `CC-2` may not be claimed with one CODEOWNERS principal. | **HALT** | Principal count |
+| `VAL-VIS-1786` | `CC-3` requires an `EV4` run log reference. | **HALT** | Log reference |
+| `VAL-VIS-1787` | `CC-4` requires `AS-6` and executable code. | **HALT** | Artefact existence |
+| `VAL-VIS-1788` | `CC-5` requires telemetry from a running environment. | **HALT** | Telemetry reference |
+| `VAL-VIS-1789` | Folder existence must never be reported as domain completion. | **HALT** | Badge audit |
+| `VAL-VIS-1790` | Prohibited formulations must not appear in any L1 document. | **HALT** | String scan of `TBL-VIS-741` |
+| `VAL-VIS-1791` | Present tense is reserved for measured repository facts. | **ERROR** | Tense audit |
+| `VAL-VIS-1792` | Specified behaviour uses "shall", "must" or "the specification requires". | **ERROR** | Modal audit |
+| `VAL-VIS-1793` | Unqualified percentages are prohibited — reaffirms `VAL-VIS-719`. | **HALT** | Percentage scan |
+| `VAL-VIS-1794` | A claim's subject must be named, never implied. | **ERROR** | Subject presence |
+| `VAL-VIS-1795` | Claim type may not be upgraded without new evidence. | **HALT** | Evidence delta |
+| `VAL-VIS-1796` | A part's completion claim is scoped to that part. | **ERROR** | Scope statement |
+| `VAL-VIS-1797` | "Frozen" asserts immutability, not validation. | **ERROR** | Semantics |
+| `VAL-VIS-1798` | Non-conformances found must be recorded as obligations, not silently fixed outside scope. | **ERROR** | Obligation record |
+| `VAL-VIS-1799` | Documents outside a document's scope must not be edited to resolve its findings. | **HALT** | Scope discipline |
+| `VAL-VIS-1800` | The claim audit must include the auditing document itself. | **HALT** | Self-inclusion |
+| `VAL-VIS-1801` | A status word with no defined type is prohibited. | **ERROR** | Vocabulary closure |
+| `VAL-VIS-1802` | "Ready" in any compound is prohibited below `M4`. | **HALT** | String scan |
+| `VAL-VIS-1803` | Claim clauses must cite a commit SHA, never a date. | **ERROR** | `observed_at` form |
+| `VAL-VIS-1804` | An agent may not infer a stronger claim from an aggregate of weaker ones. | **HALT** | Aggregation rule |
+| `VAL-VIS-1805` | Claim-type definitions are constitutional and may only change by `DEC-VIS`. | **ERROR** | Amendment path |
+| `VAL-VIS-1806` | Every closure record must state the strongest admissible claim type. | **HALT** | Closure completeness |
+
+---
+
+## 06.11 — Supersession and Amendment
+
+### AI NAVIGATION METADATA — §06.11
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P0 — read before changing any accepted content |
+| **AI DEPENDENCIES** | Append-only part model · `DEC-VIS-050` · `VAL-VIS-952` |
+| **AI INPUTS** | A proposed change to accepted content |
+| **AI OUTPUTS** | The permitted mechanism, or refusal |
+| **AI IMPLEMENTATION IMPACT** | Preserves the integrity of the frozen corpus |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1807`…`VAL-VIS-1824` |
+| **AI RELATED DOCUMENTS** | `.ai/DECISION_LOG.md` · `MASTER_CONTEXT_RULES.md` |
+
+---
+
+### 06.11.1 The Append-Only Constraint Restated
+
+> **`VIS-740`.** `AOM-VIS-001` PARTS 01–05 are frozen: byte-identical to their commit of record and
+> not editable. This is not a courtesy to the author. It is the mechanism by which a document that
+> is 25,000 lines long remains **citable** — a rule cited as `VAL-VIS-437` must mean, forever, what
+> it meant when it was cited, or every cross-reference in the corpus becomes a liability.
+
+> **`VIS-741`.** The corollary is that the corpus must have a way to be **wrong and correctable at
+> the same time**. Freezing without an amendment mechanism produces one of two failures: either the
+> document ossifies around its errors, or the freeze is quietly broken. §06.11 specifies the four
+> legitimate mechanisms so that neither is necessary.
+
+### TBL-VIS-745: The Four Amendment Mechanisms
+
+| Mechanism | When to use | What it does to the original | Record required | Precedent in this document |
+| :--- | :--- | :--- | :--- | :--- |
+| `AM-1 Supersession` | The original is wrong or outdated in substance | Remains present and readable; marked superseded by the new record | New record naming the superseded ID and every surviving provision | `TBL-VIS-677` superseding the stale `TBL-VIS-560` row |
+| `AM-2 Ceiling raise` | A namespace is exhausted | Untouched | `DEC-VIS` record; raise-only per `VAL-VIS-948` | `DEC-VIS-048`, `049`, `050` |
+| `AM-3 Errata record` | A factual or typographic error with no semantic consequence | Untouched | Errata entry in the part's closure record | Reserved — none issued |
+| `AM-4 Obligation` | The defect cannot be repaired within the document's scope | Untouched | `OBL-nn` entry with authority and blocker | `OBL-44`…`OBL-58` |
+
+> **`VIS-742`.** In-place editing is absent from the table because it is not a mechanism. The only
+> in-place changes permitted to a frozen part are those made **before** the part's commit of record,
+> which by definition are not amendments. The `IMG-VIS-030` and `TBL-VIS-687` repairs are examples:
+> both were caught pre-commit and are therefore not amendments, and both are documented in the error
+> log so that the distinction cannot later be misread as a broken freeze.
+
+```mermaid
+flowchart TD
+    A["Defect or change identified<br/>in accepted content"] --> B{"Is the content committed?"}
+    B -->|"No"| C["Repair in place<br/>record in the error log"]:::ok
+    B -->|"Yes"| D{"Semantic consequence?"}
+    D -->|"None - typo or format"| E["AM-3 ERRATA<br/>closure record entry"]:::mid
+    D -->|"Yes"| F{"Namespace exhaustion?"}
+    F -->|"Yes"| G["AM-2 CEILING RAISE<br/>DEC-VIS record"]:::mid
+    F -->|"No"| H{"Repairable within<br/>this document's scope?"}
+    H -->|"Yes"| I["AM-1 SUPERSESSION<br/>new record naming<br/>surviving provisions"]:::ok
+    H -->|"No"| J["AM-4 OBLIGATION<br/>OBL-nn with authority"]:::warn
+    C --> K["Frozen prefix unchanged"]:::ok
+    E --> K
+    G --> K
+    I --> K
+    J --> K
+    L["In-place edit of<br/>committed content"]:::bad --> M["PROHIBITED<br/>VAL-VIS-1807 HALT"]:::bad
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef mid fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-166` — **Amendment Mechanism Selection**
+> **Explanation:** Every legitimate path converges on node `K`: the frozen prefix is unchanged. That
+> convergence is the invariant, and it is mechanically checkable by byte-comparing the first N lines
+> of the file against `git show <sha>:<path>` — a check the §06.8 artefact should adopt in v2. The
+> prohibited path is drawn disconnected from the main flow deliberately, because it is not a
+> decision an agent is entitled to reach.
+
+### TBL-VIS-746: Supersession Record Required Fields
+
+| Field | Requirement | Rationale |
+| :--- | :--- | :--- |
+| Superseding ID | The new record's own identifier | Citability |
+| Superseded ID | The exact identifier being superseded | Unambiguous target |
+| Scope of supersession | Which provisions die and which survive | `VAL-VIS-952` — partial supersession is the norm |
+| Surviving provisions | Enumerated explicitly, never "the rest" | Prevents silent widening |
+| Reason | Why the original no longer holds | Provenance |
+| Effective from | The commit SHA at which it takes effect | Never a date — `VIS-051` |
+| Author | Role, not a person | `VIS-032` |
+| Evidence | What was measured that invalidated the original | Prevents preference-driven supersession |
+
+> **`VIS-743`.** The "surviving provisions" field is the one most often omitted and the one that
+> causes the most damage. A supersession that does not enumerate what survives converts every
+> downstream citation of the original into an `UNKNOWN`, and `DEC-VIS-048` and `DEC-VIS-049` were
+> both drafted with explicit "supersede ceiling provisions only" language precisely to avoid
+> invalidating the rest of the records they touched.
+
+### TBL-VIS-747: Amendment Audit — `AOM-VIS-001` To Date
+
+| Amendment | Mechanism | Target | Surviving provisions named | Frozen prefix intact |
+| :--- | :--- | :--- | :--- | :--- |
+| `TBL-VIS-677` | `AM-1` | `TBL-VIS-560` stale row | Yes | Yes |
+| `DEC-VIS-048` | `AM-2` | `VAL-VIS-` ceiling 1600→2200 | Yes — ceiling only | Yes |
+| `DEC-VIS-049` | `AM-2` | `FAL-VIS-` ceiling 400→600 | Yes — ceiling only | Yes |
+| `DEC-VIS-050` | `AM-2` | Four lapsed ceilings plus three first-ever | Yes | Yes |
+| `OBL-44` | `AM-4` | `[0-9]{3}` regex width | N/A | Yes |
+| `OBL-50` | `AM-1` closed | `TBL-VIS-560` | Yes | Yes |
+| `OBL-53` | `AM-4` | PART 05 forecast/actual ID divergence | N/A | Yes |
+| **PART 06 ToC forecast divergence** | **`AM-4`** | **`TBL-VIS-` ranges in the PART 06 ToC** | N/A | Yes — see `OBL-59` |
+
+### TBL-VIS-748: `OBL-59` — PART 06 Table of Contents Range Forecast Divergence
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `OBL-59` |
+| **Statement** | The PART 06 Table of Contents forecasts `TBL-VIS-` ranges per section that actual allocation has not matched; sections have consumed fewer identifiers than forecast, so from §06.7 onward the actual numbers run below the forecast ranges. |
+| **Evidence** | ToC forecasts §06.7 at `TBL-VIS-743`…`752`; actual allocation for §06.7 is `TBL-VIS-726`…`729`. |
+| **Why not repaired in place** | The ToC is inside the PART 06 committed prefix. Editing it would break the freeze for a forecasting artefact of no semantic weight. |
+| **Governing principle** | Forecast ranges are **advisory**; the caption line is the sole allocation record — reaffirms `VAL-VIS-949`, mention is not allocation. |
+| **Required action** | Future parts must publish ToC identifier columns as `forecast, advisory` or omit them; recurrence of `OBL-53`. |
+| **Resolution in this part** | Allocation continues strictly sequentially from the last caption. The closure record `TBL-VIS-863` publishes the actual ranges, which supersede the ToC forecast for citation purposes. |
+| **Status** | **OPEN** — process obligation, not a content defect |
+
+### TBL-VIS-749: §06.11 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1807` | In-place editing of committed content is prohibited. | **HALT** | Byte-compare frozen prefix |
+| `VAL-VIS-1808` | A supersession must enumerate surviving provisions explicitly. | **HALT** | Field presence |
+| `VAL-VIS-1809` | "The rest survives" is not an enumeration. | **HALT** | Phrase scan |
+| `VAL-VIS-1810` | Ceilings may only be raised. | **HALT** | Reaffirms `VAL-VIS-948` |
+| `VAL-VIS-1811` | Errata may not carry semantic change. | **HALT** | Semantic diff |
+| `VAL-VIS-1812` | An obligation must name an authority capable of discharging it. | **ERROR** | Authority field |
+| `VAL-VIS-1813` | Pre-commit repair is not an amendment and must not be recorded as one. | **ERROR** | Classification |
+| `VAL-VIS-1814` | Every amendment must cite a commit SHA as its effective point. | **ERROR** | SHA present |
+| `VAL-VIS-1815` | Supersession requires measured evidence, not preference. | **HALT** | Evidence field |
+| `VAL-VIS-1816` | A superseded record remains readable in place. | **HALT** | No deletion |
+| `VAL-VIS-1817` | Identifiers of superseded records are never reused. | **HALT** | Reaffirms `VIS-347` |
+| `VAL-VIS-1818` | The amendment audit table must be reproduced in each part's closure record. | **ERROR** | Closure completeness |
+| `VAL-VIS-1819` | Forecast identifier ranges are advisory and must be labelled as such. | **ERROR** | ToC labelling |
+| `VAL-VIS-1820` | The caption line is the sole allocation record. | **HALT** | Allocation source |
+| `VAL-VIS-1821` | A forecast divergence must be recorded, not silently absorbed. | **ERROR** | Obligation record |
+| `VAL-VIS-1822` | Amendment mechanisms are closed; a fifth may not be improvised. | **HALT** | Mechanism enumeration |
+| `VAL-VIS-1823` | A frozen part's line count must be republished unchanged in every later part. | **ERROR** | Prefix line count |
+| `VAL-VIS-1824` | An agent that cannot select a mechanism must escalate, not choose the nearest. | **HALT** | Escalation record |
+
+---
+
+## 06.12 — Deprecation and Decommissioning
+
+### AI NAVIGATION METADATA — §06.12
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P1 — read before removing or retiring anything |
+| **AI DEPENDENCIES** | §06.2 states · §06.11 amendment · PART 05 decay |
+| **AI INPUTS** | A proposal to retire content, an artefact, or a capability |
+| **AI OUTPUTS** | The deprecation path and its required records |
+| **AI IMPLEMENTATION IMPACT** | Prevents silent loss of specified intent |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1825`…`VAL-VIS-1842` |
+| **AI RELATED DOCUMENTS** | `archive/` · `docs/architecture/SYSTEM_ARCHITECTURE.md` legacy |
+
+---
+
+### 06.12.1 Why a Pre-Implementation System Needs This
+
+> **`VIS-744`.** It appears premature to specify decommissioning for a system with zero
+> implementation. It is not, for a reason specific to Oship's shape: **the repository already
+> contains superseded content**, and it acquired it before writing a single line of application
+> code. `docs/architecture/SYSTEM_ARCHITECTURE.md` — a 39-line legacy five-layer ASCII stack — coexists
+> with the 10,844-line `AOM-ARCH-001`, and nothing in the corpus states which governs.
+
+> **`VIS-745`.** This is the general case. Specification-first systems accumulate **specification
+> debt** in exactly the way implementation-first systems accumulate code debt, and it is less visible
+> because obsolete documents do not fail tests. A deprecation model is needed at `M1`, not at `M4`.
+
+### TBL-VIS-750: The Deprecation Lifecycle
+
+| Stage | Name | Meaning | Required marker | Reversible |
+| :--- | :--- | :--- | :--- | :--- |
+| `DP-0` | Active | Governs | Status `ACTIVE` or a release status | — |
+| `DP-1` | Challenged | A newer record covers the same subject; precedence unstated | An obligation naming both | Yes |
+| `DP-2` | Superseded | A newer record governs; the original remains for provenance | `SUPERSEDED BY <ID>` in frontmatter and at the head of the body | Yes, by a further record |
+| `DP-3` | Deprecated | Retained but must not be cited as authority | `DEPRECATED` status plus a replacement pointer | Yes |
+| `DP-4` | Archived | Moved to `archive/`; retained for history only | Path change plus an archive record | Difficult |
+| `DP-5` | Removed | Deleted from the working tree; recoverable only from history | A removal record naming the last SHA containing it | **No** |
+
+> **`VIS-746`.** Only `DP-5` is irreversible, and it is the only stage that requires an explicit
+> human authorisation in Oship, because `VIS-347` guarantees identifier permanence and a removal is
+> the one operation that can strand a live citation. An agent may propose `DP-5` and may never
+> execute it.
+
+### TBL-VIS-751: Deprecation Candidate Register — Measured
+
+| Item | Overlaps with | Current stage | Correct stage | Blocker |
+| :--- | :--- | :--- | :--- | :--- |
+| `docs/architecture/SYSTEM_ARCHITECTURE.md` — 39 L, `DOC-ARC-002` | `AOM-ARCH-001` — 10,844 L | `DP-0` unmarked | **`DP-2` superseded** | Requires an owner decision; outside `AOM-VIS-001` scope |
+| `docs/MASTER_CONTEXT/01_PRODUCT/PRODUCT_VISION.md` — registered `PLANNED`, never created | `AOM-VIS-001` | `DP-0` as a registry entry | **`DP-2`** — the registry entry is superseded | Requires an `INDEX.md` edit, already mandated |
+| `architecture/DOMAIN_MODEL.md` — 33 L | PART 03 capability register | `DP-1` challenged | `DP-1` — precedence genuinely unstated | Needs an explicit precedence statement |
+| `.github/workflow-skeletons/` — 8 skeletons | §06.8 first artefact | `DP-0` | `DP-0` — **not deprecated; these are inputs** | None; they are `AS-2` assets |
+| `README.md` §"Why Money Factory" | PART 01 problem statement | `DP-1` | `DP-1` | `OBL-58` adjacent |
+
+> **`VIS-747`.** The fourth row is included to make a distinction the register would otherwise blur.
+> The workflow skeletons are **not** deprecation candidates despite being uninstalled — an
+> unimplemented specification is `AS-2`, which is a normal healthy state, whereas a superseded
+> specification is `DP-2`, which is a defect if unmarked. Conflating "not yet built" with "no longer
+> governs" is a live risk in a repository where almost nothing is built, and `FAL-VIS-348` records it.
+
+### TBL-VIS-752: Deprecation Failure Modes
+
+| ID | Failure mode | Description | Status | Detection |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-348` | **Unbuilt conflated with obsolete** | An `AS-2` specification marked deprecated because nothing implements it | **LATENT** | Stage-versus-state cross-check |
+| `FAL-VIS-349` | **Silent supersession** | A newer document governs but the older is unmarked | **PRESENT** — two instances in `TBL-VIS-751` | Subject-overlap scan |
+| `FAL-VIS-350` | **Archive as deletion** | Moving to `archive/` without a record, losing the pointer | **LATENT** | Archive record presence |
+| `FAL-VIS-351` | **Deprecated content still cited** | A `DP-3` record used as authority | **LATENT** | Citation scan against stage |
+| `FAL-VIS-352` | **Agent-executed removal** | An agent deletes content without human authorisation | **PREVENTED** — `VAL-VIS-1832` | Authorisation record |
+| `FAL-VIS-353` | **Precedence never stated** | Two documents cover one subject and neither yields | **PRESENT** — `architecture/DOMAIN_MODEL.md` | Overlap register |
+
+### TBL-VIS-753: §06.12 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1825` | Every document must carry a deprecation stage or be `DP-0` by default. | **ERROR** | Stage field |
+| `VAL-VIS-1826` | An unimplemented specification is `AS-2`, never deprecated for that reason alone. | **HALT** | Stage-versus-state check |
+| `VAL-VIS-1827` | Two documents covering one subject must state precedence. | **ERROR** | Overlap register |
+| `VAL-VIS-1828` | `DP-2` requires a `SUPERSEDED BY` marker in frontmatter and body. | **ERROR** | Marker presence |
+| `VAL-VIS-1829` | A `DP-3` record must not be cited as authority. | **HALT** | Citation scan |
+| `VAL-VIS-1830` | Archiving requires a record naming the origin path. | **ERROR** | Archive record |
+| `VAL-VIS-1831` | Removal requires a record naming the last containing SHA. | **HALT** | Removal record |
+| `VAL-VIS-1832` | An agent may propose but never execute `DP-5`. | **HALT** | Authorisation |
+| `VAL-VIS-1833` | Deprecation must not be used to resolve a disagreement about content. | **HALT** | Reason audit |
+| `VAL-VIS-1834` | A superseded document remains readable at its original path until archived. | **ERROR** | Path stability |
+| `VAL-VIS-1835` | Identifiers in deprecated content remain allocated forever. | **HALT** | Reaffirms `VIS-347` |
+| `VAL-VIS-1836` | The candidate register must be measured, not assumed. | **HALT** | Evidence per row |
+| `VAL-VIS-1837` | Items outside the current document's scope are recorded, not edited. | **HALT** | Scope discipline |
+| `VAL-VIS-1838` | `DP-1` challenged must resolve to `DP-0` or `DP-2` within one part. | **ERROR** | Resolution tracking |
+| `VAL-VIS-1839` | Deprecation stage is independent of adoption state. | **ERROR** | Orthogonality |
+| `VAL-VIS-1840` | A deprecation record must name a replacement or state that none exists. | **ERROR** | Replacement field |
+| `VAL-VIS-1841` | Bulk deprecation of a directory is prohibited; each item is individually recorded. | **HALT** | Granularity |
+| `VAL-VIS-1842` | The register must distinguish scope-blocked items from decision-blocked items. | **ERROR** | Blocker classification |
+
+---
