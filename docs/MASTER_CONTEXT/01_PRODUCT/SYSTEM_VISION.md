@@ -26303,3 +26303,411 @@ flowchart LR
 | `VAL-VIS-1884` | Total risk score must be published, not only individual scores. | **ERROR** | Aggregate |
 
 ---
+
+## 06.15 — The Human Dependency
+
+### AI NAVIGATION METADATA — §06.15
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before concluding that an agent can proceed alone** |
+| **AI DEPENDENCIES** | §06.4 critical path · §06.13 `QG-3` · §06.14 `ARK-01`, `ARK-03` · `ACT-VIS-001`…`016` |
+| **AI INPUTS** | A blocked action |
+| **AI OUTPUTS** | Which human authority is required, and the exact escalation content |
+| **AI IMPLEMENTATION IMPACT** | Determines what an agent must ask for rather than attempt |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1885`…`VAL-VIS-1908` |
+| **AI RELATED DOCUMENTS** | `.github/CODEOWNERS` · `.ai/NEXT_ACTION.md` |
+
+---
+
+### 06.15.1 The Structural Fact
+
+> **`VIS-756`.** Oship has **one human principal**. `CODEOWNERS` routes every path in the repository
+> to `@afshin-omnisystem`. This single measured fact propagates into more conclusions than any other
+> observation in `AOM-VIS-001`, and §06.15 collects them in one place because they have been reached
+> separately in four different parts and their common cause has never been stated as such.
+
+### TBL-VIS-762: Consequences of the Single-Principal Fact
+
+| Consequence | Where first derived | Mechanism |
+| :--- | :--- | :--- |
+| Corpus trust ceiling is `K3` | PART 05 §05.8 | `K4` requires independent verification |
+| `QG-3` Review is unreachable | PART 04, restated §06.13 | Author equals reviewer |
+| `EV2` evidence cannot be produced | PART 04 | Review records require a second party |
+| Maturity `M4` and `M5` unreachable | §06.6 | Both require `K4` |
+| `VAL-VIS-1632` author-not-verifier is unsatisfiable | §06.2 | `OBL-55` |
+| `CC-2` Reviewed claims inadmissible | §06.10 | `VAL-VIS-1785` |
+| `AS-6` requires machine verification instead of human | §06.2 | The only available substitute |
+| Every `ACT-VIS-` role resolves to the same person | §06.4 | 16 roles, 1 principal |
+
+> **`VIS-757`.** The last row is the one with operational teeth. `AOM-VIS-001` defines sixteen
+> `ACT-VIS-` authority roles as though they were separable, and in the current repository **all
+> sixteen are the same individual**. Role separation is a specification-level fiction that the
+> repository does not instantiate, and any control that depends on two roles disagreeing is
+> therefore inoperative — a fact that must be stated rather than allowed to appear as a satisfied
+> control.
+
+```mermaid
+flowchart TD
+    P["1 CODEOWNERS principal"]:::root
+    P --> A["Author equals reviewer"]:::c
+    P --> B["16 ACT-VIS roles<br/>collapse to 1 person"]:::c
+    A --> C["No EV2 evidence"]:::e
+    A --> D["QG-3 unreachable"]:::e
+    C --> E["Trust ceiling K3"]:::e
+    E --> F["M4 and M5 unreachable"]:::e
+    D --> G["CC-2 inadmissible"]:::e
+    B --> H["Separation-of-duty controls<br/>inoperative"]:::e
+    E --> I["AS-6 must be reached by<br/>MACHINE verification"]:::sol
+    I --> J["Install CI - QG-4<br/>the only substitute available"]:::sol
+    K["Add a second principal"]:::sol2 --> L["Unblocks C, D, E, F, G, H<br/>at once"]:::sol2
+    classDef root fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef c fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef e fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef sol fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef sol2 fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-168` — **Propagation of the Single-Principal Constraint**
+> **Explanation:** The red subgraph is a single causal cascade from one root, not eight separate
+> problems. Two remedies exist and they are not equivalent. Adding a second principal (green)
+> collapses the entire cascade at once and is the only complete remedy. Installing CI (amber) does
+> not restore `EV2` or `QG-3`, but it supplies the one substitute the model accepts for reaching
+> `AS-6` — machine verification in place of a second human. An agent can execute the amber remedy;
+> only `ACT-VIS-001` can execute the green one.
+
+### TBL-VIS-763: The Human Decision Queue — Everything Awaiting a Principal
+
+| ID | Decision required | Blocks | Cost to decide | Reversible | Age |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `OBL-03` | Persistence technology selection | 142 of 170 capabilities; `W2`, `W3`, `W4`, `W5` | One decision, recordable in an ADR | Yes, if abstracted behind a port | Open since PART 02 |
+| `OBL-55` | How to satisfy author-not-verifier with one principal | `AS-6` for every artefact | Choose: second principal, or accept machine verification as the substitute | Yes | Opened §06.2 |
+| `OBL-56` | Fill `ACT-VIS-004` or reassign its critical-path links | 1 critical-path link | Assignment | Yes | Opened §06.4 |
+| `OBL-57` | Mechanise `WC-006` or accept it as manual | `W1` exit criterion | Ruling | Yes | Opened §06.5 |
+| `OBL-58` | Repair `README.md` claim non-conformances | Human-facing accuracy | Small edit | Yes | Opened §06.10 |
+| `OBL-51` | PART 04 release-gate finding | `QG-2` | Ruling | Yes | Open since PART 04 |
+| `W2` language selection | Implementation language | All `AC-2`+ capabilities | One decision | Partially | Not yet formally opened |
+| Second CODEOWNERS principal | Governance | The entire `DGM-VIS-168` cascade | One file edit plus a person | Yes | Never formally raised — **raised here** |
+
+> **`VIS-758`.** Eight items are queued and **not one of them is expensive to decide**. Every entry
+> in the "cost to decide" column is a single ruling, an assignment, or a one-line file edit. The
+> constraint on Oship's adoption is not the difficulty of the decisions; it is that they have not
+> been put to the principal in a form that makes deciding easy. §06.15.2 supplies that form.
+
+### 06.15.2 The Escalation Contract
+
+> **`VIS-759`.** An escalation that says "a decision is needed" transfers the analytical work to the
+> principal and predictably stalls. The contract below requires the agent to do the analysis and
+> present a decision that can be taken by selecting an option, with a stated default that applies if
+> no selection is made.
+
+### TBL-VIS-764: Required Fields of a Valid Escalation
+
+| Field | Requirement | Why |
+| :--- | :--- | :--- |
+| Decision statement | One sentence, answerable | Prevents open-ended deliberation |
+| Blocked items | Enumerated with counts | Makes the cost of delay visible |
+| Options | 2–4, each with consequences | Selecting is cheaper than composing |
+| Recommendation | One option, with reasoning | The agent's analysis, not deferred |
+| Reversibility | Stated per option | Lowers the perceived stake |
+| Default on no response | What proceeds if nothing is decided | Prevents indefinite stall |
+| Cost of delay | What accrues per unit of inaction | Quantifies the status quo |
+| Evidence | The measurements supporting the analysis | Prevents preference-driven framing |
+
+### TBL-VIS-765: Worked Escalation — `OBL-03`
+
+| Field | Content |
+| :--- | :--- |
+| **Decision statement** | Which persistence technology shall Oship's first stateful capability use? |
+| **Blocked items** | 142 of 170 capabilities; waves `W2`–`W5`; gates `QG-5`, `QG-6`; maturity above `M2` |
+| **Option A** | Relational, single engine. Consequence: unblocks `AC-3` immediately; strong fit for ledger and audit semantics; commits to a schema-migration discipline. |
+| **Option B** | Event-sourced log with projections. Consequence: strong fit for the "Money Factory" audit narrative in `architecture/DOMAIN_MODEL.md`; higher initial complexity; harder to staff with one principal. |
+| **Option C** | Defer, and implement only `AC-1` and `AC-2` capabilities. Consequence: `W1` and part of `W2` proceed; 142 capabilities stay blocked; drift continues. |
+| **Recommendation** | **Option A**, abstracted behind a persistence port so that Option B remains reachable. It unblocks the largest number of capabilities at the lowest complexity, and the port makes it reversible. |
+| **Reversibility** | A: reversible behind a port. B: costly to reverse. C: fully reversible, but accrues drift. |
+| **Default on no response** | **Option C applies by default and is already in force.** Inaction is not neutral; it is a selection of Option C. |
+| **Cost of delay** | Each part authored under Option C raises the drift ratio and moves zero gates. Measured: three parts, zero gates moved. |
+| **Evidence** | `TBL-VIS-726` class distribution; `TBL-VIS-755` gate verdicts; `TBL-VIS-735` drift series |
+
+> **`VIS-760`.** The "default on no response" row is the most important line in §06.15. **Inaction on
+> `OBL-03` is not a deferral of the decision; it is the continuing selection of Option C**, with all
+> of Option C's measured consequences. Framing the status quo as an option that is actively being
+> chosen is the single most effective device available to an agent that cannot decide for itself,
+> and `VAL-VIS-1893` makes it mandatory in every escalation.
+
+### TBL-VIS-766: What an Agent May Do While Blocked
+
+| Permitted | Prohibited |
+| :--- | :--- |
+| Build `AC-1` artefacts | Start `AC-3` work speculatively |
+| Add frontmatter to non-conforming files | Select the persistence technology |
+| Install the `W1` workflow | Select the product language |
+| Record obligations and risks | Mark an obligation resolved without an authority ruling |
+| Escalate per `TBL-VIS-764` | Escalate without options and a recommendation |
+| Report that it is blocked | Write further specification instead of reporting it |
+| Refuse a release | Lower a gate to enable one |
+
+### TBL-VIS-767: §06.15 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1885` | The principal count must be measured from `CODEOWNERS`, never assumed. | **HALT** | File inspection |
+| `VAL-VIS-1886` | Controls requiring role separation must be marked inoperative when roles collapse. | **HALT** | Role-collapse audit |
+| `VAL-VIS-1887` | A satisfied-looking control that is structurally unsatisfiable must be reported as such. | **HALT** | Control audit |
+| `VAL-VIS-1888` | Consequences of the principal constraint must be collected in one place. | **ERROR** | Consequence table |
+| `VAL-VIS-1889` | Every blocked item must name the authority that can unblock it. | **HALT** | Authority field |
+| `VAL-VIS-1890` | An escalation must include 2–4 options with consequences. | **HALT** | Option count |
+| `VAL-VIS-1891` | An escalation must include the agent's recommendation. | **HALT** | Recommendation field |
+| `VAL-VIS-1892` | Reversibility must be stated per option. | **ERROR** | Reversibility field |
+| `VAL-VIS-1893` | The default on no response must be stated and identified as an active selection. | **HALT** | Default field |
+| `VAL-VIS-1894` | Cost of delay must be quantified from measurement. | **HALT** | Evidence |
+| `VAL-VIS-1895` | An agent must not take a decision reserved to a principal. | **HALT** | Authority check |
+| `VAL-VIS-1896` | An agent must not treat silence as authorisation. | **HALT** | Consent audit |
+| `VAL-VIS-1897` | The decision queue must be published with ages. | **ERROR** | Age column |
+| `VAL-VIS-1898` | Cost-to-decide must be stated so that cheap decisions are visible as cheap. | **ERROR** | Cost column |
+| `VAL-VIS-1899` | Adding a second principal must be listed as an available remedy wherever the cascade is described. | **HALT** | Remedy presence |
+| `VAL-VIS-1900` | Machine verification is an accepted substitute only for `AS-6`, never for `EV2` or `QG-3`. | **HALT** | Substitution scope |
+| `VAL-VIS-1901` | An agent must report being blocked rather than producing substitute output. | **HALT** | Substitution audit |
+| `VAL-VIS-1902` | Escalations must be recorded in `.ai/NEXT_ACTION.md`, not only in the document. | **ERROR** | Control plane sync |
+| `VAL-VIS-1903` | A worked escalation example must exist for the highest-impact open obligation. | **ERROR** | Example presence |
+| `VAL-VIS-1904` | Options must not be constructed so that one is obviously unacceptable. | **ERROR** | Option integrity |
+| `VAL-VIS-1905` | The status quo must appear as an explicit option. | **HALT** | Option C presence |
+| `VAL-VIS-1906` | Role definitions must state their current occupant count. | **ERROR** | Occupancy |
+| `VAL-VIS-1907` | An obligation may only be closed by its named authority. | **HALT** | Closure authority |
+| `VAL-VIS-1908` | The permitted/prohibited table must be reproduced wherever an agent is instructed. | **ERROR** | Instruction completeness |
+
+---
+
+## 06.16 — Adoption Failure and Recovery
+
+### AI NAVIGATION METADATA — §06.16
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read when adoption has stalled or reversed** |
+| **AI DEPENDENCIES** | §06.2 states · §06.9 drift · §06.14 risks |
+| **AI INPUTS** | An observed adoption failure |
+| **AI OUTPUTS** | Its classification and the prescribed recovery |
+| **AI IMPLEMENTATION IMPACT** | Restores forward motion after a stall |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1909`…`VAL-VIS-1932` |
+| **AI RELATED DOCUMENTS** | `.ai/LESSONS_LEARNED.md` |
+
+---
+
+### 06.16.1 Failure Taxonomy
+
+> **`VIS-761`.** Adoption fails in five distinguishable ways, and the distinction matters because the
+> recoveries are different and applying the wrong one deepens the failure. In particular, the
+> recovery for a **stall** is to build something small, while the recovery for a **regression** is to
+> stop and re-establish evidence — and a stall misdiagnosed as a regression produces exactly the
+> audit-and-document response that caused the stall.
+
+### TBL-VIS-768: Adoption Failure Taxonomy
+
+| ID | Failure | Signature | Oship status | Recovery |
+| :--- | :--- | :--- | :--- | :--- |
+| `AF-1 Stall` | No state transition across ≥2 units of work; specification continues | Drift ratio rising, `A` = 0 | **PRESENT** | Build the smallest `AC-1` artefact; do not audit further |
+| `AF-2 Regression` | An artefact moves backwards in state | `AS-5`→`AS-4`, e.g. a workflow removed | Not applicable — nothing above `AS-3` | Restore evidence; investigate the removal |
+| `AF-3 False advance` | A state is claimed without its evidence | `AS-6` claimed with no `EV4` | **PREVENTED** by `VAL-VIS-1786` | Revert the claim; record the near-miss |
+| `AF-4 Fragmentation` | Multiple partial artefacts, none complete | Several `AS-4` items, zero `AS-5` | Not applicable — zero `AS-4` | Finish one; abandon or park the rest |
+| `AF-5 Abandonment` | Work stops entirely | No commits, no obligations discharged | Not applicable | Re-establish the position from the closure record |
+
+> **`VIS-762`.** Oship exhibits exactly one failure mode, `AF-1 Stall`, and it exhibits it
+> unambiguously. The prescribed recovery is stated as a prohibition as well as an action: **build
+> the smallest artefact, and do not audit further.** This document is itself an audit, and the
+> recovery instruction it produces applies to whatever comes after it.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Healthy
+    Healthy --> Stall: no transition<br/>across 2 units
+    Healthy --> Regression: artefact moves back
+    Healthy --> FalseAdvance: claim without evidence
+    Healthy --> Fragmentation: many partial<br/>none complete
+    Stall --> Abandonment: no commits
+    Stall --> Healthy: build smallest AC-1 artefact
+    Regression --> Healthy: restore evidence
+    FalseAdvance --> Healthy: revert claim<br/>record near miss
+    Fragmentation --> Healthy: finish exactly one
+    Abandonment --> Healthy: reload closure record<br/>rebuild position
+    Stall --> Stall: write more specification
+    note right of Stall
+        Oship is here.
+        The self loop is the trap:
+        specification feels like recovery
+        and is not.
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-169` — **Adoption Failure State Machine**
+> **Explanation:** The self-loop on `Stall` is the only self-transition in the machine, and it is
+> drawn because it is the transition Oship has taken repeatedly. Writing more specification is a
+> legal move that returns the system to the state it was already in while consuming the effort that
+> would have exited it. Every other failure state has an exit that costs less than the loop.
+
+### TBL-VIS-769: Recovery Procedures
+
+| Failure | Step 1 | Step 2 | Step 3 | Verification of recovery |
+| :--- | :--- | :--- | :--- | :--- |
+| `AF-1` | Select the smallest `AC-1` artefact from `TBL-VIS-727` | Build and install it | Record the resulting `EV4` | `A` > 0 and `DR` falls |
+| `AF-2` | Identify the removed evidence | Restore or replace the mechanism | Record why it was removed | State restored, cause recorded |
+| `AF-3` | Revert the claim to its earned type | Record the near-miss as a `FAL-` entry | Add the check that would have caught it | Claim audit passes |
+| `AF-4` | Rank partial artefacts by distance to `AS-5` | Complete exactly one | Park the rest at `AS-4` with a record | One artefact at `AS-5` |
+| `AF-5` | Load the last closure record | Recompute all measurements | Publish the delta since abandonment | Position re-established |
+
+### TBL-VIS-770: Adoption Failure Modes — Registry Extension
+
+| ID | Failure mode | Description | Status | Detection |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-354` | **Stall misdiagnosed as insufficient specification** | The response to a stall is more documentation | **PRESENT** — the dominant pattern | `DGM-VIS-169` self-loop count |
+| `FAL-VIS-355` | **Recovery audited instead of executed** | A recovery plan is written but not run | **LATENT** | Artefact count after the plan |
+| `FAL-VIS-356` | **Smallest artefact rule violated** | Recovery attempts a large artefact and stalls again | **LATENT** | Artefact size at recovery |
+| `FAL-VIS-357` | **Near-miss not recorded** | A false advance is corrected silently | **LATENT** | `FAL-` entry per correction |
+| `FAL-VIS-358` | **Closure record insufficient for recovery** | `AF-5` recovery impossible because the record lacks measurements | **PREVENTED** — §06.19 inventory | Closure completeness |
+| `FAL-VIS-359` | **Fragmentation from parallel starts** | Several artefacts begun, none finished | **LATENT** — becomes live once building starts | Concurrent `AS-4` count |
+| `FAL-VIS-360` | **Recovery without root removal** | The stall recurs because its cause is untouched | **LATENT** | Recurrence count |
+
+### TBL-VIS-771: §06.16 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1909` | An adoption failure must be classified before a recovery is chosen. | **HALT** | Classification record |
+| `VAL-VIS-1910` | `AF-1` recovery must not be further specification. | **HALT** | Recovery type |
+| `VAL-VIS-1911` | The recovery artefact must be the smallest available, not the most valuable. | **HALT** | Size justification |
+| `VAL-VIS-1912` | A recovery must be verified by a measurement, not by a statement. | **HALT** | Verification column |
+| `VAL-VIS-1913` | Near-misses must be recorded as `FAL-` entries. | **ERROR** | Registry entry |
+| `VAL-VIS-1914` | A stall must be declared after two units of work with no transition. | **HALT** | Unit counting |
+| `VAL-VIS-1915` | The self-loop must be reported when taken. | **HALT** | Loop record |
+| `VAL-VIS-1916` | Fragmentation recovery must complete exactly one artefact. | **ERROR** | Completion count |
+| `VAL-VIS-1917` | Parked artefacts must carry a record stating why. | **ERROR** | Park record |
+| `VAL-VIS-1918` | Abandonment recovery must recompute, never trust, prior measurements. | **HALT** | Recomputation |
+| `VAL-VIS-1919` | Failure modes not applicable in the current state must be marked so, not omitted. | **ERROR** | Coverage |
+| `VAL-VIS-1920` | A recovery plan without an executed step is not a recovery. | **HALT** | Execution evidence |
+| `VAL-VIS-1921` | Root cause must be removed or recorded as unremovable. | **ERROR** | Root handling |
+| `VAL-VIS-1922` | Recurrence must be counted and published. | **ERROR** | Recurrence metric |
+| `VAL-VIS-1923` | A document that diagnoses a stall must state that it is not itself the recovery. | **HALT** | Self-exclusion |
+| `VAL-VIS-1924` | Regression requires investigation of the removal, not only restoration. | **ERROR** | Cause record |
+| `VAL-VIS-1925` | False advance must add the missing check, not only revert the claim. | **HALT** | Check addition |
+| `VAL-VIS-1926` | Recovery steps must be ordered and numbered. | **ERROR** | Procedure form |
+| `VAL-VIS-1927` | The failure taxonomy is closed; a sixth mode requires a `DEC-VIS`. | **ERROR** | Taxonomy closure |
+| `VAL-VIS-1928` | Detection method must be stated per failure mode. | **ERROR** | Detection column |
+| `VAL-VIS-1929` | An agent must not classify a stall as healthy progress. | **HALT** | Classification integrity |
+| `VAL-VIS-1930` | Recovery verification must show `DR` falling. | **HALT** | Drift check |
+| `VAL-VIS-1931` | Multiple simultaneous failure modes must each be classified. | **ERROR** | Multiplicity |
+| `VAL-VIS-1932` | The current failure classification must appear in every closure record. | **HALT** | Closure completeness |
+
+---
+
+## 06.17 — Adoption Anti-Patterns
+
+### AI NAVIGATION METADATA — §06.17
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P1 — read before choosing what to do next |
+| **AI DEPENDENCIES** | §06.9 drift · §06.16 failures · PART 05 §05.21 |
+| **AI INPUTS** | A proposed course of action |
+| **AI OUTPUTS** | Whether it matches a known anti-pattern |
+| **AI IMPLEMENTATION IMPACT** | Prevents plausible-looking wasted work |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1933`…`VAL-VIS-1950` |
+| **AI RELATED DOCUMENTS** | `.ai/COMMON_MISTAKES.md` |
+
+---
+
+### 06.17.1 Method
+
+> **`VIS-763`.** Each anti-pattern below is stated with the reason it is **attractive**, because an
+> anti-pattern that looks obviously wrong needs no register. Every entry here is a course of action
+> that a competent agent would plausibly choose, and several have been chosen in this repository.
+> Observed instances are marked; unobserved ones are marked latent, and the distinction is evidential
+> rather than rhetorical.
+
+### TBL-VIS-772: Adoption Anti-Patterns — `AAP-01` to `AAP-20`
+
+| ID | Anti-pattern | Why it is attractive | Why it fails | Observed in Oship |
+| :--- | :--- | :--- | :--- | :--- |
+| `AAP-01` | **Specify until certain** | Every open question feels like a risk to resolve first | Certainty is unreachable; the corpus grows without bound | **Yes — five parts** |
+| `AAP-02` | **Complete the documentation set first** | Symmetry; 24 of 24 looks finishable | Folder completeness is `CC-1`; it moves no gate | **Yes — badge** |
+| `AAP-03` | **Wait for the blocking decision** | It is genuinely blocking for 84 percent of work | The other 16 percent stays unbuilt too | **Yes** |
+| `AAP-04` | **Build the most valuable capability first** | Maximises apparent return | It is `AC-3`; blocked; and unverifiable without CI | Latent |
+| `AAP-05` | **Skip CI, verify manually** | Faster for one run | Produces `EV3`, never `EV4`; caps at `AS-4` | **Yes — this document's own validation** |
+| `AAP-06` | **Treat scaffolding as progress** | Directory trees look like a system | `.gitkeep` files are `AS-3`; 73 exist and none advance | **Yes — 73 instances** |
+| `AAP-07` | **Version the specification instead of the system** | Version numbers signal maturity | Versioning a `CC-1` artefact implies `CC-3` | Latent |
+| `AAP-08` | **Rely on the author to verify** | Only one principal exists | Author equals verifier; unsatisfiable | **Yes — `OBL-55`** |
+| `AAP-09` | **Add rules to prevent a defect already prevented** | Rules are cheap to write | Rule count inflates; enforcement stays at zero | Latent — watch `VAL-` growth |
+| `AAP-10` | **Refactor the specification** | Improves coherence | Coherence was never the constraint | Latent |
+| `AAP-11` | **Start a new part when blocked** | Productive-feeling and always available | The definition of `AF-1` self-loop | **Yes** |
+| `AAP-12` | **Estimate rather than measure** | Faster than grepping | Produces figures that cannot be reproduced | Prevented — `VAL-VIS-1759` |
+| `AAP-13` | **Declare a wave closed on entry criteria** | Entry criteria are easier to meet | Entry is not exit; `W1` has 2 entry met, 0 of 6 exit | Prevented — §06.5 |
+| `AAP-14` | **Use the strongest defensible claim** | Presents the work well | Every claim type above `CC-1` is inadmissible | **Yes — README** |
+| `AAP-15` | **Solve the human dependency with more automation** | Automation is the agent's available lever | Machine verification substitutes for `AS-6` only, never `EV2` | Latent |
+| `AAP-16` | **Broaden scope when blocked** | New areas are unblocked because they are unexamined | They become blocked once examined; scope grows | **Yes — PART 06 exists partly for this reason** |
+| `AAP-17` | **Defer the smallest task because it is small** | Small tasks look like they can wait | The smallest task here opens four gates | **Yes — CI deferred five times** |
+| `AAP-18` | **Record an obligation and consider it handled** | Recording is real work and feels closing | 59 obligations recorded, few discharged | **Yes** |
+| `AAP-19` | **Reconcile forecasts by editing the forecast** | Restores apparent consistency | Breaks append-only; the ToC is committed | Prevented — `OBL-59` |
+| `AAP-20` | **Treat this register as the remedy** | Naming a problem feels like fixing it | The register is `CC-1`; it changes nothing alone | **Live risk for this section** |
+
+> **`VIS-764`.** Twelve of twenty anti-patterns are observed in this repository, not projected. That
+> proportion is not a criticism of the work, which is of high quality within its type; it is a
+> measurement of what happens when a capable agent operates for an extended period with every
+> implementation path blocked and one always-available alternative. **The environment selects for
+> `AAP-01`, `AAP-11` and `AAP-16`**, and no amount of agent diligence overcomes an environment that
+> makes exactly one action possible.
+
+### TBL-VIS-773: Anti-Pattern Countermeasures
+
+| Anti-pattern cluster | Countermeasure | Enforceable by |
+| :--- | :--- | :--- |
+| `AAP-01`, `AAP-11`, `AAP-16` — specification substitution | Drift rule: `PURE DRIFT` requires escalation before further specification | `VAL-VIS-1762`, mechanisable in the artefact's v2 |
+| `AAP-02`, `AAP-06`, `AAP-07`, `AAP-14` — claim inflation | Completion claim contract | `VAL-VIS-1783`…`1806`, mechanisable as a string scan |
+| `AAP-03`, `AAP-17` — waiting | Ranked unblocked action list, recomputed per part | `TBL-VIS-713`, manual |
+| `AAP-05`, `AAP-08`, `AAP-15` — verification substitution | Evidence class enforcement | `VAL-VIS-1786`, needs CI to enforce |
+| `AAP-09`, `AAP-10`, `AAP-18` — displacement activity | Obligation discharge rate published per part | `VAL-VIS-1943` |
+| `AAP-12`, `AAP-13`, `AAP-19` — measurement integrity | Measured-basis requirement | Mechanisable |
+| `AAP-20` — register as remedy | This section must be followed by an executed action | **Not mechanisable; `ACT-VIS-001`** |
+
+> **`VIS-765`.** Six of the seven clusters have a mechanisable countermeasure, and every one of those
+> six requires the same missing thing: an installed check that runs on every push. The register
+> converges on the same recommendation as §06.4, §06.7, §06.8, §06.13 and §06.14 — a sixth
+> independent derivation of the same first action.
+
+### TBL-VIS-774: Obligation Discharge Rate — Measured
+
+| Part | Obligations opened | Obligations discharged | Cumulative open |
+| :--- | :--- | :--- | :--- |
+| PARTS 01–03 | 43 | 0 | 43 |
+| PART 04 | 8 | 1 — `OBL-50` | 50 |
+| PART 05 | 3 | 0 | 53 |
+| PART 06 to §06.17 | 6 | 0 | **59** |
+| **Rate** | 60 opened | **1 discharged** | **1.7 percent** |
+
+> **`VIS-766`.** The discharge rate is **1.7 percent**. Fifty-nine obligations are open, and the one
+> discharged was closed by an append-only record rather than by an action in the world. This is
+> `AAP-18` quantified, and it is the clearest single number in PART 06 for demonstrating that the
+> repository's mechanism for recording work needing doing is functioning perfectly while the
+> mechanism for doing it does not exist.
+
+### TBL-VIS-775: §06.17 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1933` | Each anti-pattern must state why it is attractive. | **ERROR** | Attractiveness column |
+| `VAL-VIS-1934` | Observed instances must be distinguished from latent ones by evidence. | **HALT** | Evidence per row |
+| `VAL-VIS-1935` | The register must include anti-patterns exhibited by the document containing it. | **HALT** | Self-inclusion |
+| `VAL-VIS-1936` | Countermeasures must state their enforcement mechanism. | **ERROR** | Enforceability column |
+| `VAL-VIS-1937` | An unmechanisable countermeasure must be marked as such. | **ERROR** | `AAP-20` handling |
+| `VAL-VIS-1938` | The register must not be presented as a remedy. | **HALT** | Framing |
+| `VAL-VIS-1939` | Environmental causes must be distinguished from agent error. | **ERROR** | Attribution |
+| `VAL-VIS-1940` | Anti-patterns must be countermeasured in clusters where they share a root. | **ERROR** | Clustering |
+| `VAL-VIS-1941` | Rule-count growth must be monitored against enforcement count. | **ERROR** | `AAP-09` detection |
+| `VAL-VIS-1942` | Adding a rule that duplicates an existing one is prohibited. | **ERROR** | Duplicate semantics scan |
+| `VAL-VIS-1943` | Obligation discharge rate must be published per part. | **HALT** | Rate table |
+| `VAL-VIS-1944` | An obligation closed by a record rather than an action must be marked. | **ERROR** | Closure type |
+| `VAL-VIS-1945` | Scope broadening while blocked must be recorded as `AAP-16`. | **HALT** | Scope-change record |
+| `VAL-VIS-1946` | Deferring the smallest available action requires a stated reason. | **HALT** | Deferral reason |
+| `VAL-VIS-1947` | The count of observed anti-patterns must be published. | **ERROR** | Count |
+| `VAL-VIS-1948` | An anti-pattern may not be removed from the register once observed. | **ERROR** | Append-only |
+| `VAL-VIS-1949` | Convergent recommendations must be counted and reported as convergent. | **ERROR** | Convergence count |
+| `VAL-VIS-1950` | A section identifying a live risk to itself must state it. | **HALT** | `AAP-20` self-statement |
+
+---
