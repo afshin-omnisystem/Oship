@@ -19261,3 +19261,4495 @@ outcome:
 | **INHERITED FAILURES** | `VAL-VIS-437`, `VAL-VIS-443`, `VAL-VIS-456`, `VAL-VIS-470` — all HALT, all unchanged since PART 03 |
 
 ---
+
+# PART 05 — SYSTEM KNOWLEDGE ARCHITECTURE
+
+> **Document:** `AOM-VIS-001` · **Part:** 05 of a planned 6 · **Authority:** L1 — Strategic / Constitutional
+> **Appended after** the PART 04 continuation point. **PART 01, PART 02, PART 03 and PART 04 are
+> frozen** — nothing above this line is rewritten, reordered, renumbered, or squashed by this part.
+> The PART 04 continuation marker remains exactly as written; the marker at the end of *this* part
+> becomes the authoritative one.
+
+---
+
+## PART 05 — PREAMBLE
+
+### AI NAVIGATION METADATA — PART 05
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before loading, trusting, writing, or discarding any knowledge object in this repository** |
+| **AI DEPENDENCIES** | PART 01 §01.14 knowledge layers · PART 02 §02.03 domain decomposition · PART 03 §03.09 capability contracts · PART 04 §04.2 evidence classes · PART 04 §04.17 traceability matrix |
+| **AI INPUTS** | A document, a fact, a memory entry, a graph edge, a retrieved passage, or a proposition an agent is about to act on |
+| **AI OUTPUTS** | Whether that object is knowledge or merely data, what trust level it holds, what provenance it carries, when it expires, and whether it may drive an action |
+| **AI IMPLEMENTATION IMPACT** | Governs every retrieval, every context window assembly, every write to `.ai/`, every conflict between two documents, and every refusal to act on insufficient grounding |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-945`…`VAL-VIS-1289` |
+| **AI RELATED DOCUMENTS** | `MCX-MEM-001` `MASTER_CONTEXT_MEMORY_SYSTEM.md` — the memory counterpart to this part · `AOM-ARCH-001` §01.11 knowledge boundaries (read-only) · `docs/MASTER_CONTEXT/INDEX.md` §1003 domain registry · `.ai/CONTEXT_ROUTER.md` · `docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md` |
+
+---
+
+### What PART 05 Is For
+
+> **`VIS-569`.** PART 01 said *what Oship is*. PART 02 said *what Oship is made of*. PART 03 said
+> *what Oship can do*. PART 04 said *what Oship can prove*. PART 05 says the thing that makes the
+> previous four usable by a machine: **what Oship knows, how it knows it, and how that knowing is
+> handed to an agent without corrupting the agent's reasoning.**
+
+> **`VIS-570`.** This is not a documentation-management part. Documentation management asks *where
+> is the file*. Knowledge architecture asks a harder question: *when an agent reads that file, what
+> exactly has it acquired, and what is it now entitled to do?* Those are different questions with
+> different failure modes, and Oship has so far only answered the first.
+
+> **`VIS-571`.** The governing proposition of PART 05 is a subtraction, not an addition:
+
+> **KNOWLEDGE IS NOT DATA.** Knowledge is data plus context plus relationship plus meaning plus
+> validation plus provenance plus the ability to act. Strip any one of the six additions and what
+> remains may still be true, still be useful, and still be readable — but it is no longer knowledge,
+> and an agent that treats it as knowledge will make a category error whose symptoms appear far from
+> its cause.
+
+> **`VIS-572`.** That formula is testable against this repository right now, and the test is
+> unflattering. Measured on the working tree at the commit that precedes this part, Oship holds
+> **87 Markdown files** totalling **131,494 lines**. Every one of those lines is data. A far smaller
+> fraction satisfies all six additions. §05.2 and §05.16 quantify the shortfall rather than
+> asserting it; this preamble only names the shape of the problem.
+
+> **`VIS-573`.** The reason this part exists at all is that Oship's own architecture makes knowledge
+> a load-bearing structural element rather than a support function. A repository with **0
+> application source files** and **73 `.gitkeep` placeholder directories** has no executing code in
+> which behaviour can be encoded. Everything Oship currently *is*, it is in prose. That is a
+> deliberate Phase 0 posture recorded in `ADR-0001`, and it has an unavoidable consequence: **for
+> Oship, the knowledge base is not a description of the system — it is the system.** A defect in the
+> knowledge architecture is therefore not a documentation defect. It is a production defect in the
+> only production artefact that exists.
+
+> **`VIS-574`.** PART 05 is written for a reader who is not a person. A human reading a contradictory
+> pair of documents notices the contradiction, feels friction, and asks someone. An agent reading the
+> same pair silently selects whichever appeared later in its context window and proceeds with total
+> confidence. Human readers have built-in conflict detection; agents do not, unless the knowledge
+> architecture supplies it. Nearly every mechanism specified in this part — provenance chains,
+> trust levels, conflict resolution, decay, refusal vocabulary — exists to reconstruct in explicit
+> machinery what a careful human reader does implicitly and for free.
+
+---
+
+### The Knowledge Foundation Model
+
+> **`VIS-575`.** Before any registry, graph, or pipeline can be specified, the part needs a spine:
+> an ordered account of how raw material becomes something an agent may act upon. Oship adopts an
+> eight-level ascent. Each level is defined by **the single addition that distinguishes it from the
+> level below it**, because a maturity model whose levels are distinguished by adjectives rather
+> than by additions is unfalsifiable.
+
+```mermaid
+flowchart TD
+    L0["K-L0 RAW INFORMATION - undifferentiated signal, no boundary"]
+    L1["K-L1 DATA - a bounded, addressable value"]
+    L2["K-L2 STRUCTURED DATA - a value inside a declared schema"]
+    L3["K-L3 SEMANTIC INFORMATION - a value bound to a named concept"]
+    L4["K-L4 KNOWLEDGE - concept plus relationship plus provenance plus validation"]
+    L5["K-L5 UNDERSTANDING - knowledge whose implications can be derived"]
+    L6["K-L6 WISDOM - understanding that selects correctly under conflict and scarcity"]
+    L7["K-L7 ACTION - a change to the world justified by the levels beneath it"]
+
+    L0 -->|"add a boundary"| L1
+    L1 -->|"add a schema"| L2
+    L2 -->|"add meaning"| L3
+    L3 -->|"add relationship, provenance, validation"| L4
+    L4 -->|"add inference"| L5
+    L5 -->|"add judgement under conflict"| L6
+    L6 -->|"add authority and consequence"| L7
+
+    L7 -.->|"result observed, becomes new raw signal"| L0
+    L4 -.->|"decay without revalidation"| L1
+    L5 -.->|"drift when relationships break"| L3
+
+    subgraph PRESENT["PRESENT IN OSHIP TODAY - evidence class EV3 or better"]
+        L0
+        L1
+        L2
+        L3
+    end
+    subgraph PARTIAL["PARTIALLY PRESENT - specified, not mechanised"]
+        L4
+        L5
+    end
+    subgraph ABSENT["NOT PRESENT - no mechanism exists"]
+        L6
+        L7
+    end
+
+    classDef present fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef partial fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef absent fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class L0,L1,L2,L3 present
+    class L4,L5 partial
+    class L6,L7 absent
+```
+
+> **Diagram ID:** `DGM-VIS-132` — **The Knowledge Evolution Pyramid**
+> **Explanation:** The ascent is read upward; the dotted edges are the ones that matter operationally.
+> Knowledge does not merely fail to advance — it **falls**. `K-L4` decays to `K-L1` when validation
+> lapses, because unvalidated knowledge is indistinguishable from a bounded value of unknown truth.
+> `K-L5` drifts to `K-L3` when the relationships it depended on are severed, which is exactly what
+> happens when a document is moved without updating the documents that referenced it. The three
+> subgraphs are a measured claim about Oship, not a rhetorical device: levels 0 through 3 are
+> demonstrably present, 4 and 5 are specified by this document but not mechanised, and 6 and 7 have
+> no mechanism at all because **0 CI workflows are installed** and **no agent holds authority above
+> `A2`** under `VIS-033`.
+
+> **`VIS-576`.** The downward edges have a corollary that governs the rest of this part: **knowledge
+> is not a stored state, it is a maintained state.** A knowledge base left alone does not stay at
+> `K-L4`; it slides toward `K-L1` at a rate determined by how fast the world it describes changes.
+> §05.15 makes that rate explicit rather than leaving it as a metaphor.
+
+### TBL-VIS-559: Knowledge Maturity Levels
+
+| Level | Name | The single addition | Minimum test for membership | Oship instance, measured | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`K-L0`** | Raw information | none — this is the floor | Signal exists in some medium | A commit diff before anyone reads it; an unread log line | **PRESENT** |
+| **`K-L1`** | Data | A boundary and an address | The thing can be pointed at unambiguously | A line in `README.md`; the string `73` returned by a `find` on `.gitkeep` | **PRESENT** |
+| **`K-L2`** | Structured data | A declared schema the value sits inside | A parser can read it and reject malformed instances | YAML frontmatter — present on **87 of 87** Markdown files | **PRESENT** |
+| **`K-L3`** | Semantic information | Binding to a named, defined concept | The value resolves to a term defined elsewhere in the corpus | `Knowledge Domain: 01_PRODUCT` resolves to the §1003 domain registry | **PRESENT** |
+| **`K-L4`** | Knowledge | Relationship plus provenance plus validation | All six additions of `VIS-571` hold simultaneously | `TBL-VIS-390` capability statuses — has relationship and validation, provenance partial | **PARTIAL** |
+| **`K-L5`** | Understanding | Derivable implication | A consequence not written anywhere can be computed from what is | "`QG-6` is unattainable" is derived, never stated as an input | **PARTIAL — derived by authors, not by machinery** |
+| **`K-L6`** | Wisdom | Correct selection under conflict and scarcity | Two valid options, limited budget, defensible choice recorded | `DEC-VIS-040`'s refusal to create a prediction namespace | **NOT MECHANISED — human judgement only** |
+| **`K-L7`** | Action | Authority plus consequence | The world changes and the change is attributable | **None.** 0 workflows installed, 0 agent-authored merged changes | **ABSENT** |
+
+> **`VIS-577`.** Read the right-hand column as the honest headline of this part. Oship is a system
+> that has thoroughly solved levels 0 through 3, has specified level 4 in enormous detail without
+> mechanising it, performs levels 5 and 6 exclusively inside human and agent heads where they leave
+> no auditable trace, and does not reach level 7 at all. **Nothing in PART 05 changes that.** PART 05
+> specifies the architecture that would change it. The distinction is maintained on every page.
+
+---
+
+## 05.0 — Namespace Decisions and the Identifier Collision
+
+### AI NAVIGATION METADATA — §05.0
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before allocating any identifier anywhere in `AOM-VIS-001`** |
+| **AI DEPENDENCIES** | `VIS-347` identifiers are never reused · `DEC-VIS-036` PART 04 namespace creation · `DEC-VIS-038` `FAL-VIS-` ceiling · `DEC-VIS-042` `VAL-VIS-` ceiling |
+| **AI INPUTS** | A request to allocate a new identifier, or an instruction naming a specific identifier |
+| **AI OUTPUTS** | The next free value in the correct namespace, or a refusal plus the collision that caused it |
+| **AI IMPLEMENTATION IMPACT** | Every subsequent section of this part; any future part that continues these namespaces |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-945`…`VAL-VIS-968` |
+| **AI RELATED DOCUMENTS** | PART 04 §04.0 · `MASTER_CONTEXT_RULES.md` PART 04 domain registration rules |
+
+> **`VIS-578`.** PART 05 opens with a collision, and it is recorded here rather than silently
+> resolved because silent resolution of identifier conflicts is precisely the failure this document
+> exists to prevent. The instruction that commissioned PART 05 named four diagrams by number:
+> `DGM-VIS-115` Knowledge Evolution Pyramid, `DGM-VIS-116` Knowledge Universe Map, `DGM-VIS-117`
+> Enterprise Knowledge Graph, `DGM-VIS-118` Knowledge Ingestion Pipeline. **All four numbers were
+> already consumed by PART 04**, which is frozen.
+
+### TBL-VIS-560: Identifier Collision Register — Requested Versus Allocated
+
+| Requested ID | Requested meaning | Actual current holder | Holder's location | Resolution |
+| :--- | :--- | :--- | :--- | :--- |
+| `DGM-VIS-115` | Knowledge Evolution Pyramid | **The Oship Evidence Cycle** | PART 04 preamble, line 13855 | Pyramid reallocated to **`DGM-VIS-132`** |
+| `DGM-VIS-116` | Knowledge Universe Map | **Namespace Reopening Decision Procedure** | PART 04 §04.0, line 14057 | Universe Map reallocated to **`DGM-VIS-133`** |
+| `DGM-VIS-117` | Enterprise Knowledge Graph | **Why Preconditions Precede Metric Definition** | PART 04 §04.1, line 14231 | Knowledge Graph reallocated to **`DGM-VIS-135`** |
+| `DGM-VIS-118` | Knowledge Ingestion Pipeline | **Metric Trust Verdict Procedure** | PART 04 §04.1, line 14405 | Ingestion Pipeline reallocated to **`DGM-VIS-140`** |
+
+> **`VIS-579`.** The resolution rule is not a preference. `VIS-347` states that identifiers are
+> never reused, and PART 04 is frozen under the append-only part model, so the four numbers are
+> unavailable by construction. The commissioning instruction also carried its own identifier policy
+> — *audit the complete document, no duplicates, no fabricated ranges, continue existing namespaces*
+> — which resolves the conflict in favour of continuation. Where a specific number and a general
+> rule disagree, **the rule wins and the disagreement is published.** `TBL-VIS-560` is that
+> publication, and it exists so that a future agent searching for "Knowledge Evolution Pyramid" by
+> its originally-specified number finds the redirection instead of concluding the diagram is missing.
+
+> **`VIS-580`.** Two namespaces cannot accommodate PART 05's mandated yields at their current
+> ceilings. This was determined by audit before a single identifier was written, and it is the exact
+> circumstance in which the commissioning instruction requires a `DEC-VIS-` record to be created
+> first.
+
+### TBL-VIS-561: Namespace Headroom Audit — Executed Before Allocation
+
+| Namespace | Next free | Ceiling | Headroom | PART 05 demand | Verdict |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `VIS-` | `VIS-569` | none declared | unbounded | ~180 statements | **SUFFICIENT** |
+| `TBL-VIS-` | `TBL-VIS-559` | none declared | unbounded | ~130 tables | **SUFFICIENT** |
+| `DGM-VIS-` | `DGM-VIS-132` | none declared | unbounded | ~22 diagrams | **SUFFICIENT** |
+| `VAL-VIS-` | `VAL-VIS-945` | 1000 under `DEC-VIS-042` | **56** | ≥100 in §05.8 alone, ~345 total | **INSUFFICIENT — ceiling raise required** |
+| `FAL-VIS-` | `FAL-VIS-291` | 300 under `DEC-VIS-038` | **10** | ≥50 in §05.21 | **INSUFFICIENT — ceiling raise required** |
+| `IMG-VIS-` | `IMG-VIS-053` | 060 under `DEC-VIS-039` | 8 | 6 specifications | **SUFFICIENT — 2 slots will remain** |
+| `DEC-VIS-` | `DEC-VIS-043` | none declared | unbounded | 5 decisions | **SUFFICIENT** |
+| `AI-VIS-` | `AI-VIS-116` | none declared | unbounded | ~30 directives | **SUFFICIENT** |
+| `OBL-` | `OBL-44` | none declared | unbounded | ~12 obligations | **SUFFICIENT** |
+| `CAP-VIS-` | `CAP-VIS-171` | none declared | unbounded | 0 — PART 05 defines no new capabilities | **NOT USED** |
+
+> **`VIS-581`.** The audit command set is recorded so the table can be re-executed rather than
+> trusted. Each figure above was produced by extracting every occurrence of the namespace prefix
+> from the file, stripping to the numeric component, sorting numerically, and taking the maximum —
+> then subtracting the ceiling declarations that appear only as references rather than allocations.
+> That last subtraction matters: a naive maximum returns `VAL-VIS-945` and `FAL-VIS-300` because the
+> PART 04 continuation marker and the ceiling decisions **mention** numbers they do not **allocate**.
+> Conflating mention with allocation is failure mode `FAL-VIS-291`, defined in §05.21.
+
+---
+
+### DEC-VIS-043 — Identifier Collision Resolution for PART 05
+
+### TBL-VIS-562: DEC-VIS-043 Decision Record
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-043` |
+| **Title** | Reallocate the four PART 05 diagrams whose requested identifiers were consumed by PART 04 |
+| **Status** | **ACCEPTED** |
+| **Context** | The PART 05 commissioning instruction named `DGM-VIS-115`…`118`. All four were allocated in PART 04, which is frozen and append-only. |
+| **Options considered** | **(a)** Reuse the numbers, producing four duplicate identifiers. **(b)** Amend PART 04 to vacate them. **(c)** Reallocate the PART 05 diagrams to the next free range and publish a redirection table. |
+| **Decision** | **Option (c).** |
+| **Rejected — (a)** | Violates `VIS-347`. A duplicate identifier makes every cross-reference to it ambiguous, and ambiguity in an identifier is unrecoverable once other documents cite it. |
+| **Rejected — (b)** | Violates the append-only part model and the standing instruction not to modify PARTS 01–04. Vacating an identifier from a frozen part would also invalidate any external reference already made to it. |
+| **Consequence** | Four diagrams carry numbers different from those in the commissioning instruction. `TBL-VIS-560` is the permanent redirection record. |
+| **Reversibility** | **Irreversible.** Once `DGM-VIS-132`…`140` are published, they are themselves subject to `VIS-347`. |
+| **Owner** | Role: Document Architect for `AOM-VIS-001` |
+| **Evidence class** | `EV3` — the collision is verifiable by grepping the frozen region of this file |
+
+---
+
+### DEC-VIS-044 — Raise the `VAL-VIS-` Ceiling from 1000 to 1600
+
+### TBL-VIS-563: DEC-VIS-044 Decision Record
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-044` |
+| **Title** | Raise the `VAL-VIS-` validation-rule namespace ceiling from 1000 to 1600 |
+| **Status** | **ACCEPTED** |
+| **Supersedes** | `DEC-VIS-042` — ceiling only; every other provision of `DEC-VIS-042` remains in force |
+| **Context** | Next free is `VAL-VIS-945`, leaving 56 slots. §05.8 alone mandates ≥100 knowledge-validation rules, and twenty-two further sections each require their own rule block. Projected PART 05 demand is approximately 345 rules. |
+| **Options considered** | **(a)** Raise the ceiling. **(b)** Create a separate `KVAL-` namespace for knowledge rules. **(c)** Compress PART 05 to fit 56 rules. |
+| **Decision** | **Option (a).** Ceiling raised to **1600**, giving 655 slots against a projected demand of 345 and leaving roughly 310 for PART 06. |
+| **Rejected — (b)** | A second validation namespace would mean no single query returns all validation rules in the document. The whole value of `VAL-VIS-` is that it is exhaustive. Splitting it optimises for tidiness and sacrifices completeness — the wrong trade for a namespace whose purpose is coverage. |
+| **Rejected — (c)** | Would subordinate specified content to an arbitrary numeric bound. Ceilings exist to force deliberation, not to cap work. |
+| **Consequence** | `VAL-VIS-` runs `001`…`1600`. Rules `1000`…`1600` are four-digit; any parser matching exactly three digits will silently miss them. This is recorded as obligation `OBL-44`. |
+| **Reversibility** | The ceiling may be raised again by a further `DEC-VIS-` record; it may never be lowered below the highest allocated value. |
+| **Owner** | Role: Document Architect for `AOM-VIS-001` |
+
+> **`VIS-582`.** The four-digit consequence is not a footnote. PART 04 established the convention
+> that `VAL-VIS-` identifiers are three digits, and every audit one-liner written so far — including
+> the contiguity check used to detect and repair PART 04's 198 unenumerated rules — matches
+> `[0-9]\{3\}`. Those commands will **under-report** the moment rule 1000 is allocated. `OBL-44`
+> records the required parser update. It is listed as an obligation rather than fixed inline because
+> the affected commands live in this document's own prose and in the shell history of future
+> sessions, not in a file this part may modify.
+
+---
+
+### DEC-VIS-045 — Raise the `FAL-VIS-` Ceiling from 300 to 400
+
+### TBL-VIS-564: DEC-VIS-045 Decision Record
+
+| Field | Value |
+| :--- | :--- |
+| **Decision ID** | `DEC-VIS-045` |
+| **Title** | Raise the `FAL-VIS-` failure-mode namespace ceiling from 300 to 400 |
+| **Status** | **ACCEPTED** |
+| **Supersedes** | `DEC-VIS-038` — ceiling only |
+| **Context** | Next free is `FAL-VIS-291`, leaving 10 slots. §05.21 mandates ≥50 knowledge anti-patterns, and earlier PART 05 sections identify further failure modes in ingestion, provenance, conflict resolution and decay. |
+| **Decision** | Ceiling raised to **400**. PART 05 allocates `FAL-VIS-291`…`FAL-VIS-355`, leaving 45 slots. |
+| **Alternative rejected** | A dedicated `KAP-` knowledge-anti-pattern namespace. Rejected for the reason given in `DEC-VIS-044`: PART 04 already placed its measurement anti-patterns in `FAL-VIS-251`…`290` rather than in a `MAP-` namespace, and reversing that convention one part later would leave two conventions with no principle distinguishing them. |
+| **Consequence** | All failure modes in `AOM-VIS-001`, of every kind, remain retrievable by one prefix. |
+| **Owner** | Role: Document Architect for `AOM-VIS-001` |
+
+---
+
+### DEC-VIS-046 — Knowledge Namespaces Created by PART 05
+
+> **`VIS-583`.** PART 04 created eleven namespaces in one decision. PART 05 creates thirteen. Each
+> is bounded at creation, because an unbounded namespace cannot be audited for exhaustion and
+> exhaustion discovered late is expensive — which is the lesson `DEC-VIS-044` and `DEC-VIS-045` were
+> just forced to pay for.
+
+### TBL-VIS-565: DEC-VIS-046 — Namespace Creation Register
+
+| Namespace | Range | Governs | Defined in | Zero-padding |
+| :--- | :--- | :--- | :--- | :--- |
+| `K-L0`…`K-L7` | 8 fixed | Knowledge maturity levels of the foundation model | §05.0 `TBL-VIS-559` | none |
+| `KPP-01`…`KPP-60` | 60 | Knowledge philosophy principles | §05.1 | 2 digits |
+| `KND-001`…`KND-120` | 120 | Knowledge domains in the universe registry | §05.2 | 3 digits |
+| `KGN-01`…`KGN-30` | 30 | Knowledge graph **node** types | §05.3 | 2 digits |
+| `KGE-01`…`KGE-40` | 40 | Knowledge graph **edge** types | §05.3 | 2 digits |
+| `SEM-01`…`SEM-40` | 40 | Semantic pipeline stages and operations | §05.4 | 2 digits |
+| `ONT-001`…`ONT-150` | 150 | Ontology rules | §05.5 | 3 digits |
+| `TAX-01`…`TAX-60` | 60 | Taxonomy axes, facets and classes | §05.6 | 2 digits |
+| `KIN-01`…`KIN-40` | 40 | Ingestion pipeline stages, sources and gates | §05.7 | 2 digits |
+| `K0`…`K6` | 7 fixed | Knowledge trust levels | §05.8 | none |
+| `KPR-01`…`KPR-40` | 40 | Provenance chain links and fields | §05.9 | 2 digits |
+| `KSC-1`…`KSC-6` | 6 fixed | Knowledge security classifications | §05.17 | none |
+| `KAPI-01`…`KAPI-30` | 30 | Conceptual knowledge API operations | §05.20 | 2 digits |
+
+> **`VIS-584`.** Two namespaces in that register deliberately mirror PART 04 structures rather than
+> inventing new shapes. `K0`…`K6` parallels the evidence classes `E0`…`E6`, and `KSC-1`…`KSC-6`
+> parallels the metric security classes `MSC-1`…`MSC-6`. The parallelism is load-bearing, not
+> cosmetic: §05.8 must map every `K` level onto the `E` class that can justify it, and §05.17 must
+> reconcile knowledge classification with the metric classification already in force, or the two
+> schemes will assign different sensitivities to the same object. Both mappings are published, in
+> `TBL-VIS-` records within their sections, precisely so that the reconciliation is checkable.
+
+### TBL-VIS-566: Validation Rules — Namespace Decisions, §05.0
+
+| Rule | Statement | Severity | Detection |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-945` | No identifier allocated in PART 05 may duplicate an identifier allocated in PARTS 01–04. | **HALT** | Extract all IDs per namespace, `sort \| uniq -d`, expect empty |
+| `VAL-VIS-946` | A `DGM-VIS-` number cited by a commissioning instruction must be checked against the frozen region before use. | **HALT** | Grep the frozen line range for the requested number |
+| `VAL-VIS-947` | A namespace whose headroom is smaller than the projected demand of the current part must be raised by a `DEC-VIS-` record **before** the first allocation. | **HALT** | Compare `TBL-VIS-561` headroom against allocations made in the part |
+| `VAL-VIS-948` | A ceiling may be raised but never lowered below the highest allocated value. | **HALT** | Compare each ceiling decision against `max(allocated)` |
+| `VAL-VIS-949` | A mention of an identifier in a marker, ceiling, or redirection table must not be counted as an allocation. | **ERROR** | Allocation requires a defining occurrence, not a referencing one |
+| `VAL-VIS-950` | Every namespace created must declare an explicit upper bound at creation. | **ERROR** | Each row of `TBL-VIS-565` has a range |
+| `VAL-VIS-951` | Every namespace created must declare its zero-padding width. | **ERROR** | Each row of `TBL-VIS-565` has a padding column |
+| `VAL-VIS-952` | A superseding ceiling decision must name the decision it supersedes and state which provisions survive. | **ERROR** | `DEC-VIS-044`, `DEC-VIS-045` both carry a `Supersedes` field |
+| `VAL-VIS-953` | A rejected option in a `DEC-VIS-` record must carry the reason for rejection, not merely the fact of it. | **ERROR** | Each `Rejected —` row contains a causal clause |
+| `VAL-VIS-954` | An identifier collision must be published in a redirection table, never resolved silently. | **HALT** | `TBL-VIS-560` exists and lists all four collisions |
+| `VAL-VIS-955` | A validation-rule parser matching exactly three digits must be updated before `VAL-VIS-1000` is allocated. | **ERROR** | `OBL-44` open; check parser regexes for `[0-9]{3}` |
+| `VAL-VIS-956` | PART 05 must not allocate any `CAP-VIS-` identifier. | **ERROR** | Grep PART 05 line range for `CAP-VIS-1[7-9][0-9]` |
+| `VAL-VIS-957` | The permanent gaps `CAP-VIS-057`…`059`, `TBL-VIS-244`, `TBL-VIS-423`, `DEC-VIS-008`…`009` must remain unfilled. | **HALT** | Grep for defining occurrences of each; expect none |
+| `VAL-VIS-958` | A namespace mirroring a PART 04 namespace must publish its cross-mapping in the section that defines it. | **ERROR** | `K0`…`K6` to `E0`…`E6`; `KSC-` to `MSC-` |
+| `VAL-VIS-959` | No PART 05 section may modify a line above line 19263 of this file. | **HALT** | `git show 844347f:<file> \| diff - <(head -19263 <file>)` returns empty |
+| `VAL-VIS-960` | The continuation marker at the end of PART 05 supersedes the PART 04 marker; the PART 04 marker must remain textually unchanged. | **HALT** | Diff the frozen region; confirm two markers exist |
+| `VAL-VIS-961` | Every `DEC-VIS-` record in PART 05 must state reversibility. | **ERROR** | Field present in each record |
+| `VAL-VIS-962` | Every `DEC-VIS-` record must name an owner as a role, never as a person. | **ERROR** | `VIS-032` standing commitment |
+| `VAL-VIS-963` | A namespace may not be created for a concept already covered by an existing namespace. | **ERROR** | Compare `TBL-VIS-565` against `DEC-VIS-036` |
+| `VAL-VIS-964` | Projected namespace demand stated in a ceiling decision must be reconciled against actual allocation in the part's closure record. | **ERROR** | Closure record compares projected to actual |
+| `VAL-VIS-965` | An identifier redirection must be discoverable by searching for the **original** requested number. | **ERROR** | `TBL-VIS-560` contains the original numbers as literals |
+| `VAL-VIS-966` | No PART 05 identifier may be allocated before the headroom audit of `TBL-VIS-561` is published. | **ERROR** | `TBL-VIS-561` precedes all §05.1+ allocations |
+| `VAL-VIS-967` | Namespaces with fixed enumerations must not be extended without a `DEC-VIS-` record. | **HALT** | `K0`…`K6`, `KSC-1`…`KSC-6`, `K-L0`…`K-L7` |
+| `VAL-VIS-968` | The `FAL-VIS-` allocation in PART 05 must not exceed `FAL-VIS-355`. | **ERROR** | `max(FAL-VIS)` in PART 05 range |
+
+> **`VIS-585`.** With the namespaces settled and the collision published, PART 05 can proceed to its
+> substance. §05.1 begins where it must: not with a technology, a schema, or a pipeline, but with
+> the question of what the word *knowledge* is permitted to mean inside this repository — because
+> every mechanism specified afterward is a mechanism for producing, protecting, or delivering
+> whatever that word turns out to denote.
+
+---
+
+## 05.1 — Knowledge Philosophy
+
+### AI NAVIGATION METADATA — §05.1
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before treating any retrieved text as a fact** |
+| **AI DEPENDENCIES** | §05.0 namespaces · PART 04 §04.2 evidence classes `E0`…`E6` · PART 01 §01.14 knowledge layers L1–L5 |
+| **AI INPUTS** | A proposition an agent is considering acting upon |
+| **AI OUTPUTS** | A classification of that proposition as data, information, or knowledge, and the specific addition it lacks if it is not knowledge |
+| **AI IMPLEMENTATION IMPACT** | Determines whether an agent may proceed, must qualify its output, or must refuse |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-969`…`VAL-VIS-1000` |
+| **AI RELATED DOCUMENTS** | `PROJECT_PHILOSOPHY.md` §130 knowledge layers · `MASTER_CONTEXT_MEMORY_SYSTEM.md` · `.ai/AI_AGENT_OPERATING_MANUAL.md` |
+
+### 05.1.1 — What Knowledge Means Inside Oship
+
+> **`VIS-586`.** Oship uses a narrow, operational definition and rejects the broad colloquial one.
+> Colloquially, "knowledge" means anything a person or system has taken in. Operationally, inside
+> this repository, **knowledge is a proposition that an agent is entitled to act on without
+> re-deriving it.** The entitlement is the whole definition. Everything else — provenance, validation,
+> relationship, decay — exists to establish or revoke that entitlement.
+
+> **`VIS-587`.** This framing has an uncomfortable and deliberate consequence. A statement can be
+> perfectly true and still not be knowledge in Oship's sense, because entitlement to act requires
+> more than truth. The sentence *"Oship has 24 knowledge domains"* is true. It becomes knowledge
+> only when it also carries where it was measured, by what command, when, by whom, against what
+> definition of "domain", and what would make it false. Without those, an agent acting on it is
+> acting on **a correct guess it cannot distinguish from an incorrect one** — and the inability to
+> distinguish is the defect, not the correctness of the particular instance.
+
+> **`VIS-588`.** The four distinctions the rest of this section rests on are set out below before the
+> principles, because the principles reference them constantly.
+
+### TBL-VIS-567: Four Foundational Distinctions
+
+| Distinction | Left term | Right term | The discriminating question | Oship example of the left | Oship example of the right |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Data vs Knowledge** | Data | Knowledge | *Can I act on this without re-deriving it?* | The literal string `73` in a shell result | "73 `.gitkeep` directories exist, counted by `find`, on commit `844347f`, meaning Phase 0 scaffolding is complete and code is absent" |
+| **Memory vs Knowledge** | Memory | Knowledge | *Is this a record of an episode, or a generalisation over episodes?* | `.ai/SESSION_MEMORY.md` — what happened in a session | `.ai/LESSONS_LEARNED.md` — what is true across sessions |
+| **Information vs Understanding** | Information | Understanding | *Can I derive a consequence not stated in the text?* | "`QG-6` requires two CODEOWNERS principals" | "Therefore `QG-6` is unattainable today, and therefore no release gate can pass" |
+| **Belief vs Knowledge** | Belief | Knowledge | *Is there an address at which this can be checked?* | "The repository is enterprise-grade" | "`README.md` line 129 claims 24 of 24 domains; the claim is false per `FAL-VIS-171`" |
+
+> **`VIS-589`.** The **memory versus knowledge** distinction is the one most often collapsed, and
+> Oship collapses it today. `.ai/SESSION_MEMORY.md` and `.ai/LESSONS_LEARNED.md` both exist, which
+> means the repository has already recognised the distinction structurally. But `.ai/MEMORY/`
+> contains **only a `.gitkeep`** — verified on the working tree — so the episodic store the structure
+> anticipates has never been populated. §05.11 treats this at length; it is flagged here because the
+> philosophy principles below assume the distinction is real even though the mechanism is not.
+
+> **`VIS-590`.** Why an AI system needs structured knowledge, stated as a mechanism rather than a
+> slogan: a language model's default behaviour when facing an underdetermined question is to produce
+> the most plausible continuation, and plausibility is computed over the training distribution, not
+> over this repository. Structured knowledge does not make the model smarter. **It makes the
+> repository's actual state more available than the plausible-sounding alternative**, which is the
+> only lever the architecture actually has. Every mechanism in PART 05 is an application of that one
+> lever.
+
+### 05.1.2 — The Knowledge Philosophy Principles
+
+> **`VIS-591`.** Thirty principles follow, `KPP-01`…`KPP-30`. Each carries a definition, a concrete
+> Oship example, the interpretation an agent must apply, and the failure that occurs if the principle
+> is ignored. They are grouped into six families of five. The families are not decorative — §05.22's
+> loading sequence walks them in family order, because a principle about provenance is useless to an
+> agent that has not yet accepted the principle about entitlement.
+
+```mermaid
+flowchart LR
+    F1["FAMILY A - NATURE<br/>KPP-01 to KPP-05<br/>what knowledge is"]
+    F2["FAMILY B - GROUNDING<br/>KPP-06 to KPP-10<br/>what makes it trustworthy"]
+    F3["FAMILY C - STRUCTURE<br/>KPP-11 to KPP-15<br/>how it connects"]
+    F4["FAMILY D - TIME<br/>KPP-16 to KPP-20<br/>how it changes and dies"]
+    F5["FAMILY E - AGENCY<br/>KPP-21 to KPP-25<br/>how machines consume it"]
+    F6["FAMILY F - HONESTY<br/>KPP-26 to KPP-30<br/>how absence is handled"]
+
+    F1 --> F2 --> F3 --> F4 --> F5 --> F6
+    F6 -.->|"absence discovered forces renaming"| F1
+    F4 -.->|"decay invalidates grounding"| F2
+    F5 -.->|"consumption reveals broken structure"| F3
+
+    classDef nature fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef ground fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef struct fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef time fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef agency fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef honest fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class F1 nature
+    class F2 ground
+    class F3 struct
+    class F4 time
+    class F5 agency
+    class F6 honest
+```
+
+> **Diagram ID:** `DGM-VIS-133` — **Knowledge Philosophy Principle Families and Their Feedback Edges**
+> **Explanation:** The solid chain is the reading order for a cold-start agent. The dotted edges are
+> the operational couplings that make the families a system rather than a list: decay in Family D
+> destroys the grounding established in Family B, so grounding must be re-established rather than
+> assumed permanent; consumption in Family E is the activity that reveals structural breakage from
+> Family C, since a relationship nobody traverses is a relationship nobody notices is broken; and
+> discovering an absence in Family F can force a concept in Family A to be renamed, because a
+> concept defined by properties it turns out not to have is misnamed.
+
+#### Family A — The Nature of Knowledge
+
+### TBL-VIS-568: Knowledge Philosophy Principles — Family A, Nature
+
+| ID | Principle | Definition | Oship example | AI interpretation | Failure risk if ignored |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`KPP-01`** | Knowledge is entitlement to act | A proposition is knowledge only if an agent may act on it without re-deriving it | `TBL-VIS-390` capability statuses may be cited; a plausible-sounding count may not | Before acting, ask what entitles this, not whether it sounds right | Agent acts on a fluent guess and produces a confidently wrong artefact |
+| **`KPP-02`** | Truth is necessary but insufficient | A true statement lacking provenance is not knowledge | "Oship has 24 domains" is true and, unsourced, still not knowledge | Do not upgrade a statement because you believe it | The corpus fills with true-but-uncheckable claims that cannot be maintained |
+| **`KPP-03`** | Knowledge is a maintained state | Knowledge decays toward data unless actively revalidated | The `77/87` frontmatter figure recorded in an earlier session no longer matches the tree | Treat every stored figure as stale until its window is checked | Agents cite superseded measurements as current |
+| **`KPP-04`** | Knowledge is contextual, not absolute | The same proposition may be knowledge in one scope and noise in another | Metric security class `MSC-4` is knowledge to a governance agent, noise to a diagram validator | Load knowledge scoped to the goal, not scoped to availability | Context windows fill with irrelevance and the relevant is evicted |
+| **`KPP-05`** | Knowledge has a subject that can be wrong | Every knowledge object names what would falsify it | `FAL-VIS-171` falsifies the `README.md` "24 of 24" badge | If nothing could falsify it, it is a value, not knowledge | Unfalsifiable claims accumulate and the corpus becomes unauditable |
+
+> **`VIS-592`.** `KPP-03` earned its place by being violated inside this very document's authoring
+> history. A prior session recorded documentation frontmatter coverage as **77 of 87 files, 0.885**.
+> Re-measured on the current working tree, **87 of 87 Markdown files carry a frontmatter block** —
+> but only **36 of 87 carry the fifteen keys the metadata standard requires**, and **51 carry nine
+> keys**. Both the old figure and the new one were honestly produced. They differ because the tree
+> changed *and* because the two measurements were counting different things: presence of a block
+> versus conformance to a schema. This is `KPP-03` and `KPP-02` failing together, and §05.16 uses it
+> as the worked example for why a knowledge quality metric must pin its predicate before its value.
+
+#### Family B — Grounding
+
+### TBL-VIS-569: Knowledge Philosophy Principles — Family B, Grounding
+
+| ID | Principle | Definition | Oship example | AI interpretation | Failure risk if ignored |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`KPP-06`** | No knowledge without provenance | Every object names origin, author, time, and basis | Every measured figure in PART 04 names its command | A passage with no origin is `K1` at best, never `K3` | Provenance-free claims propagate and cannot be retracted when wrong |
+| **`KPP-07`** | Provenance must be re-traversable | Naming a source is insufficient; the source must be reachable now | A cited line number in a frozen file is traversable; "verified in review" is not | Attempt the traversal; downgrade on failure | A chain of citations terminates in nothing and nobody notices |
+| **`KPP-08`** | Self-verification is not verification | An author validating their own output produces `E3`, never `E4` | Single-principal `CODEOWNERS` caps all Oship evidence at `EV3` | Never record `K4` on the basis of the author's own check | The corpus believes itself verified when it is only self-consistent |
+| **`KPP-09`** | Grounding is per-proposition, not per-document | A trustworthy document may contain an ungrounded sentence | `README.md` is largely accurate and contains the false 24-of-24 badge | Inherit no trust from the container | One bad claim in a trusted file is laundered into trusted status |
+| **`KPP-10`** | Absence of contradiction is not confirmation | Nothing disagreeing with a claim does not support it | No document contradicts "Oship scales to 10,000 tenants"; it remains unevidenced | Silence is `K0`, not `K3` | Untested assertions harden into assumed facts through repetition |
+
+#### Family C — Structure
+
+### TBL-VIS-570: Knowledge Philosophy Principles — Family C, Structure
+
+| ID | Principle | Definition | Oship example | AI interpretation | Failure risk if ignored |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`KPP-11`** | Knowledge is relational | An isolated fact carries less than the same fact in a graph | `OBL-03` matters because 14 capabilities depend on it | Load the neighbourhood, not the node | Agent optimises a node and breaks its dependents |
+| **`KPP-12`** | Relationships are themselves knowledge objects | An edge has provenance, validation and decay like a node | "`CAP-VIS-041` depends on `OBL-03`" is a claim requiring evidence | Validate edges, do not assume them | A graph of true nodes joined by invented edges reasons wrongly |
+| **`KPP-13`** | One concept, one canonical identifier | A concept referred to by two identifiers becomes two concepts | The three readings of "creator" flagged by `VAL-VIS-456` | Resolve to canonical before reasoning | Duplicate concepts diverge and both are maintained badly |
+| **`KPP-14`** | Structure must survive relocation | Knowledge whose meaning depends on file position is fragile | Section numbers are stable; line numbers are not | Cite identifiers, never offsets, for durable references | Every reorganisation silently invalidates the reference graph |
+| **`KPP-15`** | Hierarchy and network are both required | Trees give navigation; graphs give reasoning; neither alone suffices | 24 numbered domains are a tree; the traceability matrix is a graph | Use the tree to find, the graph to infer | Pure-tree corpora cannot express cross-cutting dependency |
+
+> **`VIS-593`.** `KPP-14` has a concrete cost in this document. PART 04's closure record cites line
+> anchors such as *line 13855*, and those anchors were correct when written and remain correct only
+> because the region above them is frozen. **In any part of the corpus that is not append-only, line
+> citations are guaranteed to rot.** The general rule that follows is stated as `VAL-VIS-983`: a
+> durable cross-reference names an identifier; a line number may accompany it as a convenience but
+> may never be the sole locator.
+
+#### Family D — Time
+
+### TBL-VIS-571: Knowledge Philosophy Principles — Family D, Time
+
+| ID | Principle | Definition | Oship example | AI interpretation | Failure risk if ignored |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`KPP-16`** | All knowledge has a validity window | Every object is true of some interval, not eternally | "0 workflows installed" is true of commit `844347f` | Read the window before the value | Yesterday's measurement drives today's decision |
+| **`KPP-17`** | Confidence decays; it does not persist | Trust falls with elapsed time even absent contradiction | A `K4` object unrevalidated for a long interval is no longer `K4` | Apply the decay function of §05.15 before use | Stale knowledge retains the authority it had when fresh |
+| **`KPP-18`** | Supersession preserves, deletion destroys | Replaced knowledge is retained and marked, never removed | PART 04's 198 unenumerated rules were repaired by appending `§04.31.2` | Append the correction; never rewrite the original | The record of how an error was made is lost with the error |
+| **`KPP-19`** | Change rate differs by domain | Some knowledge is stable for years, some for hours | The ten tenets are near-static; the file count changes per commit | Assign decay class, not a uniform expiry | Uniform expiry over- or under-revalidates everything |
+| **`KPP-20`** | History is knowledge about knowledge | How a fact changed is itself actionable | Two divergent capability counts revealed a missing definition | Read the correction record, not only the current value | Recurring errors are re-made because their history is invisible |
+
+#### Family E — Agency
+
+### TBL-VIS-572: Knowledge Philosophy Principles — Family E, Agency
+
+| ID | Principle | Definition | Oship example | AI interpretation | Failure risk if ignored |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`KPP-21`** | Retrieval is a reasoning act | Choosing what to load already determines the conclusion | Loading `README.md` imports the false 24-of-24 badge | Justify the selection, log what was excluded | Silent selection bias masquerades as objective analysis |
+| **`KPP-22`** | Context budget is a scarce resource | Loading everything is equivalent to loading nothing useful | `SYSTEM_VISION.md` is far too large to load whole | Load by section identifier, never by whole file | The relevant is evicted by the merely available |
+| **`KPP-23`** | An agent must know what it did not load | Unloaded knowledge must be visible as a gap | An agent reading only PART 03 cannot know `VAL-VIS-470` fails | Emit the exclusion list alongside the answer | Confident answers built on unknowingly partial context |
+| **`KPP-24`** | Generated knowledge is `K1` until validated | Model output enters at the lowest structured level | Any AI-drafted section of this document | Never write generated content at `K3` or above | Hallucination is stored and later cited as source |
+| **`KPP-25`** | The right to refuse is part of the architecture | Refusal on insufficient grounding is a correct outcome | `DEC-VIS-040` refused a prediction namespace | Refuse and name the missing precondition | Agents fabricate rather than decline, and fabrication is invisible |
+
+#### Family F — Honesty
+
+### TBL-VIS-573: Knowledge Philosophy Principles — Family F, Honesty
+
+| ID | Principle | Definition | Oship example | AI interpretation | Failure risk if ignored |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`KPP-26`** | Absence must be representable | The corpus needs first-class vocabulary for "not known" | `UNKNOWN`, `NOT YET MEASURED`, `NOT APPLICABLE` | Emit an absence token; never emit an estimate in its place | Gaps are silently filled with plausible invention |
+| **`KPP-27`** | Specified is not implemented | Describing a mechanism does not create it | All thirteen PART 05 namespaces are `DOCUMENTED NOT IMPLEMENTED` | Read the status label, never the surrounding confidence | A specification is cited as though it were a running system |
+| **`KPP-28`** | Detail is not evidence | Volume and precision do not raise trust level | 214,085 words of vision, `EV3` ceiling throughout | Assess grounding, ignore thoroughness | Long documents are trusted in proportion to their length |
+| **`KPP-29`** | Known defects must be published, not buried | A discovered flaw is recorded where readers will meet it | `FAL-VIS-171` names `README.md` unloadable as agent context | Surface the defect at the point of use | A known-bad source keeps being loaded because nothing warns at load time |
+| **`KPP-30`** | The corpus must state its own trust ceiling | A knowledge base declares the maximum trust it can currently support | Oship's ceiling is `EV3`, set by single-principal `CODEOWNERS` | Never claim above the ceiling regardless of local strength | Individually strong claims aggregate into an unearned global claim |
+
+> **`VIS-594`.** `KPP-30` is the principle that binds PART 05 to PART 04's central finding and
+> prevents this part from quietly undoing it. PART 04 established that **every verification in Oship
+> is a self-verification**, because `MPC-17` records no executed process and `CODEOWNERS` resolves
+> every path to a single principal. Knowledge architecture cannot escape that ceiling by being
+> well-designed. A perfectly specified provenance chain whose every link is signed by the same
+> principal is a perfectly specified `EV3` artefact. **`K4` and above are therefore unreachable in
+> Oship today**, and §05.8 states that as a measured constraint rather than discovering it later.
+
+### TBL-VIS-574: Principle Conflicts and Their Resolution Order
+
+| Conflict | Principles in tension | Which prevails | Why |
+| :--- | :--- | :--- | :--- |
+| Load everything to avoid missing context, versus budget | `KPP-23` vs `KPP-22` | **`KPP-22`** | Exceeding budget evicts unpredictably; a declared gap is auditable, an eviction is not |
+| Retain all history, versus keep the corpus navigable | `KPP-18` vs `KPP-22` | **`KPP-18`** | Retention is cheap and irreversible loss is not; navigability is solved by indexing, not deletion |
+| Publish a defect, versus present a coherent document | `KPP-29` vs readability | **`KPP-29`** | A coherent document that conceals a defect is a more dangerous artefact than an untidy honest one |
+| Act on the best available knowledge, versus refuse | `KPP-01` vs `KPP-25` | **`KPP-25`** when grounding is below the action's authority threshold | Authority thresholds are defined in §05.13; below threshold, acting is a governance breach |
+| Use one canonical identifier, versus preserve an original citation | `KPP-13` vs `KPP-07` | **Both** via redirection | `TBL-VIS-560` is the pattern: canonicalise forward, keep the original searchable |
+
+### TBL-VIS-575: Validation Rules — Knowledge Philosophy, §05.1
+
+| Rule | Statement | Severity | Detection |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-969` | A proposition acted upon must satisfy `KPP-01`; entitlement must be nameable. | **HALT** | Agent emits the entitlement basis with the action |
+| `VAL-VIS-970` | A true statement without provenance must not be labelled knowledge. | **ERROR** | Check for origin, author, time, basis fields |
+| `VAL-VIS-971` | Every stored measurement must carry the interval it is true of. | **HALT** | Window field present and non-empty |
+| `VAL-VIS-972` | No knowledge object may be recorded at `K4` or above while `CODEOWNERS` has one principal. | **HALT** | Count principals; compare against max `K` recorded |
+| `VAL-VIS-973` | An agent must emit the list of sources it deliberately excluded. | **ERROR** | Exclusion list accompanies the answer |
+| `VAL-VIS-974` | Generated content must enter the corpus at `K1`. | **HALT** | Provenance `author_type = agent` implies `K1` |
+| `VAL-VIS-975` | A refusal must name the missing precondition. | **ERROR** | Refusal text contains a precondition identifier |
+| `VAL-VIS-976` | A document-level trust label must not be inherited by its individual claims. | **ERROR** | Per-claim trust required |
+| `VAL-VIS-977` | Absence must be expressed with an absence token, never with an estimate. | **HALT** | Scan for hedged numerics near unmeasured predicates |
+| `VAL-VIS-978` | A superseded object must remain retrievable after supersession. | **HALT** | Original present; supersession recorded as an append |
+| `VAL-VIS-979` | Two identifiers denoting one concept must be reconciled or one deprecated. | **ERROR** | Concept resolution pass; see `VAL-VIS-456` |
+| `VAL-VIS-980` | An edge asserted between two knowledge objects must carry its own provenance. | **ERROR** | Edge records include a source field |
+| `VAL-VIS-981` | A specification must not be cited as an implementation. | **HALT** | Status label check at every citation site |
+| `VAL-VIS-982` | Document length must not be used as an argument for trust. | **ERROR** | Reject trust rationales referencing size or detail |
+| `VAL-VIS-983` | A durable cross-reference must name an identifier; a line number alone is invalid. | **ERROR** | Scan references for bare offsets |
+| `VAL-VIS-984` | A knowledge object must name at least one falsifier. | **HALT** | Falsifier field non-empty |
+| `VAL-VIS-985` | Confidence must be recomputed at read time, never read from storage as final. | **ERROR** | Retrieval applies the §05.15 decay function |
+| `VAL-VIS-986` | A decay class must be assigned per domain, not uniformly. | **ERROR** | Compare decay classes across `KND-` domains |
+| `VAL-VIS-987` | A known-defective source must carry a warning at its point of use. | **HALT** | `README.md` citations carry the `FAL-VIS-171` warning |
+| `VAL-VIS-988` | The corpus trust ceiling must be stated wherever a trust level is claimed. | **ERROR** | Ceiling reference accompanies trust claims |
+| `VAL-VIS-989` | Absence of contradiction must not be recorded as supporting evidence. | **ERROR** | Reject evidence entries whose basis is silence |
+| `VAL-VIS-990` | Retrieval selection criteria must be logged with the retrieval. | **ERROR** | Selection rationale present in the trace |
+| `VAL-VIS-991` | A concept renamed after an absence discovery must retain a redirection from the old name. | **ERROR** | Redirection table entry exists |
+| `VAL-VIS-992` | A principle conflict must be resolved by `TBL-VIS-574`, not ad hoc. | **ERROR** | Resolution cites a `TBL-VIS-574` row |
+| `VAL-VIS-993` | An agent must not raise a trust level on the basis of its own re-reading. | **HALT** | Trust elevation requires a distinct principal |
+| `VAL-VIS-994` | Every `KPP-` principle must carry all five fields. | **ERROR** | Column completeness check on `TBL-VIS-568`…`573` |
+| `VAL-VIS-995` | A failure risk stated in a `KPP-` row must be a mechanism, not a restatement of the principle. | **ERROR** | Manual review; risk text differs materially from definition |
+| `VAL-VIS-996` | Knowledge scoped to one goal must not be reused for another without rescoping. | **ERROR** | Scope field compared against the consuming goal |
+| `VAL-VIS-997` | The distinction between memory and knowledge must be preserved in storage location. | **ERROR** | Episodic to `.ai/MEMORY/`; generalised to `.ai/LESSONS_LEARNED.md` |
+| `VAL-VIS-998` | A measurement re-taken with a different predicate must be published as a new metric, not an update. | **HALT** | Frontmatter presence versus frontmatter conformance are distinct metrics |
+| `VAL-VIS-999` | Principle families must be loaded in order A through F on cold start. | **ERROR** | Loading sequence in §05.22 preserves family order |
+| `VAL-VIS-1000` | No `KPP-` principle may be silently dropped; removal requires a `DEC-VIS-` record. | **HALT** | Count principles; compare against `DEC-VIS-046` register |
+
+> **`VIS-595`.** `VAL-VIS-1000` is the first four-digit validation rule in `AOM-VIS-001`. Every
+> three-digit-matching audit command in this document is now incomplete, exactly as `DEC-VIS-044`
+> predicted. `OBL-44` is open and remains open until the parsers are corrected; the closure gate in
+> §05.24 tests for it rather than assuming it was handled.
+
+---
+
+## 05.2 — The Oship Knowledge Universe
+
+### AI NAVIGATION METADATA — §05.2
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read when deciding where a new piece of knowledge belongs, or where to look for an existing one** |
+| **AI DEPENDENCIES** | §05.1 principles · `docs/MASTER_CONTEXT/INDEX.md` §1003 domain registry · PART 02 §02.03 domain decomposition |
+| **AI INPUTS** | A knowledge object seeking a home, or a question seeking a source |
+| **AI OUTPUTS** | A `KND-` domain identifier, its owner role, its decay class, and its current population |
+| **AI IMPLEMENTATION IMPACT** | Determines routing for every write into the corpus and every retrieval from it |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1001`…`VAL-VIS-1024` |
+| **AI RELATED DOCUMENTS** | `MASTER_CONTEXT_RULES.md` PART 04 domain registration · `.ai/CONTEXT_ROUTER.md` |
+
+### 05.2.1 — Ten Universes, Fifty Domains
+
+> **`VIS-596`.** The knowledge universe is the answer to a routing question that Oship currently
+> answers by convention rather than by rule: *given a new fact, where does it go?* The repository has
+> **24 numbered MASTER_CONTEXT domains** and a **17-file `.ai/` control plane**, and those two
+> structures overlap without a stated relationship between them. A fact about how agents should
+> behave could plausibly live in `.ai/AI_AGENT_OPERATING_MANUAL.md`, in
+> `docs/MASTER_CONTEXT/13_AI/`, or in this document. Three plausible homes means, in practice, three
+> partial copies that drift.
+
+> **`VIS-597`.** The knowledge universe fixes that by inserting a layer **above** the filesystem.
+> `KND-` domains are not directories. They are knowledge categories, and a single `KND-` domain may
+> be materialised across several files while a single file may carry several `KND-` domains. The
+> mapping is many-to-many and is published, which is the point: the routing rule becomes checkable
+> instead of customary.
+
+```mermaid
+flowchart TB
+    ROOT["OSHIP KNOWLEDGE UNIVERSE"]
+
+    U1["U1 SYSTEM KNOWLEDGE<br/>what the system is"]
+    U2["U2 PRODUCT KNOWLEDGE<br/>what it delivers and to whom"]
+    U3["U3 DOMAIN KNOWLEDGE<br/>the subject matter it operates on"]
+    U4["U4 ARCHITECTURE KNOWLEDGE<br/>how it is structured"]
+    U5["U5 CODE KNOWLEDGE<br/>how it is built"]
+    U6["U6 USER KNOWLEDGE<br/>who uses it and how"]
+    U7["U7 BUSINESS KNOWLEDGE<br/>why it is viable"]
+    U8["U8 AI KNOWLEDGE<br/>how machines participate"]
+    U9["U9 OPERATIONAL KNOWLEDGE<br/>how it runs and is measured"]
+    U10["U10 RESEARCH KNOWLEDGE<br/>what is not yet decided"]
+
+    ROOT --> U1 & U2 & U3 & U4
+    ROOT --> U5 & U6 & U7
+    ROOT --> U8 & U9 & U10
+
+    U1 -.->|"constrains"| U4
+    U2 -.->|"justifies"| U3
+    U4 -.->|"specifies"| U5
+    U6 -.->|"motivates"| U2
+    U7 -.->|"bounds"| U2
+    U8 -.->|"consumes all"| ROOT
+    U9 -.->|"measures all"| ROOT
+    U10 -.->|"promotes into"| U1
+
+    classDef pop fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef thin fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef empty fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef root fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    class ROOT root
+    class U1,U4,U8 pop
+    class U2,U3,U6,U7,U9,U10 thin
+    class U5 empty
+```
+
+> **Diagram ID:** `DGM-VIS-134` — **The Oship Knowledge Universe Map**
+> **Explanation:** Ten universes partition the corpus by *subject*, not by storage. Colour encodes
+> measured population, not importance: green universes are substantially populated, amber are
+> present but thin, and **U5 Code Knowledge is red because it is empty — 0 application source files
+> exist**. The dotted edges are the dependency directions that make the map a system: U8 and U9 are
+> unusual in consuming and measuring the entire root rather than sitting beside their siblings,
+> which is why they appear as cross-cutting rather than peer domains. U10 is the only universe with
+> a promotion edge **into** another, because research is defined here as knowledge that has not yet
+> earned a permanent home.
+
+### 05.2.2 — The Knowledge Domain Registry
+
+> **`VIS-598`.** Fifty domains follow, `KND-001`…`KND-050`, distributed across the ten universes.
+> Each carries a decay class, because `KPP-19` forbids a uniform expiry, and each carries a measured
+> population status rather than an aspirational one. The decay classes are defined once here and
+> used throughout the rest of the part.
+
+### TBL-VIS-576: Knowledge Decay Classes
+
+| Class | Name | Revalidation interval | Rationale | Example domain |
+| :--- | :--- | :--- | :--- | :--- |
+| **`D0`** | Immutable | Never | Fixed by decision record; changes only by supersession | Decision log, frozen document parts |
+| **`D1`** | Constitutional | On amendment only | Changes are rare, deliberate, and announced | The ten tenets, authority model |
+| **`D2`** | Slow | Per major version | Tracks deliberate structural change | Architecture layers, ontology |
+| **`D3`** | Moderate | Per release | Tracks planned work completing | Capability statuses, roadmap |
+| **`D4`** | Fast | Per commit | Tracks the working tree | File counts, coverage figures |
+| **`D5`** | Volatile | Per execution | Meaningless if not read immediately | Runtime state, agent session context |
+
+### TBL-VIS-577: Knowledge Domain Registry — U1 System and U2 Product
+
+| ID | Domain | Universe | Materialised in | Owner role | Decay | Population |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `KND-001` | System identity | U1 | `SYSTEM_VISION.md` PART 01 · `README.md` | Product Architect | `D1` | **POPULATED** |
+| `KND-002` | System purpose and problem space | U1 | PART 01 · `PROJECT_PHILOSOPHY.md` | Product Architect | `D1` | **POPULATED** |
+| `KND-003` | System boundaries and non-goals | U1 | PART 01 · PART 02 | Product Architect | `D2` | **POPULATED** |
+| `KND-004` | System principles and tenets | U1 | `README.md` lines 103–117 · `PROJECT_PHILOSOPHY.md` | Governance | `D1` | **POPULATED** |
+| `KND-005` | System constraints | U1 | PART 01 `CON-VIS-` register | Product Architect | `D2` | **POPULATED** |
+| `KND-006` | System vocabulary and ubiquitous language | U1 | `architecture/DOMAIN_MODEL.md` · PART 02 | Domain Steward | `D2` | **THIN — 2 terms defined** |
+| `KND-007` | Product vision and value proposition | U2 | PART 01 · `01_PRODUCT/INDEX.md` | Product Management | `D2` | **POPULATED** |
+| `KND-008` | Product capabilities | U2 | PART 03 `CAP-VIS-001`…`171` | Product Management | `D3` | **POPULATED** |
+| `KND-009` | Product roadmap and sequencing | U2 | `19_ROADMAP/` · `.ai/ROADMAP_AI.md` | Product Management | `D3` | **THIN** |
+| `KND-010` | Product differentiation | U2 | PART 01 | Product Management | `D2` | **THIN** |
+
+### TBL-VIS-578: Knowledge Domain Registry — U3 Domain and U4 Architecture
+
+| ID | Domain | Universe | Materialised in | Owner role | Decay | Population |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `KND-011` | Bounded contexts | U3 | `architecture/DOMAIN_MODEL.md` — 4 contexts | Domain Steward | `D2` | **THIN — 33 lines total** |
+| `KND-012` | Domain entities and aggregates | U3 | PART 02 | Domain Steward | `D2` | **DOCUMENTED NOT MODELLED** |
+| `KND-013` | Domain events | U3 | — | Domain Steward | `D2` | **EMPTY** |
+| `KND-014` | Domain invariants | U3 | PART 02 | Domain Steward | `D1` | **THIN** |
+| `KND-015` | Financial domain semantics | U3 | `DOMAIN_MODEL.md` "Money Factory" | Domain Steward | `D2` | **THIN — term named, not specified** |
+| `KND-016` | Architecture layers | U4 | `AOM-ARCH-001` `LYR-ARCH-001`…`010` | System Architect | `D2` | **POPULATED** |
+| `KND-017` | Architecture components | U4 | `AOM-ARCH-001` `CMP-ARCH-001`…`030` | System Architect | `D2` | **POPULATED** |
+| `KND-018` | Architecture decisions | U4 | `docs/ADR/` — 3 ADRs | System Architect | `D0` | **THIN — 3 records** |
+| `KND-019` | Architecture invariants | U4 | `AOM-ARCH-001` `INV-ARCH-` | System Architect | `D1` | **POPULATED** |
+| `KND-020` | Integration and interface contracts | U4 | `apis/` `.gitkeep` only | System Architect | `D2` | **EMPTY** |
+
+### TBL-VIS-579: Knowledge Domain Registry — U5 Code and U6 User
+
+| ID | Domain | Universe | Materialised in | Owner role | Decay | Population |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `KND-021` | Source structure and module map | U5 | `apps/` `services/` `packages/` — `.gitkeep` only | Engineering | `D4` | **EMPTY — 0 source files** |
+| `KND-022` | Coding standards | U5 | `23_STANDARDS/` | Engineering | `D2` | **THIN** |
+| `KND-023` | Build and dependency knowledge | U5 | — | Engineering | `D4` | **EMPTY** |
+| `KND-024` | Test knowledge and coverage | U5 | `tests/` `.gitkeep` only | Engineering | `D4` | **EMPTY** |
+| `KND-025` | Code provenance and authorship | U5 | git history | Engineering | `D4` | **EMPTY for code; present for docs** |
+| `KND-026` | User personas | U6 | `03_USERS/` | UX Research | `D2` | **THIN** |
+| `KND-027` | User journeys | U6 | `03_USERS/` | UX Research | `D3` | **THIN** |
+| `KND-028` | User needs and pain points | U6 | PART 01 `PROB-VIS-` | UX Research | `D2` | **POPULATED** |
+| `KND-029` | Accessibility knowledge | U6 | — | UX Research | `D2` | **EMPTY** |
+| `KND-030` | User feedback and observed behaviour | U6 | — | UX Research | `D4` | **EMPTY — no users exist** |
+
+### TBL-VIS-580: Knowledge Domain Registry — U7 Business and U8 AI
+
+| ID | Domain | Universe | Materialised in | Owner role | Decay | Population |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `KND-031` | Business model and revenue logic | U7 | `02_BUSINESS/` | Business Owner | `D2` | **THIN** |
+| `KND-032` | Market and competitive knowledge | U7 | — | Business Owner | `D3` | **EMPTY** |
+| `KND-033` | Regulatory and compliance obligations | U7 | `security/` `.gitkeep` only | Compliance | `D2` | **EMPTY** |
+| `KND-034` | Commercial constraints | U7 | PART 01 `CON-VIS-` | Business Owner | `D2` | **THIN** |
+| `KND-035` | Stakeholder map | U7 | `CODEOWNERS` — 1 principal | Governance | `D2` | **CRITICALLY THIN** |
+| `KND-036` | Agent roles and authority model | U8 | PART 03 `A0`…`A4` · `.ai/AI_AGENT_OPERATING_MANUAL.md` | AI Governance | `D1` | **POPULATED** |
+| `KND-037` | Agent operating procedures | U8 | `.ai/` control plane, 17 files | AI Governance | `D2` | **POPULATED** |
+| `KND-038` | Prompt and instruction knowledge | U8 | `.ai/PROMPTS/` `.gitkeep` only | AI Governance | `D3` | **EMPTY** |
+| `KND-039` | Agent memory | U8 | `.ai/MEMORY/` `.gitkeep` only · `SESSION_MEMORY.md` | AI Governance | `D5` | **EMPTY directory, one file** |
+| `KND-040` | Agent failure and lesson knowledge | U8 | `.ai/LESSONS_LEARNED.md` · `COMMON_MISTAKES.md` | AI Governance | `D3` | **POPULATED** |
+
+### TBL-VIS-581: Knowledge Domain Registry — U9 Operational and U10 Research
+
+| ID | Domain | Universe | Materialised in | Owner role | Decay | Population |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `KND-041` | Metric definitions | U9 | PART 04 `MET-VIS-001`…`050` | Measurement Owner | `D2` | **POPULATED** |
+| `KND-042` | Measured values and their windows | U9 | PART 04 §04.5 register | Measurement Owner | `D4` | **THIN — 21 at `EV3`, 0 above** |
+| `KND-043` | Evidence and provenance records | U9 | PART 04 §04.2, §04.26 | Measurement Owner | `D3` | **DOCUMENTED NOT MECHANISED** |
+| `KND-044` | Quality gates and their state | U9 | PART 04 `QG-0`…`QG-8` | Governance | `D3` | **POPULATED — 3 attainable** |
+| `KND-045` | Operational runtime state | U9 | `observability/` `.gitkeep` only | Operations | `D5` | **EMPTY — nothing runs** |
+| `KND-046` | Incident and failure history | U9 | — | Operations | `D3` | **EMPTY** |
+| `KND-047` | Process knowledge and workflows | U9 | `.github/workflow-skeletons/` — 8, none installed | Engineering | `D3` | **SPECIFIED NOT INSTALLED** |
+| `KND-048` | Open questions and unresolved decisions | U10 | `OBL-01`…`OBL-44` | Governance | `D3` | **POPULATED — 44 obligations** |
+| `KND-049` | Experiments and their outcomes | U10 | `experiments/` `.gitkeep` only | Research | `D3` | **EMPTY** |
+| `KND-050` | External research and references | U10 | `research/` `.gitkeep` only | Research | `D3` | **EMPTY** |
+
+> **`VIS-599`.** The registry produces a measurement that no prose summary would have produced. Of
+> **50 knowledge domains, 17 are POPULATED, 14 are THIN, 15 are EMPTY, and 4 carry a
+> specified-but-not-mechanised status.** The empty set is not randomly distributed: it clusters
+> almost perfectly in U5 Code, U6 User behaviour, and U9 Runtime — the three universes that can only
+> be populated by something **executing**. Oship's knowledge base is not partially complete in a
+> uniform way. It is **complete in exactly the regions that prose can populate and empty in exactly
+> the regions that require a running system.**
+
+### TBL-VIS-582: Knowledge Universe Population Summary — Measured
+
+| Universe | Domains | Populated | Thin | Empty | Specified-not-mechanised | Dominant blocker |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| U1 System | 5 | 5 | 1 | 0 | 0 | none |
+| U2 Product | 5 | 3 | 2 | 0 | 0 | none |
+| U3 Domain | 5 | 0 | 3 | 1 | 1 | No domain modelling has begun |
+| U4 Architecture | 5 | 4 | 1 | 1 | 0 | `apis/` empty |
+| U5 Code | 5 | 0 | 1 | 4 | 0 | **0 source files — `ADR-0001` Phase 0** |
+| U6 User | 5 | 1 | 2 | 2 | 0 | **No users exist** |
+| U7 Business | 5 | 0 | 3 | 2 | 0 | Single stakeholder |
+| U8 AI | 5 | 3 | 0 | 2 | 0 | `.ai/` subdirectories are placeholders |
+| U9 Operational | 7 | 2 | 1 | 2 | 2 | **0 workflows installed, nothing runs** |
+| U10 Research | 3 | 1 | 0 | 2 | 0 | No experiments recorded |
+| **TOTAL** | **50** | **17** | **14** | **15** | **4** | — |
+
+> **`VIS-600`.** `KND-035` deserves separate mention because it is the single thinnest domain with
+> the widest blast radius. The stakeholder map resolves to **one principal in `CODEOWNERS`**. That
+> one fact caps evidence at `EV3` per PART 04, caps knowledge trust at `K3` per §05.8, makes `QG-6`
+> unattainable, makes every `MSC-4` metric undashboardable under the minimum-cohort rule, and makes
+> every review a self-review. **A knowledge architecture cannot design around a governance
+> singularity.** It can only name it, which is what `KND-035` does.
+
+### TBL-VIS-583: Domain Routing Rules — Where a New Fact Belongs
+
+| If the fact answers… | Route to | Never route to | Because |
+| :--- | :--- | :--- | :--- |
+| "What is Oship?" | `KND-001`…`KND-005` | `KND-016` | Identity is not architecture; conflating them makes identity churn with structure |
+| "How is it built?" | `KND-016`…`KND-020` | `KND-001` | Architecture is revisable; identity is `D1` |
+| "What can it do?" | `KND-008` | `KND-021` | Capability is intent; source is realisation |
+| "What happened once?" | `KND-039` episodic memory | `KND-040` | An episode is not yet a lesson |
+| "What is true across episodes?" | `KND-040` | `KND-039` | A lesson is a generalisation and must outlive its episodes |
+| "What did we measure?" | `KND-042` with a window | `KND-041` | A value is not a definition |
+| "What do we not know?" | `KND-048` | anywhere implicit | Unrecorded unknowns are indistinguishable from resolved ones |
+| "How should an agent behave?" | `KND-036` authority · `KND-037` procedure | this document | Vision states why; the control plane states how |
+
+### TBL-VIS-584: Validation Rules — Knowledge Universe, §05.2
+
+| Rule | Statement | Severity | Detection |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1001` | Every knowledge object must be assigned exactly one primary `KND-` domain. | **HALT** | Domain field present and single-valued |
+| `VAL-VIS-1002` | A `KND-` domain must declare an owner role, never a person. | **ERROR** | Owner column matches a role vocabulary |
+| `VAL-VIS-1003` | A `KND-` domain must declare a decay class from `TBL-VIS-576`. | **HALT** | Decay column non-empty and in range `D0`…`D5` |
+| `VAL-VIS-1004` | Population status must be measured, never estimated. | **HALT** | Each status traceable to a filesystem or grep observation |
+| `VAL-VIS-1005` | A domain marked `EMPTY` must name its blocker. | **ERROR** | `TBL-VIS-582` blocker column non-empty for empty domains |
+| `VAL-VIS-1006` | A fact matching two routing rules must be split, not duplicated. | **ERROR** | Duplicate content across domains |
+| `VAL-VIS-1007` | The `KND-` registry must not exceed 120 entries without a `DEC-VIS-` record. | **ERROR** | Count against `DEC-VIS-046` ceiling |
+| `VAL-VIS-1008` | A universe with zero populated domains must be flagged in every progress report. | **HALT** | U3, U5, U7 currently qualify |
+| `VAL-VIS-1009` | Episodic and generalised knowledge must not share a storage location. | **ERROR** | `KND-039` versus `KND-040` separation |
+| `VAL-VIS-1010` | A metric definition and a metric value must occupy different domains. | **ERROR** | `KND-041` versus `KND-042` |
+| `VAL-VIS-1011` | A domain's materialisation list must cite paths that exist. | **HALT** | Path existence check on every registry row |
+| `VAL-VIS-1012` | A `.gitkeep`-only directory must be recorded as `EMPTY`, never as `PLANNED`. | **HALT** | Directory listing versus status label |
+| `VAL-VIS-1013` | Decay class must be consistent with the domain's observed change rate. | **ERROR** | Compare class against git churn for the materialising paths |
+| `VAL-VIS-1014` | A domain may be materialised in multiple files; a file may carry multiple domains. | **INFO** | Many-to-many mapping permitted by design |
+| `VAL-VIS-1015` | Routing decisions must cite a `TBL-VIS-583` row. | **ERROR** | Routing rationale references the table |
+| `VAL-VIS-1016` | `KND-035` stakeholder thinness must be cited wherever a review or approval is claimed. | **HALT** | Approval claims carry the single-principal caveat |
+| `VAL-VIS-1017` | A universe population summary must reconcile to the registry row count. | **HALT** | `TBL-VIS-582` totals equal 50 |
+| `VAL-VIS-1018` | A domain whose owner role does not exist in the organisation must be marked unowned. | **ERROR** | Owner roles are aspirational where one principal exists |
+| `VAL-VIS-1019` | Research knowledge must carry a promotion criterion before entering U1. | **ERROR** | `KND-050` to `KND-001` promotion requires stated criteria |
+| `VAL-VIS-1020` | A domain marked `SPECIFIED NOT MECHANISED` must name what would mechanise it. | **ERROR** | `KND-043`, `KND-047` name their missing execution |
+| `VAL-VIS-1021` | The knowledge universe must not introduce a new filesystem layout. | **HALT** | `KND-` is a logical layer only; no directories created |
+| `VAL-VIS-1022` | Every `KND-` domain must be reachable from `DGM-VIS-134`. | **ERROR** | Universe assignment present for all 50 |
+| `VAL-VIS-1023` | A change of population status must be recorded with the observation that caused it. | **ERROR** | Status changes carry a command and a commit |
+| `VAL-VIS-1024` | No domain may claim a population status higher than its evidence class supports. | **HALT** | Cross-check against PART 04 `E0`…`E6` |
+
+---
+
+## 05.3 — Knowledge Graph Architecture
+
+### AI NAVIGATION METADATA — §05.3
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before asserting any relationship between two knowledge objects** |
+| **AI DEPENDENCIES** | §05.2 domain registry · PART 04 §04.17 traceability matrix · PART 03 capability dependency model |
+| **AI INPUTS** | Two knowledge objects and a proposed relationship between them |
+| **AI OUTPUTS** | A typed, provenanced, directional edge — or a rejection with the constraint it violated |
+| **AI IMPLEMENTATION IMPACT** | Every dependency claim, every impact analysis, every "what breaks if this changes" question |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1025`…`VAL-VIS-1056` |
+| **AI RELATED DOCUMENTS** | `MASTER_CONTEXT_RELATIONSHIPS.md` · PART 04 §04.17 |
+
+### 05.3.1 — Why a Graph and Not a Hierarchy
+
+> **`VIS-601`.** Oship already has a hierarchy: 24 numbered domains, each with an `INDEX.md`, each
+> file with a path. Hierarchies answer *where do I find X* efficiently and answer *what breaks if I
+> change X* not at all. The second question is the one that matters for an AI-first repository,
+> because an agent's most dangerous action is a locally-correct change with unnoticed remote
+> consequences. **`KPP-15` requires both structures**; §05.3 specifies the one Oship lacks.
+
+> **`VIS-602`.** The graph is specified as a **logical model over existing artefacts**, not as a
+> database to be built. Every node type below already exists as content in the repository; every
+> edge type below is already asserted somewhere in prose. What is absent is the typing, the
+> provenance on the edges, and the ability to traverse. This distinction is stated plainly because
+> `KPP-27` forbids reading a specification as an implementation: **no graph store exists, no graph
+> is populated, and nothing traverses anything today.**
+
+### TBL-VIS-585: Knowledge Graph Node Types — `KGN-01`…`KGN-11`
+
+| ID | Node type | Definition | Identity source | Oship instances, measured | Key attributes |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `KGN-01` | **Concept** | A named abstraction with a definition | Glossary term | Thin — `KND-006` has 2 defined terms | `label`, `definition`, `synonyms`, `domain` |
+| `KGN-02` | **Entity** | A concrete thing the system reasons about | Domain model | 4 bounded contexts, no entities modelled | `type`, `context`, `invariants` |
+| `KGN-03` | **Decision** | A recorded choice with rationale and alternatives | `DEC-VIS-`, `DEC-ARCH-`, ADR | 46 `DEC-VIS-` · 3 ADRs · 10 `.ai/DECISION_LOG` | `status`, `alternatives`, `reversibility` |
+| `KGN-04` | **Document** | An addressable authored artefact | File path plus document ID | **87 Markdown files** | `doc_id`, `authority`, `status`, `owner` |
+| `KGN-05` | **Component** | An architectural building block | `CMP-ARCH-` | 30 specified, 0 built | `layer`, `interfaces`, `status` |
+| `KGN-06` | **Capability** | Something the system can or will do | `CAP-VIS-` | **167** | `status`, `evidence_class`, `dependencies` |
+| `KGN-07` | **Metric** | A defined measurement with unit and window | `MET-VIS-`, `AIO-`, `DQR-` | 50 `MET-VIS-` · 52 `AIO-` | `formula`, `unit`, `window`, `trust` |
+| `KGN-08` | **Agent** | An actor with an authority level | `A0`…`A4` | 5 levels, `A4` prohibited | `authority`, `scopes`, `permitted_actions` |
+| `KGN-09` | **Memory** | A record of a specific episode | Session identifier | 1 file, `.ai/MEMORY/` empty | `episode`, `timestamp`, `outcome` |
+| `KGN-10` | **Event** | Something that occurred at a time | Commit, execution, incident | Git commits only | `type`, `time`, `actor`, `effect` |
+| `KGN-11` | **Artifact** | A produced output, not authored prose | Build output, report, diagram | 133 Mermaid blocks · 0 build outputs | `producer`, `reproducible`, `hash` |
+
+> **`VIS-603`.** Eleven node types, and the population column is again the honest part. **Three node
+> types are richly populated** — Document, Capability, Decision — and they are exactly the three that
+> can be created by writing. **Two are structurally empty** — Entity and Event beyond commits — and
+> one, Agent, exists only as an authority taxonomy with no instances, because no agent has ever held
+> a persistent identity in this repository.
+
+### TBL-VIS-586: Knowledge Graph Edge Types — `KGE-01`…`KGE-08`
+
+| ID | Edge | Direction | Semantics | Transitive | Cycle permitted | Oship example |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `KGE-01` | `depends_on` | A → B | A cannot function or be true without B | **Yes** | **No — HALT** | `CAP-VIS-041 depends_on OBL-03` |
+| `KGE-02` | `derived_from` | A → B | A was produced by transforming B | **Yes** | **No — HALT** | `TBL-VIS-582 derived_from TBL-VIS-577..581` |
+| `KGE-03` | `validated_by` | A → B | B is the check that establishes A's trust | No | No | `MET-VIS-011 validated_by /tmp/mmv/val.mjs` |
+| `KGE-04` | `implemented_by` | A → B | B is the realisation of specification A | No | No | `CAP-VIS-nnn implemented_by <none>` — the universal Oship case |
+| `KGE-05` | `related_to` | A ↔ B | Undirected association of last resort | No | Yes | Two adjacent sections |
+| `KGE-06` | `conflicts_with` | A ↔ B | A and B cannot both be true | No | Yes | `README` 24-of-24 badge `conflicts_with` measured domain state |
+| `KGE-07` | `supersedes` | A → B | A replaces B; B is retained | **Yes** | **No — HALT** | `DEC-VIS-044 supersedes DEC-VIS-042` |
+| `KGE-08` | `evolves_into` | A → B | A matures into B without being wrong | **Yes** | **No — HALT** | `K-L3 evolves_into K-L4` |
+
+> **`VIS-604`.** `KGE-05` `related_to` is marked *of last resort* deliberately. An untyped
+> association is the graph equivalent of a shrug: it records that someone noticed a connection
+> without recording what kind. A graph dominated by `related_to` edges has the appearance of
+> structure and none of the inferential power, which is failure mode `FAL-VIS-296`. The rule stated
+> at `VAL-VIS-1034` is that `related_to` must never exceed one quarter of all edges.
+
+```mermaid
+graph LR
+    CON["KGN-01 Concept"]
+    ENT["KGN-02 Entity"]
+    DEC["KGN-03 Decision"]
+    DOC["KGN-04 Document"]
+    CMP["KGN-05 Component"]
+    CAP["KGN-06 Capability"]
+    MET["KGN-07 Metric"]
+    AGT["KGN-08 Agent"]
+    MEM["KGN-09 Memory"]
+    EVT["KGN-10 Event"]
+    ART["KGN-11 Artifact"]
+
+    CAP -->|"KGE-01 depends_on"| CAP
+    CAP -->|"KGE-04 implemented_by"| CMP
+    CAP -->|"KGE-03 validated_by"| MET
+    DOC -->|"KGE-02 derived_from"| DOC
+    DOC -->|"KGE-07 supersedes"| DOC
+    DEC -->|"KGE-07 supersedes"| DEC
+    DEC -->|"KGE-01 depends_on"| MET
+    MET -->|"KGE-02 derived_from"| ART
+    ART -->|"KGE-02 derived_from"| EVT
+    AGT -->|"KGE-02 derived_from"| MEM
+    MEM -->|"KGE-08 evolves_into"| CON
+    CON -->|"KGE-06 conflicts_with"| CON
+    ENT -->|"KGE-01 depends_on"| CON
+    DOC -->|"KGE-03 validated_by"| MET
+    AGT -->|"KGE-01 depends_on"| DOC
+
+    classDef rich fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef thin fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bare fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class DOC,CAP,DEC rich
+    class CON,MET,ART,MEM thin
+    class ENT,CMP,AGT,EVT bare
+```
+
+> **Diagram ID:** `DGM-VIS-135` — **The Enterprise Knowledge Graph — Type Schema**
+> **Explanation:** This is the **type-level** graph, not an instance graph: each box is a node
+> *class* and each edge a permitted relationship *kind*. Colour again encodes measured population.
+> The most consequential structure is the `MEM evolves_into CON` edge — the only path by which
+> episodic experience becomes reusable concept — and it is currently **unpopulated in both
+> directions**, because `.ai/MEMORY/` holds nothing. Note also the self-loops on Capability,
+> Document and Decision: these are legal and common, and they are exactly the edges where cycle
+> detection must run, since `depends_on` and `supersedes` cycles are both HALT conditions.
+
+### 05.3.2 — Knowledge Graph Schema
+
+> **`VIS-605`.** The schema is expressed twice, in JSON and YAML, because the two serve different
+> consumers: JSON for programmatic validation, YAML for human authoring in frontmatter. Both are
+> **`DOCUMENTED NOT IMPLEMENTED`** — no validator consumes them today.
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "oship://knowledge/graph/node.schema.json",
+  "title": "Oship Knowledge Graph Node",
+  "type": "object",
+  "required": ["node_id", "node_type", "label", "domain", "trust", "provenance"],
+  "additionalProperties": false,
+  "properties": {
+    "node_id":   { "type": "string", "pattern": "^[A-Z][A-Z0-9-]{2,}-[0-9]{2,4}$" },
+    "node_type": { "type": "string", "enum": ["KGN-01","KGN-02","KGN-03","KGN-04","KGN-05","KGN-06","KGN-07","KGN-08","KGN-09","KGN-10","KGN-11"] },
+    "label":     { "type": "string", "minLength": 3, "maxLength": 200 },
+    "domain":    { "type": "string", "pattern": "^KND-[0-9]{3}$" },
+    "trust":     { "type": "string", "enum": ["K0","K1","K2","K3","K4","K5","K6"] },
+    "decay_class": { "type": "string", "enum": ["D0","D1","D2","D3","D4","D5"] },
+    "security":  { "type": "string", "enum": ["KSC-1","KSC-2","KSC-3","KSC-4","KSC-5","KSC-6"] },
+    "status":    { "type": "string", "enum": ["IMPLEMENTED","DOCUMENTED","PARTIALLY_IMPLEMENTED","PLANNED","PROPOSED","VISION","DEPRECATED","UNKNOWN"] },
+    "provenance": {
+      "type": "object",
+      "required": ["origin", "author_type", "author_role", "observed_at", "basis", "method"],
+      "properties": {
+        "origin":       { "type": "string", "description": "repository path plus identifier anchor" },
+        "author_type":  { "type": "string", "enum": ["human", "agent", "tool", "derived"] },
+        "author_role":  { "type": "string", "description": "role, never a personal name" },
+        "observed_at":  { "type": "string", "description": "commit SHA - the only stable time anchor in this repository" },
+        "basis":        { "type": "string", "description": "the command, artifact, or document the claim rests on" },
+        "method":       { "type": "string", "enum": ["measured","asserted","derived","generated","cited"] },
+        "verified_by":  { "type": ["string","null"], "description": "principal distinct from author, or null" }
+      }
+    },
+    "falsifier":  { "type": "string", "minLength": 10, "description": "what observation would make this false" },
+    "validity_window": {
+      "type": "object",
+      "required": ["valid_from", "revalidate_after"],
+      "properties": {
+        "valid_from":       { "type": "string" },
+        "revalidate_after": { "type": "string", "description": "expressed in commits or releases, never wall-clock dates" }
+      }
+    }
+  }
+}
+```
+
+> **`VIS-606`.** Three schema choices are deliberate and each encodes a PART 04 finding.
+> `observed_at` takes a **commit SHA rather than a timestamp**, because `VIS-051` forbids dates and
+> because a commit is the only time anchor in this repository that is both precise and verifiable.
+> `verified_by` is **nullable and must differ from the author**, which makes the single-principal
+> problem visible in the data rather than hidden in a footnote — every node Oship can currently
+> produce will carry `verified_by: null`. And `revalidate_after` is expressed in commits or releases
+> rather than wall-clock intervals, for the same reason.
+
+```yaml
+# Edge instance — conforming example, KGE-01
+edge_id: KGE-I-000001
+edge_type: KGE-01           # depends_on
+from: CAP-VIS-041
+to: OBL-03
+directional: true
+transitive: true
+provenance:
+  origin: "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md#03.14"
+  author_type: human
+  author_role: "Product Architect"
+  observed_at: "844347f"
+  basis: "PART 03 section 03.14 capability dependency analysis"
+  method: derived
+  verified_by: null          # single-principal CODEOWNERS - see KND-035
+trust: K3                    # ceiling, cannot reach K4 while verified_by is null
+falsifier: "A persistence decision recorded in OBL-03 that CAP-VIS-041 does not reference"
+validity_window:
+  valid_from: "e87d3c8"
+  revalidate_after: "next release, or any commit touching OBL-03"
+constraints_checked:
+  - cycle_free: true
+  - both_endpoints_exist: true
+  - edge_type_permitted_between_node_types: true
+```
+
+### TBL-VIS-587: Graph Constraint Register
+
+| Constraint | Applies to | Rule | Violation severity |
+| :--- | :--- | :--- | :--- |
+| Endpoint existence | all edges | Both endpoints must resolve to declared nodes | **HALT** |
+| Type compatibility | all edges | The edge type must be permitted between those node types per `DGM-VIS-135` | **HALT** |
+| Acyclicity | `KGE-01`, `KGE-02`, `KGE-07`, `KGE-08` | No directed cycle | **HALT** |
+| Supersession chain integrity | `KGE-07` | A superseded node must remain retrievable | **HALT** |
+| Edge provenance | all edges | Every edge carries its own provenance block | **ERROR** |
+| Trust propagation | `KGE-01`, `KGE-02` | A derived node's trust cannot exceed the minimum of its sources | **HALT** |
+| `related_to` budget | `KGE-05` | Must not exceed 25 percent of all edges | **ERROR** |
+| Conflict symmetry | `KGE-06` | If A conflicts with B, B conflicts with A | **ERROR** |
+| Orphan prohibition | all nodes | Every node has at least one edge, or is explicitly marked isolated | **ERROR** |
+| Self-loop restriction | `KGE-01`, `KGE-07` | A node may not depend on or supersede itself | **HALT** |
+
+> **`VIS-607`.** **Trust propagation** is the most important row and the least intuitive. If a
+> conclusion is derived from three sources at `K3`, `K2` and `K1`, the conclusion is `K1` — the
+> minimum, never the average and never the maximum. Averaging trust is failure mode `FAL-VIS-297`
+> and it is seductive because it produces comfortable numbers: three mostly-good sources feel like
+> they should yield a good conclusion. They do not. A chain is exactly as strong as its weakest link,
+> and a knowledge graph that averages will systematically overstate the reliability of its most
+> derived — which is to say, its most consequential — conclusions.
+
+### TBL-VIS-588: Validation Rules — Knowledge Graph, §05.3
+
+| Rule | Statement | Severity | Detection |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1025` | Every edge must declare a type from `KGE-01`…`KGE-08`. | **HALT** | Edge type field in enum |
+| `VAL-VIS-1026` | Every edge must resolve both endpoints to existing nodes. | **HALT** | Endpoint resolution pass |
+| `VAL-VIS-1027` | `depends_on` must be acyclic. | **HALT** | Topological sort; failure means a cycle |
+| `VAL-VIS-1028` | `supersedes` must be acyclic and must retain the superseded node. | **HALT** | Chain walk; retention check |
+| `VAL-VIS-1029` | Derived trust must equal the minimum of source trusts. | **HALT** | Recompute on every derived node |
+| `VAL-VIS-1030` | Every edge must carry provenance independent of its endpoints. | **ERROR** | Edge provenance block present |
+| `VAL-VIS-1031` | A node must declare `node_type`, `domain`, `trust`, and `provenance`. | **HALT** | Schema validation against the node schema |
+| `VAL-VIS-1032` | `verified_by` must differ from `author_role` or be null. | **HALT** | String inequality check |
+| `VAL-VIS-1033` | A node with `verified_by: null` may not exceed `K3`. | **HALT** | Trust ceiling enforcement |
+| `VAL-VIS-1034` | `related_to` edges must not exceed 25 percent of all edges. | **ERROR** | Edge type histogram |
+| `VAL-VIS-1035` | `conflicts_with` must be recorded symmetrically. | **ERROR** | Reverse edge existence check |
+| `VAL-VIS-1036` | An orphan node must be explicitly marked isolated, not left unlinked. | **ERROR** | Degree-zero node scan |
+| `VAL-VIS-1037` | `observed_at` must be a commit SHA, never a wall-clock date. | **HALT** | Format check; `VIS-051` compliance |
+| `VAL-VIS-1038` | `revalidate_after` must be expressed in commits or releases. | **ERROR** | Format check |
+| `VAL-VIS-1039` | `author_role` must be a role, never a personal name. | **HALT** | `VIS-032` compliance |
+| `VAL-VIS-1040` | Every node must carry a falsifier of at least ten characters. | **HALT** | Length and content check |
+| `VAL-VIS-1041` | A node's `status` must come from the eight-value status vocabulary. | **HALT** | Enum check |
+| `VAL-VIS-1042` | No graph store may be described as existing. | **HALT** | Grep for implementation claims in §05.3 |
+| `VAL-VIS-1043` | `implemented_by` edges pointing to nothing must be recorded, not omitted. | **ERROR** | Absent implementations are data, not gaps |
+| `VAL-VIS-1044` | A self-loop on `depends_on` or `supersedes` is invalid. | **HALT** | Endpoint equality check |
+| `VAL-VIS-1045` | Edge type must be permitted between the two node types involved. | **HALT** | Type-compatibility matrix lookup |
+| `VAL-VIS-1046` | A node's domain must exist in the `KND-` registry. | **HALT** | Registry membership check |
+| `VAL-VIS-1047` | A node's decay class must match its domain's declared class unless overridden with rationale. | **ERROR** | Compare node to domain default |
+| `VAL-VIS-1048` | Graph queries must return provenance alongside results. | **ERROR** | Query result shape includes provenance |
+| `VAL-VIS-1049` | A traversal that crosses a `conflicts_with` edge must halt and report. | **HALT** | Traversal guard |
+| `VAL-VIS-1050` | Node identifiers must match the declared pattern and be unique graph-wide. | **HALT** | Regex plus uniqueness check |
+| `VAL-VIS-1051` | An edge asserted in prose but absent from the graph is an unrecorded edge, not a missing one. | **INFO** | Prose-to-graph reconciliation |
+| `VAL-VIS-1052` | Trust may never be averaged across sources. | **HALT** | Reject any aggregation other than minimum |
+| `VAL-VIS-1053` | A `KGN-08` Agent node must declare an authority level from `A0`…`A3`. | **HALT** | `A4` prohibited per `VIS-033` |
+| `VAL-VIS-1054` | A `KGN-09` Memory node must not be promoted to `KGN-01` Concept without generalisation evidence. | **ERROR** | `evolves_into` requires a stated generalisation |
+| `VAL-VIS-1055` | Schema examples in this section must be valid JSON and valid YAML respectively. | **HALT** | Parse both with a strict parser |
+| `VAL-VIS-1056` | The type-level graph must contain every node type declared in `TBL-VIS-585`. | **ERROR** | Count boxes in `DGM-VIS-135` against 11 |
+
+---
+
+## 05.4 — The Semantic Layer
+
+### AI NAVIGATION METADATA — §05.4
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read when two texts appear to say the same thing, or the same thing twice** |
+| **AI DEPENDENCIES** | §05.3 graph types · §05.5 ontology · `VAL-VIS-456` the three readings of "creator" |
+| **AI INPUTS** | Unstructured or semi-structured text entering the corpus |
+| **AI OUTPUTS** | Normalised concepts, resolved entities, discovered relationships, and an explicit ambiguity list |
+| **AI IMPLEMENTATION IMPACT** | Determines whether two documents are recognised as agreeing, disagreeing, or duplicating |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1057`…`VAL-VIS-1080` |
+| **AI RELATED DOCUMENTS** | `architecture/DOMAIN_MODEL.md` ubiquitous language · §05.6 taxonomy |
+
+> **`VIS-608`.** The semantic layer exists because the corpus is written in English, and English
+> permits the same concept to be expressed in unlimited ways and different concepts to be expressed
+> identically. Both directions are hazardous. The first produces **invisible duplication**: two
+> sections specify the same rule in different words and drift independently because nothing links
+> them. The second produces **invisible collision**: one word carries three meanings and a reader
+> resolves it to whichever meaning their context suggests.
+
+> **`VIS-609`.** Oship has a documented instance of the second failure, and it is unresolved.
+> `VAL-VIS-456` records that the word **"creator"** carries three distinct readings in this corpus,
+> and it remains one of the four HALT-level release blockers. It is the canonical worked example for
+> this section because it demonstrates the cost precisely: a single unresolved term is currently one
+> of the four things preventing `AOM-VIS-001` from advancing beyond `IN_PROGRESS`.
+
+### TBL-VIS-589: Semantic Processing Operations — `SEM-01`…`SEM-24`
+
+| ID | Operation | Stage | Input | Output | Oship status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `SEM-01` | Tokenisation and segmentation | Extract | Raw text | Sentence and clause units | **NOT IMPLEMENTED** |
+| `SEM-02` | Term candidate detection | Extract | Segments | Candidate terms | **NOT IMPLEMENTED** |
+| `SEM-03` | Identifier extraction | Extract | Text | `VIS-`, `CAP-VIS-`, `TBL-VIS-` occurrences | **PARTIAL — grep only, manual** |
+| `SEM-04` | Definition detection | Extract | Text | Term-definition pairs | **NOT IMPLEMENTED** |
+| `SEM-05` | Concept normalisation | Normalise | Candidate terms | Canonical concept labels | **NOT IMPLEMENTED** |
+| `SEM-06` | Synonym clustering | Normalise | Labels | Synonym sets with one canonical head | **NOT IMPLEMENTED** |
+| `SEM-07` | Case and morphology folding | Normalise | Labels | Folded forms | **NOT IMPLEMENTED** |
+| `SEM-08` | Abbreviation expansion | Normalise | Acronyms | Expanded forms plus retained acronym | **PARTIAL — manual glossaries** |
+| `SEM-09` | Entity candidate generation | Resolve | Concepts | Possible entity matches | **NOT IMPLEMENTED** |
+| `SEM-10` | Entity disambiguation | Resolve | Candidates plus context | One entity or an ambiguity record | **NOT IMPLEMENTED** |
+| `SEM-11` | Cross-document coreference | Resolve | Mentions across files | Coreference chains | **NOT IMPLEMENTED** |
+| `SEM-12` | Identifier canonicalisation | Resolve | Aliases and redirections | Canonical identifier | **PARTIAL — `TBL-VIS-560` is a manual instance** |
+| `SEM-13` | Relationship candidate extraction | Discover | Sentences | Typed edge candidates | **NOT IMPLEMENTED** |
+| `SEM-14` | Dependency inference | Discover | Edge candidates | `KGE-01` edges | **PARTIAL — authored by hand in PART 03** |
+| `SEM-15` | Contradiction detection | Discover | Claim pairs | `KGE-06` edges | **NOT IMPLEMENTED — the `README` badge was found by a human** |
+| `SEM-16` | Derivation tracing | Discover | Derived values | `KGE-02` edges | **PARTIAL — manual** |
+| `SEM-17` | Domain assignment | Enrich | Concepts | `KND-` domain | **PARTIAL — frontmatter, manual** |
+| `SEM-18` | Authority attachment | Enrich | Objects | L1–L5 authority level | **PARTIAL — frontmatter** |
+| `SEM-19` | Provenance attachment | Enrich | Objects | Provenance block | **PARTIAL — prose only** |
+| `SEM-20` | Temporal anchoring | Enrich | Claims | Commit SHA anchor | **PARTIAL — manual** |
+| `SEM-21` | Ambiguity detection | Disambiguate | Terms with multiple definitions | Ambiguity record | **MANUAL — `VAL-VIS-456`** |
+| `SEM-22` | Sense assignment | Disambiguate | Ambiguous term plus context | One sense identifier | **NOT IMPLEMENTED** |
+| `SEM-23` | Unresolvable escalation | Disambiguate | Undecidable ambiguity | Human obligation record | **MANUAL — becomes an `OBL-`** |
+| `SEM-24` | Semantic validation | Validate | Enriched objects | Pass or reject with reason | **NOT IMPLEMENTED** |
+
+> **`VIS-610`.** Twenty-four operations; **zero fully implemented, nine partial, fifteen absent.**
+> Every partial is partial in the same way — a human or an agent performs it by reading, and the
+> result is recorded as prose rather than as data. That is not worthless: `TBL-VIS-560` is a genuine
+> canonicalisation and `VAL-VIS-456` is a genuine ambiguity record. But a manual semantic layer
+> scales with attention, and attention is the scarcest resource in the system.
+
+```mermaid
+flowchart TD
+    IN["INPUT - unstructured or semi-structured text"]
+
+    subgraph EXTRACT["EXTRACT - SEM-01 to SEM-04"]
+        E1["segment"]
+        E2["detect terms"]
+        E3["extract identifiers"]
+        E4["detect definitions"]
+    end
+    subgraph NORM["NORMALISE - SEM-05 to SEM-08"]
+        N1["canonical label"]
+        N2["synonym cluster"]
+        N3["fold morphology"]
+        N4["expand abbreviations"]
+    end
+    subgraph RESOLVE["RESOLVE - SEM-09 to SEM-12"]
+        R1["candidate entities"]
+        R2["disambiguate"]
+        R3["coreference"]
+        R4["canonical identifier"]
+    end
+    subgraph DISCOVER["DISCOVER - SEM-13 to SEM-16"]
+        D1["edge candidates"]
+        D2["dependencies"]
+        D3["contradictions"]
+        D4["derivations"]
+    end
+    subgraph ENRICH["ENRICH - SEM-17 to SEM-20"]
+        C1["domain"]
+        C2["authority"]
+        C3["provenance"]
+        C4["temporal anchor"]
+    end
+    subgraph AMBIG["DISAMBIGUATE - SEM-21 to SEM-23"]
+        A1["detect ambiguity"]
+        A2["assign sense"]
+        A3["escalate to human"]
+    end
+
+    IN --> EXTRACT --> NORM --> RESOLVE --> DISCOVER --> ENRICH --> AMBIG
+    AMBIG --> V["SEM-24 semantic validation"]
+    V -->|"pass"| OUT["typed node plus edges, ready for KIN-ingestion"]
+    V -->|"reject"| REJ["rejection with reason - never silent drop"]
+    A3 -.->|"creates OBL- record"| HUM["HUMAN QUEUE"]
+    D3 -.->|"KGE-06 conflicts_with"| OUT
+
+    classDef absent fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef partial fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef term fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class EXTRACT,NORM,RESOLVE,DISCOVER absent
+    class ENRICH,AMBIG partial
+    class IN,OUT,REJ,HUM,V term
+```
+
+> **Diagram ID:** `DGM-VIS-136` — **The Semantic Processing Pipeline**
+> **Explanation:** Six stages in sequence, with two edges that matter more than the main line. The
+> dotted edge from `SEM-23` to the human queue is the pipeline's **escape hatch**: ambiguity that
+> cannot be resolved by rule becomes an obligation rather than a guess, which is `KPP-25` mechanised.
+> The dotted edge from contradiction detection directly to output carries conflicts into the graph as
+> first-class `KGE-06` edges instead of discarding them — **a detected contradiction is knowledge,
+> not an error to be swallowed.** The rejection branch is drawn explicitly because a pipeline that
+> silently drops what it cannot process is indistinguishable from one that processes everything
+> correctly.
+
+### TBL-VIS-590: Worked Ambiguity Record — The "Creator" Collision
+
+| Field | Value |
+| :--- | :--- |
+| **Ambiguity ID** | `AMB-001` — the reference instance |
+| **Surface term** | "creator" |
+| **Detected by** | Human review, recorded as `VAL-VIS-456` |
+| **Sense 1** | The originating author of a document or artefact — an authorship role |
+| **Sense 2** | The originating principal of a repository-level decision — a governance role |
+| **Sense 3** | The party that brings a shipment or consignment into existence in the shipping domain sense |
+| **Why unresolvable by rule** | The three senses belong to three different `KND-` domains and no context feature reliably separates them in the existing prose |
+| **Current status** | **UNRESOLVED — HALT-level release blocker** |
+| **Resolution path** | Assign three distinct canonical terms and redirect each occurrence; this is documentation work, not a decision requiring new information |
+| **Note** | `VAL-VIS-456` is the only one of the four HALT blockers clearable by documentation alone |
+
+> **`VIS-611`.** `AMB-001` illustrates why entity resolution cannot be deferred to retrieval time. An
+> agent asked *"who is the creator?"* will retrieve passages from all three senses, find them
+> mutually consistent at the surface level, and synthesise a coherent answer describing a role that
+> does not exist. **The synthesis will not look like an error.** It will look like a summary. This is
+> the precise mechanism by which a knowledge base with no semantic layer produces fluent falsehood,
+> and it is why `SEM-21` through `SEM-23` are the operations whose absence costs most.
+
+### TBL-VIS-591: Semantic Layer Failure Modes
+
+| ID | Failure | Mechanism | Present in Oship | Guard |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-291` | **Mention counted as allocation** | An identifier referenced in a marker or ceiling is treated as consumed | **PRESENT — corrected in `TBL-VIS-561`** | `VAL-VIS-949` |
+| `FAL-VIS-292` | **Silent sense selection** | Ambiguous term resolved to whichever sense context suggests, without recording the choice | **PRESENT — `AMB-001` unresolved** | `VAL-VIS-1066` |
+| `FAL-VIS-293` | **Invisible duplication** | Two sections state one rule in different words and drift apart | **LIKELY — no detection exists** | `VAL-VIS-1061` |
+| `FAL-VIS-294` | **Coreference collapse** | Two distinct entities merged because their labels match | **GUARDED — no automated merging occurs** | `VAL-VIS-1063` |
+| `FAL-VIS-295` | **Silent pipeline drop** | Unprocessable input discarded without a rejection record | **N/A — no pipeline runs** | `VAL-VIS-1070` |
+| `FAL-VIS-296` | **`related_to` inflation** | Untyped associations dominate the graph, simulating structure | **GUARDED — 25 percent cap at `VAL-VIS-1034`** | `VAL-VIS-1034` |
+| `FAL-VIS-297` | **Trust averaging** | Derived trust computed as mean rather than minimum of sources | **GUARDED — `VAL-VIS-1052`** | `VAL-VIS-1052` |
+| `FAL-VIS-298` | **Definition drift** | A term's definition changes in one location and not the others | **LIKELY — 87 files, no cross-checking** | `VAL-VIS-1059` |
+
+### TBL-VIS-592: Validation Rules — Semantic Layer, §05.4
+
+| Rule | Statement | Severity | Detection |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1057` | Every term used as a technical concept must have exactly one definition site. | **HALT** | Definition occurrence count per term |
+| `VAL-VIS-1058` | A term with more than one definition must produce an `AMB-` record. | **HALT** | Ambiguity register entry exists |
+| `VAL-VIS-1059` | A definition change must propagate to every citing location or open an obligation. | **ERROR** | Definition hash compared across citations |
+| `VAL-VIS-1060` | Synonym clusters must nominate exactly one canonical head. | **ERROR** | Cluster head cardinality |
+| `VAL-VIS-1061` | Two passages stating the same rule must be linked or one deprecated. | **ERROR** | Semantic similarity pass, human confirmation |
+| `VAL-VIS-1062` | Abbreviations must be expanded on first use in every part. | **ERROR** | First-occurrence scan per part |
+| `VAL-VIS-1063` | Entity resolution must never merge two entities without an explicit merge record. | **HALT** | Merge log required |
+| `VAL-VIS-1064` | An unresolvable ambiguity must become an `OBL-` record, never a default choice. | **HALT** | Escalation path per `SEM-23` |
+| `VAL-VIS-1065` | Sense assignment must record the context feature that determined it. | **ERROR** | Sense records carry rationale |
+| `VAL-VIS-1066` | An agent encountering an unresolved `AMB-` term must qualify its output. | **HALT** | Output carries the ambiguity warning |
+| `VAL-VIS-1067` | Contradiction detection output must become a `KGE-06` edge, not a suppressed warning. | **HALT** | Conflict edges present in the graph |
+| `VAL-VIS-1068` | Identifier extraction must not treat a redirection table entry as a live reference. | **ERROR** | `TBL-VIS-560` entries excluded from reference counts |
+| `VAL-VIS-1069` | Semantic enrichment must not invent a domain assignment for an unclassifiable object. | **HALT** | Unclassifiable objects route to `KND-048` |
+| `VAL-VIS-1070` | Pipeline rejections must be recorded with a reason and remain retrievable. | **HALT** | Rejection log non-silent |
+| `VAL-VIS-1071` | Temporal anchoring must use commit SHAs. | **HALT** | `VIS-051` compliance |
+| `VAL-VIS-1072` | Normalisation must be reversible — the original surface form is retained. | **ERROR** | Surface form field present |
+| `VAL-VIS-1073` | A concept normalised across domains must record which domains it spans. | **ERROR** | Multi-domain concepts flagged |
+| `VAL-VIS-1074` | Relationship extraction must produce typed edges only. | **HALT** | No untyped edges admitted |
+| `VAL-VIS-1075` | A discovered edge must be marked `method: derived`, never `measured`. | **HALT** | Provenance method check |
+| `VAL-VIS-1076` | Semantic operations marked NOT IMPLEMENTED must not be cited as available. | **HALT** | `KPP-27` compliance |
+| `VAL-VIS-1077` | The ambiguity register must be loaded before any retrieval that could touch an ambiguous term. | **ERROR** | Loading sequence in §05.22 |
+| `VAL-VIS-1078` | A canonicalisation must preserve searchability of the original form. | **ERROR** | Redirection retains the original literal |
+| `VAL-VIS-1079` | Semantic validation failure must block ingestion, not degrade it silently. | **HALT** | `SEM-24` reject path |
+| `VAL-VIS-1080` | Manual semantic operations must be recorded as manual, never as pipeline output. | **HALT** | Method field distinguishes manual from automated |
+
+---
+
+## 05.5 — The Oship Ontology
+
+### AI NAVIGATION METADATA — §05.5
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before creating any new class of thing in the corpus** |
+| **AI DEPENDENCIES** | §05.3 node types · §05.4 semantic layer · PART 02 domain decomposition |
+| **AI INPUTS** | A proposed new kind of object, or a question about what kind an object is |
+| **AI OUTPUTS** | Its position under the ontology root, its permitted relations, and the rules it inherits |
+| **AI IMPLEMENTATION IMPACT** | Constrains what may exist in Oship's knowledge model at all |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1081`…`VAL-VIS-1130` |
+| **AI RELATED DOCUMENTS** | §05.6 taxonomy · `MASTER_CONTEXT_SCHEMA.md` |
+
+> **`VIS-612`.** An ontology answers *what kinds of things exist*; a taxonomy answers *how do we sort
+> the things that exist*. The distinction is routinely collapsed and the collapse is expensive: a
+> system with a taxonomy but no ontology can file anything anywhere and has no basis for rejecting a
+> category error. Oship needs the ontology first because it is the layer that makes rejection
+> possible.
+
+```mermaid
+graph TD
+    OSHIP["OSHIP - the root"]
+
+    SYS["System"]
+    DOM["Domain"]
+    CAP["Capability"]
+    CMP["Component"]
+    AGT["Agent"]
+    KNW["Knowledge"]
+    MEM["Memory"]
+    DEC["Decision"]
+    EVD["Evidence"]
+
+    OSHIP --> SYS & DOM & CAP & CMP
+    OSHIP --> AGT & KNW & MEM
+    OSHIP --> DEC & EVD
+
+    SYS --> S1["Identity"] & S2["Boundary"] & S3["Constraint"] & S4["Principle"]
+    DOM --> D1["BoundedContext"] & D2["Entity"] & D3["Invariant"] & D4["DomainEvent"]
+    CAP --> C1["CapabilityContract"] & C2["CapabilityStatus"] & C3["CapabilityDependency"]
+    CMP --> P1["Layer"] & P2["Interface"] & P3["Deployment"]
+    AGT --> A1["AuthorityLevel"] & A2["Scope"] & A3["Action"] & A4["Trace"]
+    KNW --> K1["Concept"] & K2["Fact"] & K3["Rule"] & K4["Question"]
+    MEM --> M1["Episode"] & M2["Lesson"] & M3["Context"]
+    DEC --> E1["Option"] & E2["Rationale"] & E3["Consequence"]
+    EVD --> V1["Artifact"] & V2["Measurement"] & V3["Validation"] & V4["Provenance"]
+
+    EVD -.->|"grounds"| KNW
+    DEC -.->|"consumes"| EVD
+    AGT -.->|"acts under"| DEC
+    MEM -.->|"generalises into"| KNW
+    KNW -.->|"describes"| SYS
+
+    classDef root fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef l1 fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef l2 fill:#37474f,stroke:#b0bec5,color:#ffffff
+    class OSHIP root
+    class SYS,DOM,CAP,CMP,AGT,KNW,MEM,DEC,EVD l1
+    class S1,S2,S3,S4,D1,D2,D3,D4,C1,C2,C3,P1,P2,P3,A1,A2,A3,A4,K1,K2,K3,K4,M1,M2,M3,E1,E2,E3,V1,V2,V3,V4 l2
+```
+
+> **Diagram ID:** `DGM-VIS-137` — **The Oship Ontology — Root and First Two Levels**
+> **Explanation:** Nine first-level classes under one root, each with three or four subclasses. The
+> dotted edges form a closed loop that is the ontology's real content: **Evidence grounds Knowledge,
+> Knowledge describes System, Decisions consume Evidence, Agents act under Decisions, and Memory
+> generalises into Knowledge.** Read as a cycle, it says that nothing in Oship is self-justifying —
+> every class depends on another for its warrant. The absence of an edge from Agent directly to
+> Knowledge is deliberate and enforced: an agent may not write knowledge except through the Decision
+> and Evidence classes, which is `KPP-24` expressed structurally.
+
+### TBL-VIS-593: Ontology Class Register — First Level
+
+| Class | Definition | Instances must have | Cannot be | Oship population |
+| :--- | :--- | :--- | :--- | :--- |
+| **System** | The whole under description | Identity, boundary, constraints | Instantiated more than once | 1 — Oship |
+| **Domain** | A bounded region of subject matter | A boundary and a ubiquitous language | Overlapping with another domain undeclared | 4 contexts · 50 `KND-` |
+| **Capability** | Something the system can or will do | A contract and a status | Both `PLANNED` and `IMPLEMENTED` | 167 |
+| **Component** | A structural building block | A layer and an interface | A capability | 30 specified, 0 built |
+| **Agent** | An actor with bounded authority | An authority level and a scope | Authority `A4` | 4 levels, 0 persistent instances |
+| **Knowledge** | A proposition with grounding | Provenance and a falsifier | Self-grounding | corpus-wide |
+| **Memory** | A record of a specific episode | A time anchor and an outcome | A generalisation | **0 stored episodes** |
+| **Decision** | A recorded choice among alternatives | Options, rationale, reversibility | Made without alternatives | 46 `DEC-VIS-` · 3 ADR · 10 log |
+| **Evidence** | An observation supporting a claim | A source and a method | Produced by the claimant alone at `E4`+ | `EV3` ceiling |
+
+> **`VIS-613`.** The **Cannot be** column is the ontology's teeth. An ontology that only says what
+> things are permits every category error; one that says what things cannot be enables rejection.
+> Two rows there encode Oship's hardest constraints: *Agent cannot be authority `A4`* per `VIS-033`,
+> and *Evidence cannot be produced by the claimant alone above `E3`* — which, combined with
+> single-principal `CODEOWNERS`, is the formal statement of the trust ceiling.
+
+### 05.5.2 — Ontology Rules Registry
+
+> **`VIS-614`.** Fifty rules, `ONT-001`…`ONT-050`, organised as class rules, relation rules,
+> inheritance rules, instantiation rules, and prohibition rules. Rules are stated so that a violation
+> is detectable by inspection rather than by judgement.
+
+### TBL-VIS-594: Ontology Rules — Class Rules `ONT-001`…`ONT-012`
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `ONT-001` | Every class must have exactly one parent, except the root. | **HALT** |
+| `ONT-002` | The root class `Oship` has no parent and no instances. | **HALT** |
+| `ONT-003` | A class must define at least one required attribute. | **ERROR** |
+| `ONT-004` | A class must define at least one prohibition. | **ERROR** |
+| `ONT-005` | Class names are singular nouns, never plurals or verb phrases. | **ERROR** |
+| `ONT-006` | A class may not be introduced without a `DEC-VIS-` record. | **HALT** |
+| `ONT-007` | Two classes may not have identical required attribute sets. | **ERROR** |
+| `ONT-008` | A class with zero instances must be marked as such, not silently empty. | **ERROR** |
+| `ONT-009` | A class must belong to at least one `KND-` domain. | **ERROR** |
+| `ONT-010` | Abstract classes must be marked abstract and may not be instantiated. | **HALT** |
+| `ONT-011` | A subclass must be a strict specialisation, never a partial one. | **HALT** |
+| `ONT-012` | Class depth must not exceed four levels from the root. | **ERROR** |
+
+### TBL-VIS-595: Ontology Rules — Relation Rules `ONT-013`…`ONT-026`
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `ONT-013` | Every relation must declare domain class and range class. | **HALT** |
+| `ONT-014` | A relation not declared between two classes may not hold between their instances. | **HALT** |
+| `ONT-015` | Relations must declare cardinality on both ends. | **ERROR** |
+| `ONT-016` | A relation must declare whether it is transitive. | **ERROR** |
+| `ONT-017` | Transitive relations must be acyclic. | **HALT** |
+| `ONT-018` | Inverse relations must be declared in pairs or explicitly marked as having no inverse. | **ERROR** |
+| `ONT-019` | A relation may not connect a class to itself unless reflexivity is declared. | **HALT** |
+| `ONT-020` | Agent may not relate directly to Knowledge; it must pass through Decision or Evidence. | **HALT** |
+| `ONT-021` | Evidence may not relate to a Claim it was authored to support without a distinct verifier. | **HALT** |
+| `ONT-022` | Memory relates to Knowledge only via `evolves_into` with stated generalisation. | **HALT** |
+| `ONT-023` | Capability relates to Component only via `implemented_by`. | **ERROR** |
+| `ONT-024` | Decision must relate to at least two Options. | **HALT** |
+| `ONT-025` | A relation's provenance is required independently of its endpoints. | **ERROR** |
+| `ONT-026` | Relations crossing `KND-` domain boundaries must be flagged for review. | **ERROR** |
+
+### TBL-VIS-596: Ontology Rules — Inheritance and Instantiation `ONT-027`…`ONT-040`
+
+| ID | Rule | Severity |
+| :--- | :--- | :--- |
+| `ONT-027` | A subclass inherits all parent prohibitions and may add but never remove them. | **HALT** |
+| `ONT-028` | A subclass inherits all parent required attributes. | **HALT** |
+| `ONT-029` | A subclass may narrow an attribute's range, never widen it. | **HALT** |
+| `ONT-030` | Multiple inheritance is prohibited. | **HALT** |
+| `ONT-031` | An instance must declare its most specific class, not an ancestor. | **ERROR** |
+| `ONT-032` | An instance must satisfy every required attribute of its class chain. | **HALT** |
+| `ONT-033` | An instance may not belong to two sibling classes. | **HALT** |
+| `ONT-034` | An instance's identifier must be unique within its class. | **HALT** |
+| `ONT-035` | An instance may not be reclassified; it is deprecated and re-created. | **HALT** |
+| `ONT-036` | An instance must carry a status from the eight-value vocabulary. | **HALT** |
+| `ONT-037` | An instance of Evidence must carry a method from the five-value method vocabulary. | **HALT** |
+| `ONT-038` | An instance of Decision must carry reversibility. | **ERROR** |
+| `ONT-039` | An instance of Memory must carry a commit anchor. | **ERROR** |
+| `ONT-040` | An instance of Capability must carry an evidence class. | **HALT** |
+
+### TBL-VIS-597: Ontology Rules — Prohibitions `ONT-041`…`ONT-050`
+
+| ID | Rule | Severity | Rationale |
+| :--- | :--- | :--- | :--- |
+| `ONT-041` | No class may be its own ancestor. | **HALT** | Cycles make inheritance undecidable |
+| `ONT-042` | No instance may be simultaneously `PLANNED` and `IMPLEMENTED`. | **HALT** | The core honesty invariant |
+| `ONT-043` | No Agent instance may hold authority `A4`. | **HALT** | `VIS-033` standing commitment |
+| `ONT-044` | No Evidence instance may claim `E4` or above with a null verifier. | **HALT** | Self-verification ceiling |
+| `ONT-045` | No Knowledge instance may cite itself as its own basis. | **HALT** | Circular grounding |
+| `ONT-046` | No Decision may be recorded without at least one rejected option and its reason. | **HALT** | A single-option decision is not a decision |
+| `ONT-047` | No class may be created to hold exactly one instance permanently. | **ERROR** | Signals a modelling error |
+| `ONT-048` | No instance may be deleted; deprecation is the only removal. | **HALT** | `KPP-18` |
+| `ONT-049` | No ontology change may be applied retroactively to frozen document parts. | **HALT** | Append-only part model |
+| `ONT-050` | No ontology class may be named identically to a `KND-` domain. | **ERROR** | Prevents class-domain confusion |
+
+> **`VIS-615`.** `ONT-035` — *an instance may not be reclassified* — is the rule most likely to feel
+> excessive and is the one with the clearest justification in this repository's own history. PART 04
+> discovered 198 validation rules declared by range but never enumerated. The repair was not to
+> reclassify them from "declared" to "enumerated"; it was to **append** `§04.31.2` enumerating them
+> while leaving the original declarations intact. Had reclassification been permitted, the record of
+> the defect would have vanished along with the defect, and `KPP-20` — history is knowledge about
+> knowledge — would have been violated in the act of fixing the problem.
+
+### TBL-VIS-598: Validation Rules — Ontology, §05.5
+
+| Rule | Statement | Severity | Detection |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1081` | The ontology must have exactly one root. | **HALT** | Parentless class count equals 1 |
+| `VAL-VIS-1082` | Every class must satisfy `ONT-001` through `ONT-012`. | **HALT** | Class rule sweep |
+| `VAL-VIS-1083` | Every relation must satisfy `ONT-013` through `ONT-026`. | **HALT** | Relation rule sweep |
+| `VAL-VIS-1084` | Inheritance must satisfy `ONT-027` through `ONT-030`. | **HALT** | Inheritance walk |
+| `VAL-VIS-1085` | Every instance must satisfy `ONT-031` through `ONT-040`. | **HALT** | Instance sweep |
+| `VAL-VIS-1086` | Every prohibition `ONT-041` through `ONT-050` must be checked before any write. | **HALT** | Pre-write gate |
+| `VAL-VIS-1087` | A class introduced without a `DEC-VIS-` record must be rejected. | **HALT** | Cross-check class list against decisions |
+| `VAL-VIS-1088` | Class depth must not exceed four. | **ERROR** | Depth computation from root |
+| `VAL-VIS-1089` | Multiple inheritance must be rejected at declaration time. | **HALT** | Parent count per class equals 1 |
+| `VAL-VIS-1090` | An Agent-to-Knowledge direct relation must be rejected. | **HALT** | `ONT-020` enforcement |
+| `VAL-VIS-1091` | A Decision with fewer than two options must be rejected. | **HALT** | Option count |
+| `VAL-VIS-1092` | An Evidence instance authored and verified by the same principal may not exceed `E3`. | **HALT** | Principal comparison |
+| `VAL-VIS-1093` | Reclassification attempts must be rejected and routed to deprecate-and-recreate. | **HALT** | Class field immutability |
+| `VAL-VIS-1094` | Deletion attempts must be rejected. | **HALT** | Only deprecation permitted |
+| `VAL-VIS-1095` | A class name colliding with a `KND-` domain name must be rejected. | **ERROR** | Name comparison |
+| `VAL-VIS-1096` | Abstract classes must have zero instances. | **HALT** | Instance count for abstract classes |
+| `VAL-VIS-1097` | An empty class must be marked empty, not omitted from the register. | **ERROR** | Register completeness |
+| `VAL-VIS-1098` | Every ontology class must map to at least one `KGN-` node type or declare why it does not. | **ERROR** | Cross-mapping table |
+| `VAL-VIS-1099` | The ontology must not be applied retroactively to frozen parts. | **HALT** | `ONT-049`; diff frozen region |
+| `VAL-VIS-1100` | Every prohibition must state its rationale. | **ERROR** | `TBL-VIS-597` rationale column |
+| `VAL-VIS-1101` | A subclass widening a parent attribute range must be rejected. | **HALT** | Range comparison |
+| `VAL-VIS-1102` | An instance belonging to two sibling classes must be rejected. | **HALT** | Sibling membership check |
+| `VAL-VIS-1103` | A transitive relation forming a cycle must halt processing. | **HALT** | Cycle detection |
+| `VAL-VIS-1104` | Relations crossing domain boundaries must be listed in a review queue. | **ERROR** | Boundary-crossing edge list |
+| `VAL-VIS-1105` | An ontology rule may not be weakened without a superseding `DEC-VIS-` record. | **HALT** | Rule text diff against prior version |
+
+---
+
+## 05.6 — The Taxonomy System
+
+### AI NAVIGATION METADATA — §05.6
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read when classifying an object or searching by category** |
+| **AI DEPENDENCIES** | §05.5 ontology · §05.2 domain registry |
+| **AI INPUTS** | An object requiring classification along one or more axes |
+| **AI OUTPUTS** | A facet vector, or an escalation if the object resists classification |
+| **AI IMPLEMENTATION IMPACT** | Determines retrievability; an unclassified object is effectively invisible |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1106`…`VAL-VIS-1129` |
+| **AI RELATED DOCUMENTS** | §05.5 ontology · `.ai/CONTEXT_ROUTER.md` |
+
+> **`VIS-616`.** Oship rejects a single hierarchical taxonomy and adopts a **faceted** one. The
+> reason is empirical rather than theoretical: this repository already contains a strict hierarchy —
+> 24 numbered domains, one directory each, unique two-digit prefixes enforced by `TBL-MCR-008` — and
+> that hierarchy has already produced a filing conflict. `SYSTEM_VISION.md` belongs equally in
+> `01_PRODUCT` and in a vision-specific domain; the resolution was to place it in `01_PRODUCT`
+> because the prefix rule forbade creating `01_VISION`. **The hierarchy did not classify the
+> document; it constrained where the document could be stored.** Those are different services, and
+> conflating them means storage constraints silently determine semantics.
+
+### TBL-VIS-599: Taxonomy Axes — `TAX-01`…`TAX-10`
+
+| Axis | ID | Question it answers | Values | Mutually exclusive | Mandatory |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Universe** | `TAX-01` | Which of the ten knowledge universes? | `U1`…`U10` | Yes | **Yes** |
+| **Domain** | `TAX-02` | Which `KND-` domain? | `KND-001`…`KND-050` | Yes for primary | **Yes** |
+| **Ontology class** | `TAX-03` | What kind of thing is it? | Nine first-level classes | Yes | **Yes** |
+| **Authority** | `TAX-04` | How binding is it? | L1…L5 | Yes | **Yes** |
+| **Trust** | `TAX-05` | How much may it be relied on? | `K0`…`K6` | Yes | **Yes** |
+| **Status** | `TAX-06` | What is its realisation state? | 8-value vocabulary | Yes | **Yes** |
+| **Decay** | `TAX-07` | How fast does it go stale? | `D0`…`D5` | Yes | **Yes** |
+| **Security** | `TAX-08` | Who may see it? | `KSC-1`…`KSC-6` | Yes | **Yes** |
+| **Audience** | `TAX-09` | Who is it written for? | human · agent · both | No | No |
+| **Lifecycle** | `TAX-10` | Where is it in its own lifecycle? | draft · active · superseded · deprecated | Yes | **Yes** |
+
+> **`VIS-617`.** Nine mandatory axes and one optional. That is a deliberately high bar, and the
+> justification is that **an object missing a mandatory facet cannot be correctly retrieved, and an
+> object that cannot be retrieved is not knowledge under `KPP-01`** — it cannot be acted on because
+> it cannot be found. The cost of nine facets is paid once at authoring time; the cost of missing
+> facets is paid on every retrieval forever.
+
+### TBL-VIS-600: Taxonomy Kinds and Where Each Applies
+
+| Kind | Structure | Strength | Weakness | Used in Oship for |
+| :--- | :--- | :--- | :--- | :--- |
+| **Hierarchical** | Single tree, one parent | Fast navigation, obvious storage | Forces one filing decision; cross-cutting concepts break it | The 24 MASTER_CONTEXT domains; the ontology |
+| **Faceted / multi-dimensional** | Independent axes | Cross-cutting retrieval; no forced choice | Higher authoring cost; needs discipline | `TAX-01`…`TAX-10` — the primary system |
+| **Dynamic** | Categories emerge from content | Adapts without redesign | Unstable; categories drift under the reader | **NOT USED — rejected** |
+| **AI-generated** | Model proposes categories | Scales; finds unexpected groupings | Categories are `K1`; may encode training bias | **PROPOSAL ONLY — human ratification required** |
+
+> **`VIS-618`.** Dynamic taxonomy is rejected outright and the rejection deserves its reason.
+> A taxonomy whose categories change as content arrives makes every historical classification
+> ambiguous — an object filed under a category that has since drifted is now filed under something
+> its author did not choose. For a corpus whose whole purpose is durable, auditable grounding, that
+> is disqualifying. AI-generated taxonomy is permitted only as **proposal**: the model may suggest an
+> axis or a value, and a human ratifies it into `TAX-` before use, which is `KPP-24` applied to
+> classification schemes rather than to facts.
+
+```mermaid
+flowchart TD
+    START["An object requires classification"]
+
+    Q1{"Does it assert something<br/>about the world?"}
+    Q2{"Is it grounded in an<br/>observation or artifact?"}
+    Q3{"Does it record a choice<br/>among alternatives?"}
+    Q4{"Does it describe a<br/>specific episode?"}
+    Q5{"Does it constrain what<br/>the system may do?"}
+    Q6{"Does it describe structure<br/>or behaviour?"}
+
+    C_EVD["Ontology class EVIDENCE<br/>TAX-03 = Evidence"]
+    C_KNW["Ontology class KNOWLEDGE<br/>TAX-03 = Knowledge"]
+    C_DEC["Ontology class DECISION<br/>TAX-03 = Decision"]
+    C_MEM["Ontology class MEMORY<br/>TAX-03 = Memory"]
+    C_SYS["Ontology class SYSTEM<br/>TAX-03 = System"]
+    C_CMP["Ontology class COMPONENT or CAPABILITY"]
+    C_ESC["ESCALATE - unclassifiable<br/>route to KND-048 open questions"]
+
+    START --> Q3
+    Q3 -->|"yes"| C_DEC
+    Q3 -->|"no"| Q4
+    Q4 -->|"yes"| C_MEM
+    Q4 -->|"no"| Q1
+    Q1 -->|"yes"| Q2
+    Q1 -->|"no"| Q5
+    Q2 -->|"yes"| C_EVD
+    Q2 -->|"no"| C_KNW
+    Q5 -->|"yes"| C_SYS
+    Q5 -->|"no"| Q6
+    Q6 -->|"yes"| C_CMP
+    Q6 -->|"no"| C_ESC
+
+    C_ESC -.->|"never guess a facet"| START
+
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef c fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef esc fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    class Q1,Q2,Q3,Q4,Q5,Q6 q
+    class C_EVD,C_KNW,C_DEC,C_MEM,C_SYS,C_CMP c
+    class C_ESC esc
+```
+
+> **Diagram ID:** `DGM-VIS-138` — **Taxonomy Classification Decision Tree for `TAX-03`**
+> **Explanation:** The tree resolves the hardest facet — ontology class — in at most four questions.
+> Order matters: Decision and Memory are tested **first** because both are frequently misfiled as
+> Knowledge, and misfiling them is costly in opposite directions. A decision filed as knowledge loses
+> its alternatives and rationale; an episode filed as knowledge is over-generalised from a single
+> case. The red terminal is the tree's most important node: an object that reaches it is **not
+> guessed at** but routed to `KND-048` open questions, because a wrong facet is worse than a missing
+> one — a missing facet is visible, a wrong one is not.
+
+### TBL-VIS-601: Worked Classification — This Document
+
+| Facet | Value | Basis |
+| :--- | :--- | :--- |
+| `TAX-01` Universe | **U1 System Knowledge** | It describes what Oship is, not what it delivers |
+| `TAX-02` Domain | **`KND-001`** primary; also materialises `KND-041`, `KND-048` | Frontmatter `Knowledge Domain: 01_PRODUCT` |
+| `TAX-03` Class | **Knowledge** | Asserts about the world; grounded partly, not primarily an artifact |
+| `TAX-04` Authority | **L1 Constitutional** | Frontmatter `Knowledge Layer: L1` |
+| `TAX-05` Trust | **`K3`** | Ceiling; `verified_by` null under single-principal `CODEOWNERS` |
+| `TAX-06` Status | **`IN_PROGRESS`** | Frontmatter; `VAL-VIS-470` forbids advancement |
+| `TAX-07` Decay | **`D1` Constitutional** for PARTS 01–02; **`D3`** for measured figures within | Mixed — see `VIS-619` |
+| `TAX-08` Security | **`KSC-1` Public** | No sensitive content; repository is the boundary |
+| `TAX-09` Audience | **both**, agent-primary | Preamble states it is an AI-executable specification |
+| `TAX-10` Lifecycle | **active** | Not superseded |
+
+> **`VIS-619`.** The `TAX-07` row exposes a genuine limitation being recorded rather than smoothed
+> over. This document has **one decay class per document but mixed decay rates within it**: the ten
+> tenets are `D1` and the measured file counts are `D4`, and they live in the same file. The facet
+> system as specified cannot express that. The honest consequence is that **document-level decay must
+> be set to the fastest-decaying content it contains**, which for this file is `D4` — meaning
+> `SYSTEM_VISION.md` is formally stale on every commit that changes the tree. That is an
+> uncomfortable result and it is the correct one; §05.15 addresses it by allowing per-claim decay
+> overrides, and `OBL-45` records that the override mechanism does not exist.
+
+### TBL-VIS-602: Validation Rules — Taxonomy, §05.6
+
+| Rule | Statement | Severity | Detection |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1106` | Every knowledge object must carry all nine mandatory facets. | **HALT** | Facet completeness check |
+| `VAL-VIS-1107` | A mandatory facet may not be inferred; it must be declared. | **HALT** | Reject computed defaults |
+| `VAL-VIS-1108` | An unclassifiable object routes to `KND-048`, never to a guessed facet. | **HALT** | Escalation path per `DGM-VIS-138` |
+| `VAL-VIS-1109` | Facet values must come from the declared value set of their axis. | **HALT** | Enum membership |
+| `VAL-VIS-1110` | Mutually exclusive axes must carry exactly one value. | **HALT** | Cardinality check |
+| `VAL-VIS-1111` | Dynamic taxonomy must not be introduced. | **HALT** | No emergent categories admitted |
+| `VAL-VIS-1112` | AI-proposed facet values require human ratification before use. | **HALT** | Ratification record required |
+| `VAL-VIS-1113` | Document decay class must equal the fastest-decaying content it contains. | **ERROR** | Compare declared to content-derived |
+| `VAL-VIS-1114` | Storage location must not determine semantic classification. | **HALT** | Facets independent of path |
+| `VAL-VIS-1115` | A new axis requires a `DEC-VIS-` record. | **HALT** | Axis count against `DEC-VIS-046` |
+| `VAL-VIS-1116` | Facet vocabularies must not overlap across axes. | **ERROR** | Value-set intersection empty |
+| `VAL-VIS-1117` | The classification tree must terminate for every input. | **HALT** | No unreachable or looping paths |
+| `VAL-VIS-1118` | A reclassification must follow `ONT-035` — deprecate and recreate. | **HALT** | Facet immutability after publication |
+| `VAL-VIS-1119` | Trust facet must not exceed the corpus ceiling. | **HALT** | `K3` while single principal |
+| `VAL-VIS-1120` | Security facet must be reconciled with the `MSC-` metric classification. | **ERROR** | Cross-mapping in §05.17 |
+| `VAL-VIS-1121` | An object with `TAX-09 = agent` must satisfy the AI readability requirements of §05.22. | **ERROR** | Readability check |
+| `VAL-VIS-1122` | Facets must be machine-readable, not embedded in prose. | **ERROR** | Frontmatter or structured block |
+| `VAL-VIS-1123` | The hierarchical domain tree must not be used as the primary classifier. | **ERROR** | Primary classification is faceted |
+| `VAL-VIS-1124` | A facet whose value is unknown must carry `UNKNOWN`, not be omitted. | **HALT** | Absence vocabulary compliance |
+| `VAL-VIS-1125` | Facet assignment must record its method — declared, derived, or proposed. | **ERROR** | Method field present |
+| `VAL-VIS-1126` | An object's universe facet must be consistent with its domain facet. | **ERROR** | Cross-check against `TBL-VIS-577`…`581` |
+| `VAL-VIS-1127` | Lifecycle facet `superseded` requires a `KGE-07` edge to the superseding object. | **HALT** | Edge existence |
+| `VAL-VIS-1128` | Classification decisions taken by an agent must be logged with the tree path followed. | **ERROR** | Path trace in the classification record |
+| `VAL-VIS-1129` | No object may carry a status facet inconsistent with its trust facet. | **HALT** | `IMPLEMENTED` requires at least `K3` |
+
+---
+
+## 05.7 — The Knowledge Ingestion Pipeline
+
+### AI NAVIGATION METADATA — §05.7
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before writing anything into the corpus** |
+| **AI DEPENDENCIES** | §05.4 semantic layer · §05.6 taxonomy · §05.8 trust levels |
+| **AI INPUTS** | A candidate knowledge object from any source |
+| **AI OUTPUTS** | An indexed, classified, provenanced object at a declared trust level — or a recorded rejection |
+| **AI IMPLEMENTATION IMPACT** | The only sanctioned path by which knowledge enters Oship |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1130`…`VAL-VIS-1153` |
+| **AI RELATED DOCUMENTS** | §05.19 AI knowledge creation · §05.9 provenance |
+
+> **`VIS-620`.** Every knowledge object in Oship today entered by the same route: **a human or an
+> agent wrote it into a Markdown file and committed it.** There is no capture step, no extraction, no
+> classification gate, no validation gate, and no index. That is not a criticism — it is the
+> measured baseline against which the pipeline below is a specification of change. Stating it
+> plainly prevents the pipeline from being read as a description of current behaviour.
+
+### TBL-VIS-603: Ingestion Sources — `KIN-01`…`KIN-08`
+
+| ID | Source | Arrival trust | Volume today | Extraction difficulty | Current handling |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `KIN-01` | **Documents** — authored Markdown | `K2` — structured on arrival | **87 files, 131,494 lines** | Low | Committed directly |
+| `KIN-02` | **Code** — source files and comments | `K3` — executable is self-evidencing | **0 files** | Medium | N/A |
+| `KIN-03` | **Repositories** — git history and metadata | `K3` — commits are immutable facts | Full history | Low | Unindexed |
+| `KIN-04` | **APIs** — external system responses | `K1` — external, unverifiable locally | **0** | Medium | N/A |
+| `KIN-05` | **Research** — external literature | `K1` — requires local validation | **0 recorded** | High | N/A |
+| `KIN-06` | **Human input** — direct authoring and review | `K2` — authoritative but unverified | Continuous | Low | Committed directly |
+| `KIN-07` | **AI discovery** — agent-generated propositions | `K1` — always, per `KPP-24` | This document, substantially | Low | Committed directly |
+| `KIN-08` | **Runtime events** — logs, traces, executions | `K3` — observed reality | **0 — nothing runs** | Medium | N/A |
+
+> **`VIS-621`.** The arrival-trust column encodes a rule that is easy to get backwards. **Code and
+> runtime events arrive at higher trust than human authoring**, because executable artefacts and
+> observed events are self-evidencing in a way that prose is not: a test that passes is evidence, a
+> sentence claiming the test passes is an assertion. Oship's difficulty is that its two
+> highest-trust sources are both **empty**, so its entire corpus arrives at `K1` or `K2` and must be
+> raised by validation rather than by origin.
+
+```mermaid
+flowchart TD
+    S1["KIN-01 Documents"]
+    S2["KIN-02 Code"]
+    S3["KIN-03 Repository"]
+    S6["KIN-06 Human"]
+    S7["KIN-07 AI discovery"]
+    S8["KIN-08 Runtime"]
+
+    CAP["KIN-11 CAPTURE<br/>bind a source address and a commit anchor"]
+    EXT["KIN-12 EXTRACT<br/>SEM-01 to SEM-04"]
+    NRM["KIN-13 NORMALISE<br/>SEM-05 to SEM-12"]
+    CLS["KIN-14 CLASSIFY<br/>TAX-01 to TAX-10, nine mandatory facets"]
+    VAL["KIN-15 VALIDATE<br/>ontology, schema, trust, provenance"]
+    STO["KIN-16 STORE<br/>append-only, never overwrite"]
+    IDX["KIN-17 INDEX<br/>graph edges plus retrieval keys"]
+    AVL["KIN-18 AVAILABLE<br/>retrievable at a declared trust level"]
+
+    S1 & S2 & S3 & S6 & S7 & S8 --> CAP
+    CAP --> EXT --> NRM --> CLS --> VAL
+    VAL -->|"pass"| STO --> IDX --> AVL
+    VAL -->|"fail"| REJ["KIN-19 REJECT<br/>recorded with reason, retrievable"]
+    CLS -->|"unclassifiable"| ESC["KIN-20 ESCALATE<br/>KND-048 plus OBL- record"]
+    REJ -.->|"corrected and resubmitted"| CAP
+    ESC -.->|"human ratifies a facet"| CLS
+    AVL -.->|"decay per section 05.15"| VAL
+
+    classDef src fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef stage fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef gate fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class S1,S2,S3,S6,S7,S8 src
+    class CAP,EXT,NRM,STO,IDX stage
+    class CLS,VAL gate
+    class REJ,ESC bad
+    class AVL good
+```
+
+> **Diagram ID:** `DGM-VIS-139` — **The Knowledge Ingestion Pipeline**
+> **Explanation:** Eight forward stages, two exit paths, three feedback edges. The two orange stages
+> are **gates**, meaning nothing passes them without an explicit pass verdict; the remaining stages
+> are transformations that cannot reject. The most consequential edge is the dotted one from
+> `AVAILABLE` back to `VALIDATE`: knowledge does not leave the pipeline permanently, it re-enters at
+> the validation gate whenever its decay window elapses. **Availability is a lease, not a
+> possession.** Both exit paths are retrievable rather than terminal, because a rejection record is
+> itself knowledge — it tells a future author that this candidate was considered and why it failed.
+
+### TBL-VIS-604: Ingestion Stage Contracts — `KIN-11`…`KIN-20`
+
+| ID | Stage | Must produce | Must reject if | May not |
+| :--- | :--- | :--- | :--- | :--- |
+| `KIN-11` | Capture | Source address plus commit anchor | Source is unaddressable | Modify the source |
+| `KIN-12` | Extract | Segments, terms, identifiers, definitions | Input is unparseable | Infer missing content |
+| `KIN-13` | Normalise | Canonical labels, retained surface forms | Canonicalisation is ambiguous | Discard the original form |
+| `KIN-14` | Classify | Nine mandatory facets | Any mandatory facet is underivable | Guess a facet |
+| `KIN-15` | Validate | A pass or fail verdict with rule identifiers | Any HALT rule fails | Downgrade a HALT to a warning |
+| `KIN-16` | Store | An append-only write | The target already holds the identifier | Overwrite |
+| `KIN-17` | Index | Graph edges and retrieval keys | Endpoints do not resolve | Create untyped edges |
+| `KIN-18` | Available | A trust level and a revalidation window | Trust exceeds the corpus ceiling | Omit the window |
+| `KIN-19` | Reject | A reason, the failing rule, and the candidate | — | Delete the candidate |
+| `KIN-20` | Escalate | An `OBL-` record and a `KND-048` entry | — | Resolve by default |
+
+### TBL-VIS-605: Validation Rules — Ingestion, §05.7
+
+| Rule | Statement | Severity | Detection |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1130` | No knowledge object may enter the corpus except through `KIN-11`…`KIN-18`. | **HALT** | Provenance shows a capture anchor |
+| `VAL-VIS-1131` | Capture must bind a commit SHA at the moment of capture. | **HALT** | Anchor present |
+| `VAL-VIS-1132` | Extraction must not infer content absent from the source. | **HALT** | Extracted spans traceable to source offsets |
+| `VAL-VIS-1133` | Normalisation must retain the original surface form. | **ERROR** | Surface field present |
+| `VAL-VIS-1134` | Classification must produce all nine mandatory facets or escalate. | **HALT** | Facet completeness or `KIN-20` record |
+| `VAL-VIS-1135` | A HALT-level validation failure must stop ingestion entirely. | **HALT** | No partial writes on HALT |
+| `VAL-VIS-1136` | Storage must be append-only. | **HALT** | No overwrite operations permitted |
+| `VAL-VIS-1137` | Indexing must create only typed edges. | **HALT** | Edge type present on every edge |
+| `VAL-VIS-1138` | Availability must declare a revalidation window. | **HALT** | Window field non-empty |
+| `VAL-VIS-1139` | Rejected candidates must remain retrievable with their reason. | **HALT** | Rejection store is append-only |
+| `VAL-VIS-1140` | Escalation must produce both an `OBL-` and a `KND-048` entry. | **ERROR** | Both records exist |
+| `VAL-VIS-1141` | Arrival trust must not exceed the source's declared maximum in `TBL-VIS-603`. | **HALT** | Source-to-trust lookup |
+| `VAL-VIS-1142` | AI-discovered content must arrive at `K1` regardless of apparent quality. | **HALT** | `KPP-24`; `author_type = agent` implies `K1` |
+| `VAL-VIS-1143` | A pipeline stage may not be skipped, even for high-trust sources. | **HALT** | Stage completion log |
+| `VAL-VIS-1144` | Re-ingestion of a corrected candidate must create a new object, not mutate the rejection. | **HALT** | `ONT-048` compliance |
+| `VAL-VIS-1145` | The pipeline must not be described as operating. | **HALT** | `KPP-27`; status is `DOCUMENTED NOT IMPLEMENTED` |
+| `VAL-VIS-1146` | Sources with zero volume must be recorded as zero, not omitted. | **ERROR** | `TBL-VIS-603` completeness |
+| `VAL-VIS-1147` | Capture must not modify the source artefact. | **HALT** | Source hash unchanged after capture |
+| `VAL-VIS-1148` | Every stage must emit a stage-completion record for the trace. | **ERROR** | Trace completeness per §05.10 equivalent |
+| `VAL-VIS-1149` | A validation gate may not downgrade a HALT rule to a warning. | **HALT** | Severity immutability |
+| `VAL-VIS-1150` | Duplicate identifiers must be rejected at `KIN-16`, not resolved silently. | **HALT** | Identifier uniqueness check |
+| `VAL-VIS-1151` | Runtime-event ingestion must be marked N/A while zero processes execute. | **ERROR** | Honest status labelling |
+| `VAL-VIS-1152` | An object failing revalidation must return to `KIN-15`, not be removed from availability silently. | **HALT** | Decay loop per `DGM-VIS-139` |
+| `VAL-VIS-1153` | Ingestion throughput must never be reported as a quality measure. | **ERROR** | `KPP-28`; volume is not evidence |
+
+---
+
+## 05.8 — Knowledge Validation and the Trust Model
+
+### AI NAVIGATION METADATA — §05.8
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before assigning or believing any trust level** |
+| **AI DEPENDENCIES** | PART 04 §04.2 evidence classes `E0`…`E6` · §05.7 ingestion · §05.9 provenance |
+| **AI INPUTS** | A knowledge object and its provenance |
+| **AI OUTPUTS** | A trust level `K0`…`K6` and the specific condition blocking the next level |
+| **AI IMPLEMENTATION IMPACT** | Gates every action; authority thresholds in §05.13 are expressed in `K` levels |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1154`…`VAL-VIS-1253` — 100 rules |
+| **AI RELATED DOCUMENTS** | PART 04 §04.2, §04.6 metric lifecycle · §05.15 decay |
+
+> **`VIS-622`.** Trust levels are not confidence scores. A confidence score expresses how strongly
+> someone believes something; a trust level expresses **what has actually been done to the object**.
+> The distinction is the whole design: belief is unfalsifiable and self-reinforcing, whereas
+> "a distinct principal executed a check and recorded the result" either happened or did not.
+
+### TBL-VIS-606: The Knowledge Trust Levels `K0`…`K6`
+
+| Level | Name | Entry condition | Evidence class required | May an agent act on it? | Oship population |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`K0`** | **Unknown** | Default for anything unassessed | none | **No** | Everything unclassified |
+| **`K1`** | **Captured** | Exists at an address with a commit anchor | `E1` asserted | **No — may be quoted, not relied on** | All AI-generated content |
+| **`K2`** | **Structured** | Conforms to a schema; carries all mandatory facets | `E2` documented | **Advisory only** | Most of the 87 documents |
+| **`K3`** | **Verified** | A check was executed and recorded | `E3` repository verified | **Yes, for `A0`–`A1` actions** | 21 `MET-VIS-` metrics · this document's measured figures |
+| **`K4`** | **Trusted** | Verified by a principal distinct from the author | `E4` automated validation | **Yes, for `A2` actions** | **ZERO — structurally unreachable** |
+| **`K5`** | **Operational** | Observed correct in a running system | `E5` runtime verified | **Yes, for `A3` actions** | **ZERO — nothing runs** |
+| **`K6`** | **Proven** | Repeatedly observed in production over time | `E6` production observed | **Yes, within declared bounds** | **ZERO** |
+
+> **`VIS-623`.** The right-hand column is the section's headline and it is a structural result, not a
+> maturity complaint. **`K4` is unreachable in Oship today, and no amount of work inside the
+> knowledge architecture can reach it.** `K4` requires verification by a principal distinct from the
+> author. `CODEOWNERS` resolves every path to **one principal**. Therefore every check is a
+> self-check, therefore `E4` is unattainable, therefore `K4` is unattainable. The blocker is
+> governance, not documentation, and the smallest action that lifts it is adding a second
+> `CODEOWNERS` principal — which is why that action appears in `.ai/NEXT_ACTION.md` as `VIS-19`.
+
+```mermaid
+stateDiagram-v2
+    [*] --> K0
+    K0 --> K1: captured with address and commit anchor
+    K1 --> K2: schema conformance plus nine facets
+    K2 --> K3: check executed and recorded
+    K3 --> K4: verified by a DISTINCT principal
+    K4 --> K5: observed correct in a running system
+    K5 --> K6: repeatedly observed over time
+
+    K3 --> K2: check invalidated
+    K4 --> K3: verifier withdrawn or found non-distinct
+    K5 --> K3: runtime observation contradicted
+    K6 --> K4: production behaviour diverged
+    K2 --> K1: schema violated after change
+    K1 --> K0: address no longer resolves
+
+    K3 --> K1: decay window elapsed without revalidation
+    K4 --> K1: decay window elapsed without revalidation
+
+    note right of K4
+        UNREACHABLE IN OSHIP
+        CODEOWNERS resolves to
+        one principal, so no
+        verifier can be distinct
+        from the author
+    end note
+
+    note right of K5
+        UNREACHABLE
+        zero processes execute
+        zero workflows installed
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-140` — **The Knowledge Trust State Machine**
+> **Explanation:** Six upward transitions, each requiring a specific act, and eight downward ones.
+> The downward edges outnumber the upward because **trust is far easier to lose than to gain**, which
+> is correct: a single contradicting observation invalidates a verification that took real work. Note
+> that the decay edges from `K3` and `K4` fall all the way to `K1` rather than one step — an object
+> whose validity window has elapsed retains its structure but loses its verification entirely, since
+> a check performed at an earlier state says nothing about the current one. The two notes are
+> measured constraints on this repository, not general properties of the model.
+
+### TBL-VIS-607: `K` Level to `E` Class Cross-Mapping
+
+| `K` level | Requires `E` class | Why the mapping is exact | Failure if decoupled |
+| :--- | :--- | :--- | :--- |
+| `K0` | none | Absence of assessment | — |
+| `K1` | `E1` asserted | Something was claimed at an address | Claims without addresses become unretractable |
+| `K2` | `E2` documented | Structure exists and conforms | Schema-free objects cannot be validated |
+| `K3` | `E3` repository verified | A repository-observable check ran | Verified status without a check is a belief |
+| `K4` | `E4` automated validation | An independent process produced the verdict | Self-verification laundered as verification |
+| `K5` | `E5` runtime verified | A running system exhibited the behaviour | Specification mistaken for behaviour |
+| `K6` | `E6` production observed | Sustained observation under real load | One success generalised to reliability |
+
+> **`VIS-624`.** The mapping is one-to-one by construction, and that is a design decision worth
+> stating: **Oship refuses to let knowledge trust and evidence class diverge.** Two parallel ladders
+> that can drift apart would permit an object to be `K4` on the knowledge ladder while sitting at
+> `E2` on the evidence ladder, and every such divergence is an opportunity to claim strength that
+> was never established. One ladder, two names, is the safer construction.
+
+### 05.8.2 — The Hundred Validation Rules
+
+> **`VIS-625`.** One hundred rules follow, `VAL-VIS-1154`…`VAL-VIS-1253`, in ten blocks of ten. The
+> blocks are: entry conditions, provenance requirements, verifier independence, transition
+> legality, decay interaction, action authorisation, contradiction handling, aggregation, reporting,
+> and prohibitions.
+
+### TBL-VIS-608: Trust Validation Rules — Block 1, Entry Conditions `VAL-VIS-1154`…`1163`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1154` | Every knowledge object must carry exactly one `K` level. | **HALT** |
+| `VAL-VIS-1155` | An object with no assessment carries `K0`, never a blank. | **HALT** |
+| `VAL-VIS-1156` | `K1` requires a resolvable address and a commit anchor. | **HALT** |
+| `VAL-VIS-1157` | `K2` requires schema conformance and all nine mandatory facets. | **HALT** |
+| `VAL-VIS-1158` | `K3` requires a named, re-executable check and its recorded result. | **HALT** |
+| `VAL-VIS-1159` | `K4` requires a verifier principal distinct from the author principal. | **HALT** |
+| `VAL-VIS-1160` | `K5` requires an observation from an executing process. | **HALT** |
+| `VAL-VIS-1161` | `K6` requires at least two independent sustained observations. | **HALT** |
+| `VAL-VIS-1162` | A level may not be entered by assertion; the entry condition must be evidenced. | **HALT** |
+| `VAL-VIS-1163` | Entry conditions may not be waived for any object regardless of authority. | **HALT** |
+
+### TBL-VIS-609: Trust Validation Rules — Block 2, Provenance `VAL-VIS-1164`…`1173`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1164` | Every object at `K1` or above must carry a complete provenance block. | **HALT** |
+| `VAL-VIS-1165` | Provenance must name origin, author type, author role, observation anchor, basis, and method. | **HALT** |
+| `VAL-VIS-1166` | `author_role` must be a role identifier, never a personal name. | **HALT** |
+| `VAL-VIS-1167` | `method` must be one of measured, asserted, derived, generated, cited. | **HALT** |
+| `VAL-VIS-1168` | `method: measured` requires a re-executable command in the basis field. | **HALT** |
+| `VAL-VIS-1169` | `method: generated` caps the object at `K1`. | **HALT** |
+| `VAL-VIS-1170` | `method: cited` requires the cited object to exist and be at an equal or higher level. | **HALT** |
+| `VAL-VIS-1171` | `method: derived` caps the object at the minimum level of its inputs. | **HALT** |
+| `VAL-VIS-1172` | Provenance may not be inherited from a containing document. | **HALT** |
+| `VAL-VIS-1173` | A provenance chain must terminate in an observation, never in another assertion. | **HALT** |
+
+### TBL-VIS-610: Trust Validation Rules — Block 3, Verifier Independence `VAL-VIS-1174`…`1183`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1174` | A verifier must be a principal distinct from every author of the object. | **HALT** |
+| `VAL-VIS-1175` | Distinctness is evaluated against `CODEOWNERS` principals, not against session identities. | **HALT** |
+| `VAL-VIS-1176` | An agent may not verify content authored by an agent under the same principal. | **HALT** |
+| `VAL-VIS-1177` | A tool executed by the author is evidence at `E3`, never at `E4`. | **HALT** |
+| `VAL-VIS-1178` | While `CODEOWNERS` holds one principal, no object may be recorded above `K3`. | **HALT** |
+| `VAL-VIS-1179` | The single-principal constraint must be restated wherever a `K4`+ level is discussed. | **ERROR** |
+| `VAL-VIS-1180` | Adding a second principal does not retroactively raise existing objects. | **HALT** |
+| `VAL-VIS-1181` | A verification record must name the verifier role and the check performed. | **HALT** |
+| `VAL-VIS-1182` | A withdrawn verification must demote the object and record the withdrawal. | **HALT** |
+| `VAL-VIS-1183` | Verifier independence may not be established by self-declaration. | **HALT** |
+
+### TBL-VIS-611: Trust Validation Rules — Block 4, Transition Legality `VAL-VIS-1184`…`1193`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1184` | Upward transitions must be single-step; skipping a level is prohibited. | **HALT** |
+| `VAL-VIS-1185` | Downward transitions may skip levels. | **INFO** |
+| `VAL-VIS-1186` | Every transition must record the trigger that caused it. | **HALT** |
+| `VAL-VIS-1187` | A transition record is append-only and never edited. | **HALT** |
+| `VAL-VIS-1188` | `K0` to `K2` directly is prohibited. | **HALT** |
+| `VAL-VIS-1189` | `K2` to `K4` directly is prohibited. | **HALT** |
+| `VAL-VIS-1190` | A demotion must not delete the prior verification record. | **HALT** |
+| `VAL-VIS-1191` | Transitions must be idempotent; re-running a check does not raise a level twice. | **ERROR** |
+| `VAL-VIS-1192` | A transition attempted without its entry condition must be recorded as a failed attempt. | **ERROR** |
+| `VAL-VIS-1193` | The transition history must be reconstructible from the append-only log alone. | **HALT** |
+
+### TBL-VIS-612: Trust Validation Rules — Block 5, Decay Interaction `VAL-VIS-1194`…`1203`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1194` | Every object at `K3` or above must carry a revalidation window. | **HALT** |
+| `VAL-VIS-1195` | An elapsed window demotes the object to `K1` automatically. | **HALT** |
+| `VAL-VIS-1196` | Demotion by decay must be recorded, not silent. | **HALT** |
+| `VAL-VIS-1197` | Windows are expressed in commits or releases, never wall-clock durations. | **HALT** |
+| `VAL-VIS-1198` | An object's window must be consistent with its `TAX-07` decay class. | **ERROR** |
+| `VAL-VIS-1199` | Revalidation re-executes the original check, not a substitute. | **HALT** |
+| `VAL-VIS-1200` | A check that cannot be re-executed caps the object at `K2`. | **HALT** |
+| `VAL-VIS-1201` | Decay applies to edges as well as nodes. | **ERROR** |
+| `VAL-VIS-1202` | Reading a decayed object must surface the decay, not the stale level. | **HALT** |
+| `VAL-VIS-1203` | Decay must be computed at read time, never cached as a final value. | **HALT** |
+
+### TBL-VIS-613: Trust Validation Rules — Block 6, Action Authorisation `VAL-VIS-1204`…`1213`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1204` | An `A0` observation action requires at least `K1`. | **ERROR** |
+| `VAL-VIS-1205` | An `A1` documentation action requires at least `K2`. | **HALT** |
+| `VAL-VIS-1206` | An `A2` repository-modifying action requires at least `K3`. | **HALT** |
+| `VAL-VIS-1207` | An `A3` governance action requires at least `K4` and is therefore currently impossible. | **HALT** |
+| `VAL-VIS-1208` | `A4` is prohibited at every trust level. | **HALT** |
+| `VAL-VIS-1209` | An action taken on insufficient trust must be reverted and recorded. | **HALT** |
+| `VAL-VIS-1210` | An agent must state the trust level it relied on when acting. | **HALT** |
+| `VAL-VIS-1211` | Aggregated trust may not authorise an action that no single input authorises. | **HALT** |
+| `VAL-VIS-1212` | Urgency may not lower an authorisation threshold. | **HALT** |
+| `VAL-VIS-1213` | A refusal due to insufficient trust must name the level required and the level held. | **HALT** |
+
+### TBL-VIS-614: Trust Validation Rules — Block 7, Contradiction `VAL-VIS-1214`…`1223`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1214` | Two objects in contradiction must both be demoted pending resolution. | **HALT** |
+| `VAL-VIS-1215` | A contradiction must produce a `KGE-06` edge. | **HALT** |
+| `VAL-VIS-1216` | The higher-trust object does not automatically win. | **HALT** |
+| `VAL-VIS-1217` | Resolution must follow the §05.14 procedure. | **HALT** |
+| `VAL-VIS-1218` | An unresolved contradiction must block actions depending on either object. | **HALT** |
+| `VAL-VIS-1219` | A contradiction resolved by supersession retains both objects. | **HALT** |
+| `VAL-VIS-1220` | A contradiction may not be resolved by deleting one side. | **HALT** |
+| `VAL-VIS-1221` | Detection of a contradiction must be recorded even if resolution is deferred. | **ERROR** |
+| `VAL-VIS-1222` | An agent encountering a contradiction must halt and report, not select. | **HALT** |
+| `VAL-VIS-1223` | Contradictions across authority levels resolve toward the higher authority only after evidence comparison. | **HALT** |
+
+### TBL-VIS-615: Trust Validation Rules — Block 8, Aggregation `VAL-VIS-1224`…`1233`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1224` | Aggregate trust equals the minimum of constituent trusts. | **HALT** |
+| `VAL-VIS-1225` | Trust may never be averaged. | **HALT** |
+| `VAL-VIS-1226` | Trust may never be summed. | **HALT** |
+| `VAL-VIS-1227` | Adding more `K2` sources does not produce a `K3` conclusion. | **HALT** |
+| `VAL-VIS-1228` | A conclusion must name every input and its level. | **HALT** |
+| `VAL-VIS-1229` | An aggregation with an unassessed input is `K0`. | **HALT** |
+| `VAL-VIS-1230` | Aggregation across `KND-` domains must be flagged for review. | **ERROR** |
+| `VAL-VIS-1231` | A derived object inherits the fastest decay window among its inputs. | **HALT** |
+| `VAL-VIS-1232` | Aggregation must be recomputed when any input changes level. | **HALT** |
+| `VAL-VIS-1233` | An aggregate may not be cited without its constituent list. | **ERROR** |
+
+### TBL-VIS-616: Trust Validation Rules — Block 9, Reporting `VAL-VIS-1234`…`1243`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1234` | Every reported figure must carry its trust level. | **HALT** |
+| `VAL-VIS-1235` | A report must state the corpus trust ceiling alongside any level it cites. | **ERROR** |
+| `VAL-VIS-1236` | A report may not present `K1` content without marking it unreliable. | **HALT** |
+| `VAL-VIS-1237` | Counts of objects must be broken down by trust level, never given as a bare total. | **ERROR** |
+| `VAL-VIS-1238` | A dashboard may not display a `K4`+ level while none exists. | **HALT** |
+| `VAL-VIS-1239` | Trust distribution must be reported in every part closure record. | **ERROR** |
+| `VAL-VIS-1240` | A report must name objects that were excluded and why. | **ERROR** |
+| `VAL-VIS-1241` | Reported trust must be recomputed at report time. | **HALT** |
+| `VAL-VIS-1242` | A trust level must never be described in prose without its identifier. | **ERROR** |
+| `VAL-VIS-1243` | Improvement in trust distribution must not be reported as progress toward a goal that remains blocked. | **ERROR** |
+
+### TBL-VIS-617: Trust Validation Rules — Block 10, Prohibitions `VAL-VIS-1244`…`1253`
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1244` | No object may be assigned `K4` or above while `CODEOWNERS` holds one principal. | **HALT** |
+| `VAL-VIS-1245` | No agent may raise its own output above `K1`. | **HALT** |
+| `VAL-VIS-1246` | No trust level may be assigned by prose assertion. | **HALT** |
+| `VAL-VIS-1247` | No level may be inferred from document authority. | **HALT** |
+| `VAL-VIS-1248` | No level may be inferred from document length, detail, or confidence of tone. | **HALT** |
+| `VAL-VIS-1249` | No level may persist past its revalidation window. | **HALT** |
+| `VAL-VIS-1250` | No object may hold a level higher than its evidence class permits. | **HALT** |
+| `VAL-VIS-1251` | No trust record may be edited; corrections are appends. | **HALT** |
+| `VAL-VIS-1252` | No level may be assigned to an object lacking a falsifier. | **HALT** |
+| `VAL-VIS-1253` | No exception to blocks 1 through 10 may be granted without a superseding `DEC-VIS-` record. | **HALT** |
+
+> **`VIS-626`.** One hundred rules and **eighty-seven of them are HALT**. That ratio is deliberate
+> and is itself a claim about the domain: in a knowledge architecture, most defects are not
+> degradations that can be tolerated while work continues — they are conditions under which
+> continuing produces confidently wrong output. A warning that permits an agent to proceed on
+> unverified knowledge has not prevented anything; it has merely documented the moment before the
+> error. The thirteen non-HALT rules are the ones where proceeding with a recorded caveat is
+> genuinely safer than stopping.
+
+---
+
+## 05.9 — The Provenance Chain
+
+### AI NAVIGATION METADATA — §05.9
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before recording or citing any knowledge object** |
+| **AI DEPENDENCIES** | §05.8 trust levels · §05.7 ingestion `KIN-11` |
+| **AI INPUTS** | A knowledge object requiring an origin record |
+| **AI OUTPUTS** | A complete `KPR-` provenance block, or a refusal to record the object |
+| **AI IMPLEMENTATION IMPACT** | Provenance is the falsifiability substrate; without it nothing above `K1` is legal |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1254`…`VAL-VIS-1277` |
+| **AI RELATED DOCUMENTS** | PART 04 §04.2 evidence classes · §05.10 versioning |
+
+> **`VIS-627`.** Provenance answers six questions and refusing any one of them invalidates the
+> object: **where it came from, who produced it, at what state of the world, why it was produced,
+> what it rests on, and how it was checked.** These are not metadata conveniences. Each one is the
+> handle by which a future reader can disprove the object, and a claim that cannot be disproved
+> cannot be trusted — which is `KPP-06` restated at the level of a single record.
+
+### TBL-VIS-618: The Provenance Field Set — `KPR-01`…`KPR-18`
+
+| ID | Field | Type | Mandatory | Rule | Present in Oship today |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `KPR-01` | `origin` | source address | **Yes** | File path, URL, or `KIN-` source id | Implicit — the file itself |
+| `KPR-02` | `origin_kind` | enum | **Yes** | One of `KIN-01`…`KIN-08` | **Absent** |
+| `KPR-03` | `author_type` | enum | **Yes** | `human` · `agent` · `tool` | **Absent** |
+| `KPR-04` | `author_role` | role id | **Yes** | Role, never a person (`VIS-032`) | Partially — frontmatter `Owner` |
+| `KPR-05` | `author_principal` | principal | **Yes** | Must resolve in `CODEOWNERS` | Implicit — one principal |
+| `KPR-06` | `observed_at` | commit SHA | **Yes** | Never a date (`VIS-051`) | **Absent** — git provides it externally |
+| `KPR-07` | `created_in` | commit SHA | **Yes** | The commit that introduced the record | Available from git, not in-document |
+| `KPR-08` | `why` | text | **Yes** | The question the object answers | **Absent** |
+| `KPR-09` | `basis` | list | **Yes** | Object ids, commands, or citations | Partially — measured figures carry commands |
+| `KPR-10` | `method` | enum | **Yes** | measured · asserted · derived · generated · cited | **Absent** |
+| `KPR-11` | `validation_method` | text | **Yes** | The re-executable check, or `NONE` | Partially |
+| `KPR-12` | `validated_by` | principal | No | Null permitted; null caps at `K3` | **Always null** |
+| `KPR-13` | `validated_at` | commit SHA | No | Required if `validated_by` non-null | **Always null** |
+| `KPR-14` | `trust_level` | `K0`…`K6` | **Yes** | Computed, never asserted | **Absent** |
+| `KPR-15` | `revalidation_window` | commits or releases | **Yes** at `K3`+ | Never wall-clock | **Absent** |
+| `KPR-16` | `falsifier` | text | **Yes** | What observation would disprove this | Partially — PART 02 statements carry them |
+| `KPR-17` | `supersedes` | object id | No | Populates a `KGE-07` edge | Used in `DEC-VIS-` records |
+| `KPR-18` | `derived_from` | list of ids | No | Populates `KGE-02` edges | **Absent** |
+
+> **`VIS-628`.** Twelve of eighteen fields are **absent from this repository**, four are partial, and
+> two are available only outside the documents via git. That is the honest state, and it changes how
+> the preceding hundred rules should be read: they are not describing a system being audited, they
+> are describing the audit that does not yet exist. **`OBL-46` records that no provenance block
+> schema is implemented anywhere in Oship**, and that until one is, every `K3` assignment in this
+> document rests on provenance that is reconstructible by a human reading a command in a table rather
+> than by a machine reading a field.
+
+```mermaid
+flowchart LR
+    OBS["OBSERVATION<br/>a command executed<br/>against the repository"]
+    ANC["ANCHOR<br/>KPR-06 observed_at<br/>commit SHA"]
+    CLM["CLAIM<br/>the recorded figure<br/>or statement"]
+    BAS["BASIS<br/>KPR-09<br/>the command itself"]
+    FAL["FALSIFIER<br/>KPR-16<br/>what would disprove it"]
+    MTH["METHOD<br/>KPR-10 = measured"]
+    TRU["TRUST<br/>KPR-14 computed<br/>not asserted"]
+    VER["VERIFIER<br/>KPR-12<br/>NULL in Oship"]
+    CEIL["CEILING K3<br/>enforced by<br/>VAL-VIS-1178"]
+
+    OBS --> ANC --> CLM
+    OBS --> BAS --> CLM
+    CLM --> MTH --> TRU
+    CLM --> FAL --> TRU
+    VER -.->|"null"| CEIL
+    CEIL --> TRU
+
+    TRU --> USE["USABLE at K3<br/>A0 to A2 actions only"]
+
+    classDef obs fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef mid fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef blk fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef out fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class OBS,ANC,BAS obs
+    class CLM,MTH,FAL,TRU mid
+    class VER,CEIL blk
+    class USE out
+```
+
+> **Diagram ID:** `DGM-VIS-141` — **The Provenance Chain from Observation to Usable Knowledge**
+> **Explanation:** The chain begins at an observation and ends at a usable trust level, and every
+> intermediate node is a field that must be populated for the chain to hold. Two paths feed the
+> claim — the anchor establishes *when in the world's history* it was true, the basis establishes
+> *how* it was found — and both are required, because a figure without an anchor is undatable and a
+> figure without a basis is unrepeatable. The red branch is Oship's live constraint: the verifier
+> field is null, so the chain terminates at a `K3` ceiling no matter how good the observation was.
+
+### TBL-VIS-619: Worked Provenance Record — a Measured Figure from This Document
+
+| Field | Value |
+| :--- | :--- |
+| `KPR-01` origin | `docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md` §05.2 |
+| `KPR-02` origin_kind | `KIN-03` repository |
+| `KPR-03` author_type | `agent` |
+| `KPR-04` author_role | Documentation Authoring Agent |
+| `KPR-05` author_principal | `@afshin-omnisystem` |
+| `KPR-06` observed_at | HEAD at time of measurement — `644b3cb` |
+| `KPR-07` created_in | the commit carrying PART 05 |
+| `KPR-08` why | To establish whether the corpus is uniformly structured before asserting `K2` |
+| `KPR-09` basis | `awk` frontmatter key-count over all 87 Markdown files |
+| `KPR-10` method | `measured` |
+| `KPR-11` validation_method | Re-execute the `awk` command; compare the three-bucket distribution |
+| `KPR-12` validated_by | **NULL** |
+| `KPR-13` validated_at | **NULL** |
+| `KPR-14` trust_level | **`K3`** — ceiling, per `VAL-VIS-1178` |
+| `KPR-15` revalidation_window | Any commit touching a Markdown frontmatter block |
+| `KPR-16` falsifier | Re-running the count yields a different distribution at the same SHA |
+| `KPR-17` supersedes | The earlier `77/87` figure recorded in session working notes |
+| `KPR-18` derived_from | — |
+
+> **`VIS-629`.** The `KPR-17` row is the record doing its job. An earlier measurement in this project
+> produced `77/87`; the corrected measurement produced the three-bucket distribution of 51, 35, and
+> 1. Without a supersession field the two figures would simply coexist and a reader would have no way
+> to tell which is current. **Provenance is not primarily about credit; it is about making
+> corrections legible.**
+
+### TBL-VIS-620: Provenance Failure Modes — `FAL-VIS-299`…`FAL-VIS-308`
+
+| ID | Failure | Mechanism | Consequence | Guard |
+| :--- | :--- | :--- | :--- | :--- |
+| `FAL-VIS-299` | **Orphan claim** | A figure recorded with no basis | Unrepeatable; degrades to folklore | `VAL-VIS-1258` |
+| `FAL-VIS-300` | **Date anchoring** | `observed_at` recorded as a date | Cannot be tied to a tree state | `VAL-VIS-1259` |
+| `FAL-VIS-301` | **Inherited provenance** | Object relies on the document's frontmatter | One stale header invalidates hundreds of claims | `VAL-VIS-1172` |
+| `FAL-VIS-302` | **Self-verification** | `validated_by` equals the author | `K4` claimed on `E3` evidence | `VAL-VIS-1174` |
+| `FAL-VIS-303` | **Method laundering** | `generated` recorded as `derived` | AI output enters above `K1` | `VAL-VIS-1169` |
+| `FAL-VIS-304` | **Citation to a lower level** | Citing a `K1` object to support a `K3` claim | Trust manufactured by reference | `VAL-VIS-1170` |
+| `FAL-VIS-305` | **Missing falsifier** | No stated disproof condition | Object becomes permanently unchallengeable | `VAL-VIS-1252` |
+| `FAL-VIS-306` | **Silent correction** | A figure edited in place with no supersession | The correction is invisible to history | `VAL-VIS-1251` |
+| `FAL-VIS-307` | **Basis drift** | The command in `basis` no longer exists or no longer runs | Revalidation impossible; object stuck at `K2` | `VAL-VIS-1200` |
+| `FAL-VIS-308` | **Provenance theatre** | Fields populated with plausible but unchecked values | Worse than absence — creates false assurance | `VAL-VIS-1274` |
+
+> **`VIS-630`.** `FAL-VIS-308` deserves emphasis because it is the failure this very section makes
+> possible. A schema with eighteen fields invites completion for its own sake, and a fully populated
+> block that nobody verified is **more dangerous than an empty one**: an empty block signals that
+> nothing is known, while a filled one signals that everything was checked. Any provenance mechanism
+> Oship implements must therefore make unchecked population harder than honest absence.
+
+### TBL-VIS-621: Validation Rules — Provenance, §05.9
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1254` | Every knowledge object above `K0` must carry a `KPR-` block. | **HALT** |
+| `VAL-VIS-1255` | All fields marked mandatory in `TBL-VIS-618` must be present. | **HALT** |
+| `VAL-VIS-1256` | A mandatory field with no known value must carry `UNKNOWN`, never a blank. | **HALT** |
+| `VAL-VIS-1257` | `author_role` must be a role, never a personal name. | **HALT** |
+| `VAL-VIS-1258` | A claim without a `basis` may not be recorded. | **HALT** |
+| `VAL-VIS-1259` | `observed_at` must be a commit SHA. | **HALT** |
+| `VAL-VIS-1260` | `created_in` must differ from `observed_at` only when the observation predates the record. | **INFO** |
+| `VAL-VIS-1261` | `why` must state a question, not a justification of the answer. | **ERROR** |
+| `VAL-VIS-1262` | `method` must be one of the five permitted values. | **HALT** |
+| `VAL-VIS-1263` | `validation_method` must be re-executable or explicitly `NONE`. | **HALT** |
+| `VAL-VIS-1264` | `validated_by` must resolve to a `CODEOWNERS` principal. | **HALT** |
+| `VAL-VIS-1265` | `validated_by` must differ from `author_principal`. | **HALT** |
+| `VAL-VIS-1266` | `trust_level` must be computed from the block, never asserted independently. | **HALT** |
+| `VAL-VIS-1267` | `revalidation_window` is mandatory at `K3` and above. | **HALT** |
+| `VAL-VIS-1268` | `falsifier` must name an observation, not an opinion. | **HALT** |
+| `VAL-VIS-1269` | `supersedes` must reference an existing object. | **HALT** |
+| `VAL-VIS-1270` | `derived_from` entries must all exist and be at or above the derived object's level. | **HALT** |
+| `VAL-VIS-1271` | A provenance block is append-only; corrections supersede. | **HALT** |
+| `VAL-VIS-1272` | Provenance must not be reconstructed after the fact and presented as original. | **HALT** |
+| `VAL-VIS-1273` | The absence of a provenance mechanism must be recorded as an obligation, not implied. | **ERROR** |
+| `VAL-VIS-1274` | Populated provenance fields must be verifiable; unverifiable population is a HALT defect. | **HALT** |
+| `VAL-VIS-1275` | Provenance completeness must be reported alongside corpus trust distribution. | **ERROR** |
+| `VAL-VIS-1276` | An object whose origin no longer resolves demotes to `K0`. | **HALT** |
+| `VAL-VIS-1277` | Provenance may not be summarised away when an object is cited elsewhere. | **HALT** |
+
+---
+
+## 05.10 — Knowledge Versioning and the Evolution Lifecycle
+
+### AI NAVIGATION METADATA — §05.10
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before changing any existing knowledge object** |
+| **AI DEPENDENCIES** | §05.9 provenance · §05.5 `ONT-048` no deletion |
+| **AI INPUTS** | An existing object plus a proposed change |
+| **AI OUTPUTS** | A new version with a supersession edge, or a rejection |
+| **AI IMPLEMENTATION IMPACT** | Determines whether the corpus can be read as of any past commit |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1278`…`VAL-VIS-1301` |
+| **AI RELATED DOCUMENTS** | §05.14 conflict resolution · §05.15 decay |
+
+> **`VIS-631`.** Oship's versioning model is **append-and-supersede**, never edit-in-place, and the
+> reason is that an edited object destroys the only record of what was previously believed. Git
+> retains the bytes, but git does not retain the *reason* — a diff shows that `77/87` became
+> `36/87` and says nothing about which was wrong or why. The supersession record carries that
+> reason as first-class content.
+
+### TBL-VIS-622: Knowledge Lifecycle States
+
+| State | Meaning | May be cited? | May be acted on? | Exit |
+| :--- | :--- | :--- | :--- | :--- |
+| **PROPOSED** | Written, not yet admitted through `KIN-15` | No | No | Admitted or rejected |
+| **ACTIVE** | Admitted and within its revalidation window | **Yes** | Yes, at its `K` level | Superseded, decayed, or deprecated |
+| **DECAYED** | Window elapsed; structure intact, verification void | Yes, with the decay surfaced | **No above `K1`** | Revalidated or deprecated |
+| **SUPERSEDED** | A newer object replaces it | **Yes, historically** | No | Terminal |
+| **DEPRECATED** | Judged wrong or obsolete, retained | Only to explain the change | No | Terminal |
+| **CONTESTED** | In an unresolved contradiction | Yes, with the contradiction surfaced | **No** | Resolved to one of the above |
+
+> **`VIS-632`.** There is no DELETED state, by `ONT-048`. The closest states are SUPERSEDED and
+> DEPRECATED and both are **retained and retrievable**, which means the corpus grows monotonically
+> and never shrinks. That has a real cost — retrieval must filter by lifecycle state on every query,
+> and a naive search will surface deprecated content — and Oship accepts it because the alternative
+> is a corpus in which past wrongness is invisible and therefore repeatable.
+
+```mermaid
+stateDiagram-v2
+    [*] --> PROPOSED
+    PROPOSED --> ACTIVE: admitted at KIN-15
+    PROPOSED --> [*]: rejected at KIN-19
+
+    ACTIVE --> DECAYED: revalidation window elapsed
+    DECAYED --> ACTIVE: revalidated with the original check
+    ACTIVE --> CONTESTED: KGE-06 edge created
+    DECAYED --> CONTESTED: KGE-06 edge created
+    CONTESTED --> ACTIVE: resolved in this object's favour
+    CONTESTED --> DEPRECATED: resolved against this object
+    CONTESTED --> SUPERSEDED: resolved by a merged successor
+
+    ACTIVE --> SUPERSEDED: newer version admitted
+    DECAYED --> SUPERSEDED: newer version admitted
+    ACTIVE --> DEPRECATED: judged wrong or obsolete
+    DECAYED --> DEPRECATED: judged wrong or obsolete
+
+    note right of DEPRECATED
+        Terminal but RETAINED
+        ONT-048 forbids deletion
+        Citable only to explain
+        why the change happened
+    end note
+
+    note right of CONTESTED
+        Actions on this object
+        are blocked entirely
+        VAL-VIS-1218
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-142` — **The Knowledge Evolution Lifecycle**
+> **Explanation:** Six states with a single entry and two terminals, neither of which removes the
+> object. The path worth tracing is ACTIVE → DECAYED → ACTIVE, the only cycle in the machine: an
+> object may oscillate indefinitely between verified and unverified as the tree changes beneath it,
+> and this is normal rather than pathological. CONTESTED is the only state that blocks action
+> outright, because acting while two admitted objects disagree means acting on a corpus that does
+> not know what it believes.
+
+### TBL-VIS-623: Version Change Classes
+
+| Class | Trigger | Creates a new version? | Trust effect | Example from this document |
+| :--- | :--- | :--- | :--- | :--- |
+| **Correction** | The prior value was wrong | **Yes** | New object starts at the method's level; old becomes DEPRECATED | `77/87` → the three-bucket distribution |
+| **Refresh** | The world changed; the prior value was right then | **Yes** | Old becomes SUPERSEDED, retains its historical validity | Line and word counts across parts |
+| **Extension** | New content, prior content unchanged | No — append | Unchanged | Adding §05.7 after §05.6 |
+| **Clarification** | Meaning unchanged, expression improved | **Yes**, flagged non-substantive | Unchanged | Rewording an ambiguous rule |
+| **Retraction** | The object should never have been recorded | **Yes** | DEPRECATED with no successor | None to date |
+| **Remap** | An identifier assignment changed | **Yes**, via `DEC-VIS-` | Unchanged | `DEC-VIS-043` diagram remap |
+
+> **`VIS-633`.** Correction and refresh are distinguished because they mean opposite things about
+> the past. A **correction** says the old record was never true; a **refresh** says it was true and
+> the world moved. Collapsing them — as most documentation systems do, by simply editing — makes it
+> impossible to tell whether a system's history contains errors or merely change, and that
+> distinction is exactly what a reader assessing trustworthiness needs.
+
+### TBL-VIS-624: Validation Rules — Versioning, §05.10
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1278` | An existing knowledge object may not be edited in place. | **HALT** |
+| `VAL-VIS-1279` | Every change must create a new object with a `KGE-07` supersession edge. | **HALT** |
+| `VAL-VIS-1280` | The superseded object must remain retrievable. | **HALT** |
+| `VAL-VIS-1281` | A supersession must record its change class from `TBL-VIS-623`. | **HALT** |
+| `VAL-VIS-1282` | A correction must state why the prior value was wrong. | **HALT** |
+| `VAL-VIS-1283` | A refresh must state what changed in the world. | **HALT** |
+| `VAL-VIS-1284` | A clarification must assert that meaning is unchanged and be reviewable on that basis. | **ERROR** |
+| `VAL-VIS-1285` | A retraction must have no successor and must state the reason for retraction. | **HALT** |
+| `VAL-VIS-1286` | Identifiers are never reused across versions. | **HALT** |
+| `VAL-VIS-1287` | A new version starts at the trust level its own method supports, never inheriting the old level. | **HALT** |
+| `VAL-VIS-1288` | Supersession chains must be acyclic. | **HALT** |
+| `VAL-VIS-1289` | An object may be superseded by at most one successor. | **HALT** |
+| `VAL-VIS-1290` | A merge of two objects supersedes both and records both as predecessors. | **HALT** |
+| `VAL-VIS-1291` | Lifecycle state must be explicit on every object. | **HALT** |
+| `VAL-VIS-1292` | Retrieval must filter by lifecycle state by default. | **HALT** |
+| `VAL-VIS-1293` | A DEPRECATED object surfaced in retrieval must be marked as such. | **HALT** |
+| `VAL-VIS-1294` | A CONTESTED object blocks all dependent actions. | **HALT** |
+| `VAL-VIS-1295` | Corpus size must never be reported as a growth metric. | **ERROR** |
+| `VAL-VIS-1296` | The corpus must be readable as of any historical commit. | **ERROR** |
+| `VAL-VIS-1297` | A version record must be creatable without modifying its predecessor's file region. | **HALT** |
+| `VAL-VIS-1298` | Frozen parts of this document may not be modified; corrections append at the current end. | **HALT** |
+| `VAL-VIS-1299` | A correction to a frozen part must carry a pointer to the region it corrects. | **HALT** |
+| `VAL-VIS-1300` | The count of open corrections must be reported at every part closure. | **ERROR** |
+| `VAL-VIS-1301` | No object may be silently removed from availability. | **HALT** |
+
+---
+
+## 05.11 — Knowledge Versus Memory
+
+### AI NAVIGATION METADATA — §05.11
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before writing to either store** |
+| **AI DEPENDENCIES** | `MASTER_CONTEXT_MEMORY_SYSTEM.md` · §05.5 ontology classes Knowledge and Memory |
+| **AI INPUTS** | An item to be persisted |
+| **AI OUTPUTS** | A routing decision — knowledge store, memory store, or both |
+| **AI IMPLEMENTATION IMPACT** | Misrouting produces either amnesia or over-generalisation |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1302`…`VAL-VIS-1325` |
+| **AI RELATED DOCUMENTS** | `.ai/SESSION_MEMORY.md` · `.ai/LESSONS_LEARNED.md` |
+
+> **`VIS-634`.** Knowledge is what is true of the system; memory is what happened to the system.
+> The test that separates them cleanly is **counterfactual reuse**: if the item would still be
+> useful to an agent that had never participated in the episode that produced it, it is knowledge;
+> if its value depends on having been there, it is memory. "The Mermaid validator rejects `;` inside
+> `Note over`" passes the test and is knowledge. "The validator rejected block 47 on the third
+> attempt of this session" fails it and is memory.
+
+### TBL-VIS-625: Knowledge and Memory Compared Across Twelve Dimensions
+
+| Dimension | Knowledge | Memory |
+| :--- | :--- | :--- |
+| **Question answered** | What is true? | What happened? |
+| **Scope** | System-wide | Episode-specific |
+| **Validity** | Must hold generally | Held once, in one context |
+| **Trust model** | `K0`…`K6`, earned by verification | Fidelity to the episode, not general truth |
+| **Decay** | Decays as the world changes | Never decays; the episode is fixed |
+| **Correction** | Superseded when found wrong | **Never corrected** — a misremembered episode is a new record |
+| **Contradiction** | Blocks action until resolved | Two episodes may legitimately differ |
+| **Ontology class** | `Knowledge` | `Memory` |
+| **Generalisation** | Its purpose | **Prohibited without promotion** |
+| **Retention** | Indefinite, superseded in place of deletion | Indefinite, immutable |
+| **Access** | Broad, subject to `KSC-` | Narrower; may carry session-scoped sensitivity |
+| **Oship store** | The 87 Markdown documents | `.ai/SESSION_MEMORY.md`, `.ai/LESSONS_LEARNED.md` |
+
+> **`VIS-635`.** The row that carries the most weight is **decay**. Knowledge decays because the
+> world it describes changes; memory does not, because a past episode cannot become a different past
+> episode. This is why memory must never be stored in the knowledge graph as though it were general
+> truth — it would be subject to a revalidation window it can never satisfy, since re-running a check
+> against today's repository says nothing about what happened three sessions ago.
+
+```mermaid
+flowchart TD
+    ITEM["An item to persist"]
+    Q1{"Useful to an agent that<br/>was not present?"}
+    Q2{"Does it assert something<br/>that must hold generally?"}
+    Q3{"Has the pattern recurred<br/>across at least two episodes?"}
+
+    MEM["MEMORY STORE<br/>immutable episode record<br/>ai SESSION_MEMORY"]
+    KNW["KNOWLEDGE STORE<br/>graph node with KPR block<br/>subject to K0 to K6"]
+    CAND["PROMOTION CANDIDATE<br/>ai LESSONS_LEARNED<br/>held at K1"]
+
+    ITEM --> Q1
+    Q1 -->|"no"| MEM
+    Q1 -->|"yes"| Q2
+    Q2 -->|"yes"| KNW
+    Q2 -->|"no"| MEM
+
+    MEM --> Q3
+    Q3 -->|"yes"| CAND
+    Q3 -->|"no"| MEM
+    CAND -->|"human ratifies<br/>KPP-24"| KNW
+    CAND -->|"not ratified"| MEM
+
+    KNW -.->|"an application of knowledge<br/>is itself an episode"| MEM
+
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef mem fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef knw fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef cand fill:#e65100,stroke:#ffcc80,color:#ffffff
+    class Q1,Q2,Q3 q
+    class MEM mem
+    class KNW knw
+    class CAND cand
+```
+
+> **Diagram ID:** `DGM-VIS-143` — **Knowledge and Memory Interaction Model**
+> **Explanation:** The two stores are not parallel silos; they exchange in both directions. Upward,
+> a pattern observed across two or more episodes becomes a **promotion candidate**, held at `K1`
+> until a human ratifies it — never auto-promoted, because a pattern seen twice may still be
+> coincidence. Downward, the dotted edge records that every application of knowledge generates a new
+> episode, which is how the system accumulates the evidence that later justifies promotion. The
+> orange node is the only place the two stores touch, and it is deliberately a single narrow gate.
+
+### TBL-VIS-626: Worked Routing Examples from This Project
+
+| Item | Routing | Reason |
+| :--- | :--- | :--- |
+| "`bash` command parameter caps at 64,000 characters" | **Knowledge** | Holds for any agent in this environment |
+| "The heredoc failed on the PART 04 append" | **Memory** | Episode-specific |
+| "`/tmp` was wiped between turns three times, survived twice" | **Promotion candidate** | Recurrent but not yet a reliable rule |
+| "Setting `global.navigator` throws on node 22" | **Knowledge** | Reproducible property of the runtime |
+| "Git commits were rolled back three times this session" | **Promotion candidate** | Pattern with an unknown mechanism |
+| "`CODEOWNERS` resolves all paths to one principal" | **Knowledge** at `K3` | Measured against the tree |
+| "The user chose `01_PRODUCT` over creating `01_VISION`" | **Both** | Decision object plus the episode that produced it |
+
+> **`VIS-636`.** The last row shows the legitimate case for dual storage. A decision has a general
+> content — the file lives in `01_PRODUCT` — and an episodic content — it was chosen at a particular
+> moment, over a particular alternative, for a stated reason. Storing only the general form loses the
+> alternative; storing only the episode makes the ruling unfindable. **Dual storage is permitted only
+> for `Decision` class objects**, which is why the ontology gives Decision its own first-level class
+> rather than treating it as a kind of knowledge.
+
+### TBL-VIS-627: Validation Rules — Knowledge and Memory, §05.11
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1302` | Every persisted item must be routed to exactly one store, except `Decision` objects. | **HALT** |
+| `VAL-VIS-1303` | Memory records are immutable. | **HALT** |
+| `VAL-VIS-1304` | A memory record may not carry a `K` level above `K1`. | **HALT** |
+| `VAL-VIS-1305` | Memory may not be subject to a revalidation window. | **HALT** |
+| `VAL-VIS-1306` | Generalising from a single episode is prohibited. | **HALT** |
+| `VAL-VIS-1307` | Promotion requires at least two independent episodes. | **HALT** |
+| `VAL-VIS-1308` | Promotion requires human ratification. | **HALT** |
+| `VAL-VIS-1309` | An unratified promotion candidate remains at `K1`. | **HALT** |
+| `VAL-VIS-1310` | A promoted object must cite the episodes that justified it. | **HALT** |
+| `VAL-VIS-1311` | Two memory records that differ are not a contradiction. | **HALT** |
+| `VAL-VIS-1312` | Knowledge derived from memory inherits `K1` until independently verified. | **HALT** |
+| `VAL-VIS-1313` | Memory must not be stored in the knowledge graph as a general assertion. | **HALT** |
+| `VAL-VIS-1314` | A `Decision` object stored in both stores must carry the same identifier in each. | **HALT** |
+| `VAL-VIS-1315` | Session memory must not be loaded as authoritative context. | **HALT** |
+| `VAL-VIS-1316` | An agent must state which store a claim came from. | **ERROR** |
+| `VAL-VIS-1317` | Memory volume must never be reported as knowledge growth. | **ERROR** |
+| `VAL-VIS-1318` | A demoted knowledge object does not become memory. | **HALT** |
+| `VAL-VIS-1319` | Memory records must carry the episode anchor — the session and commit. | **HALT** |
+| `VAL-VIS-1320` | Memory must not be summarised in a way that loses the episode boundary. | **ERROR** |
+| `VAL-VIS-1321` | A lesson recorded in `.ai/LESSONS_LEARNED.md` is a candidate, not knowledge. | **HALT** |
+| `VAL-VIS-1322` | Knowledge must never be written only to a memory store. | **HALT** |
+| `VAL-VIS-1323` | The routing decision must be recorded with the item. | **ERROR** |
+| `VAL-VIS-1324` | Retrieval must not blend the two stores without labelling each result. | **HALT** |
+| `VAL-VIS-1325` | Failure to distinguish the stores must be treated as a corpus integrity defect. | **HALT** |
+
+---
+
+## 05.12 — The AI Knowledge Retrieval Flow
+
+### AI NAVIGATION METADATA — §05.12
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this is the loop an agent executes on every task** |
+| **AI DEPENDENCIES** | §05.6 taxonomy · §05.8 trust · §05.13 access matrix |
+| **AI INPUTS** | A goal expressed as a question |
+| **AI OUTPUTS** | An action taken at a declared confidence, or a recorded refusal |
+| **AI IMPLEMENTATION IMPACT** | The operational face of the entire knowledge architecture |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1326`…`VAL-VIS-1349` |
+| **AI RELATED DOCUMENTS** | `.ai/CONTEXT_ROUTER.md` · `.ai/AI_AGENT_OPERATING_MANUAL.md` |
+
+> **`VIS-637`.** Retrieval in Oship is not search. Search returns documents ranked by similarity;
+> retrieval returns **a decision about whether the agent may act, and on what basis.** The
+> difference is the confidence gate: a search engine that finds nothing returns an empty list and the
+> caller decides what to do, whereas Oship's retrieval flow that finds nothing must produce an
+> explicit refusal naming the gap, because an agent that silently proceeds on an empty result set
+> is an agent that fabricates.
+
+```mermaid
+flowchart TD
+    GOAL["1 GOAL<br/>expressed as an answerable question"]
+    DECOMP["2 DECOMPOSE<br/>into facet constraints<br/>TAX-01 to TAX-10"]
+    SEARCH["3 SEARCH<br/>graph traversal plus facet filter<br/>lifecycle ACTIVE by default"]
+    ACCESS["4 ACCESS FILTER<br/>KSC- clearance per section 05.13"]
+    SELECT["5 CONTEXT SELECTION<br/>minimum sufficient set<br/>ordered by authority then trust"]
+    CONFLICT{"6 Any KGE-06<br/>contradiction edge?"}
+    CONF["7 CONFIDENCE<br/>= MINIMUM trust across<br/>the selected set"]
+    GATE{"8 Confidence sufficient<br/>for the action class?"}
+    ACT["9 ACT<br/>stating the level relied on"]
+    REFUSE["REFUSE<br/>name the gap, the level held,<br/>the level required"]
+    HALT["HALT<br/>report the contradiction<br/>do not choose a side"]
+    RECORD["10 RECORD<br/>episode to memory<br/>gaps to KND-048"]
+
+    GOAL --> DECOMP --> SEARCH --> ACCESS --> SELECT --> CONFLICT
+    CONFLICT -->|"yes"| HALT
+    CONFLICT -->|"no"| CONF --> GATE
+    GATE -->|"yes"| ACT --> RECORD
+    GATE -->|"no"| REFUSE --> RECORD
+    HALT --> RECORD
+    SEARCH -->|"empty result"| REFUSE
+
+    classDef step fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef gate fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class GOAL,DECOMP,SEARCH,ACCESS,SELECT,CONF,RECORD step
+    class CONFLICT,GATE gate
+    class REFUSE,HALT bad
+    class ACT good
+```
+
+> **Diagram ID:** `DGM-VIS-144` — **The AI Knowledge Retrieval and Action Flow**
+> **Explanation:** Ten steps with three terminals, two of which are non-action. That ratio is the
+> point: **refusal and halt are first-class outcomes with the same status as acting**, not error
+> paths. Step 7 computes confidence as the *minimum* trust across the selected context, never an
+> average, so adding a well-verified document to a set containing one unverified claim does not
+> raise the result. Step 10 runs on every terminal, including refusals — a refusal is exactly the
+> kind of episode that later reveals which `KND-` domains are starving the agent.
+
+### TBL-VIS-628: Retrieval Step Contracts
+
+| Step | Must produce | Must refuse if | Common failure |
+| :--- | :--- | :--- | :--- |
+| 1 Goal | A question with a determinate answer type | The goal is unanswerable as posed | Acting on an interpretation the user did not state |
+| 2 Decompose | Facet constraints | No facet constrains the search | Retrieving the whole corpus |
+| 3 Search | A candidate set with lifecycle states | Result set is empty | Treating empty as "no constraint applies" |
+| 4 Access filter | A cleared subset plus a count of items withheld | Clearance is undetermined | Silently returning fewer results |
+| 5 Selection | The **minimum sufficient** set | No sufficient set exists | Loading everything and hoping |
+| 6 Conflict check | A contradiction verdict | An unresolved `KGE-06` touches the set | Choosing the more recent side |
+| 7 Confidence | The minimum `K` level and the object holding it | Any input is `K0` | Averaging |
+| 8 Gate | A pass or fail against the action class | Threshold not met | Downgrading the action to fit the evidence |
+| 9 Act | The action plus the level relied on | — | Acting without stating the basis |
+| 10 Record | An episode record and any gap entries | — | Recording only successes |
+
+> **`VIS-638`.** Step 5's phrase **minimum sufficient set** is a hard requirement, not an efficiency
+> preference. Every additional object in the context window is an additional opportunity for the
+> minimum-trust rule to drag confidence down, and more importantly an additional opportunity for a
+> stale or deprecated claim to be treated as current. **Loading more context makes an agent less
+> reliable, not more** — a conclusion that runs against the common instinct and follows directly
+> from the aggregation rules in `TBL-VIS-615`.
+
+### TBL-VIS-629: Worked Retrieval — "May an agent update `04_ARCHITECTURE/INDEX.md`?"
+
+| Step | Result |
+| :--- | :--- |
+| 1 Goal | Is an `A2` repository modification of a domain index permitted, and by what authority? |
+| 2 Decompose | `TAX-02` = `KND-004`; `TAX-03` = System; `TAX-04` = L1–L2; `TAX-06` = any |
+| 3 Search | `MASTER_CONTEXT_RULES.md` PART 04 · `04_ARCHITECTURE/INDEX.md` · `VIS-065` · `VIS-192` · `ADR-0001` |
+| 4 Access filter | All `KSC-1`; nothing withheld |
+| 5 Selection | Three objects — the registration workflow, `VIS-192`, and the index's own status row |
+| 6 Conflict check | None; no `KGE-06` edge touches the set |
+| 7 Confidence | **`K3`** — the lowest member is the index status row, measured against the tree |
+| 8 Gate | `A2` requires `K3` per `VAL-VIS-1206` — **pass** |
+| 9 Act | Permitted: update the `SYSTEM_ARCHITECTURE.md` status from PLANNED to COMPLETE, stating `K3` |
+| 10 Record | Episode logged; no gap — this is task `ARCH-04`, already tracked |
+
+> **`VIS-639`.** The worked case shows the flow producing a **permission** rather than a
+> prohibition, which matters because a governance model that only ever says no is indistinguishable
+> from paralysis. The gate passed because a repository-observable check exists — the index row can be
+> compared to the file it describes — and that is precisely the class of action a `K3` corpus can
+> support. The same flow run against "should Oship adopt an event-sourced architecture?" would
+> terminate at refusal, because no object in the corpus is above `K1` on that question.
+
+### TBL-VIS-630: Retrieval Failure Modes — `FAL-VIS-309`…`FAL-VIS-318`
+
+| ID | Failure | Mechanism | Guard |
+| :--- | :--- | :--- | :--- |
+| `FAL-VIS-309` | **Empty-set fabrication** | No results, agent answers from parametric memory | `VAL-VIS-1330` |
+| `FAL-VIS-310` | **Context flooding** | Whole corpus loaded; minimum trust collapses to `K0` | `VAL-VIS-1334` |
+| `FAL-VIS-311` | **Recency bias** | Most recent object chosen in a contradiction | `VAL-VIS-1216` |
+| `FAL-VIS-312` | **Authority bias** | L1 preferred without comparing evidence | `VAL-VIS-1223` |
+| `FAL-VIS-313` | **Silent withholding** | Access filter removes results without a count | `VAL-VIS-1332` |
+| `FAL-VIS-314` | **Deprecated resurfacing** | Lifecycle filter omitted | `VAL-VIS-1292` |
+| `FAL-VIS-315` | **Confidence inflation** | Averaging across the selected set | `VAL-VIS-1225` |
+| `FAL-VIS-316` | **Threshold shopping** | Action reclassified downward to fit available trust | `VAL-VIS-1340` |
+| `FAL-VIS-317` | **Unrecorded refusal** | Agent declines silently; the gap is never learned | `VAL-VIS-1345` |
+| `FAL-VIS-318` | **Goal drift** | Answer given to an adjacent question | `VAL-VIS-1327` |
+
+### TBL-VIS-631: Validation Rules — Retrieval, §05.12
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1326` | Retrieval must begin from an explicit goal question. | **HALT** |
+| `VAL-VIS-1327` | The answer must address the stated goal, not an adjacent one. | **HALT** |
+| `VAL-VIS-1328` | Search must be facet-constrained. | **ERROR** |
+| `VAL-VIS-1329` | Search must filter lifecycle state by default. | **HALT** |
+| `VAL-VIS-1330` | An empty result set must produce a refusal, never a generated answer. | **HALT** |
+| `VAL-VIS-1331` | The access filter must run before context selection. | **HALT** |
+| `VAL-VIS-1332` | Withheld results must be counted and reported. | **HALT** |
+| `VAL-VIS-1333` | Context selection must produce the minimum sufficient set. | **HALT** |
+| `VAL-VIS-1334` | Loading the whole corpus as context is prohibited. | **HALT** |
+| `VAL-VIS-1335` | Selection order is authority first, then trust, then recency. | **ERROR** |
+| `VAL-VIS-1336` | Any contradiction edge touching the set halts the flow. | **HALT** |
+| `VAL-VIS-1337` | Confidence equals the minimum trust in the set. | **HALT** |
+| `VAL-VIS-1338` | The object holding the minimum must be named. | **ERROR** |
+| `VAL-VIS-1339` | The gate must compare confidence to the action class threshold. | **HALT** |
+| `VAL-VIS-1340` | An action may not be reclassified to fit available confidence. | **HALT** |
+| `VAL-VIS-1341` | An action must state the trust level relied on. | **HALT** |
+| `VAL-VIS-1342` | A refusal must name the gap, the level held, and the level required. | **HALT** |
+| `VAL-VIS-1343` | A refusal must not be softened into a hedged answer. | **HALT** |
+| `VAL-VIS-1344` | `README.md` must never enter a retrieval context set. | **HALT** |
+| `VAL-VIS-1345` | Every refusal must be recorded as an episode. | **ERROR** |
+| `VAL-VIS-1346` | Gaps discovered during retrieval must be written to `KND-048`. | **ERROR** |
+| `VAL-VIS-1347` | Retrieval must not consult parametric model knowledge as a corpus substitute. | **HALT** |
+| `VAL-VIS-1348` | The flow must be traceable step by step after the fact. | **ERROR** |
+| `VAL-VIS-1349` | A successful action does not retroactively justify a skipped step. | **HALT** |
+
+---
+
+## 05.13 — The Agent Knowledge Access Matrix
+
+### AI NAVIGATION METADATA — §05.13
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before any agent reads or writes knowledge** |
+| **AI DEPENDENCIES** | §05.8 trust · §05.17 security classification · PART 04 action classes `A0`…`A4` |
+| **AI INPUTS** | An agent role and a requested operation on a knowledge scope |
+| **AI OUTPUTS** | Permit or deny, with the governing rule |
+| **AI IMPLEMENTATION IMPACT** | Defines isolation; the tenancy model rests on it |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1350`…`VAL-VIS-1373` |
+| **AI RELATED DOCUMENTS** | `.github/CODEOWNERS` · `ADR-0001` |
+
+> **`VIS-640`.** Oship has **zero implemented agents** and therefore zero enforced access control.
+> The matrix below is a specification whose current enforcement mechanism is a human reading a
+> document. Recording that plainly is required by `KPP-27`; the matrix is nonetheless worth writing
+> now, because access boundaries designed after agents exist are always drawn around whatever those
+> agents already do.
+
+### TBL-VIS-632: Agent Roles and Knowledge Scopes
+
+| Role | Read scope | Write scope | Max action class | Max trust it may assign |
+| :--- | :--- | :--- | :--- | :--- |
+| **Reader** | All `KSC-1` | None | `A0` | None |
+| **Analyst** | All `KSC-1`–`KSC-2` | Gap records in `KND-048` only | `A1` | `K1` |
+| **Author** | All `KSC-1`–`KSC-2` | New objects in assigned `KND-` domains | `A1` | `K1` |
+| **Validator** | All `KSC-1`–`KSC-3` | Validation records only | `A2` | `K3` |
+| **Curator** | All `KSC-1`–`KSC-3` | Facets, edges, lifecycle states | `A2` | `K3` |
+| **Governor** | All | `DEC-` records, ontology, taxonomy axes | `A3` | `K4` — **currently unreachable** |
+| **Any agent** | — | — | **`A4` PROHIBITED** | — |
+
+> **`VIS-641`.** No role may assign a trust level above the corpus ceiling, so the Governor row's
+> `K4` is aspirational by construction — it becomes reachable the moment a second `CODEOWNERS`
+> principal exists and not before. The matrix deliberately separates **Validator** from **Author**
+> even though one principal currently holds both, because the separation is what makes the future
+> `K4` transition a configuration change rather than a redesign.
+
+### TBL-VIS-633: The Access Matrix — Role Against Operation
+
+| Operation | Reader | Analyst | Author | Validator | Curator | Governor |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| Read `KSC-1` public | **Y** | **Y** | **Y** | **Y** | **Y** | **Y** |
+| Read `KSC-2` internal | N | **Y** | **Y** | **Y** | **Y** | **Y** |
+| Read `KSC-3` restricted | N | N | N | **Y** | **Y** | **Y** |
+| Read `KSC-4`–`KSC-6` | N | N | N | N | N | **Y** |
+| Create a knowledge object | N | N | **Y** | N | N | **Y** |
+| Create a gap record | N | **Y** | **Y** | **Y** | **Y** | **Y** |
+| Assign a facet | N | N | **Y** at creation | N | **Y** | **Y** |
+| Change a facet | N | N | N | N | **Y** | **Y** |
+| Create an edge | N | N | **Y** typed only | N | **Y** | **Y** |
+| Record a validation | N | N | N | **Y** | N | **Y** |
+| Raise a trust level | N | N | N | **Y** to `K3` | N | **Y** to `K4` |
+| Lower a trust level | N | N | N | **Y** | **Y** | **Y** |
+| Supersede an object | N | N | **Y** own only | N | **Y** | **Y** |
+| Deprecate an object | N | N | N | N | **Y** | **Y** |
+| Delete anything | **N** | **N** | **N** | **N** | **N** | **N** |
+| Amend the ontology | N | N | N | N | N | **Y** |
+| Amend the taxonomy axes | N | N | N | N | N | **Y** |
+| Issue a `DEC-` record | N | N | N | N | N | **Y** |
+| Modify a frozen part | **N** | **N** | **N** | **N** | **N** | **N** |
+
+> **`VIS-642`.** Two rows read **N** across every role, including Governor: deletion and modifying a
+> frozen part. These are not permissions that happen to be unassigned — they are **capabilities the
+> system does not have**, which is a stronger guarantee than an unassigned permission because there
+> is no role to escalate into. `ONT-048` and the append-only part model are enforced by absence of
+> mechanism rather than by policy.
+
+```mermaid
+flowchart TD
+    REQ["Agent requests an operation<br/>on a knowledge scope"]
+    R1{"Is the role<br/>declared?"}
+    R2{"Is the scope within<br/>the role read clearance?"}
+    R3{"Is the operation in<br/>the role row of TBL-VIS-633?"}
+    R4{"Is the action class within<br/>the role maximum?"}
+    R5{"Is the requested trust within<br/>the role maximum AND the<br/>corpus ceiling?"}
+    R6{"Does the operation cross<br/>a tenancy boundary?"}
+
+    PERMIT["PERMIT<br/>log the governing rule"]
+    DENY["DENY<br/>name the failing check"]
+
+    REQ --> R1
+    R1 -->|"no"| DENY
+    R1 -->|"yes"| R2
+    R2 -->|"no"| DENY
+    R2 -->|"yes"| R3
+    R3 -->|"no"| DENY
+    R3 -->|"yes"| R4
+    R4 -->|"no"| DENY
+    R4 -->|"yes"| R5
+    R5 -->|"no"| DENY
+    R5 -->|"yes"| R6
+    R6 -->|"yes"| DENY
+    R6 -->|"no"| PERMIT
+
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class R1,R2,R3,R4,R5,R6 q
+    class DENY bad
+    class PERMIT good
+```
+
+> **Diagram ID:** `DGM-VIS-145` — **The Knowledge Access Decision Chain**
+> **Explanation:** Six sequential checks, all of which must pass, arranged **cheapest and most
+> commonly failing first**. The chain is deny-by-default at every node: there is no path to PERMIT
+> that skips a check and no check whose failure can be overridden. The ordering matters
+> operationally — role declaration is checked before clearance so that an undeclared agent never
+> learns which scopes exist, which is the difference between "access denied" and "no such thing".
+
+### TBL-VIS-634: Isolation and Tenancy
+
+| Boundary | Definition | Enforced today? | Consequence of breach |
+| :--- | :--- | :--- | :--- |
+| **Role isolation** | An agent may not act outside its role row | **No — no runtime** | Privilege escalation by convention |
+| **Scope isolation** | An agent writes only to assigned `KND-` domains | **No** | Cross-domain contamination |
+| **Session isolation** | One session's memory is not another's knowledge | **Partial** — `.ai/SESSION_MEMORY.md` is shared | Over-generalisation from one episode |
+| **Tenancy isolation** | One tenant's knowledge never enters another's context | **N/A** — single tenant | Data leakage across customers |
+| **Trust isolation** | An agent may not raise its own output's level | **No** | Self-certification |
+| **Temporal isolation** | Historical states are readable but not writable | **Yes** — git provides it | History rewriting |
+
+> **`VIS-643`.** Only one of six boundaries is enforced today, and it is enforced by git rather than
+> by Oship. **`OBL-47`** records that the access matrix has no enforcement mechanism whatsoever. The
+> row that will matter most at scale is tenancy: it is marked N/A because Oship has one tenant, but
+> a knowledge graph designed without tenancy boundaries cannot retrofit them, since every edge
+> created without a tenant scope becomes an edge that may cross tenants once a second one exists.
+> This is recorded as a **design constraint on the graph schema in §05.3**, not a future feature.
+
+### TBL-VIS-635: Validation Rules — Access, §05.13
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1350` | Every agent must declare its role before any operation. | **HALT** |
+| `VAL-VIS-1351` | An undeclared role denies all operations. | **HALT** |
+| `VAL-VIS-1352` | Access is deny-by-default. | **HALT** |
+| `VAL-VIS-1353` | No role may perform an operation marked N in `TBL-VIS-633`. | **HALT** |
+| `VAL-VIS-1354` | No role, including Governor, may delete a knowledge object. | **HALT** |
+| `VAL-VIS-1355` | No role may modify a frozen part. | **HALT** |
+| `VAL-VIS-1356` | An agent may not raise the trust level of its own output. | **HALT** |
+| `VAL-VIS-1357` | A role's maximum trust assignment is capped by the corpus ceiling. | **HALT** |
+| `VAL-VIS-1358` | `A4` is prohibited for every role at every level. | **HALT** |
+| `VAL-VIS-1359` | A denial must name the failing check. | **HALT** |
+| `VAL-VIS-1360` | A permit must log the governing rule. | **ERROR** |
+| `VAL-VIS-1361` | Role assignment must resolve to a `CODEOWNERS` principal. | **HALT** |
+| `VAL-VIS-1362` | Author and Validator roles must not be exercised by the same principal on the same object. | **HALT** |
+| `VAL-VIS-1363` | Cross-domain writes require Curator or Governor. | **HALT** |
+| `VAL-VIS-1364` | Session memory must not be read as another session's knowledge. | **HALT** |
+| `VAL-VIS-1365` | Every graph edge must carry a tenant scope even while one tenant exists. | **HALT** |
+| `VAL-VIS-1366` | An operation crossing a tenancy boundary is denied unconditionally. | **HALT** |
+| `VAL-VIS-1367` | The absence of enforcement must be recorded, not implied. | **ERROR** |
+| `VAL-VIS-1368` | The matrix must not be described as enforced while `OBL-47` is open. | **HALT** |
+| `VAL-VIS-1369` | Adding a role requires a `DEC-VIS-` record. | **HALT** |
+| `VAL-VIS-1370` | Clearance must be evaluated against the object, not the containing document. | **HALT** |
+| `VAL-VIS-1371` | Withheld objects must be counted in the response. | **HALT** |
+| `VAL-VIS-1372` | Escalation of privilege must be impossible by construction, not by policy alone. | **ERROR** |
+| `VAL-VIS-1373` | Access decisions must be reconstructible from the log. | **ERROR** |
+
+---
+
+## 05.14 — Knowledge Conflict Resolution
+
+### AI NAVIGATION METADATA — §05.14
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read the moment two objects disagree** |
+| **AI DEPENDENCIES** | §05.8 trust · §05.10 versioning · `KGE-06` conflicts_with |
+| **AI INPUTS** | Two or more objects in contradiction |
+| **AI OUTPUTS** | A resolution record, or an escalation |
+| **AI IMPLEMENTATION IMPACT** | Determines whether the corpus can hold a coherent position |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1374`…`VAL-VIS-1397` |
+| **AI RELATED DOCUMENTS** | §05.11 memory records are exempt |
+
+> **`VIS-644`.** A conflict is not a disagreement of opinion; it is **two admitted objects that
+> cannot both be true of the same tree state.** The qualifier matters — `README.md` claiming 24
+> complete knowledge domains and the file system showing 24 index files with varying content are not
+> in conflict about the same proposition until "complete" is disambiguated. Most apparent conflicts
+> in this corpus dissolve under `SEM-` ambiguity resolution, and the procedure below applies only to
+> those that survive it.
+
+### TBL-VIS-636: Conflict Types
+
+| Type | Definition | Example in Oship | Resolvable by documentation alone? |
+| :--- | :--- | :--- | :--- |
+| **Factual** | Two objects state different values for the same measurement | `77/87` versus 36/87 frontmatter completeness | **Yes** — re-measure |
+| **Definitional** | The same term carries incompatible meanings | `AMB-001` "creator" — three readings | **Yes** — disambiguate |
+| **Status** | An object is both PLANNED and IMPLEMENTED | `README.md` badge versus the tree | **Yes** — correct the claim |
+| **Authority** | Two L1 objects mandate incompatible actions | None currently detected | Sometimes |
+| **Temporal** | Both were true, at different tree states | Line counts across commits | **Yes** — anchor both |
+| **Evidential** | Same claim, incompatible evidence classes | A `K3` figure contradicted by a `K1` assertion | **Yes** — the `K1` yields |
+| **Structural** | The ontology forbids a state the corpus contains | An object with no `KND-` domain | **No** — requires a `DEC-` record |
+
+```mermaid
+stateDiagram-v2
+    [*] --> DETECTED
+    DETECTED --> DISAMBIGUATE: apply SEM-19 to SEM-24
+    DISAMBIGUATE --> DISSOLVED: the objects speak of different things
+    DISSOLVED --> [*]
+    DISAMBIGUATE --> CONFIRMED: the same proposition, incompatible values
+
+    CONFIRMED --> BOTH_DEMOTED: both objects demoted, actions blocked
+    BOTH_DEMOTED --> EVIDENCE_COMPARE: compare evidence class, not authority
+
+    EVIDENCE_COMPARE --> RESOLVED_BY_EVIDENCE: one holds strictly stronger evidence
+    EVIDENCE_COMPARE --> RESOLVED_BY_ANCHOR: both true at different commits
+    EVIDENCE_COMPARE --> RESOLVED_BY_AUTHORITY: evidence equal, authority differs
+    EVIDENCE_COMPARE --> ESCALATED: evidence equal, authority equal
+
+    RESOLVED_BY_EVIDENCE --> RECORDED
+    RESOLVED_BY_ANCHOR --> RECORDED
+    RESOLVED_BY_AUTHORITY --> RECORDED
+    ESCALATED --> HUMAN_RULING: OBL- record opened
+    HUMAN_RULING --> RECORDED: DEC-VIS- record issued
+
+    RECORDED --> [*]
+
+    note right of BOTH_DEMOTED
+        Neither side wins by default
+        Recency does not decide
+        Authority does not decide
+        until evidence is compared
+    end note
+
+    note right of ESCALATED
+        The only exit is a human
+        ruling. An agent must not
+        break a tie it cannot
+        break on evidence.
+    end note
+```
+
+> **Diagram ID:** `DGM-VIS-146` — **The Conflict Resolution State Machine**
+> **Explanation:** The machine's first move is to try to make the conflict **disappear** — roughly
+> the majority of detected conflicts in a documentation corpus are two authors using one word for
+> two things, and resolving those as substantive disputes creates spurious supersessions. Once
+> confirmed, both objects are demoted simultaneously, which is the design's central asymmetry:
+> **there is no default winner.** Evidence is compared before authority, so an L1 constitutional
+> statement contradicted by an `E3` repository measurement does not simply prevail. When evidence and
+> authority are both tied the machine has no move and escalates; an agent that invents a tiebreak
+> here has substituted its judgement for the corpus's.
+
+### TBL-VIS-637: Resolution Precedence Order
+
+| Rank | Criterion | Rationale | Never used because |
+| :--- | :--- | :--- | :--- |
+| 1 | **Evidence class** — higher `E` wins | Observation beats assertion | — |
+| 2 | **Anchor** — both true at different commits | Temporal, not substantive | — |
+| 3 | **Authority** — higher L wins, evidence being equal | Constitutional intent governs where facts do not decide | — |
+| 4 | **Escalation** to a human ruling | No mechanical tiebreak remains | — |
+| — | Recency | A newer wrong claim is still wrong | `VAL-VIS-1216` |
+| — | Length or detail | Elaboration is not evidence | `VAL-VIS-1248` |
+| — | Author identity | Roles, not persons | `VIS-032` |
+| — | Majority across objects | Repetition is not corroboration | `VAL-VIS-1227` |
+
+> **`VIS-645`.** The four excluded criteria are excluded because each is a **plausible heuristic that
+> silently converts volume into truth.** Majority is the most seductive: if six documents say the
+> system has 24 complete domains and one measurement says otherwise, the majority rule endorses the
+> six. But the six are copies of one another — a single unverified claim propagated by citation — and
+> counting them as six independent witnesses is precisely the error `VAL-VIS-1227` forbids.
+
+### TBL-VIS-638: Worked Resolution — `AMB-001` "creator"
+
+| Step | Outcome |
+| :--- | :--- |
+| DETECTED | Three document regions use "creator" with incompatible referents |
+| DISAMBIGUATE | `SEM-19`…`SEM-24` applied; the term denotes originating principal, authoring agent, and content owner in three distinct passages |
+| Verdict | **DISSOLVED** — not a factual conflict; a definitional one already registered as `AMB-001` |
+| Action | Register three distinct terms; retain "creator" as a deprecated surface form mapping to none |
+| Trust effect | The three passages return to their prior levels; no demotion persists |
+| Residual | `VAL-VIS-456` HALT is cleared **only** once the vocabulary entry is written into the appendix |
+
+> **`VIS-646`.** `AMB-001` is the sole release-gate HALT in this document clearable by documentation
+> alone, and the resolution above is what clearing it requires: not a decision about which meaning is
+> correct, but the recognition that **three meanings were always present and only one word was
+> available.** The other three HALT conditions — `VAL-VIS-437`, `443`, and `470` — need a retention
+> class decision, a persistence mechanism, and part completion respectively, none of which prose can
+> supply.
+
+### TBL-VIS-639: Validation Rules — Conflict Resolution, §05.14
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1374` | A detected conflict must create a `KGE-06` edge before any other action. | **HALT** |
+| `VAL-VIS-1375` | Disambiguation must be attempted before a conflict is confirmed. | **HALT** |
+| `VAL-VIS-1376` | Confirmation requires that both objects address the same proposition. | **HALT** |
+| `VAL-VIS-1377` | Both objects must be demoted on confirmation. | **HALT** |
+| `VAL-VIS-1378` | Actions depending on either object are blocked while CONTESTED. | **HALT** |
+| `VAL-VIS-1379` | Evidence class must be compared before authority. | **HALT** |
+| `VAL-VIS-1380` | Recency must never decide a conflict. | **HALT** |
+| `VAL-VIS-1381` | Majority across objects must never decide a conflict. | **HALT** |
+| `VAL-VIS-1382` | Length, detail, or tone must never decide a conflict. | **HALT** |
+| `VAL-VIS-1383` | Author identity must never decide a conflict. | **HALT** |
+| `VAL-VIS-1384` | A tie on evidence and authority must escalate. | **HALT** |
+| `VAL-VIS-1385` | An agent must not invent a tiebreak criterion. | **HALT** |
+| `VAL-VIS-1386` | Escalation must open an `OBL-` record. | **HALT** |
+| `VAL-VIS-1387` | A human ruling must be recorded as a `DEC-VIS-` object. | **HALT** |
+| `VAL-VIS-1388` | Resolution must retain both objects. | **HALT** |
+| `VAL-VIS-1389` | A dissolved conflict must record the disambiguation that dissolved it. | **ERROR** |
+| `VAL-VIS-1390` | A dissolved conflict must not leave residual demotions. | **ERROR** |
+| `VAL-VIS-1391` | Two memory records that differ must not be treated as a conflict. | **HALT** |
+| `VAL-VIS-1392` | Temporal resolution requires both objects to carry commit anchors. | **HALT** |
+| `VAL-VIS-1393` | An unresolved conflict must be reported at every part closure. | **ERROR** |
+| `VAL-VIS-1394` | Conflict count must never be reported without the resolved and unresolved split. | **ERROR** |
+| `VAL-VIS-1395` | A structural conflict requires a `DEC-` record and may not be resolved locally. | **HALT** |
+| `VAL-VIS-1396` | Resolution records are append-only. | **HALT** |
+| `VAL-VIS-1397` | A conflict may not be closed by deleting, hiding, or rewording one side. | **HALT** |
+
+---
+
+## 05.15 — The Knowledge Decay Model
+
+### AI NAVIGATION METADATA — §05.15
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before believing any recorded trust level** |
+| **AI DEPENDENCIES** | §05.8 trust · §05.6 `TAX-07` decay classes · §05.9 `KPR-15` |
+| **AI INPUTS** | An object, its decay class, and the current tree state |
+| **AI OUTPUTS** | An effective trust level, which may be lower than the recorded one |
+| **AI IMPLEMENTATION IMPACT** | Prevents a corpus of confidently stale claims |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1398`…`VAL-VIS-1421` |
+| **AI RELATED DOCUMENTS** | §05.10 lifecycle DECAYED state |
+
+> **`VIS-647`.** Knowledge in Oship does not expire on a calendar. **It expires when the thing it
+> describes changes**, which for a repository means it expires on commits, not on dates. This
+> follows directly from `VIS-051` — no dates anywhere — but it is more than a formatting rule: a
+> claim about the file tree measured at `644b3cb` is exactly as true a year later if no commit has
+> touched the tree, and already false a minute later if one has. Wall-clock decay would get both
+> cases wrong.
+
+### TBL-VIS-640: Decay Classes and Their Windows
+
+| Class | Name | What it describes | Revalidation window | Examples in this document |
+| :--- | :--- | :--- | :--- | :--- |
+| **`D0`** | **Immutable** | Facts about a fixed past | **Never** | A commit SHA; a superseded value; a memory record |
+| **`D1`** | **Constitutional** | Deliberate commitments | On amendment only | The Ten Tenets; `VIS-032`; `VIS-051`; the ontology |
+| **`D2`** | **Slow** | Structure that changes by decision | Any commit touching the structure | The 24 domains; `KND-` registry; `TAX-` axes |
+| **`D3`** | **Moderate** | Derived properties of the corpus | Any commit to the described domain | Capability statuses; metric definitions |
+| **`D4`** | **Fast** | Direct measurements of the tree | **Any commit at all** | File counts; line counts; frontmatter distribution |
+| **`D5`** | **Volatile** | Runtime observations | Every observation window | **None — nothing runs** |
+
+> **`VIS-648`.** Every measured figure in this document is `D4`, and `D4`'s window is *any commit*.
+> The consequence is uncomfortable and correct: **the commit that adds PART 05 invalidates PART 05's
+> own measurements.** The line count recorded in §05.2 was true of the tree before this part
+> existed. That is not a defect in the measurement; it is the honest behaviour of a `D4` claim, and
+> the mitigation is not to loosen the window but to record the anchor so a reader can tell exactly
+> which tree state the figure describes.
+
+### TBL-VIS-641: The Decay Model — Component Terms
+
+| Term | Symbol | Definition | Source | Range |
+| :--- | :--- | :--- | :--- | :--- |
+| **Recorded trust** | `K_rec` | The level assigned at validation | `KPR-14` | `K0`…`K6` |
+| **Decay class** | `d` | The rate class of the claim | `TAX-07` | `D0`…`D5` |
+| **Window** | `w` | Commits or releases before revalidation is due | `KPR-15` | integer or `∞` |
+| **Elapsed** | `e` | Qualifying commits since `KPR-06` | Computed at read time | integer ≥ 0 |
+| **Staleness** | `s` | `e / w`, or `0` when `w = ∞` | Computed | real ≥ 0 |
+| **Effective trust** | `K_eff` | The level an agent may actually rely on | Computed | `K0`…`K6` |
+| **Corpus ceiling** | `K_max` | Highest level any object may hold | §05.8 | **`K3` today** |
+
+### TBL-VIS-642: The Effective Trust Rule
+
+| Condition | `K_eff` | Rationale |
+| :--- | :--- | :--- |
+| `d = D0` | `K_rec` | A fact about a fixed past cannot go stale |
+| `s < 1` | `K_rec` | Within the window; the validation still stands |
+| `s ≥ 1` and `K_rec ≥ K3` | **`K1`** | Verification void; structure intact |
+| `s ≥ 1` and `K_rec = K2` | **`K1`** | Schema conformance unverified after change |
+| `s ≥ 1` and `K_rec ≤ K1` | `K_rec` | Nothing left to lose |
+| Origin no longer resolves | **`K0`** | Per `VAL-VIS-1276` |
+| Any input decayed, for a derived object | **min over inputs** | Per `VAL-VIS-1231` |
+| Always | `min` with `K_max` | The ceiling binds regardless |
+
+> **`VIS-649`.** Decay is a **cliff, not a slope**. There is no gradual confidence erosion between
+> `s = 0` and `s = 1`; the object holds its level until the window elapses and then drops to `K1` in
+> one step. A continuous decay function would be more elegant and would be false precision: nothing
+> is known about how partially-stale a claim is, and a number like "0.63 confidence" invites an
+> agent to act at 63% when the honest state is that the check has not been re-run.
+
+```mermaid
+flowchart TD
+    READ["An agent reads an object"]
+    D0Q{"Decay class D0?"}
+    ORIG{"Does the origin<br/>still resolve?"}
+    ELAPSE["Compute e = qualifying commits<br/>since KPR-06 observed_at"]
+    SQ{"Is e greater than or<br/>equal to w?"}
+    DERIV{"Is the object derived<br/>from other objects?"}
+    MIN["K_eff = minimum across inputs"]
+    KEEP["K_eff = K_rec"]
+    DROP["K_eff = K1<br/>verification void"]
+    ZERO["K_eff = K0<br/>origin unresolvable"]
+    CEIL["Apply corpus ceiling<br/>K_eff = min of K_eff and K3"]
+    SURF["SURFACE the decay to the caller<br/>never the stale recorded level"]
+
+    READ --> ORIG
+    ORIG -->|"no"| ZERO --> SURF
+    ORIG -->|"yes"| D0Q
+    D0Q -->|"yes"| KEEP
+    D0Q -->|"no"| ELAPSE --> SQ
+    SQ -->|"no"| KEEP
+    SQ -->|"yes"| DROP
+    KEEP --> DERIV
+    DROP --> DERIV
+    DERIV -->|"yes"| MIN --> CEIL
+    DERIV -->|"no"| CEIL
+    CEIL --> SURF
+
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef calc fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class D0Q,ORIG,SQ,DERIV q
+    class ELAPSE,MIN,CEIL calc
+    class DROP,ZERO bad
+    class KEEP,SURF good
+```
+
+> **Diagram ID:** `DGM-VIS-147` — **Effective Trust Computation at Read Time**
+> **Explanation:** The flow runs **on every read**, never once at write time, which is why
+> `VAL-VIS-1203` forbids caching the result. An object's effective trust is a function of the
+> current tree state, so a value computed and stored yesterday is itself a `D4` claim about a `D4`
+> claim. The terminal node is deliberately not "return the level" but "surface the decay": a caller
+> that receives `K1` without being told it was `K3` before the window elapsed cannot tell the
+> difference between never-verified and no-longer-verified, and those call for different responses —
+> the first needs a check written, the second needs one re-run.
+
+### TBL-VIS-643: Worked Decay — Four Claims from This Document
+
+| Claim | `d` | `w` | `K_rec` | Status after the PART 05 commit | `K_eff` |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| "87 Markdown files" | `D4` | any commit | `K3` | This commit adds none but modifies one | **`K1`** — window elapsed |
+| "`CODEOWNERS` holds one principal" | `D2` | commit touching `CODEOWNERS` | `K3` | Untouched | **`K3`** |
+| "`VIS-051` forbids dates" | `D1` | amendment only | `K3` | Not amended | **`K3`** |
+| "PART 04 closed at `844347f`" | `D0` | never | `K3` | Fixed past | **`K3`** |
+
+> **`VIS-650`.** Three of four survive; the measured file count does not. This is the model working
+> as designed rather than failing — **`D4` claims are expected to churn**, and a corpus whose
+> measurements are perpetually one commit stale is far safer than one whose measurements are
+> confidently presented as current. The operational implication is that `D4` figures should be
+> **generated by a check at read time wherever possible** rather than transcribed into prose, which
+> is `OBL-48`: no mechanism exists in Oship to embed a live measurement in a document.
+
+### TBL-VIS-644: Validation Rules — Decay, §05.15
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1398` | Every object at `K2` or above must carry a decay class. | **HALT** |
+| `VAL-VIS-1399` | Decay windows must be expressed in commits or releases. | **HALT** |
+| `VAL-VIS-1400` | Effective trust must be computed at read time. | **HALT** |
+| `VAL-VIS-1401` | Effective trust must never be cached as final. | **HALT** |
+| `VAL-VIS-1402` | Decay is a step function; partial confidence values are prohibited. | **HALT** |
+| `VAL-VIS-1403` | A decayed object drops to `K1`, not one level. | **HALT** |
+| `VAL-VIS-1404` | `D0` objects never decay. | **HALT** |
+| `VAL-VIS-1405` | A claim about the file tree must be `D4`. | **HALT** |
+| `VAL-VIS-1406` | A document's class equals the fastest class it contains. | **ERROR** |
+| `VAL-VIS-1407` | Decay must be surfaced, never silently applied. | **HALT** |
+| `VAL-VIS-1408` | The caller must be able to distinguish never-verified from no-longer-verified. | **HALT** |
+| `VAL-VIS-1409` | A derived object takes the minimum effective trust across its inputs. | **HALT** |
+| `VAL-VIS-1410` | The corpus ceiling applies after decay computation. | **HALT** |
+| `VAL-VIS-1411` | An unresolvable origin yields `K0` regardless of class. | **HALT** |
+| `VAL-VIS-1412` | Revalidation must re-execute the original check. | **HALT** |
+| `VAL-VIS-1413` | A window may not be extended to avoid revalidation. | **HALT** |
+| `VAL-VIS-1414` | Changing an object's decay class requires a supersession. | **HALT** |
+| `VAL-VIS-1415` | Edges decay on the same rules as nodes. | **ERROR** |
+| `VAL-VIS-1416` | A part closure must report the count of decayed objects. | **ERROR** |
+| `VAL-VIS-1417` | A measured figure transcribed into prose must carry its anchor. | **HALT** |
+| `VAL-VIS-1418` | Absence of a live-measurement mechanism must be recorded as an obligation. | **ERROR** |
+| `VAL-VIS-1419` | Decay must not be described as implemented. | **HALT** |
+| `VAL-VIS-1420` | A revalidation that fails must demote, not retry indefinitely. | **HALT** |
+| `VAL-VIS-1421` | Decay must never be reported as a reduction in corpus quality. | **ERROR** |
+
+---
+
+## 05.16 — The Knowledge Quality Index
+
+### AI NAVIGATION METADATA — §05.16
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P2 — read when assessing corpus health, not when acting** |
+| **AI DEPENDENCIES** | §05.8 trust · §05.9 provenance · §05.15 decay |
+| **AI INPUTS** | The corpus at a commit anchor |
+| **AI OUTPUTS** | Seven dimension scores and their composite, with the composite's own trust level |
+| **AI IMPLEMENTATION IMPACT** | The measure by which knowledge work is judged; a wrong measure misdirects all effort |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1422`…`VAL-VIS-1445` |
+| **AI RELATED DOCUMENTS** | PART 04 metric register · `.ai/METRICS.md` |
+
+> **`VIS-651`.** A quality index is dangerous in a way most metrics are not: **it is the metric that
+> decides which other metrics get attention.** If it rewards volume, the corpus grows; if it rewards
+> coverage, gaps get filled with low-trust prose. The index below is therefore weighted so that
+> **no dimension can be improved by writing more**, and every dimension can be improved only by
+> verification, correction, or honest deletion of claims that were never supportable.
+
+### TBL-VIS-645: The Seven Quality Dimensions
+
+| Dim | Name | Measures | How it is gamed | Anti-gaming guard |
+| :--- | :--- | :--- | :--- | :--- |
+| `KQI-1` | **Trust distribution** | Share of objects at `K3`+ | Assign levels without checks | Level requires a re-executable check |
+| `KQI-2` | **Provenance completeness** | Share with all mandatory `KPR-` fields | Fill fields plausibly | `FAL-VIS-308`; fields must be verifiable |
+| `KQI-3` | **Freshness** | Share within their decay window | Widen the windows | Window fixed by decay class |
+| `KQI-4` | **Structural conformance** | Share passing schema and facet checks | Loosen the schema | Schema change needs `DEC-` |
+| `KQI-5` | **Graph connectivity** | Share with at least one typed non-`related_to` edge | Add `related_to` edges | `related_to` capped at 25% |
+| `KQI-6` | **Contradiction load** | Count of unresolved `KGE-06` edges, inverted | Stop detecting | Detection is a gate, not optional |
+| `KQI-7` | **Falsifiability** | Share carrying a stated falsifier | Write vacuous falsifiers | Falsifier must name an observation |
+
+> **`VIS-652`.** Each dimension's third column is filled in deliberately. **A quality metric whose
+> gaming strategy has not been written down has not been designed** — it has merely been proposed,
+> and the first party to optimise against it will find the strategy the designer did not consider.
+> Naming the exploit next to the measure is what makes the guard reviewable.
+
+### TBL-VIS-646: Current Index — Measured Where Possible
+
+| Dim | Weight | Oship value | Basis | Evidence |
+| :--- | :---: | :--- | :--- | :--- |
+| `KQI-1` Trust distribution | 25% | **Not computable** | No object carries a `KPR-14` field | `E0` |
+| `KQI-2` Provenance completeness | 20% | **0%** | Twelve of eighteen fields absent corpus-wide | `E3` |
+| `KQI-3` Freshness | 15% | **Not computable** | No windows declared | `E0` |
+| `KQI-4` Structural conformance | 15% | **41%** | 36 of 87 files carry ≥15 frontmatter keys | `E3` |
+| `KQI-5` Graph connectivity | 10% | **0%** | No graph exists | `E3` |
+| `KQI-6` Contradiction load | 10% | **Not computable** | No detection mechanism | `E0` |
+| `KQI-7` Falsifiability | 5% | **Not computable** | No systematic falsifier field | `E0` |
+| **Composite** | 100% | **NOT YET MEASURED** | Five of seven dimensions uncomputable | `E0` |
+
+> **`VIS-653`.** The composite is `NOT YET MEASURED`, not zero, and the distinction is enforced by
+> `VAL-VIS-719`. Zero would assert that the corpus scored nothing on a measurement that was taken;
+> `NOT YET MEASURED` asserts that the measurement was not taken, which is the true state for five of
+> seven dimensions. **A composite computed from two measurable dimensions and five blanks would be a
+> fabricated number wearing a percentage sign** — precisely the failure this document exists to
+> prevent.
+
+### TBL-VIS-647: Dashboard Specification — `IMG-VIS-053`
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `IMG-VIS-053` |
+| **Title** | Knowledge Quality Index Dashboard |
+| **Purpose** | Show corpus health honestly, including what is not measurable |
+| **Audience** | Governor role; repository owner |
+| **Aspect Ratio** | 16:9 |
+| **Canvas** | Seven radial gauges in a row above a single composite band |
+| **Visual Hierarchy** | Composite band dominant; gauges secondary; uncomputable markers must be as visually prominent as scores |
+| **Elements** | One gauge per `KQI-` dimension; a hatched overlay for uncomputable dimensions; a corpus-ceiling watermark reading `K3` |
+| **Relationships** | Gauge weight shown as gauge width, so a 25% dimension is visibly wider than a 5% one |
+| **Labels** | Dimension id, name, value or `NOT YET MEASURED`, evidence class |
+| **Color Semantics** | Green `#1b5e20` measured and passing · amber `#e65100` measured and failing · **grey hatch `#37474f` uncomputable** · red `#b71c1c` blocked |
+| **Typography** | Monospace for values; uncomputable rendered in the same size as numeric values, never smaller |
+| **Legend** | Must define `NOT YET MEASURED` explicitly as distinct from zero |
+| **Meaning** | The corpus is largely unmeasured; the visible scores are not a summary of quality |
+| **AI Interpretation** | Do not compute a composite while any dimension is hatched |
+| **Implementation Relevance** | Requires `KPR-` fields to exist; blocked by `OBL-46` |
+| **Generation Prompt** | A clean dark-background analytics dashboard, seven radial gauges of varying widths in a horizontal row, several rendered as grey diagonal hatch instead of a filled arc, a wide horizontal band below reading NOT YET MEASURED in monospace, a faint watermark K3 in the corner, flat vector style, no photographic elements |
+
+> **`VIS-654`.** The specification's unusual instruction — that uncomputable markers be **as
+> prominent as scores** — is the whole design. Dashboards conventionally shrink or grey out what
+> they cannot measure, which trains the eye to read the visible portion as the whole picture. For a
+> corpus that is five-sevenths unmeasured, that convention would produce a display that is
+> technically accurate and materially misleading.
+
+### TBL-VIS-648: Validation Rules — Quality Index, §05.16
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1422` | The composite may not be computed while any dimension is uncomputable. | **HALT** |
+| `VAL-VIS-1423` | An uncomputable dimension must read `NOT YET MEASURED`, never zero. | **HALT** |
+| `VAL-VIS-1424` | Every dimension value must carry its evidence class. | **HALT** |
+| `VAL-VIS-1425` | No dimension may be improvable by adding content alone. | **HALT** |
+| `VAL-VIS-1426` | Each dimension must publish its gaming strategy and guard. | **ERROR** |
+| `VAL-VIS-1427` | Weights may be changed only by a `DEC-VIS-` record. | **HALT** |
+| `VAL-VIS-1428` | The index must be recomputed at read time. | **HALT** |
+| `VAL-VIS-1429` | The corpus ceiling must be displayed alongside the index. | **ERROR** |
+| `VAL-VIS-1430` | An improving index must not be reported as progress while a HALT gate is open. | **HALT** |
+| `VAL-VIS-1431` | Contradiction load must not improve by disabling detection. | **HALT** |
+| `VAL-VIS-1432` | Freshness must not improve by widening windows. | **HALT** |
+| `VAL-VIS-1433` | Connectivity must not improve through `related_to` edges beyond the 25% cap. | **HALT** |
+| `VAL-VIS-1434` | Provenance completeness must count only verifiable fields. | **HALT** |
+| `VAL-VIS-1435` | The index must never be described as a quality guarantee. | **ERROR** |
+| `VAL-VIS-1436` | The index itself carries a trust level and a decay class. | **HALT** |
+| `VAL-VIS-1437` | Dimension counts must be reproducible from a stated command. | **HALT** |
+| `VAL-VIS-1438` | A dashboard must not render uncomputable dimensions less prominently than measured ones. | **ERROR** |
+| `VAL-VIS-1439` | Historical index values must be retained, not overwritten. | **HALT** |
+| `VAL-VIS-1440` | The index must not be used to rank authors or roles. | **HALT** |
+| `VAL-VIS-1441` | A dimension may not be dropped to raise the composite. | **HALT** |
+| `VAL-VIS-1442` | Adding a dimension requires a `DEC-VIS-` record. | **HALT** |
+| `VAL-VIS-1443` | The index must not be reported without the anchor at which it was computed. | **HALT** |
+| `VAL-VIS-1444` | Partial computation must state which dimensions were included. | **HALT** |
+| `VAL-VIS-1445` | A rising index accompanied by a rising contradiction load must be reported as a regression. | **ERROR** |
+
+---
+
+## 05.17 — Knowledge Security Classification
+
+### AI NAVIGATION METADATA — §05.17
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before exposing any knowledge outside the repository** |
+| **AI DEPENDENCIES** | §05.13 access matrix · PART 04 `MSC-1`…`MSC-6` |
+| **AI INPUTS** | A knowledge object and a proposed disclosure |
+| **AI OUTPUTS** | A classification and a disclosure verdict |
+| **AI IMPLEMENTATION IMPACT** | The boundary between a public repository and a leak |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1446`…`VAL-VIS-1469` |
+| **AI RELATED DOCUMENTS** | `.github/CODEOWNERS` · `ADR-0001` |
+
+### TBL-VIS-649: The Security Classification Levels `KSC-1`…`KSC-6`
+
+| Level | Name | Definition | Disclosure boundary | Oship population | `MSC-` counterpart |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `KSC-1` | **Public** | Harmless if world-readable | None | **All 87 documents** | `MSC-1` |
+| `KSC-2` | **Internal** | Organisational context; not secret, not for publication | Organisation | **0** | `MSC-2` |
+| `KSC-3` | **Restricted** | Discloses exploitable structure | Named roles | **0** | `MSC-3` |
+| `KSC-4` | **Confidential** | Discloses business-sensitive positions | Governor only | **0** | `MSC-4` |
+| `KSC-5` | **Secret** | Credentials, keys, tokens | **Never in the repository** | **0 — must remain 0** | `MSC-5` |
+| `KSC-6` | **Regulated** | Subject to external legal control | Legal process | **0** | `MSC-6` |
+
+> **`VIS-655`.** Every object in Oship is `KSC-1` and that is not an accident of youth — it is the
+> current architecture. The repository is the only store, the repository is the boundary, and a
+> single-tier corpus needs no classification machinery. The value of writing the six levels now is
+> that **the first `KSC-3` object will arrive without warning**, most likely as a description of an
+> access-control weakness written in the course of documenting access control, and a system with no
+> classification vocabulary handles that by publishing it.
+
+```mermaid
+flowchart TD
+    OBJ["A knowledge object"]
+    C1{"Contains a credential,<br/>key, or token?"}
+    C2{"Subject to external<br/>legal control?"}
+    C3{"Reveals a business position<br/>not yet public?"}
+    C4{"Reveals an exploitable<br/>structural weakness?"}
+    C5{"Meaningful only inside<br/>the organisation?"}
+
+    K5["KSC-5 SECRET<br/>MUST NOT ENTER THE REPOSITORY<br/>halt and purge the candidate"]
+    K6["KSC-6 REGULATED"]
+    K4["KSC-4 CONFIDENTIAL"]
+    K3C["KSC-3 RESTRICTED"]
+    K2C["KSC-2 INTERNAL"]
+    K1C["KSC-1 PUBLIC"]
+
+    OBJ --> C1
+    C1 -->|"yes"| K5
+    C1 -->|"no"| C2
+    C2 -->|"yes"| K6
+    C2 -->|"no"| C3
+    C3 -->|"yes"| K4
+    C3 -->|"no"| C4
+    C4 -->|"yes"| K3C
+    C4 -->|"no"| C5
+    C5 -->|"yes"| K2C
+    C5 -->|"no"| K1C
+
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef sec fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef mid fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef pub fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class C1,C2,C3,C4,C5 q
+    class K5,K6 sec
+    class K4,K3C,K2C mid
+    class K1C pub
+```
+
+> **Diagram ID:** `DGM-VIS-148` — **Security Classification Decision Chain**
+> **Explanation:** Classification is evaluated **most-restrictive-first**, the opposite of the
+> access chain in `DGM-VIS-145`. The ordering is a safety property: a chain that asks "is this
+> public?" first will classify anything that looks harmless as public before reaching the questions
+> that would have caught a credential. `KSC-5` terminates in a purge instruction rather than a
+> classification, because a secret that reaches the repository is not a filing problem — the commit
+> history retains it and the only remedy is rotation.
+
+### TBL-VIS-650: Disclosure Matrix — Classification Against Destination
+
+| Destination | `KSC-1` | `KSC-2` | `KSC-3` | `KSC-4` | `KSC-5` | `KSC-6` |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| Public repository | **Y** | N | N | N | **N** | N |
+| Issue or PR body | **Y** | N | N | N | **N** | N |
+| Agent context window | **Y** | Y | Y by role | Governor | **N** | Governor |
+| Commit message | **Y** | N | N | N | **N** | N |
+| Generated documentation | **Y** | N | N | N | **N** | N |
+| External API call | **Y** | N | N | N | **N** | N |
+| Log output | **Y** | Y | N | N | **N** | N |
+| Error message | **Y** | N | N | N | **N** | N |
+
+> **`VIS-656`.** The `KSC-5` column is **N in every row including the agent context window**, which
+> is stricter than most schemes and follows from a property specific to agents: **anything entering
+> a model's context may be reproduced in its output.** A credential shown to an agent for a
+> legitimate purpose is a credential that may appear in a commit message three steps later. There is
+> no safe read of a secret by a text-generating system, so the matrix does not offer one.
+
+### TBL-VIS-651: Validation Rules — Security Classification, §05.17
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1446` | Every knowledge object must carry a `KSC-` level. | **HALT** |
+| `VAL-VIS-1447` | Classification is evaluated most-restrictive-first. | **HALT** |
+| `VAL-VIS-1448` | A `KSC-5` candidate must halt ingestion and trigger rotation. | **HALT** |
+| `VAL-VIS-1449` | `KSC-5` content must never enter an agent context window. | **HALT** |
+| `VAL-VIS-1450` | Classification may not be lowered without a Governor ruling. | **HALT** |
+| `VAL-VIS-1451` | Classification may be raised by any role. | **INFO** |
+| `VAL-VIS-1452` | A raised classification applies retroactively to all copies. | **HALT** |
+| `VAL-VIS-1453` | Disclosure must be checked against the destination, not the source. | **HALT** |
+| `VAL-VIS-1454` | An object's classification is independent of its containing document. | **HALT** |
+| `VAL-VIS-1455` | A document takes the highest classification of any object it contains. | **HALT** |
+| `VAL-VIS-1456` | `KSC-` and `MSC-` levels must be reconciled where both apply. | **ERROR** |
+| `VAL-VIS-1457` | Error messages must not include content above `KSC-1`. | **HALT** |
+| `VAL-VIS-1458` | Commit messages must not include content above `KSC-1`. | **HALT** |
+| `VAL-VIS-1459` | An unclassified object is treated as `KSC-4` until classified. | **HALT** |
+| `VAL-VIS-1460` | The absence of `KSC-2`+ content must be stated, not assumed. | **ERROR** |
+| `VAL-VIS-1461` | A classification decision must record the question that determined it. | **ERROR** |
+| `VAL-VIS-1462` | Aggregation of `KSC-1` objects may produce a higher classification and must be checked. | **HALT** |
+| `VAL-VIS-1463` | Redaction must be recorded as a supersession, not an edit. | **HALT** |
+| `VAL-VIS-1464` | A leaked secret may not be resolved by deletion alone. | **HALT** |
+| `VAL-VIS-1465` | Classification must not be inferred from file location. | **HALT** |
+| `VAL-VIS-1466` | An agent must state the classification of content it reproduces. | **ERROR** |
+| `VAL-VIS-1467` | Withheld content must be counted, never silently omitted. | **HALT** |
+| `VAL-VIS-1468` | Adding a classification level requires a `DEC-VIS-` record. | **HALT** |
+| `VAL-VIS-1469` | The classification model must not be described as enforced while `OBL-47` is open. | **HALT** |
+
+---
+
+## 05.18 — Knowledge Governance
+
+### AI NAVIGATION METADATA — §05.18
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read before changing how knowledge is governed, not for routine work** |
+| **AI DEPENDENCIES** | §05.13 roles · §05.14 conflict resolution · `MASTER_CONTEXT_RULES.md` |
+| **AI INPUTS** | A proposed change to the knowledge architecture itself |
+| **AI OUTPUTS** | An amendment record, or a refusal |
+| **AI IMPLEMENTATION IMPACT** | Determines whether the architecture can evolve without eroding |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1470`…`VAL-VIS-1493` |
+| **AI RELATED DOCUMENTS** | `.ai/DECISION_LOG.md` · `docs/ADR/` |
+
+> **`VIS-657`.** Governance answers a question the preceding seventeen sections cannot: **who may
+> change the rules, and by what process.** Without it every rule in PART 05 is advisory, because a
+> rule that any actor may quietly amend is a preference. Oship's governance model is deliberately
+> thin — four instruments, one authority, one escalation path — because a heavy process on a
+> single-principal repository produces ceremony rather than control.
+
+### TBL-VIS-652: The Four Governance Instruments
+
+| Instrument | Location | Governs | Amendment path | Count today |
+| :--- | :--- | :--- | :--- | :--- |
+| **ADR** | `docs/ADR/` | Architecture-wide technical choices | New ADR superseding the old | **3** |
+| **`DEC-` record** | `.ai/DECISION_LOG.md` | Repository operating decisions | New `DEC-` superseding | **10** — `DEC-001`…`DEC-010` |
+| **`DEC-VIS-` record** | This document | Vision-document decisions: identifier ranges, namespaces, remaps | New `DEC-VIS-` superseding | **46** in force, two gaps |
+| **`MASTER_CONTEXT_RULES.md`** | `docs/MASTER_CONTEXT/` | Domain registration, naming, structure | Direct amendment; L1 authority | 1 document |
+
+> **`VIS-658`.** Four instruments with **overlapping but not identical jurisdictions** is a known
+> weakness rather than a design. `DEC-VIS-044` raised a validation identifier ceiling — a decision
+> about this document — while `ADR-0001` mandates the `.ai/` control plane — a decision about the
+> repository — and no rule states which prevails if they ever conflict. **`OBL-49` records that
+> instrument precedence is undefined.** It has not yet mattered because the jurisdictions have not
+> overlapped in practice, which is exactly the condition under which such gaps are cheapest to fix
+> and easiest to forget.
+
+### TBL-VIS-653: Governance Decision Rights
+
+| Change | Who decides | Instrument | Requires | Reversible? |
+| :--- | :--- | :--- | :--- | :--- |
+| Add a `KND-` domain | Governor | `DEC-VIS-` | Domain registry entry plus universe assignment | Yes, by supersession |
+| Add a taxonomy axis | Governor | `DEC-VIS-` | Value set, mandatory flag, exclusivity | Yes |
+| Add an ontology class | Governor | `DEC-VIS-` | Parent, subclasses, prohibitions | **Rarely** — instances would be reclassified |
+| Change a trust level definition | Governor | `DEC-VIS-` | Evidence-class mapping restated | **No** — invalidates all prior assignments |
+| Raise an identifier ceiling | Governor | `DEC-VIS-` | Audit of existing use | Yes |
+| Change a `KQI-` weight | Governor | `DEC-VIS-` | Restatement of the gaming guard | Yes |
+| Add a `CODEOWNERS` principal | Repository owner | Git | — | Yes |
+| Freeze a part | Author, on completion | Part closure record | Validation pass | **No** |
+| Modify a frozen part | **Nobody** | — | — | — |
+| Delete a knowledge object | **Nobody** | — | — | — |
+
+> **`VIS-659`.** Three rows are irreversible and two have no decider at all. The irreversibility of
+> **changing a trust level definition** is the one most likely to be underestimated: every `K3`
+> assignment in this corpus means "a repository-observable check ran", and redefining `K3` does not
+> re-examine those objects — it silently relabels them. Such a change is therefore only legitimate
+> as a **new level alongside the old**, never as a redefinition, which is why `VAL-VIS-1478` states
+> it as a prohibition rather than a caution.
+
+```mermaid
+flowchart TD
+    PROP["A change to the knowledge<br/>architecture is proposed"]
+    Q1{"Does it modify a<br/>frozen part or delete<br/>an object?"}
+    Q2{"Is the proposer<br/>the Governor role?"}
+    Q3{"Is the change<br/>irreversible?"}
+    Q4{"Does it invalidate<br/>existing assignments?"}
+    Q5{"Is instrument<br/>jurisdiction clear?"}
+
+    REFUSE["REFUSE<br/>no mechanism exists"]
+    ESC1["ESCALATE to the<br/>repository owner"]
+    ESC2["ESCALATE - OBL-49<br/>precedence undefined"]
+    ADD["Require an ADDITIVE form<br/>new level or class<br/>alongside the existing one"]
+    REC["ISSUE the record<br/>DEC-VIS- with audit<br/>of existing use"]
+    APPLY["APPLY prospectively only<br/>never retroactively"]
+
+    PROP --> Q1
+    Q1 -->|"yes"| REFUSE
+    Q1 -->|"no"| Q2
+    Q2 -->|"no"| ESC1
+    Q2 -->|"yes"| Q5
+    Q5 -->|"no"| ESC2
+    Q5 -->|"yes"| Q3
+    Q3 -->|"yes"| Q4
+    Q3 -->|"no"| REC
+    Q4 -->|"yes"| ADD --> REC
+    Q4 -->|"no"| REC
+    REC --> APPLY
+
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class Q1,Q2,Q3,Q4,Q5 q
+    class REFUSE bad
+    class ESC1,ESC2,ADD warn
+    class REC,APPLY good
+```
+
+> **Diagram ID:** `DGM-VIS-149` — **The Knowledge Governance Amendment Flow**
+> **Explanation:** Five gates before any amendment is issued, and the terminal node is not "apply"
+> but **"apply prospectively only"**. That final constraint is what keeps the corpus auditable: an
+> amendment that reaches backwards changes what past records mean without touching their text,
+> producing a document whose historical claims can no longer be interpreted. The `ADD` branch is the
+> escape valve — a change that would invalidate existing assignments is not refused outright but
+> **converted into an additive form**, which is how the architecture grows without rewriting itself.
+
+### TBL-VIS-654: Governance Obligations Register — PART 05
+
+| ID | Obligation | Owner role | Blocking | Clearable by documentation? |
+| :--- | :--- | :--- | :--- | :--- |
+| `OBL-44` | Audit regexes assume three-digit identifiers; `VAL-VIS-` now four | Curator | Identifier audits | **Yes** — widen to `[0-9]{3,4}` |
+| `OBL-45` | No per-claim decay override; document-level class only | Governor | `KQI-3` freshness | No |
+| `OBL-46` | No provenance block schema implemented anywhere | Governor | `KQI-2`, all `K3`+ claims | No |
+| `OBL-47` | Access matrix has no enforcement mechanism | Governor | §05.13 in full | No |
+| `OBL-48` | No mechanism to embed a live measurement in a document | Curator | `D4` claim accuracy | No |
+| `OBL-49` | Governance instrument precedence undefined | Governor | Cross-instrument conflicts | **Yes** — a `DEC-` record |
+| `OBL-50` | `TBL-VIS-560` carries the superseded `116`→`133` diagram mapping | Curator | Identifier audit accuracy | **Yes** — correction record at closure |
+
+> **`VIS-660`.** Seven open obligations, three clearable by writing and four requiring mechanism.
+> The ratio is worth stating because it bounds what this document can achieve: **PART 05 can close
+> its own documentation debts and cannot close its implementation debts**, and any reading of the
+> part as "knowledge architecture complete" would be false on four counts. `OBL-46` is the keystone —
+> provenance blocks are the substrate on which trust, decay, and quality all depend, and until they
+> exist the preceding sections describe a system that is specified rather than operating.
+
+### TBL-VIS-655: Validation Rules — Governance, §05.18
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1470` | Every architectural change must produce a governance record. | **HALT** |
+| `VAL-VIS-1471` | A record must name the instrument under which it is issued. | **HALT** |
+| `VAL-VIS-1472` | Amendments apply prospectively only. | **HALT** |
+| `VAL-VIS-1473` | An amendment may not modify a frozen part. | **HALT** |
+| `VAL-VIS-1474` | An amendment may not delete a knowledge object. | **HALT** |
+| `VAL-VIS-1475` | Only the Governor role may issue `DEC-VIS-` records. | **HALT** |
+| `VAL-VIS-1476` | An identifier ceiling change requires an audit of existing use. | **HALT** |
+| `VAL-VIS-1477` | A change invalidating existing assignments must take an additive form. | **HALT** |
+| `VAL-VIS-1478` | A trust level definition may never be redefined; new levels may be added. | **HALT** |
+| `VAL-VIS-1479` | Instrument precedence conflicts must escalate, not be resolved locally. | **HALT** |
+| `VAL-VIS-1480` | Every obligation must name an owner role and a blocking scope. | **HALT** |
+| `VAL-VIS-1481` | Obligations must state whether documentation alone clears them. | **ERROR** |
+| `VAL-VIS-1482` | An open obligation must be reported at every part closure. | **HALT** |
+| `VAL-VIS-1483` | A part may not be described as complete while it has unclearable obligations, without saying so. | **HALT** |
+| `VAL-VIS-1484` | A governance record must be append-only. | **HALT** |
+| `VAL-VIS-1485` | Superseded records remain retrievable. | **HALT** |
+| `VAL-VIS-1486` | A record must state what it supersedes, or state that it supersedes nothing. | **HALT** |
+| `VAL-VIS-1487` | Governance must not be exercised through prose assertion in an unrelated section. | **HALT** |
+| `VAL-VIS-1488` | Adding a governance instrument requires an ADR. | **HALT** |
+| `VAL-VIS-1489` | A decision right marked "Nobody" may not be reassigned. | **HALT** |
+| `VAL-VIS-1490` | Governance ceremony must not exceed what a single principal can execute. | **INFO** |
+| `VAL-VIS-1491` | An amendment must state its reversibility. | **ERROR** |
+| `VAL-VIS-1492` | The obligations register must be cumulative across parts. | **ERROR** |
+| `VAL-VIS-1493` | Closing an obligation requires evidence, not assertion. | **HALT** |
+
+---
+
+## 05.19 — The AI Knowledge Creation Pipeline
+
+### AI NAVIGATION METADATA — §05.19
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before an agent writes a single knowledge object** |
+| **AI DEPENDENCIES** | §05.7 ingestion · §05.8 trust · §05.9 provenance |
+| **AI INPUTS** | An agent-generated proposition |
+| **AI OUTPUTS** | A `K1` candidate with full provenance, or nothing |
+| **AI IMPLEMENTATION IMPACT** | This document is itself an output of this pipeline |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1494`…`VAL-VIS-1517` |
+| **AI RELATED DOCUMENTS** | `KPP-24` never trust generated knowledge · §05.11 promotion |
+
+> **`VIS-661`.** **This document was written by an agent.** Every statement in PARTS 01 through 05
+> was generated, which means the pipeline described in this section is not hypothetical — it is the
+> process that produced the corpus a reader is currently evaluating. That reflexivity is the reason
+> `KPP-24` exists: an architecture whose own specification is AI-generated must be explicit about
+> what that generation is worth, or it becomes a system that certifies itself.
+
+### TBL-VIS-656: What an Agent May and May Not Produce
+
+| Output | Permitted | Arrival level | Condition |
+| :--- | :---: | :--- | :--- |
+| A measurement executed against the repository | **Yes** | `K3` | The command must be recorded and re-executable |
+| A restatement of an existing object | **Yes** | Level of the source | Must cite the source |
+| A derivation from cited objects | **Yes** | min over inputs | All inputs cited with levels |
+| A structural proposal — ontology, taxonomy, schema | **Yes** | `K1` | Marked PROPOSAL; requires ratification |
+| A named pattern or principle | **Yes** | `K1` | Requires two episodes plus ratification |
+| A claim about the world outside the repository | **Yes** | `K1` | Must be marked as unverifiable locally |
+| A status assignment — IMPLEMENTED, PLANNED | **Yes** | `K3` | Only from repository observation |
+| A confidence figure not derived from `K` levels | **No** | — | Prohibited outright |
+| A completion percentage | **No** | — | `VAL-VIS-719` |
+| A verification of its own output | **No** | — | `VAL-VIS-1245` |
+| A date | **No** | — | `VIS-051` |
+| A claim with no falsifier | **No** | — | `VAL-VIS-1252` |
+
+> **`VIS-662`.** The permitted column is broader than the prohibitions suggest, and that is
+> intentional. **The constraint on agent-generated knowledge is not what it may say but at what level
+> it enters** — an agent may propose an entire ontology, and that ontology arrives at `K1` and
+> governs nothing until ratified. Restricting subject matter would make agents useless; restricting
+> authority makes them safe.
+
+```mermaid
+flowchart TD
+    GEN["Agent generates a proposition"]
+    CLASS{"Which output class<br/>per TBL-VIS-656?"}
+    MEAS["MEASUREMENT<br/>record the command"]
+    DERIV["DERIVATION<br/>cite every input"]
+    PROP["PROPOSAL<br/>mark as unratified"]
+    PROHIB["PROHIBITED<br/>do not emit"]
+
+    PRV["Attach a complete<br/>KPR- provenance block<br/>method = measured or derived<br/>or generated"]
+    FALS{"Does it carry<br/>a falsifier?"}
+    LVL["Assign the arrival level<br/>generated implies K1<br/>VAL-VIS-1169"]
+    SELF{"Is the agent about to<br/>verify its own output?"}
+    HALTN["HALT<br/>self-verification prohibited"]
+    OUT["EMIT as a candidate<br/>into KIN-11 capture"]
+    RAT["Await human ratification<br/>for proposals and patterns"]
+
+    GEN --> CLASS
+    CLASS -->|"measurement"| MEAS --> PRV
+    CLASS -->|"derivation"| DERIV --> PRV
+    CLASS -->|"proposal or pattern"| PROP --> PRV
+    CLASS -->|"prohibited"| PROHIB
+    PRV --> FALS
+    FALS -->|"no"| PROHIB
+    FALS -->|"yes"| LVL --> SELF
+    SELF -->|"yes"| HALTN
+    SELF -->|"no"| OUT
+    OUT --> RAT
+
+    classDef q fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef ok fill:#004d40,stroke:#80cbc4,color:#ffffff
+    classDef bad fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+    class CLASS,FALS,SELF q
+    class MEAS,DERIV,PROP,PRV,LVL ok
+    class PROHIB,HALTN bad
+    class OUT good
+    class RAT warn
+```
+
+> **Diagram ID:** `DGM-VIS-150` — **The AI Knowledge Creation Pipeline**
+> **Explanation:** Generation is the first step and the **least significant** one; the six steps
+> after it are what determine whether the output becomes knowledge. Two nodes terminate in refusal:
+> a proposition with no falsifier is discarded rather than downgraded, because an unfalsifiable
+> claim has no level at which it is safe, and a self-verification attempt halts rather than
+> proceeding at a lower level, because the attempt itself indicates a misunderstanding of the trust
+> model. Note that the pipeline **feeds `KIN-11`** rather than writing directly — agent output takes
+> the same ingestion path as every other source and receives no shortcut.
+
+### TBL-VIS-657: Applying the Pipeline to This Document
+
+| Content class in PART 05 | Output class | Arrival level | Ratified? |
+| :--- | :--- | :--- | :--- |
+| File counts, frontmatter distribution, `CODEOWNERS` principal count | Measurement | `K3` | N/A — measured |
+| The `KND-` domain population figures | Measurement | `K3` | N/A |
+| The `K4`-unreachability conclusion | Derivation | `K3` — min over `CODEOWNERS` measurement and the `K4` definition | N/A |
+| The ontology, taxonomy axes, `KQI-` dimensions | Proposal | **`K1`** | **No** |
+| The hundred trust validation rules | Proposal | **`K1`** | **No** |
+| `KPP-` principles | Pattern | **`K1`** | **No** |
+| Every "should" and "must" in this part | Proposal | **`K1`** | **No** |
+
+> **`VIS-663`.** The honest summary of PART 05 is that **its measurements are `K3` and its
+> architecture is `K1`.** The normative content — every rule, every class, every prohibition — is an
+> unratified proposal by an agent, and remains so until a human with Governor authority ratifies it.
+> That is not a hedge. It is the pipeline applied to its own output, and a version of this section
+> that claimed otherwise would violate the rule it is describing in the act of describing it.
+
+### TBL-VIS-658: AI Creation Failure Modes — `FAL-VIS-319`…`FAL-VIS-328`
+
+| ID | Failure | Mechanism | Guard |
+| :--- | :--- | :--- | :--- |
+| `FAL-VIS-319` | **Self-certification** | Agent verifies its own output | `VAL-VIS-1245` |
+| `FAL-VIS-320` | **Fluency as evidence** | Well-written prose read as verified | `VAL-VIS-1248` |
+| `FAL-VIS-321` | **Parametric leakage** | Training-data facts presented as repository facts | `VAL-VIS-1347` |
+| `FAL-VIS-322` | **Plausible measurement** | A figure that looks measured but was estimated | `VAL-VIS-1168` |
+| `FAL-VIS-323` | **Proposal drift** | An unratified proposal cited later as settled | `VAL-VIS-1503` |
+| `FAL-VIS-324` | **Volume as progress** | Length reported as architectural completeness | `VAL-VIS-1295` |
+| `FAL-VIS-325` | **Falsifier theatre** | A falsifier that no observation could satisfy | `VAL-VIS-1268` |
+| `FAL-VIS-326` | **Derivation laundering** | Generated content labelled derived | `VAL-VIS-1169` |
+| `FAL-VIS-327` | **Confidence invention** | A percentage not traceable to `K` levels | `VAL-VIS-1499` |
+| `FAL-VIS-328` | **Ratification assumption** | Silence treated as approval | `VAL-VIS-1504` |
+
+### TBL-VIS-659: Validation Rules — AI Creation, §05.19
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1494` | Agent-generated content arrives at `K1` unless it is a recorded measurement. | **HALT** |
+| `VAL-VIS-1495` | A measurement must carry a re-executable command. | **HALT** |
+| `VAL-VIS-1496` | A derivation must cite every input with its level. | **HALT** |
+| `VAL-VIS-1497` | A proposal must be marked unratified wherever it appears. | **HALT** |
+| `VAL-VIS-1498` | An agent may not verify its own output. | **HALT** |
+| `VAL-VIS-1499` | A confidence figure not derived from `K` levels is prohibited. | **HALT** |
+| `VAL-VIS-1500` | An unfalsifiable proposition must be discarded, not downgraded. | **HALT** |
+| `VAL-VIS-1501` | Agent output must enter through `KIN-11`, never directly. | **HALT** |
+| `VAL-VIS-1502` | Provenance `method` must record `generated` where it applies. | **HALT** |
+| `VAL-VIS-1503` | An unratified proposal may not be cited as settled. | **HALT** |
+| `VAL-VIS-1504` | Silence must never be treated as ratification. | **HALT** |
+| `VAL-VIS-1505` | Parametric model knowledge must not be presented as repository fact. | **HALT** |
+| `VAL-VIS-1506` | An agent must distinguish what it observed from what it inferred. | **HALT** |
+| `VAL-VIS-1507` | Generated volume must never be reported as progress. | **ERROR** |
+| `VAL-VIS-1508` | A document authored by an agent must say so. | **HALT** |
+| `VAL-VIS-1509` | An agent must state its own output's level when summarising its work. | **HALT** |
+| `VAL-VIS-1510` | A pattern requires two episodes before it may be proposed. | **HALT** |
+| `VAL-VIS-1511` | A status assignment must derive from repository observation only. | **HALT** |
+| `VAL-VIS-1512` | An agent must not assign a status it cannot observe. | **HALT** |
+| `VAL-VIS-1513` | Prohibited outputs must not be emitted in weakened form. | **HALT** |
+| `VAL-VIS-1514` | An agent must record what it could not determine. | **ERROR** |
+| `VAL-VIS-1515` | Ratification must be recorded as a governance record. | **HALT** |
+| `VAL-VIS-1516` | Ratification by the authoring principal does not satisfy verifier independence. | **HALT** |
+| `VAL-VIS-1517` | The reflexive case — a specification generated by the process it specifies — must be disclosed. | **HALT** |
+
+---
+
+## 05.20 — The Knowledge API Model
+
+### AI NAVIGATION METADATA — §05.20
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P1 — read when designing or calling a knowledge operation** |
+| **AI DEPENDENCIES** | §05.12 retrieval flow · §05.13 access · §05.15 decay |
+| **AI INPUTS** | An operation name, a scope, and a caller role |
+| **AI OUTPUTS** | A response carrying results, trust levels, withheld counts, and decay state |
+| **AI IMPLEMENTATION IMPACT** | The contract every consumer of Oship knowledge depends on |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1518`…`VAL-VIS-1541` |
+| **AI RELATED DOCUMENTS** | §05.3 graph schema |
+
+> **`VIS-664`.** The Knowledge API is **`PLANNED`** — no endpoint, client, or handler exists in this
+> repository, and `apis/` and `sdk/` contain only `.gitkeep`. What follows is a contract
+> specification whose purpose is to constrain the eventual implementation, and its single most
+> important property is that **every response carries the epistemic state of its results**, not just
+> the results. An API that returns knowledge as bare content silently discards trust, decay, and
+> withholding, and every consumer then reinvents those concerns badly.
+
+### TBL-VIS-660: Knowledge API Operations — `KAPI-01`…`KAPI-18`
+
+| ID | Operation | Purpose | Min role | Min trust to return | Idempotent |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `KAPI-01` | `get` | Fetch one object by identifier | Reader | Any, with level attached | Yes |
+| `KAPI-02` | `search` | Facet-constrained candidate set | Reader | Any, labelled | Yes |
+| `KAPI-03` | `traverse` | Walk typed edges from a node | Reader | Any, min propagated | Yes |
+| `KAPI-04` | `resolve` | Answer a goal question per §05.12 | Reader | Gate-dependent | Yes |
+| `KAPI-05` | `classify` | Produce a facet vector | Analyst | — | Yes |
+| `KAPI-06` | `validate` | Run rules against an object | Validator | — | Yes |
+| `KAPI-07` | `create` | Admit a new object via `KIN-11` | Author | — | **No** |
+| `KAPI-08` | `supersede` | Create a successor with a `KGE-07` edge | Author | — | **No** |
+| `KAPI-09` | `deprecate` | Move to DEPRECATED | Curator | — | Yes |
+| `KAPI-10` | `link` | Create a typed edge | Author | — | **No** |
+| `KAPI-11` | `unlink` | Deprecate an edge; never delete | Curator | — | Yes |
+| `KAPI-12` | `promote` | Raise a trust level | Validator | — | **No** |
+| `KAPI-13` | `demote` | Lower a trust level | Validator | — | Yes |
+| `KAPI-14` | `revalidate` | Re-execute the original check | Validator | — | Yes |
+| `KAPI-15` | `conflict` | Register a `KGE-06` edge | Analyst | — | **No** |
+| `KAPI-16` | `provenance` | Return the `KPR-` block | Reader | — | Yes |
+| `KAPI-17` | `index` | Report `KQI-` dimensions | Reader | — | Yes |
+| `KAPI-18` | `gaps` | List `KND-048` open questions | Reader | — | Yes |
+| — | `delete` | **Does not exist** | — | — | — |
+
+> **`VIS-665`.** There is no `delete`, and `unlink` deprecates rather than removes. This is `ONT-048`
+> expressed as an API surface, and it is worth stating why it belongs here rather than only in the
+> ontology: **a prohibition enforced only by policy is enforced by whoever remembers it, while a
+> prohibition enforced by the absence of an operation is enforced by the type system.** The API is
+> the last place where the no-deletion guarantee can still be given up by accident.
+
+### TBL-VIS-661: The Universal Response Envelope
+
+| Field | Type | Always present | Meaning |
+| :--- | :--- | :---: | :--- |
+| `results` | list | **Yes** | May be empty; empty is a valid answer |
+| `result_count` | integer | **Yes** | Length of `results` |
+| `withheld_count` | integer | **Yes** | Objects excluded by the access filter |
+| `withheld_reason` | enum | When non-zero | `clearance` · `tenancy` · `lifecycle` |
+| `effective_trust` | `K0`…`K6` | **Yes** | Minimum across results, computed at read time |
+| `trust_floor_object` | id | When results non-empty | Which object set the minimum |
+| `corpus_ceiling` | `K0`…`K6` | **Yes** | `K3` today |
+| `decayed_count` | integer | **Yes** | Results whose window elapsed |
+| `contested_count` | integer | **Yes** | Results touched by a `KGE-06` edge |
+| `anchor` | commit SHA | **Yes** | Tree state the response describes |
+| `unratified` | boolean | **Yes** | Whether any result is an unratified proposal |
+| `refusal` | object | When applicable | Gap, level held, level required |
+
+> **`VIS-666`.** Twelve envelope fields for a response that may contain nothing is not overhead —
+> **the envelope is the answer in the cases that matter most.** A caller receiving zero results with
+> `withheld_count: 4` learns something entirely different from a caller receiving zero results with
+> `withheld_count: 0`: the first is a permissions question, the second is a genuine gap. Collapsing
+> both to an empty list is the single most common way knowledge systems mislead their consumers.
+
+```json
+{
+  "operation": "KAPI-04",
+  "request": {
+    "goal": "May an agent update 04_ARCHITECTURE/INDEX.md?",
+    "caller_role": "Curator",
+    "action_class": "A2"
+  },
+  "response": {
+    "results": [
+      {
+        "id": "MCX-04-001",
+        "facets": {
+          "TAX-01": "U1",
+          "TAX-02": "KND-004",
+          "TAX-03": "System",
+          "TAX-04": "L2",
+          "TAX-05": "K3",
+          "TAX-06": "DOCUMENTED",
+          "TAX-07": "D2",
+          "TAX-08": "KSC-1",
+          "TAX-10": "active"
+        },
+        "trust": "K3",
+        "decayed": false
+      },
+      {
+        "id": "VIS-192",
+        "facets": {
+          "TAX-03": "Decision",
+          "TAX-04": "L1",
+          "TAX-05": "K3",
+          "TAX-07": "D1"
+        },
+        "trust": "K3",
+        "decayed": false
+      }
+    ],
+    "result_count": 2,
+    "withheld_count": 0,
+    "effective_trust": "K3",
+    "trust_floor_object": "MCX-04-001",
+    "corpus_ceiling": "K3",
+    "decayed_count": 0,
+    "contested_count": 0,
+    "anchor": "844347f",
+    "unratified": false,
+    "verdict": "PERMIT",
+    "governing_rule": "VAL-VIS-1206"
+  }
+}
+```
+
+```json
+{
+  "operation": "KAPI-04",
+  "request": {
+    "goal": "Should Oship adopt an event-sourced persistence model?",
+    "caller_role": "Curator",
+    "action_class": "A2"
+  },
+  "response": {
+    "results": [],
+    "result_count": 0,
+    "withheld_count": 0,
+    "effective_trust": "K0",
+    "corpus_ceiling": "K3",
+    "decayed_count": 0,
+    "contested_count": 0,
+    "anchor": "844347f",
+    "unratified": false,
+    "refusal": {
+      "gap": "No object in the corpus addresses persistence model selection",
+      "level_held": "K0",
+      "level_required": "K3",
+      "related_obligation": "OBL-03",
+      "recorded_to": "KND-048"
+    },
+    "verdict": "REFUSE",
+    "governing_rule": "VAL-VIS-1330"
+  }
+}
+```
+
+> **`VIS-667`.** The two payloads differ in one structural respect that carries all the meaning: the
+> second has an empty `results` array **and a populated `refusal` object.** A conventional API would
+> return the empty array alone and let the caller decide, which for an LLM caller means deciding
+> from parametric memory. The refusal object removes that option by making the absence explicit,
+> named, and traceable to an obligation the repository already tracks.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant AG as Agent
+    participant API as Knowledge API
+    participant ACL as Access Filter
+    participant GR as Knowledge Graph
+    participant DEC as Decay Evaluator
+    participant LOG as Episode Log
+
+    AG->>API: KAPI-04 resolve with goal and role
+    API->>API: decompose into facet constraints
+    API->>GR: facet-constrained traversal
+    GR-->>API: candidate set with recorded levels
+    API->>ACL: filter by KSC clearance and tenancy
+    ACL-->>API: cleared subset plus withheld count
+    API->>DEC: compute effective trust at anchor
+    DEC-->>API: per-object effective levels plus decayed count
+    API->>API: select minimum sufficient set
+    API->>API: check for KGE-06 contradiction edges
+
+    alt contradiction present
+        API-->>AG: HALT envelope with contested count
+    else confidence below threshold
+        API-->>AG: REFUSE envelope naming the gap
+        API->>LOG: record the refusal and the gap
+    else permitted
+        API-->>AG: PERMIT envelope with effective trust
+        API->>LOG: record the episode
+    end
+```
+
+> **Diagram ID:** `DGM-VIS-151` — **Knowledge API Resolve Sequence**
+> **Explanation:** Six participants and three mutually exclusive outcomes. The ordering of the
+> middle three calls is contractual rather than incidental: **access filtering precedes decay
+> evaluation, which precedes selection.** Filtering first prevents an object the caller may not see
+> from influencing the trust floor; evaluating decay before selection prevents a stale object from
+> being chosen as the minimum sufficient set. Every branch writes to the episode log, including
+> refusals, which is what makes the gap register self-populating rather than manually curated.
+
+### TBL-VIS-662: Validation Rules — Knowledge API, §05.20
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1518` | Every response must carry the full envelope. | **HALT** |
+| `VAL-VIS-1519` | An empty result set must be distinguishable from a fully withheld one. | **HALT** |
+| `VAL-VIS-1520` | `effective_trust` must be computed at read time. | **HALT** |
+| `VAL-VIS-1521` | `corpus_ceiling` must appear in every response. | **HALT** |
+| `VAL-VIS-1522` | `anchor` must be a commit SHA. | **HALT** |
+| `VAL-VIS-1523` | No operation named `delete` may exist. | **HALT** |
+| `VAL-VIS-1524` | `unlink` must deprecate, never remove. | **HALT** |
+| `VAL-VIS-1525` | Non-idempotent operations must be explicitly marked. | **ERROR** |
+| `VAL-VIS-1526` | Every operation must enforce the role minimum from `TBL-VIS-660`. | **HALT** |
+| `VAL-VIS-1527` | A refusal must populate the refusal object, not merely return empty. | **HALT** |
+| `VAL-VIS-1528` | A refusal must record the gap to `KND-048`. | **ERROR** |
+| `VAL-VIS-1529` | Access filtering must precede decay evaluation. | **HALT** |
+| `VAL-VIS-1530` | Decay evaluation must precede context selection. | **HALT** |
+| `VAL-VIS-1531` | Results must carry their facet vector. | **ERROR** |
+| `VAL-VIS-1532` | `unratified` must be true if any result is an unratified proposal. | **HALT** |
+| `VAL-VIS-1533` | `trust_floor_object` must be named whenever results are non-empty. | **ERROR** |
+| `VAL-VIS-1534` | The API must not be described as implemented. | **HALT** |
+| `VAL-VIS-1535` | A contradiction in the result set must halt, not filter. | **HALT** |
+| `VAL-VIS-1536` | Pagination must not split a minimum sufficient set. | **ERROR** |
+| `VAL-VIS-1537` | Caching a response must cache its anchor and invalidate on any qualifying commit. | **HALT** |
+| `VAL-VIS-1538` | An error response must carry the same envelope fields. | **ERROR** |
+| `VAL-VIS-1539` | The API must never return content above the caller's clearance, even summarised. | **HALT** |
+| `VAL-VIS-1540` | Adding an operation requires a `DEC-VIS-` record. | **HALT** |
+| `VAL-VIS-1541` | Every operation must be traceable in the episode log. | **ERROR** |
+
+---
+
+## 05.21 — Knowledge Anti-Patterns
+
+### AI NAVIGATION METADATA — §05.21
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read as a checklist before and after any knowledge work** |
+| **AI DEPENDENCIES** | All of PART 05 |
+| **AI INPUTS** | A proposed knowledge action or an existing corpus state |
+| **AI OUTPUTS** | Detection of a named anti-pattern and its remedy |
+| **AI IMPLEMENTATION IMPACT** | Most corpus damage arrives through these fifty-five routes |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1542`…`VAL-VIS-1565` |
+| **AI RELATED DOCUMENTS** | `.ai/COMMON_MISTAKES.md` |
+
+> **`VIS-668`.** Fifty-five anti-patterns follow, `KAP-01`…`KAP-55`, in six groups. Each carries a
+> **present-in-Oship** column, and it is populated honestly: **eighteen of the fifty-five are
+> currently present in this repository**, including several in this very document. An anti-pattern
+> catalogue that finds no instances in its own corpus has not been applied to it.
+
+### TBL-VIS-663: Anti-Patterns — Group A, Creation `KAP-01`…`KAP-10`
+
+| ID | Anti-pattern | Why it is harmful | Present in Oship | Remedy |
+| :--- | :--- | :--- | :---: | :--- |
+| `KAP-01` | **Undated authority** — a claim with no anchor | Cannot be tied to a tree state | **Yes** — most prose statements | Attach `KPR-06` |
+| `KAP-02` | **Orphan fact** — no basis recorded | Unrepeatable | **Yes** | Record the command |
+| `KAP-03` | **Prose-encoded structure** — facets buried in sentences | Unqueryable | **Yes** — pervasively | Structured blocks |
+| `KAP-04` | **Fluency as evidence** | Confident writing read as verified | **Yes** — risk of this document | State levels explicitly |
+| `KAP-05` | **Copy-propagation** — a claim repeated until it looks corroborated | Manufactures false consensus | **Yes** — the "24 of 24" badge | Cite the single source |
+| `KAP-06` | **Aspirational tense** — planned written as present | Misleads every downstream reader | Guarded by the status vocabulary | Status labels |
+| `KAP-07` | **Unfalsifiable claim** | Cannot be disproved, so cannot be trusted | Partly | Require `KPR-16` |
+| `KAP-08` | **Estimated as measured** | A guess wearing a number | Guarded | `method` field |
+| `KAP-09` | **Silent scope** — a claim whose subject is undefined | Reader supplies the subject | **Yes** — `AMB-001` | Disambiguate |
+| `KAP-10` | **Definition by example only** | The boundary is never stated | Partly | State the intension |
+
+### TBL-VIS-664: Anti-Patterns — Group B, Structure `KAP-11`…`KAP-20`
+
+| ID | Anti-pattern | Why it is harmful | Present in Oship | Remedy |
+| :--- | :--- | :--- | :---: | :--- |
+| `KAP-11` | **Single-hierarchy filing** | Storage constrains semantics | **Yes** — the 24-domain tree | Faceted classification |
+| `KAP-12` | **`related_to` sprawl** | Untyped edges carry no meaning | N/A — no graph | 25% cap |
+| `KAP-13` | **Orphan node** — no edges | Unreachable by traversal | N/A | Require one typed edge |
+| `KAP-14` | **Deep hierarchy** — more than four levels | Navigation cost exceeds benefit | No | Flatten with facets |
+| `KAP-15` | **Category of one** | A class with a single instance is a name, not a class | Partly | Merge or justify |
+| `KAP-16` | **Overlapping facet vocabularies** | Ambiguous classification | No | Disjoint value sets |
+| `KAP-17` | **Optional mandatory field** | A required field that is often blank | **Yes** — frontmatter, 51 of 87 short | Enforce or demote |
+| `KAP-18` | **Schema drift** — variants proliferate | Validation becomes impossible | **Yes** — 9, 15, and 16-key blocks | One schema |
+| `KAP-19` | **Nested exception** — a rule with rule-specific exemptions | Unenforceable | No | Additive amendment |
+| `KAP-20` | **Identifier reuse** | Destroys historical reference | No — `VIS-347` | Never reuse |
+
+### TBL-VIS-665: Anti-Patterns — Group C, Trust `KAP-21`…`KAP-30`
+
+| ID | Anti-pattern | Why it is harmful | Present in Oship | Remedy |
+| :--- | :--- | :--- | :---: | :--- |
+| `KAP-21` | **Self-verification** | Author checks own work and calls it verified | **Yes** — structurally forced | Second principal |
+| `KAP-22` | **Trust averaging** | One weak input hidden by strong ones | Guarded | Minimum rule |
+| `KAP-23` | **Trust by authority** | L1 status read as verification | Risk | Compare evidence first |
+| `KAP-24` | **Trust by volume** | Many sources treated as many witnesses | **Yes** | Count independent origins |
+| `KAP-25` | **Sticky trust** — a level that never decays | Stale claims stay confident | **Yes** — no decay mechanism | `OBL-45`, `OBL-48` |
+| `KAP-26` | **Level inflation on restatement** | A `K1` claim quoted in an L1 doc becomes `K3` | Risk | Level travels with the claim |
+| `KAP-27` | **Confidence percentages** | False precision | Prohibited | `K` levels only |
+| `KAP-28` | **Ceiling denial** — reporting levels above the corpus ceiling | Fabricated assurance | Guarded | State the ceiling |
+| `KAP-29` | **Verification theatre** — a check that cannot fail | Passes always; proves nothing | Risk | Falsifier required |
+| `KAP-30` | **Retroactive verification** | Provenance reconstructed after the fact | Risk | `VAL-VIS-1272` |
+
+### TBL-VIS-666: Anti-Patterns — Group D, Retrieval `KAP-31`…`KAP-40`
+
+| ID | Anti-pattern | Why it is harmful | Present in Oship | Remedy |
+| :--- | :--- | :--- | :---: | :--- |
+| `KAP-31` | **Context flooding** | Minimum trust collapses; noise dominates | Risk | Minimum sufficient set |
+| `KAP-32` | **Empty-set fabrication** | No results, answer generated anyway | **Highest-severity risk** | Explicit refusal |
+| `KAP-33` | **Silent withholding** | Filtered results not counted | N/A | `withheld_count` |
+| `KAP-34` | **Recency preference** | Newest treated as truest | Risk | Evidence first |
+| `KAP-35` | **Deprecated resurfacing** | Superseded content returned as current | Risk | Lifecycle filter |
+| `KAP-36` | **Goal drift** | Adjacent question answered | Risk | Restate the goal |
+| `KAP-37` | **Threshold shopping** | Action reclassified to fit evidence | Risk | Fixed thresholds |
+| `KAP-38` | **Unrecorded refusal** | The gap is never learned | **Yes** | Log every refusal |
+| `KAP-39` | **Parametric substitution** | Model knowledge fills a corpus gap | **Highest-severity risk** | `VAL-VIS-1347` |
+| `KAP-40` | **Summary-of-summary** | Provenance lost through layers | Risk | Cite originals |
+
+### TBL-VIS-667: Anti-Patterns — Group E, Governance `KAP-41`…`KAP-48`
+
+| ID | Anti-pattern | Why it is harmful | Present in Oship | Remedy |
+| :--- | :--- | :--- | :---: | :--- |
+| `KAP-41` | **Rule by prose** | Governance exercised in a narrative aside | Risk | Formal records only |
+| `KAP-42` | **Retroactive amendment** | Past records silently change meaning | No | Prospective only |
+| `KAP-43` | **Undefined precedence** | Instruments conflict with no tiebreak | **Yes** — `OBL-49` | A `DEC-` record |
+| `KAP-44` | **Obligation drift** | Open items lose their owner | Guarded | Owner role required |
+| `KAP-45` | **Completion by declaration** | A part called complete while blocked | Guarded | `VAL-VIS-1483` |
+| `KAP-46` | **Ceremony beyond capacity** | Process no single principal can execute | Risk | `VAL-VIS-1490` |
+| `KAP-47` | **Silent ratification** | Absence of objection read as approval | **Yes** — risk in this document | Explicit records |
+| `KAP-48` | **Definition redefinition** | A level's meaning changed under existing assignments | No | Additive only |
+
+### TBL-VIS-668: Anti-Patterns — Group F, Reporting `KAP-49`…`KAP-55`
+
+| ID | Anti-pattern | Why it is harmful | Present in Oship | Remedy |
+| :--- | :--- | :--- | :---: | :--- |
+| `KAP-49` | **Unqualified percentage** | Implies a measured denominator | Prohibited — `VAL-VIS-719` | Absence vocabulary |
+| `KAP-50` | **Zero for unmeasured** | Asserts a measurement that never ran | Guarded | `NOT YET MEASURED` |
+| `KAP-51` | **Volume as progress** | Length reported as completeness | **Yes** — risk here | Report by trust level |
+| `KAP-52` | **Composite over blanks** | An index computed from partial dimensions | Guarded | `VAL-VIS-1422` |
+| `KAP-53` | **Green-by-omission** | Dashboards shrink what they cannot measure | Guarded | `IMG-VIS-053` |
+| `KAP-54` | **Progress against a blocked gate** | Improvement reported while a HALT stands | **Yes** — risk | State the gate |
+| `KAP-55` | **Anchorless metric** | A figure with no commit reference | **Yes** | Attach the anchor |
+
+> **`VIS-669`.** Two entries are marked **highest-severity risk** rather than present:
+> `KAP-32` empty-set fabrication and `KAP-39` parametric substitution. They are grouped apart
+> because they are the only anti-patterns that **produce content indistinguishable from correct
+> content**. Every other failure leaves a trace — a missing anchor, an inflated level, a stale
+> claim — that an auditor can find. A fabricated answer to a question the corpus could not answer
+> looks exactly like a well-researched one, which is why they are guarded by HALT rules rather than
+> by review.
+
+### TBL-VIS-669: Validation Rules — Anti-Patterns, §05.21
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1542` | The anti-pattern catalogue must be applied to this corpus, not only to future ones. | **HALT** |
+| `VAL-VIS-1543` | Each anti-pattern must carry a present-in-corpus verdict. | **HALT** |
+| `VAL-VIS-1544` | A present anti-pattern must be recorded as an obligation or accepted with a reason. | **ERROR** |
+| `VAL-VIS-1545` | `KAP-32` and `KAP-39` must be guarded by HALT rules, never by review. | **HALT** |
+| `VAL-VIS-1546` | Adding an anti-pattern requires no governance record; removing one does. | **ERROR** |
+| `VAL-VIS-1547` | An anti-pattern may not be marked absent without a check. | **HALT** |
+| `VAL-VIS-1548` | Each anti-pattern must name a remedy. | **ERROR** |
+| `VAL-VIS-1549` | A remedy that is itself unimplemented must say so. | **HALT** |
+| `VAL-VIS-1550` | The catalogue must be re-run at every part closure. | **ERROR** |
+| `VAL-VIS-1551` | The count of present anti-patterns must be reported, never suppressed. | **HALT** |
+| `VAL-VIS-1552` | An anti-pattern present by structural necessity must name the structural cause. | **HALT** |
+| `VAL-VIS-1553` | `KAP-21` self-verification must be attributed to the `CODEOWNERS` constraint, not to negligence. | **ERROR** |
+| `VAL-VIS-1554` | A document may not claim to avoid an anti-pattern it exhibits. | **HALT** |
+| `VAL-VIS-1555` | Anti-pattern detection must not depend on the author's self-assessment alone. | **ERROR** |
+| `VAL-VIS-1556` | Remedies must be traceable to specific validation rules. | **ERROR** |
+| `VAL-VIS-1557` | An anti-pattern marked risk must state the condition under which it becomes present. | **ERROR** |
+| `VAL-VIS-1558` | The catalogue must not be described as exhaustive. | **HALT** |
+| `VAL-VIS-1559` | A newly discovered anti-pattern must be appended, never substituted. | **HALT** |
+| `VAL-VIS-1560` | Anti-pattern identifiers are never reused. | **HALT** |
+| `VAL-VIS-1561` | Groups must not be renumbered when entries are added. | **HALT** |
+| `VAL-VIS-1562` | A remedy may not introduce another catalogued anti-pattern. | **ERROR** |
+| `VAL-VIS-1563` | Present anti-patterns must be cross-listed in `.ai/COMMON_MISTAKES.md`. | **ERROR** |
+| `VAL-VIS-1564` | The catalogue must be readable independently of the rest of PART 05. | **INFO** |
+| `VAL-VIS-1565` | A corpus reporting zero present anti-patterns must be treated as unaudited. | **HALT** |
+
+---
+
+## 05.22 — AI Interpretation Guide and the Knowledge Loading Sequence
+
+### AI NAVIGATION METADATA — §05.22
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this is the section an agent reads first in practice** |
+| **AI DEPENDENCIES** | All of PART 05 |
+| **AI INPUTS** | A cold-start agent with a task |
+| **AI OUTPUTS** | A correctly ordered, minimal, trust-labelled context |
+| **AI IMPLEMENTATION IMPACT** | Wrong load order produces confident wrong answers on the first turn |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1566`…`VAL-VIS-1589` |
+| **AI RELATED DOCUMENTS** | `.ai/CONTEXT_ROUTER.md` · `.ai/AI_AGENT_OPERATING_MANUAL.md` |
+
+> **`VIS-670`.** Load order is not a convenience. **An agent that reads capabilities before it reads
+> the trust ceiling will believe the capability list**, and every subsequent inference inherits that
+> belief. The sequence below is ordered so that each stage constrains the interpretation of the
+> next — constraints before content, prohibitions before permissions, ceilings before claims.
+
+### TBL-VIS-670: The Knowledge Loading Sequence
+
+| Stage | Load | Why at this position | Skippable |
+| :--- | :--- | :--- | :--- |
+| **L0** | Status vocabulary and absence vocabulary | Without it, every status label is misread | **No** |
+| **L1** | Trust levels `K0`…`K6` and the corpus ceiling `K3` | Bounds everything read afterwards | **No** |
+| **L2** | Prohibitions — `A4`, deletion, frozen parts, `README.md` exclusion | Prevents an action before any content suggests one | **No** |
+| **L3** | Open HALT gates and obligations | Tells the agent what it may not conclude | **No** |
+| **L4** | The taxonomy axes | Enables constrained search instead of scanning | **No** |
+| **L5** | Task-relevant `KND-` domains only | Minimum sufficient set | — |
+| **L6** | Task-relevant objects with their facets and levels | The actual content | — |
+| **L7** | Contradiction edges touching the loaded set | Late, because it is scoped to what was loaded | **No** |
+| **L8** | Episode memory, labelled as memory | Last, and never as authority | Yes |
+
+> **`VIS-671`.** Six of nine stages are unskippable and five of those precede any domain content. The
+> shape is deliberate: **the majority of the load budget is spent on constraints rather than facts.**
+> A conventional context strategy inverts this — load the relevant documents, then the rules if space
+> remains — and produces an agent that knows a great deal and is bounded by nothing.
+
+```mermaid
+flowchart TD
+    L0["L0 vocabulary<br/>status and absence terms"]
+    L1["L1 trust ladder<br/>plus corpus ceiling K3"]
+    L2["L2 prohibitions<br/>A4, deletion, frozen parts, README"]
+    L3["L3 open HALT gates<br/>and obligations"]
+    L4["L4 taxonomy axes"]
+    L5["L5 task-relevant KND domains"]
+    L6["L6 objects with facets and levels"]
+    L7["L7 contradiction edges<br/>scoped to the loaded set"]
+    L8["L8 episode memory<br/>labelled as memory"]
+    ACT["Agent may now act<br/>within the loaded bounds"]
+
+    L0 --> L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8 --> ACT
+    L7 -->|"contradiction found"| HALTX["HALT before acting"]
+    L3 -->|"a HALT gate covers the task"| HALTX
+
+    classDef must fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef cont fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef opt fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef good fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    class L0,L1,L2,L3,L4,L7 must
+    class L5,L6 cont
+    class L8 opt
+    class ACT good
+    class HALTX must
+```
+
+> **Diagram ID:** `DGM-VIS-152` — **The Knowledge Loading Sequence**
+> **Explanation:** A strictly linear chain with two early exits. The red stages are mandatory
+> constraints, the blue are task content, the purple is memory — and the colouring makes the budget
+> visible at a glance. The exit from `L3` matters most: an agent whose task is covered by an open
+> HALT gate should stop **before loading any content**, because reading the content will produce an
+> opinion the agent is not permitted to act on, and an opinion held is an opinion likely to leak into
+> the response.
+
+### TBL-VIS-671: Interpretation Rules for an Agent Reading This Document
+
+| Situation | Correct interpretation |
+| :--- | :--- |
+| A statement uses "must" | It is a rule at L1 authority and an **unratified proposal** at `K1` |
+| A statement reports a number | `K3` if a command is shown, `K1` otherwise; `D4` unless stated |
+| A capability is listed | Read its status label; the list is not an inventory of working software |
+| A diagram shows a pipeline | The pipeline is `PLANNED` unless a section says otherwise |
+| A table shows a registry | The registry exists as text; no mechanism reads it |
+| A trust level above `K3` appears | It is definitional, not an assignment; the ceiling is `K3` |
+| A percentage appears | Only permitted with a stated denominator and anchor |
+| `NOT YET MEASURED` appears | The measurement did not run; this is not zero |
+| `UNKNOWN` appears | Requires repository verification before use |
+| A section is marked frozen | Read it; never edit it |
+| `README.md` is referenced | Do not load it as context — `FAL-VIS-171` |
+| Two statements disagree | Halt and report; do not select |
+
+> **`VIS-672`.** The first row is the one most likely to be misapplied. Every normative statement in
+> PART 05 is simultaneously **binding in authority and unratified in trust**, which sounds
+> contradictory and is not: authority says where a rule sits in the hierarchy if adopted, trust says
+> how much evidence supports adopting it. An agent should follow these rules — they are the best
+> available specification — while never citing them as established practice.
+
+### TBL-VIS-672: Validation Rules — Interpretation, §05.22
+
+| Rule | Statement | Severity |
+| :--- | :--- | :--- |
+| `VAL-VIS-1566` | Load stages `L0`…`L4` and `L7` must not be skipped. | **HALT** |
+| `VAL-VIS-1567` | The trust ceiling must be loaded before any content. | **HALT** |
+| `VAL-VIS-1568` | Prohibitions must be loaded before permissions. | **HALT** |
+| `VAL-VIS-1569` | An open HALT gate covering the task must stop the load. | **HALT** |
+| `VAL-VIS-1570` | Memory must be loaded last and labelled. | **HALT** |
+| `VAL-VIS-1571` | `README.md` must not be loaded. | **HALT** |
+| `VAL-VIS-1572` | Content must not be loaded without its facets and level. | **HALT** |
+| `VAL-VIS-1573` | An agent must state which stages it loaded. | **ERROR** |
+| `VAL-VIS-1574` | Normative statements must be treated as unratified proposals. | **HALT** |
+| `VAL-VIS-1575` | A number without a command must be treated as `K1`. | **HALT** |
+| `VAL-VIS-1576` | A diagram must not be read as evidence of implementation. | **HALT** |
+| `VAL-VIS-1577` | A registry must not be read as a mechanism. | **HALT** |
+| `VAL-VIS-1578` | Levels above `K3` in definitions must not be read as assignments. | **HALT** |
+| `VAL-VIS-1579` | `NOT YET MEASURED` must never be rendered as zero. | **HALT** |
+| `VAL-VIS-1580` | `UNKNOWN` must trigger verification, not assumption. | **HALT** |
+| `VAL-VIS-1581` | Frozen sections must be read but never edited. | **HALT** |
+| `VAL-VIS-1582` | Disagreement must halt the agent. | **HALT** |
+| `VAL-VIS-1583` | The loading sequence must be re-run when the task changes materially. | **ERROR** |
+| `VAL-VIS-1584` | Partial loading must be disclosed in the response. | **HALT** |
+| `VAL-VIS-1585` | An agent must not infer permission from the absence of a prohibition. | **HALT** |
+| `VAL-VIS-1586` | An agent must not treat document length as coverage. | **ERROR** |
+| `VAL-VIS-1587` | Interpretation rules take precedence over surface phrasing. | **HALT** |
+| `VAL-VIS-1588` | An agent must record which interpretation rule it applied when a statement was ambiguous. | **ERROR** |
+| `VAL-VIS-1589` | This guide must be loaded before any other section of PART 05. | **HALT** |
+
+---
+
+## 05.A — PART 05 APPENDIX
+
+### 05.A.1 — Controlled Vocabulary
+
+### TBL-VIS-673: PART 05 Controlled Vocabulary
+
+| Term | Definition | Not to be confused with |
+| :--- | :--- | :--- |
+| **Data** | A recorded value with no attached context | Knowledge |
+| **Information** | Data placed in a context | Understanding |
+| **Knowledge** | Data plus context, relationship, meaning, validation, provenance, and the ability to act | Information |
+| **Understanding** | The capacity to apply knowledge to an unseen case | Knowledge |
+| **Memory** | A record of an episode | Knowledge |
+| **Trust level** | What has been done to an object | Confidence |
+| **Confidence** | A belief held by an actor — **prohibited as a recorded value** | Trust level |
+| **Evidence class** | The kind of observation supporting a claim | Trust level, to which it maps one-to-one |
+| **Provenance** | The six-part origin record of a claim | Attribution |
+| **Decay** | Loss of validity because the described world changed | Deletion |
+| **Supersession** | Replacement retaining the predecessor | Correction, which is one kind of it |
+| **Facet** | One classification axis value | Tag |
+| **Ontology** | What kinds of things exist and how they relate | Taxonomy |
+| **Taxonomy** | How existing things are classified for retrieval | Ontology |
+| **Ratification** | Human adoption of an agent proposal | Review |
+| **Anchor** | The commit SHA at which a claim was observed | Timestamp — **prohibited** |
+| **Falsifier** | The observation that would disprove a claim | Caveat |
+
+### TBL-VIS-674: `AMB-001` Resolution — the Three Senses of "creator"
+
+| New term | Sense | Where it applies | Replaces "creator" in |
+| :--- | :--- | :--- | :--- |
+| **originating principal** | The GitHub principal under whose authority an object was committed | Provenance `KPR-05` | Governance and access contexts |
+| **authoring agent** | The process or person that produced the text | Provenance `KPR-03`/`KPR-04` | Creation and generation contexts |
+| **content owner** | The role accountable for an object's continued correctness | Frontmatter `Owner` | Ownership and review contexts |
+| ~~creator~~ | **DEPRECATED surface form** | — | Maps to none; must be replaced at each use |
+
+> **`VIS-673`.** This table is the documentation half of clearing `VAL-VIS-456`. The remaining half
+> is mechanical: each existing use of "creator" in PARTS 01 through 04 must be **annotated at the
+> current end of the document** — never edited in place, since those parts are frozen — with the
+> sense intended. `OBL-51` records that annotation as outstanding; until it is done, `VAL-VIS-456`
+> remains a HALT and the release gate stays closed.
+
+### 05.A.2 — Registry Catalogue
+
+### TBL-VIS-675: PART 05 Namespace Catalogue
+
+| Namespace | Range allocated | Consumed in PART 05 | Meaning |
+| :--- | :--- | :--- | :--- |
+| `K-L0`…`K-L7` | 8 | 8 | Knowledge maturity levels |
+| `KPP-01`…`KPP-60` | 60 | 30 | Knowledge philosophy principles |
+| `KND-001`…`KND-120` | 120 | 50 | Knowledge domains |
+| `KGN-01`…`KGN-30` | 30 | 11 | Graph node types |
+| `KGE-01`…`KGE-40` | 40 | 8 | Graph edge types |
+| `SEM-01`…`SEM-40` | 40 | 24 | Semantic operations |
+| `ONT-001`…`ONT-150` | 150 | 50 | Ontology rules |
+| `TAX-01`…`TAX-60` | 60 | 10 | Taxonomy axes |
+| `KIN-01`…`KIN-40` | 40 | 20 | Ingestion sources and stages |
+| `K0`…`K6` | 7 | 7 | Trust levels |
+| `KPR-01`…`KPR-40` | 40 | 18 | Provenance fields |
+| `KSC-1`…`KSC-6` | 6 | 6 | Security classifications |
+| `KAPI-01`…`KAPI-30` | 30 | 18 | API operations |
+| `KQI-1`…`KQI-7` | 7 | 7 | Quality dimensions — **new in §05.16** |
+| `KAP-01`…`KAP-55` | 55 | 55 | Anti-patterns — **new in §05.21** |
+| `AMB-001`…` ` | open | 1 | Registered ambiguities — **new in §05.4** |
+
+> **`VIS-674`.** Three namespaces — `KQI-`, `KAP-`, and `AMB-` — were created during PART 05 and were
+> **not anticipated by `DEC-VIS-046`**, which declared thirteen. That is a governance defect of
+> exactly the kind §05.18 describes: namespaces were created by writing rather than by record.
+> **`DEC-VIS-047` below regularises them retrospectively**, and the fact that it must do so
+> retrospectively is itself worth recording as an instance of `KAP-41`, rule by prose.
+
+### TBL-VIS-676: `DEC-VIS-047` — Retrospective Namespace Regularisation
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-VIS-047` |
+| **Decision** | Register `KQI-1`…`KQI-20`, `KAP-01`…`KAP-120`, and `AMB-001`…`AMB-060` as governed namespaces |
+| **Supersedes** | Extends `DEC-VIS-046`; supersedes nothing |
+| **Reason** | Three namespaces were introduced during authoring without a prior record |
+| **Alternatives** | Rename the identifiers into existing namespaces — rejected, `VIS-347` forbids reuse and renaming breaks references |
+| **Reversible** | No — identifiers are already in use |
+| **Instrument** | `DEC-VIS-` under §05.18 |
+| **Defect acknowledged** | `KAP-41` rule by prose; recorded, not excused |
+
+### TBL-VIS-677: `TBL-VIS-560` Correction Record — `OBL-50`
+
+| Field | Value |
+| :--- | :--- |
+| **Corrects** | `TBL-VIS-560` in §05.0, row mapping the user-requested Knowledge Universe Map diagram |
+| **Superseded value** | `116` → `DGM-VIS-133` |
+| **Correct value** | `116` → **`DGM-VIS-134`** |
+| **Reason** | `DGM-VIS-133` was allocated to the §05.1 Principle Families diagram at write time; the mapping row was written before the allocation settled |
+| **Change class** | Correction — the prior value was never true |
+| **Method** | Append-only correction; `TBL-VIS-560` is **not** edited, per the frozen-region rule |
+| **Effect** | `DEC-VIS-043` as stated in §05.0 remains authoritative; only the `TBL-VIS-560` row is corrected |
+| **Obligation** | `OBL-50` — **CLOSED by this record** |
+
+### 05.A.3 — Knowledge Object Schemas
+
+```yaml
+# Canonical knowledge object — YAML form
+# Status: PROPOSED. No implementation reads this schema.
+knowledge_object:
+  id: "VIS-624"
+  kind: "Knowledge"
+
+  content:
+    statement: "K level and E class map one to one by construction"
+    surface_forms:
+      - "trust maps to evidence"
+
+  facets:
+    TAX-01_universe: "U1"
+    TAX-02_domain: "KND-001"
+    TAX-03_class: "Knowledge"
+    TAX-04_authority: "L1"
+    TAX-05_trust: "K1"
+    TAX-06_status: "PROPOSED"
+    TAX-07_decay: "D1"
+    TAX-08_security: "KSC-1"
+    TAX-09_audience: "both"
+    TAX-10_lifecycle: "active"
+
+  provenance:
+    KPR-01_origin: "docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md"
+    KPR-02_origin_kind: "KIN-07"
+    KPR-03_author_type: "agent"
+    KPR-04_author_role: "Documentation Authoring Agent"
+    KPR-05_author_principal: "afshin-omnisystem"
+    KPR-06_observed_at: "844347f"
+    KPR-08_why: "Whether trust and evidence may diverge"
+    KPR-09_basis:
+      - "PART 04 section 04.2 evidence class definitions"
+      - "section 05.8 trust level definitions"
+    KPR-10_method: "generated"
+    KPR-11_validation_method: "NONE"
+    KPR-12_validated_by: null
+    KPR-14_trust_level: "K1"
+    KPR-15_revalidation_window: "on amendment"
+    KPR-16_falsifier: "A ratified case where a K level is legitimately held without its mapped E class"
+
+  edges:
+    - type: "KGE-02"
+      target: "VIS-622"
+    - type: "KGE-05"
+      target: "TBL-VIS-607"
+
+  envelope_defaults:
+    corpus_ceiling: "K3"
+    unratified: true
+```
+
+```json
+{
+  "$schema_note": "PROPOSED. Structural mirror of the YAML form above.",
+  "id": "VAL-VIS-1224",
+  "kind": "Knowledge",
+  "content": {
+    "statement": "Aggregate trust equals the minimum of constituent trusts"
+  },
+  "facets": {
+    "TAX-03_class": "Knowledge",
+    "TAX-04_authority": "L1",
+    "TAX-05_trust": "K1",
+    "TAX-06_status": "PROPOSED",
+    "TAX-07_decay": "D1",
+    "TAX-08_security": "KSC-1",
+    "TAX-10_lifecycle": "active"
+  },
+  "provenance": {
+    "author_type": "agent",
+    "method": "generated",
+    "validated_by": null,
+    "trust_level": "K1",
+    "falsifier": "A ratified aggregation rule that is not the minimum"
+  },
+  "severity": "HALT",
+  "edges": [
+    { "type": "KGE-03", "target": "FAL-VIS-297" },
+    { "type": "KGE-01", "target": "K0" }
+  ]
+}
+```
+
+> **`VIS-675`.** Both schemas set `validated_by` to null and `trust_level` to `K1`, which is not an
+> artefact of the example — **it is the only legal value for an agent-authored schema proposal under
+> `VAL-VIS-1169`.** A schema example showing `K4` would be a demonstration of the failure mode the
+> schema exists to prevent.
+
+### 05.A.4 — Worked Validation Examples
+
+### TBL-VIS-678: Three Validation Walkthroughs
+
+| Case | Object | Rules applied | Verdict |
+| :--- | :--- | :--- | :--- |
+| **A** | A new measured figure with a recorded command and an anchor | `1156`, `1158`, `1165`, `1168`, `1194`, `1234` | **`K3`** — passes; window is any commit |
+| **B** | An agent-proposed ontology class with a falsifier | `1142`, `1169`, `1497`, `1500`, `1503` | **`K1` PROPOSAL** — usable, not citable as settled |
+| **C** | A `K3` figure whose command no longer runs | `1200`, `1195`, `1276`, `1407` | **Demoted to `K2`**, then `K1` on window elapse |
+
+### TBL-VIS-679: Failure Walkthrough — an Object That Must Be Rejected
+
+| Step | Check | Result |
+| :--- | :--- | :--- |
+| 1 | `VAL-VIS-1154` — carries exactly one `K` level | Pass — claims `K4` |
+| 2 | `VAL-VIS-1159` — `K4` requires a distinct verifier | **FAIL** |
+| 3 | `VAL-VIS-1178` — no object above `K3` while one principal | **FAIL — HALT** |
+| 4 | Ingestion outcome | `KIN-19` reject; recorded with both failing rules |
+| 5 | Remedy available? | Resubmit at `K3`, or add a second `CODEOWNERS` principal |
+| 6 | Record created | Rejection retained and retrievable per `VAL-VIS-1139` |
+
+> **`VIS-676`.** The walkthrough ends with a **retained rejection**, not a discarded submission. A
+> future author proposing the same object will find that it was considered, why it failed, and what
+> would change the outcome — which is the difference between a validation system and a filter.
+
+---
+
+## PART 05 — CLOSURE RECORD
+
+### TBL-VIS-680: PART 05 Completion Record
+
+| Field | Value |
+| :--- | :--- |
+| **Part** | PART 05 — SYSTEM KNOWLEDGE ARCHITECTURE |
+| **Sections** | §05.0 Foundation through §05.22, plus Appendix §05.A |
+| **Status** | **COMPLETE — FROZEN, APPEND-ONLY** |
+| **Statements** | `VIS-561`…`VIS-676` |
+| **Validation rules** | `VAL-VIS-945`…`VAL-VIS-1589` — **645 rules** |
+| **Tables** | `TBL-VIS-556`…`TBL-VIS-680` |
+| **Diagrams** | `DGM-VIS-132`…`DGM-VIS-152` — **21 diagrams** |
+| **Failure modes** | `FAL-VIS-291`…`FAL-VIS-328` — 38 |
+| **Decisions** | `DEC-VIS-043`…`DEC-VIS-047` |
+| **Image specifications** | `IMG-VIS-053` |
+| **Namespaces created** | 16 — 13 by `DEC-VIS-046`, 3 regularised by `DEC-VIS-047` |
+| **Open obligations** | `OBL-44`…`OBL-51`; `OBL-50` **CLOSED** by `TBL-VIS-677` |
+| **Anti-patterns present in corpus** | **18 of 55** — see `TBL-VIS-663`…`668` |
+| **Release gate** | **STILL FAILS** — `VAL-VIS-437`, `443`, `456`, `470` |
+| **Trust of this part** | Measurements `K3`; architecture **`K1` unratified** |
+| **Authored by** | Agent — disclosed per `VAL-VIS-1508` and `VAL-VIS-1517` |
+
+### TBL-VIS-681: Open Obligations Carried Forward
+
+| ID | Obligation | Status | Owner role |
+| :--- | :--- | :--- | :--- |
+| `OBL-03` | Persistence mechanism undecided; human-blocked; critical path #1 | **OPEN** | Repository owner |
+| `OBL-44` | Widen identifier audit regexes to `[0-9]{3,4}` | **OPEN** | Curator |
+| `OBL-45` | No per-claim decay override | **OPEN** | Governor |
+| `OBL-46` | No provenance block schema implemented | **OPEN — keystone** | Governor |
+| `OBL-47` | Access matrix unenforced | **OPEN** | Governor |
+| `OBL-48` | No live-measurement embedding mechanism | **OPEN** | Curator |
+| `OBL-49` | Governance instrument precedence undefined | **OPEN** | Governor |
+| `OBL-50` | `TBL-VIS-560` diagram mapping correction | **CLOSED** — `TBL-VIS-677` | Curator |
+| `OBL-51` | Annotate "creator" uses in PARTS 01–04 with `TBL-VIS-674` senses | **OPEN** | Curator |
+
+<!-- CONTINUATION_POINT -->
+
+### TBL-VIS-682: Continuation Marker
+
+| Field | Value |
+| :--- | :--- |
+| **LAST_COMPLETED_SECTION** | PART 05 — SYSTEM KNOWLEDGE ARCHITECTURE |
+| **LAST_COMPLETED_SUBSECTION** | §05.A Appendix — Worked Validation Examples |
+| **LAST_COMPLETED_ID** | `VIS-676` · `TBL-VIS-682` · `DGM-VIS-152` · `VAL-VIS-1589` · `FAL-VIS-328` · `DEC-VIS-047` · `OBL-51` |
+| **NEXT_SECTION** | PART 06 — §06.0 Foundation |
+| **NEXT_ID** | `VIS-677` · `TBL-VIS-683` · `DGM-VIS-153` · `VAL-VIS-1590` · `FAL-VIS-329` · `DEC-VIS-048` · `OBL-52` |
+| **CURRENT_PART** | 05 — COMPLETE |
+| **NEXT_PART** | 06 |
+| **LAST_LINE_ANCHOR** | `TBL-VIS-682: Continuation Marker` |
+| **DEPENDENCIES_LOADED** | `MASTER_CONTEXT_RULES.md` · `METADATA_STANDARD.md` · `.github/CODEOWNERS` · `ADR-0001` · `04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md` — read-only · `.ai/` control plane |
+
+---
