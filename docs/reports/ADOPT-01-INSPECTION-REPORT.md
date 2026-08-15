@@ -188,7 +188,7 @@ prerequisites, and `tools/` is empty and unclaimed.
 | `tools/docs-validate/schemas/metadata-schema.yaml` | canonical metadata contract with header-dialect aliases |
 | `tools/docs-validate/fixtures/` | regression fixtures for `FA-04`, `FA-09`, `FA-10`, `FA-11` |
 | `tools/docs-validate/reports/BASELINE-2026-08-15.md` | the committed first-run baseline |
-| `.github/workflows/docs-validate.yml` | **the first installed workflow in Oship's history** |
+| `tools/docs-validate/ci/docs-validate.yml` | the workflow required by `FA-01`/`FA-02`, YAML-validated. **Staged, not installed** — see `ADOPT-OBL-13`. |
 | `docs/reports/ADOPT-01-VALIDATION-BASELINE.md` | the 165 findings, itemised as discharge-tracked obligations |
 
 Nothing under `docs/MASTER_CONTEXT/` was modified. No frozen content was touched. No

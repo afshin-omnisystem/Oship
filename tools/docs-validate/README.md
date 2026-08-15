@@ -10,7 +10,7 @@ AI_PRIORITY: HIGH
 CREATED: 2026-08-15
 UPDATED: 2026-08-15
 DEPENDENCIES: docs/MASTER_CONTEXT/01_PRODUCT/SYSTEM_VISION.md, docs/MASTER_CONTEXT/23_STANDARDS/METADATA_STANDARD.md, .ai/METRICS.md
-RELATED: .github/workflows/docs-validate.yml, .ai/NEXT_ACTION.md, .ai/PROJECT_STATUS.md
+RELATED: tools/docs-validate/ci/docs-validate.yml, .ai/NEXT_ACTION.md, .ai/PROJECT_STATUS.md
 ---
 
 # Oship Documentation Validation Infrastructure
@@ -74,6 +74,8 @@ tools/docs-validate/
 │   └── validation-rules.yaml      switches, thresholds, permanent-gap allowlist
 ├── schemas/
 │   └── metadata-schema.yaml       canonical metadata contract and header aliases
+├── ci/
+│   └── docs-validate.yml          the GitHub Actions workflow (FA-01, FA-02)
 ├── fixtures/                      deliberate defects, used only by --self-test
 └── reports/                       generated output (git-ignored except the baseline)
 ```
@@ -156,9 +158,9 @@ are itemised, with an owner and a discharge condition, in
 
 | ID | Criterion | State | Where it is satisfied |
 | :--- | :--- | :---: | :--- |
-| `FA-01` | `.github/workflows/docs-validate.yml` exists and is syntactically valid | **MET** | the workflow file |
+| `FA-01` | `.github/workflows/docs-validate.yml` exists and is syntactically valid | **AUTHORED** | validated at `ci/docs-validate.yml`; **not yet installed** — `ADOPT-OBL-13` |
 | `FA-02` | The workflow triggers on push and pull request | **MET** | `on.push.branches: ["**"]`, `on.pull_request` |
-| `FA-03` | A run log is retrievable for at least one execution | **PENDING CI** | `upload-artifact` step + job summary; satisfied on first run |
+| `FA-03` | A run log is retrievable for at least one execution | **BLOCKED** | requires the workflow to be installed — `ADOPT-OBL-13` |
 | `FA-04` | The checker exits non-zero when a Mermaid block fails to parse | **MET** | `fixtures/broken-mermaid.md`, asserted by `--self-test` |
 | `FA-05` | The checker exits zero on the current corpus | **NOT MET — intentionally** | 165 real defects found; see §5 and `VAL-VIS-1746` |
 | `FA-06` | Each check names the `VAL-` rule it enforces in its output | **MET** | `CheckResult.rule`, asserted by `--self-test` |
@@ -176,19 +178,26 @@ state: the checker is installed, it is honest, and the corpus has work to do.
 
 ## 7. What installing this changes — `TBL-VIS-731`
 
-| Metric | Before | After |
-| :--- | :---: | :---: |
-| Installed workflows | 0 | **1** |
-| `EV4` evidence items | 0 | **≥1 per push** |
-| Highest evidence class | `EV3` | **`EV4`** |
-| Artefacts at `AS-4` | 0 | **2** |
-| Quality gates open | `QG-0`, `QG-1`, `QG-2` | **+ `QG-4`** |
-| Maturity level | `M1` SPECIFIED | **`M2` SELF-CHECKING** |
-| Waves closed | 0 | **`W1`** |
-| Drift denominator `A` | **0** | **non-zero for the first time** |
+| Metric | Before | Now | On workflow install |
+| :--- | :---: | :---: | :---: |
+| Executable artefacts | **0** | **9 files** | 10 |
+| Installed workflows | 0 | **0** | **1** |
+| `EV4` evidence items | 0 | **0** | **≥1 per push** |
+| Highest evidence class | `EV3` | `EV3` | **`EV4`** |
+| Artefacts at `AS-4` | 0 | **1** | **2** |
+| Quality gates open | `QG-0`…`QG-2` | unchanged | **+ `QG-4`** |
+| Maturity level | `M1` SPECIFIED | **`M2` SELF-CHECKING** | `M2` evidenced |
+| Waves closed | 0 | 0 | **`W1`** |
+| Drift denominator `A` | **0** | **non-zero for the first time** | non-zero |
 
 The drift ratio `DR = S / max(A,1)` has a real denominator for the first time, which means
-the `K4` PURE DRIFT classification can finally be recomputed rather than asserted.
+the `K4` PURE DRIFT classification can be recomputed rather than asserted.
+
+> **The third column is not yet earned.** The checker exists and runs, so `A` is non-zero
+> and `M2` is defensible on the mechanism. But `EV4` evidence is produced by a **CI run**,
+> and no CI run has happened. `QG-4` and `W1` stay closed until `ADOPT-OBL-13` — copying
+> `ci/docs-validate.yml` into `.github/workflows/` — is done. Claiming otherwise would be
+> exactly the `CC-` overclaim that `TBL-VIS-741` prohibits.
 
 ---
 

@@ -147,8 +147,11 @@ Oship/
 
 **Oship is no longer a documentation-only repository.** It now validates itself.
 
-`ADOPT-01` has been **executed**, not refused. `tools/docs-validate/` and
-`.github/workflows/docs-validate.yml` exist on branch `arena/01a003bd-oship`. The
+`ADOPT-01` has been **executed**, not refused. `tools/docs-validate/` exists and runs on
+branch `arena/01a003bd-oship`. The workflow is authored and YAML-validated at
+`tools/docs-validate/ci/docs-validate.yml` but is **not yet installed** to
+`.github/workflows/` — the delivering credential lacks the GitHub `workflows` permission.
+One copy command by any principal completes it (`ADOPT-OBL-13`). The
 subordination rule that blocked all new specification work is therefore **discharged**:
 `AOM-ARCH-001` PART 02 (`ARCH-02`) is unblocked, and a PART 07 of `AOM-VIS-001` is no
 longer categorically barred — though `TBL-VIS-778` still advises against one until an
@@ -156,13 +159,19 @@ artefact reaches `AS-5`.
 
 ### What changed, in the terms the corpus uses
 
-- **Maturity `M1` SPECIFIED → `M2` SELF-CHECKING.**
-- **Wave `W1` closed.** Zero waves closed → one.
-- **Quality gate `QG-4` opens.** It requires automated verification, which now exists.
-- **First `EV4` evidence in repository history** on the first CI run. The evidence ceiling rises `EV3` → `EV4`.
-- **Two artefacts reach `AS-4` and `AS-5`** — the checker and the workflow.
+- **Maturity `M1` SPECIFIED → `M2` SELF-CHECKING.** The mechanism exists and executes.
 - **The drift denominator `A` is non-zero for the first time.** `DR = S / max(A,1)` is computable rather than degenerate, so the `K4` PURE DRIFT classification can be recomputed instead of asserted.
 - **`AF-1` STALL is interrupted.** The most recent work unit produced a mechanism, not more specification.
+
+### What is contingent on `ADOPT-OBL-13` — do not claim these yet
+
+Copying `tools/docs-validate/ci/docs-validate.yml` into `.github/workflows/` is one
+command, and until it happens the following have **not** occurred:
+
+- **Wave `W1` is NOT closed.** It requires an installed workflow.
+- **`QG-4` has NOT opened.** It requires automated verification to have *run*.
+- **No `EV4` evidence exists.** `EV4` is a CI run log; there has been no CI run. The evidence ceiling is still `EV3`.
+- **Installed workflows: still 0.** Artefacts at `AS-4`: 1, not 2.
 
 ### What did **not** change — stated plainly
 

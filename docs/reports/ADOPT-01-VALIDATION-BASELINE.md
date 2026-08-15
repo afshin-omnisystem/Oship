@@ -29,7 +29,7 @@ to soften the checker.
 
 > **Standing prohibition.** No threshold in `configs/validation-rules.yaml` may be
 > loosened, no path added to `exclude_paths`, no check deleted, and no
-> `continue-on-error` added to `.github/workflows/docs-validate.yml` for the purpose of
+> `continue-on-error` added to the `docs-validate` workflow for the purpose of
 > turning this report green. The only admissible route to green is discharging the
 > obligations below. A checker tuned until it passes measures nothing (`VIS-728`).
 
@@ -70,9 +70,18 @@ class, its size, the rule it violates, and the condition under which it closes.
 | `ADOPT-OBL-10` | Reconcile 2 out-of-vocabulary `STATUS` values (`APPROVED`, `IN_PROGRESS`) | 2 | `MCX-23-002` | warning | either the documents adopt the vocabulary or `METADATA_STANDARD.md` is amended to admit them |
 | `ADOPT-OBL-11` | Triage 424 relative links whose targets do not exist on disk | 424 | `MET-05` | warning | each is classified as a planned artefact or a genuine break; genuine breaks repaired |
 | `ADOPT-OBL-12` | Decide whether frontmatter conformance becomes blocking | 1 | `VAL-VIS-001` | decision | `fail_on_missing_fields: true` in the config, or a recorded refusal |
+| `ADOPT-OBL-13` | **Install the workflow.** Copy `tools/docs-validate/ci/docs-validate.yml` to `.github/workflows/docs-validate.yml` | 1 | `FA-01`, `FA-03` | **BLOCKING** | a CI run log exists — the first `EV4` evidence in repository history |
 
 `ADOPT-OBL-01`…`06` are the 165 blocking errors. `ADOPT-OBL-07`…`11` are the warnings.
 `ADOPT-OBL-12` is a governance decision, not a repair.
+
+`ADOPT-OBL-13` is different from all of them: it is **not a corpus defect**, it is an
+unfinished installation. The delivering credential lacked the GitHub `workflows`
+permission, so the workflow is committed at `tools/docs-validate/ci/docs-validate.yml`
+instead of `.github/workflows/`. It is YAML-validated and complete. Until someone copies
+it across, Oship has a checker but **no `EV4` evidence**, `QG-4` does **not** open, and
+wave `W1` does **not** close — so `ADOPT-01`'s headline effects are, precisely, pending.
+It is the smallest remaining action with the largest remaining effect in the repository.
 
 ---
 

@@ -244,18 +244,18 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 | **Milestone ID** | `ADOPT-01` |
 | **Specification** | `TBL-VIS-730` — First Executable Artefact |
 | **Acceptance** | `TBL-VIS-732` — `FA-01`…`FA-12` |
-| **STATUS** | **`EXECUTED`** — 2026-08-15 |
+| **STATUS** | **`EXECUTED`** — 2026-08-15. Checker complete and running; workflow authored and validated but **not installed** (`ADOPT-OBL-13`, credential lacks `workflows` permission). |
 | **Branch** | `arena/01a003bd-oship` (feature branch; **no direct commit to `main`**) |
 | **Artefact class** | `AC-1` self-referential · Wave `W1` |
 | **Human decision required** | **None**, as `TBL-VIS-730` predicted |
 | **Self-test** | **11 of 11 PASS** |
-| **First full-corpus run** | **FAIL — 165 errors, 441 warnings** (the intended outcome under `VAL-VIS-1746` / `SC-04`) |
-| **Obligations recorded** | `ADOPT-OBL-01`…`12` in `docs/reports/ADOPT-01-VALIDATION-BASELINE.md` |
+| **First full-corpus run** | **FAIL — 165 errors, 441 warnings** (the intended outcome under `VAL-VIS-1746` / `SC-04`). Run **locally**; not yet in CI. |
+| **Obligations recorded** | `ADOPT-OBL-01`…`13` in `docs/reports/ADOPT-01-VALIDATION-BASELINE.md` |
 
 ### Phase 0 gate checklist — new entries
 
 - [x] Execute `ADOPT-01`: build `tools/docs-validate/` per `TBL-VIS-730` — six validators, config, schema, fixtures, reports.
-- [x] Install `.github/workflows/docs-validate.yml` — **the first installed workflow in repository history**.
+- [ ] Install `.github/workflows/docs-validate.yml` — authored and validated at `tools/docs-validate/ci/docs-validate.yml`; blocked on the `workflows` credential permission (`ADOPT-OBL-13`). **Until installed there is no `EV4` evidence and `QG-4` does not open.**
 - [x] Produce and commit the first validation baseline (`reports/BASELINE-2026-08-15.md`).
 - [x] Record every first-run finding as a tracked obligation rather than relaxing a check.
 - [ ] Discharge `ADOPT-OBL-01`…`06` (the 165 blocking errors) and flip `FA-05` to MET.
@@ -263,22 +263,29 @@ This document provides a comprehensive tracking matrix for the repository lifecy
 
 ### Measured state transition — `TBL-VIS-731`
 
-| Metric | Before | After |
-| :--- | :---: | :---: |
-| Installed workflows | **0** | **1** |
-| `EV4` evidence items | **0** | **≥1 per push** |
-| Highest evidence class | `EV3` | **`EV4`** |
-| Artefacts at `AS-4` | **0** | **2** |
-| Artefacts at `AS-5` | **0** | **2** |
-| Quality gates open | `QG-0`, `QG-1`, `QG-2` | **+ `QG-4`** |
-| Maturity level | **`M1` SPECIFIED** | **`M2` SELF-CHECKING** |
-| Waves closed | **0** | **`W1`** |
-| Drift denominator `A` | **0** | **non-zero for the first time** |
-| Executable files in repository | **0** | **9** |
+| Metric | Before | Now | On workflow install |
+| :--- | :---: | :---: | :---: |
+| Executable files in repository | **0** | **9** | 10 |
+| Installed workflows | **0** | **0** | **1** |
+| `EV4` evidence items | **0** | **0** | **≥1 per push** |
+| Highest evidence class | `EV3` | `EV3` | **`EV4`** |
+| Artefacts at `AS-4` | **0** | **1** | **2** |
+| Artefacts at `AS-5` | **0** | **1** | **2** |
+| Quality gates open | `QG-0`, `QG-1`, `QG-2` | unchanged | **+ `QG-4`** |
+| Maturity level | **`M1` SPECIFIED** | **`M2` SELF-CHECKING** | `M2` evidenced |
+| Waves closed | **0** | **0** | **`W1`** |
+| Drift denominator `A` | **0** | **non-zero for the first time** | non-zero |
 
 `DR = S / max(A,1)` now has a real denominator, so the `K4` PURE DRIFT classification can
 be **recomputed** rather than asserted. The `AF-1` STALL failure mode is interrupted: the
 repository's most recent work unit produced a mechanism, not more specification.
+
+> **The third column is not yet earned, and must not be claimed.** `EV4` evidence is a CI
+> run log, and no CI run has occurred — the workflow is authored and validated but not
+> installed (`ADOPT-OBL-13`). `QG-4` and `W1` remain closed. `M2` is defensible on the
+> mechanism existing and executing locally; every other advance in the third column is
+> contingent on one copy command. Recording it as already achieved would be precisely the
+> completion overclaim `TBL-VIS-741` prohibits.
 
 ### Recounted corpus measurements — `VAL-VIS-1745`
 
