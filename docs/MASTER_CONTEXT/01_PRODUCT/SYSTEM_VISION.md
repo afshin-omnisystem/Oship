@@ -24773,3 +24773,407 @@ flowchart TD
 | `VAL-VIS-1668` | The current wave distribution must be measured, not recalled. | **HALT** | Re-measurement evidence |
 
 ---
+
+## 06.4 — The Critical Path
+
+### AI NAVIGATION METADATA — §06.4
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before answering "what should I do next"** |
+| **AI DEPENDENCIES** | §06.3 wave register · `OBL-03` · `EVD-VIS-017` no installed workflows |
+| **AI INPUTS** | A request for prioritisation |
+| **AI OUTPUTS** | The critical-path item, its blocker, and the highest-value unblocked action |
+| **AI IMPLEMENTATION IMPACT** | Determines what any agent does with its next unit of effort |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1669`…`VAL-VIS-1688` |
+| **AI RELATED DOCUMENTS** | `.ai/NEXT_ACTION.md` |
+
+---
+
+### 06.4.1 Purpose and Definition
+
+> **`VIS-708`.** The critical path is the longest chain of strictly dependent items between the
+> current state and a chosen end state. It is not the list of important things. Items off the
+> critical path may be more valuable individually and still be the wrong thing to do, because doing
+> them does not shorten the chain.
+
+> **`VIS-709`.** Oship's critical path has a property that distinguishes it from most software
+> projects: **its first link is not a task.** It is a decision that no agent is permitted to make.
+> This means the critical path cannot be shortened by effort, only by a human act, and any plan that
+> proposes to make progress by working harder on the specification is not shortening it at all.
+
+### 06.4.2 The Critical Path Graph
+
+```mermaid
+flowchart LR
+    S["CURRENT STATE<br/>AS-2 corpus, zero artefacts"]:::now
+    H["OBL-03<br/>persistence decision"]:::human
+    A2["AOM-ARCH-001 PART 02<br/>concrete architecture"]:::blocked
+    F["First service skeleton"]:::blocked
+    T["Bound test suite"]:::blocked
+    V["First AS-6 capability"]:::blocked
+    D["Deployment target"]:::blocked
+    O["First AS-7 capability"]:::blocked
+    S --> H --> A2 --> F --> T --> V --> D --> O
+    S -.->|"OFF critical path<br/>but unblocked"| CI["W1 - install CI<br/>first EV4 evidence"]:::ok
+    CI -.->|"raises evidence ceiling<br/>for every later link"| T
+    classDef now fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef human fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef blocked fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-159` — **The Oship Critical Path and the One Unblocked Branch**
+> **Explanation:** Seven of the eight links are grey because each waits on its predecessor and the
+> predecessor chain terminates at an amber human gate. The green branch is deliberately drawn as a
+> side path: installing CI is **not** on the critical path and does not shorten it. It is
+> nevertheless the correct next action, and the dotted return edge shows why — it raises the
+> evidence ceiling from `EV3` to `EV4`, which every downstream link on the critical path will
+> require when it arrives. Doing it now converts a future critical-path cost into a present
+> off-path cost.
+
+### TBL-VIS-712: Critical Path Link Register
+
+| # | Link | Depends on | Blocked by | Who may act | Off-path alternative |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | Persistence decision | — | **`OBL-03`** | `ACT-VIS-001` only | None — irreducible |
+| 2 | `AOM-ARCH-001` PART 02 | Link 1 | Link 1 | `ACT-VIS-005` once unblocked | Specify decision *criteria* without deciding |
+| 3 | First service skeleton | Link 2 | Link 2 | `ACT-VIS-005` | None |
+| 4 | Bound test suite | Link 3, and `W1` for the runner | Links 2–3 | `ACT-VIS-005` | Build the runner now via `W1` |
+| 5 | First `AS-6` capability | Link 4 | Links 2–4 | `ACT-VIS-005` | None |
+| 6 | Deployment target | Link 1 | **`OBL-03`** adjacent | `ACT-VIS-001` only | None |
+| 7 | First `AS-7` capability | Links 5–6 | All above | `ACT-VIS-004` — role unfilled | None |
+
+> **`VIS-710`.** Two links require `ACT-VIS-001` and one requires `ACT-VIS-004`, a role that is
+> currently unfilled. The critical path therefore requires **two distinct human roles**, one of which
+> does not exist. This is recorded as `OBL-56` and analysed in §06.15.
+
+### TBL-VIS-713: Highest-Value Unblocked Actions, Ranked
+
+| Rank | Action | Wave | Human decision | Evidence produced | Unlocks |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | Commit the Mermaid validator and install a workflow that runs it | `W1` | **No** | **First `EV4` in repository history** | `MET-VIS-011` `EV3`→`EV4`; quality gate `QG-4`; `AS-5` reachable |
+| 2 | Install the identifier uniqueness sweep as CI | `W1` | No | `EV4` | Mechanises `TBL-VIS-689`; prevents recurrence of the `IMG-VIS-030` class of defect |
+| 3 | Install the frontmatter key-count check | `W1` | No | `EV4` | Detects the 51/87 metadata shortfall continuously |
+| 4 | Record the decision *criteria* for `OBL-03` without deciding | `W0` | No | `EV2` | Reduces the human decision to a selection among specified options |
+| 5 | Fill `ACT-VIS-008` auditor or add a second CODEOWNERS principal | `W0` | **Yes** | `EV2` | Raises the knowledge trust ceiling from `K3` to `K4`; unblocks `VAL-VIS-1632` |
+| 6 | Annotate PARTS 01–04 "creator" uses per `OBL-51` | `W0` | No | `EV2` | The only release-gate HALT clearable by documentation alone |
+
+> **`VIS-711`.** Rank 1 has been the top-ranked unblocked action since PART 04 measured it, and it
+> remains undone. That is itself a datum: the repository has demonstrated, across three parts, a
+> consistent preference for extending `W0` over opening `W1`. §06.9 names this pattern and §06.17
+> records it as an anti-pattern with the repository itself as the worked example.
+
+```mermaid
+flowchart TD
+    Q["Agent asks: what next?"] --> A{"Is the critical path<br/>blocked by a human decision?"}
+    A -->|"No"| B["Take the next critical path link"]:::ok
+    A -->|"Yes"| C{"Is there an unblocked action that<br/>raises the evidence ceiling?"}
+    C -->|"Yes"| D["Take it - rank 1 of TBL-VIS-713"]:::ok
+    C -->|"No"| E{"Is there an unblocked action that<br/>reduces the human decision to a selection?"}
+    E -->|"Yes"| F["Specify the decision criteria<br/>WITHOUT deciding"]:::ok
+    E -->|"No"| G{"Would more specification<br/>increase the drift ratio?"}
+    G -->|"Yes"| H["STOP and escalate to ACT-VIS-001"]:::warn
+    G -->|"No"| I["Extend the constitution"]:::ok
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef warn fill:#e65100,stroke:#ffcc80,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-160` — **Next-Action Decision Tree**
+> **Explanation:** This tree is the operational form of §06.4 and is the single most frequently
+> executed decision in the repository. Its terminal `STOP and escalate` branch is unusual and
+> deliberate: there is a condition under which the correct action for an autonomous agent is to
+> produce **nothing** and hand back to a human. That condition is reached when the critical path is
+> human-blocked, no evidence-raising action remains, and further specification would increase drift.
+> An agent without this branch will always find something to write, and will therefore always
+> increase drift.
+
+### TBL-VIS-714: Decision Matrix — Choosing Among Unblocked Actions
+
+| Criterion | Weight | Install CI | More specification | Scaffold code | Wait |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| Raises evidence ceiling | 5 | **5** | 0 | 0 | 0 |
+| Requires no human decision | 4 | **4** | 4 | 4 | 4 |
+| Reduces drift ratio | 4 | **4** | −4 | 2 | 0 |
+| Reversible if wrong | 3 | **3** | 3 | 1 | 3 |
+| Unlocks a quality gate | 3 | **3** | 0 | 0 | 0 |
+| Produces reusable mechanism | 2 | **2** | 0 | 1 | 0 |
+| **Total** | | **21** | **3** | **8** | **7** |
+
+> **`VIS-712`.** "More specification" scores negatively on drift and produces no evidence, giving it
+> the lowest total of the four options — including lower than doing nothing. That result should be
+> read carefully: it does not say specification is worthless. It says that **at the current adoption
+> position**, with 24,000 lines of specification and zero artefacts, the marginal value of the
+> 24,001st line is below the value of waiting. The matrix would score differently at a different
+> position, and §06.9 defines the measurement that determines which position the repository is in.
+
+### TBL-VIS-715: §06.4 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1669` | The critical path must be stated as a dependency chain, not a priority list. | **ERROR** | Each link names its predecessor |
+| `VAL-VIS-1670` | A human-gated link must name the actor authorised to act. | **HALT** | Actor identified |
+| `VAL-VIS-1671` | An agent must not attempt a link gated on `ACT-VIS-001`. | **HALT** | Authority check |
+| `VAL-VIS-1672` | Off-path actions must be labelled off-path even when recommended. | **ERROR** | Label present |
+| `VAL-VIS-1673` | The highest-value unblocked action must be re-derived, not quoted. | **HALT** | Derivation shown |
+| `VAL-VIS-1674` | A decision matrix must state its weights before its scores. | **ERROR** | Column order |
+| `VAL-VIS-1675` | Negative scores are permitted and must not be clamped to zero. | **ERROR** | Score range |
+| `VAL-VIS-1676` | "Wait" must appear as an option in every next-action matrix. | **ERROR** | Option presence |
+| `VAL-VIS-1677` | An agent reaching the STOP branch of `DGM-VIS-160` must produce no content. | **HALT** | Output check |
+| `VAL-VIS-1678` | Escalation must name the obligation and the actor, not merely request guidance. | **ERROR** | Escalation content |
+| `VAL-VIS-1679` | The critical path must be recomputed whenever an obligation closes. | **ERROR** | Recomputation trigger |
+| `VAL-VIS-1680` | A link may not be declared complete without its exit evidence. | **HALT** | Evidence check |
+| `VAL-VIS-1681` | The number of links requiring an unfilled role must be stated. | **ERROR** | Role availability audit |
+| `VAL-VIS-1682` | Ranking must be justified by the criteria, not asserted. | **ERROR** | Matrix precedes ranking |
+| `VAL-VIS-1683` | The persistent non-execution of rank 1 must be reported, not omitted. | **HALT** | Historical status included |
+| `VAL-VIS-1684` | Specifying decision criteria must not constitute making the decision. | **HALT** | No selection among criteria |
+| `VAL-VIS-1685` | Critical path length must be stated in links, never in time. | **ERROR** | No temporal units |
+| `VAL-VIS-1686` | An action that produces no evidence must be scored zero on the evidence criterion. | **ERROR** | Scoring integrity |
+| `VAL-VIS-1687` | The critical path must terminate at a defined end state. | **ERROR** | End state named |
+| `VAL-VIS-1688` | Alternative paths must be shown where they exist, and their absence stated where they do not. | **ERROR** | Alternative column populated |
+
+---
+
+## 06.5 — Entry and Exit Criteria
+
+### AI NAVIGATION METADATA — §06.5
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P1 — read before opening or closing a wave |
+| **AI DEPENDENCIES** | §06.3 wave register · §06.2 state machine |
+| **AI INPUTS** | A wave and a claim that it should open or close |
+| **AI OUTPUTS** | Criterion-by-criterion evaluation with evidence |
+| **AI IMPLEMENTATION IMPACT** | Wave status in the control plane |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1689`…`VAL-VIS-1704` |
+| **AI RELATED DOCUMENTS** | `.ai/PROJECT_STATUS.md` |
+
+---
+
+> **`VIS-713`.** Criteria are written in a single mandatory form: **a proposition that a mechanical
+> check can evaluate to true or false against the repository.** A criterion that requires judgement
+> is not a criterion; it is an opinion with a checkbox. Where a criterion currently requires
+> judgement because no mechanism exists, it is marked `MANUAL — MECHANISATION PENDING` and carries
+> the obligation that would mechanise it.
+
+### TBL-VIS-716: `W0` Constitution — Entry and Exit Criteria
+
+| Type | ID | Criterion | Mechanically checkable | Currently met |
+| :--- | :--- | :--- | :--- | :--- |
+| Entry | `WC-000` | A git repository exists with a default branch | Yes | **YES** |
+| Exit | `WC-001` | Every constitutional document has ≥15 frontmatter keys | Yes | **NO — 36 of 87** |
+| Exit | `WC-002` | Every Mermaid block in the corpus parses | Yes | **NO — only `AOM-VIS-001` is checked, and only manually** |
+| Exit | `WC-003` | Every identifier namespace has an explicit current ceiling | Yes | **YES — as of `DEC-VIS-050`** |
+| Exit | `WC-004` | Zero duplicate identifier definitions corpus-wide | Yes | **YES for `AOM-VIS-001`; UNKNOWN corpus-wide** |
+| Exit | `WC-005` | Every domain `INDEX.md` status matches the artefact it registers | Yes | **NO — `MCX-04-001` still lists `SYSTEM_ARCHITECTURE.md` as PLANNED** |
+| Exit | `WC-006` | No document claims a state above its evidence | Manual — mechanisation pending, `OBL-57` | **NO — `FAL-VIS-171`** |
+| Exit | `WC-007` | Every open obligation is recorded with an owner | Yes | **YES** |
+
+### TBL-VIS-717: `W1` Mechanisation — Entry and Exit Criteria
+
+| Type | ID | Criterion | Mechanically checkable | Currently met |
+| :--- | :--- | :--- | :--- | :--- |
+| Entry | `WC-010` | At least one `VAL-` rule is expressible as an automated check | Yes | **YES — `VAL-VIS-` Mermaid rules already are** |
+| Entry | `WC-011` | A workflow skeleton exists to adapt | Yes | **YES — `.github/workflow-skeletons/`** |
+| Exit | `WC-012` | `.github/workflows/` contains ≥1 installed workflow | Yes | **NO — zero** |
+| Exit | `WC-013` | That workflow runs on every push to the default branch | Yes | **NO** |
+| Exit | `WC-014` | It produces a retrievable run log | Yes | **NO** |
+| Exit | `WC-015` | It fails the build when a `VAL-` rule is violated | Yes | **NO** |
+| Exit | `WC-016` | At least one artefact reaches `AS-5` | Yes | **NO — zero above `AS-3`** |
+| Exit | `WC-017` | At least one `EV4` evidence item exists | Yes | **NO — zero** |
+
+> **`VIS-714`.** `W1` has both entry criteria met and zero of six exit criteria met. That is the
+> definition of an open, unblocked, untouched wave. No other wave in the register has this profile.
+
+### TBL-VIS-718: `W2` Foundation — Entry and Exit Criteria
+
+| Type | ID | Criterion | Mechanically checkable | Currently met |
+| :--- | :--- | :--- | :--- | :--- |
+| Entry | `WC-020` | `W1` exit criteria all met | Yes | **NO** |
+| Entry | `WC-021` | An authorised principal is available to make irreversible commitments | Manual, `OBL-56` | Partially — one principal, no auditor |
+| Exit | `WC-022` | An ADR selects the persistence technology | Yes | **NO — `OBL-03`** |
+| Exit | `WC-023` | An ADR selects the language and runtime | Yes | **NO** |
+| Exit | `WC-024` | An ADR selects the deployment target | Yes | **NO** |
+| Exit | `WC-025` | A compliance framework is named or explicitly deferred with rationale | Yes | **NO — `PROB-VIS-023` `UNKNOWN`** |
+| Exit | `WC-026` | `AOM-ARCH-001` PART 02 exists and cites those ADRs | Yes | **NO** |
+
+### TBL-VIS-719: `W3`–`W5` — Entry and Exit Criteria
+
+| Wave | Type | ID | Criterion | Currently met |
+| :--- | :--- | :--- | :--- | :--- |
+| `W3` | Entry | `WC-030` | `W2` exit criteria all met | **NO** |
+| `W3` | Entry | `WC-031` | One capability selected by `ACT-VIS-001` | **NO — recommendation only** |
+| `W3` | Exit | `WC-032` | Selected capability at `AS-6` | **NO** |
+| `W3` | Exit | `WC-033` | Its tests cite the `VAL-` rules they enforce | **NO** |
+| `W3` | Exit | `WC-034` | Its specification and implementation cross-reference each other | **NO** |
+| `W4` | Entry | `WC-040` | `W3` exit criteria all met | **NO** |
+| `W4` | Exit | `WC-041` | All core-platform capabilities at `AS-6` | **NO** |
+| `W4` | Exit | `WC-042` | Traceability L1→L2 unbroken | **NO — breaks at L1→L2, 76/100** |
+| `W5` | Entry | `WC-050` | `W4` exit criteria all met | **NO** |
+| `W5` | Exit | `WC-051` | ≥1 capability at `AS-7` with telemetry | **NO** |
+| `W5` | Exit | `WC-052` | `ACT-VIS-004` operator role filled | **NO — role unfilled** |
+
+### TBL-VIS-720: Criterion Evaluation Summary
+
+| Wave | Entry criteria | Met | Exit criteria | Met | Wave verdict |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `W0` | 1 | 1 | 7 | **2** | OPEN — 2 of 7 exit criteria met |
+| `W1` | 2 | **2** | 6 | **0** | **OPEN, UNBLOCKED, UNTOUCHED** |
+| `W2` | 2 | 0 | 5 | 0 | BLOCKED |
+| `W3` | 2 | 0 | 3 | 0 | BLOCKED |
+| `W4` | 1 | 0 | 2 | 0 | BLOCKED |
+| `W5` | 1 | 0 | 2 | 0 | BLOCKED |
+| **Total** | **9** | **3** | **25** | **2** | 2 of 34 criteria met |
+
+> **`VIS-715`.** Two of thirty-four criteria are met, and both are in `W0`. This figure is the
+> honest headline of PART 06 and it is deliberately not softened. It measures adoption, not effort:
+> an enormous amount of work has been done, and almost none of it has moved a criterion, because
+> almost all of it was `W0` specification and `W0` has only seven exit criteria in total.
+
+### TBL-VIS-721: §06.5 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1689` | Every criterion is a proposition evaluable to true or false. | **HALT** | No judgement-dependent criteria without a `MANUAL` label |
+| `VAL-VIS-1690` | A `MANUAL` criterion carries the obligation that would mechanise it. | **ERROR** | `OBL-` reference |
+| `VAL-VIS-1691` | Criterion status must be measured at evaluation time. | **HALT** | Re-measurement |
+| `VAL-VIS-1692` | A wave must not be declared open with unmet entry criteria. | **HALT** | Entry evaluation |
+| `VAL-VIS-1693` | A wave must not be declared closed with unmet exit criteria. | **HALT** | Exit evaluation |
+| `VAL-VIS-1694` | Partially met criteria count as unmet. | **ERROR** | Binary evaluation |
+| `VAL-VIS-1695` | The met/total ratio must be stated whenever wave status is summarised. | **ERROR** | Summary completeness |
+| `VAL-VIS-1696` | Criteria may be added but never weakened to achieve closure. | **HALT** | Diff of criterion text |
+| `VAL-VIS-1697` | Criterion identifiers are stable and never reused. | **ERROR** | `VIS-347` |
+| `VAL-VIS-1698` | A criterion referencing a count must name the measurement command. | **ERROR** | Command present or derivable |
+| `VAL-VIS-1699` | Corpus-wide claims must state where they are `UNKNOWN`. | **HALT** | `WC-004` pattern |
+| `VAL-VIS-1700` | The overall met count must equal the sum of per-wave met counts. | **ERROR** | Arithmetic check |
+| `VAL-VIS-1701` | A wave with all entry criteria met and zero exit criteria met is reported as untouched. | **ERROR** | Verdict vocabulary |
+| `VAL-VIS-1702` | "Untouched" must not be softened to "early" or "beginning". | **HALT** | Vocabulary check |
+| `VAL-VIS-1703` | Criteria must not be reordered to change apparent progress. | **ERROR** | Stable ordering by ID |
+| `VAL-VIS-1704` | A criterion whose truth depends on an external system must say so. | **ERROR** | Dependency noted |
+
+---
+
+## 06.6 — The Maturity Model
+
+### AI NAVIGATION METADATA — §06.6
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P1 — read before making any claim about repository maturity |
+| **AI DEPENDENCIES** | §06.1 adoption states · PART 04 quality gates `QG-0`…`QG-8` · PART 05 trust levels `K1`…`K6` |
+| **AI INPUTS** | A maturity claim |
+| **AI OUTPUTS** | The maturity level supported by evidence |
+| **AI IMPLEMENTATION IMPACT** | README language, `PROJECT_STATUS.md`, any external description |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1705`…`VAL-VIS-1722` |
+| **AI RELATED DOCUMENTS** | `README.md` — evidence only · PART 04 §04 quality gates |
+
+---
+
+> **`VIS-716`.** Oship now has three independent graded scales: adoption states `AS-0`…`AS-7`
+> (§06.1), quality gates `QG-0`…`QG-8` (PART 04), and knowledge trust levels `K1`…`K6` (PART 05).
+> A reader could reasonably ask whether a fourth is needed. It is, and for a precise reason: the
+> three existing scales measure **artefacts**, **process** and **knowledge** respectively, and none
+> of them measures **the repository as a whole**. A repository can hold one `AS-6` artefact and be
+> otherwise empty. The maturity model composes the three.
+
+### TBL-VIS-722: The Repository Maturity Model
+
+| Level | Name | Definition | Composition rule | Oship |
+| :--- | :--- | :--- | :--- | :--- |
+| `M0` | **Empty** | A repository with structure and no content | No document carries identifiers | Passed |
+| `M1` | **Specified** | A governing corpus exists and is internally consistent | ≥1 L1 document complete; zero unresolved internal contradictions | **CURRENT** |
+| `M2` | **Self-checking** | The repository can mechanically detect violations of its own rules | ≥1 installed workflow enforcing ≥1 `VAL-` rule; `QG-4` open | Not reached |
+| `M3` | **Founded** | Irreversible technology commitments are made and recorded | `W2` exit criteria met | Not reached |
+| `M4` | **Executing** | ≥1 capability at `AS-6` | `W3` exit criteria met | Not reached |
+| `M5` | **Operating** | ≥1 capability at `AS-7` with telemetry | `W5` exit criteria met | Not reached |
+| `M6` | **Governed** | Independent verification exists; trust level `K4`+ reachable | ≥2 CODEOWNERS principals; `ACT-VIS-008` filled | Not reached |
+
+> **`VIS-717`.** `M6` is not the top of a progression that runs through `M5` — it is orthogonal and
+> can be reached at any point, because it depends on **who** verifies rather than **what** exists.
+> Oship could reach `M6` today by adding a second principal, and doing so would raise the knowledge
+> trust ceiling from `K3` to `K4` across the entire corpus retroactively. That is the highest
+> leverage single act available in the repository, and it is a human act.
+
+```mermaid
+flowchart LR
+    M0["M0 EMPTY"]:::done --> M1["M1 SPECIFIED"]:::now
+    M1 --> M2["M2 SELF-CHECKING"]:::next
+    M2 --> M3["M3 FOUNDED"]:::future
+    M3 --> M4["M4 EXECUTING"]:::future
+    M4 --> M5["M5 OPERATING"]:::future
+    M6["M6 GOVERNED<br/>orthogonal - reachable now"]:::ortho
+    M1 -.->|"add a second principal"| M6
+    M6 -.->|"raises K3 to K4<br/>across the whole corpus"| M1
+    classDef done fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef now fill:#1a237e,stroke:#9fa8da,color:#ffffff
+    classDef next fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef future fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef ortho fill:#4a148c,stroke:#ce93d8,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-161` — **Maturity Levels with the Orthogonal Governance Axis**
+> **Explanation:** The purple node sits off the main chain because governance maturity is not
+> earned by building. The bidirectional dotted relationship is the interesting structure: reaching
+> `M6` requires only a personnel change, and it immediately improves the *quality of everything
+> already written* by making independent verification possible. Every other level requires new
+> artefacts; `M6` requires a new reviewer.
+
+### TBL-VIS-723: Maturity Composition Matrix
+
+| Level | Requires adoption | Requires quality gate | Requires trust level | Requires actors |
+| :--- | :--- | :--- | :--- | :--- |
+| `M1` | `AS-2` corpus | `QG-2` | `K3` | `ACT-VIS-001` |
+| `M2` | ≥1 `AS-5` | `QG-4` | `K3` | + `ACT-VIS-011` |
+| `M3` | `AS-2` architecture PART 02 | `QG-4` | `K3` | + ratifying principal |
+| `M4` | ≥1 `AS-6` | `QG-6` | `K4` | + independent verifier |
+| `M5` | ≥1 `AS-7` | `QG-7` | `K4` | + `ACT-VIS-004` |
+| `M6` | any | any | `K4`+ | ≥2 principals, `ACT-VIS-008` |
+
+> **`VIS-718`.** `M4` requires trust level `K4`, and PART 05 established that `K4` is **structurally
+> unreachable** while CODEOWNERS names one principal. Therefore `M4` is unreachable, therefore `M5`
+> is unreachable, and the blocker is not technical. Reading `TBL-VIS-723` and `TBL-VIS-722` together
+> yields the conclusion PART 05 reached from the knowledge side and §06.4 reached from the
+> sequencing side: **the binding constraint on Oship is the number of principals, not the amount of
+> work.**
+
+### TBL-VIS-724: Prohibited Maturity Language at `M1`
+
+| Prohibited phrase | Why | Admissible replacement |
+| :--- | :--- | :--- |
+| "production ready" | Requires `M5` | "specification complete for the covered scope" |
+| "battle tested" | Requires `AS-7` and operational history | "unvalidated — no execution has occurred" |
+| "enterprise grade" | Requires `M4` plus `M6` | "designed against enterprise constraints; unimplemented" |
+| "scalable" | An untested property of a non-existent system | "specified to scale; unverified" |
+| "X percent complete" | Prohibited by `VAL-VIS-719` and `VAL-VIS-1606` | Per-wave criterion counts |
+| "24 of 24 domains" | Counts index files, not capabilities | "24 domain indexes exist; content varies by domain" |
+| "AI-first" as an achievement | It is a design commitment, not a measured property | "AI-first by design; adoption unverified" |
+
+> **`VIS-719`.** Every phrase in the left column except the last two appears in `README.md`. This is
+> why `FAL-VIS-171` prohibits loading `README.md` as agent context: it is the repository's least
+> accurate document and its most prominent one. It remains valuable as **evidence of intent** and
+> is cited that way throughout `AOM-VIS-001`.
+
+### TBL-VIS-725: §06.6 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1705` | A maturity claim must name the level and cite its composition. | **HALT** | Level plus `TBL-VIS-723` row |
+| `VAL-VIS-1706` | Maturity may not be claimed above the lowest satisfied composition element. | **HALT** | Minimum rule, as with trust |
+| `VAL-VIS-1707` | `M6` must not be presented as sequentially after `M5`. | **ERROR** | Orthogonality preserved |
+| `VAL-VIS-1708` | Phrases in `TBL-VIS-724` are prohibited in any Oship document at `M1`. | **HALT** | Phrase scan |
+| `VAL-VIS-1709` | The unreachability of `M4` and `M5` must be stated wherever maturity is discussed. | **ERROR** | Statement present |
+| `VAL-VIS-1710` | Maturity composes adoption, quality and trust; no element may be omitted. | **ERROR** | All three cited |
+| `VAL-VIS-1711` | Maturity is a property of the repository, never of a document. | **ERROR** | Subject check |
+| `VAL-VIS-1712` | A maturity level must be re-measured, never inherited. | **HALT** | Re-measurement |
+| `VAL-VIS-1713` | Adding a level requires a `DEC-VIS-` record. | **HALT** | Decision presence |
+| `VAL-VIS-1714` | `M2` requires an installed workflow, not a skeleton. | **HALT** | Path check `.github/workflows/` |
+| `VAL-VIS-1715` | `M3` requires ADRs, not intentions. | **ERROR** | ADR path check |
+| `VAL-VIS-1716` | The principal count must be stated wherever `M6` is discussed. | **ERROR** | CODEOWNERS measurement |
+| `VAL-VIS-1717` | A maturity regression must be recorded like any state regression. | **ERROR** | Ledger entry |
+| `VAL-VIS-1718` | Maturity must not be averaged across subsystems. | **HALT** | Minimum rule |
+| `VAL-VIS-1719` | External descriptions of Oship are bound by the same vocabulary. | **HALT** | Scope of `TBL-VIS-724` |
+| `VAL-VIS-1720` | The current level must appear in the document closure record. | **ERROR** | `TBL-VIS-863` |
+| `VAL-VIS-1721` | A level's definition must not be weakened to permit a claim. | **HALT** | Definition diff |
+| `VAL-VIS-1722` | Where README and this section conflict, this section governs and the conflict is recorded. | **HALT** | Precedence plus `FAL-VIS-171` |
+
+---
