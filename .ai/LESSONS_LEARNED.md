@@ -66,3 +66,86 @@ AI Priority: MEDIUM
 
 - **Lesson**: Tagging a major MASTER_CONTEXT document (e.g. `mcx-mem-001-v1.0.0`) gives future AI agents a fixed, immutable reference point to reconstruct the memory architecture regardless of later drift on `main`.
 - **Application**: Released MCX-MEM-001 v1.0.0 via PR #5 and tag `mcx-mem-001-v1.0.0`, recording the merge commit (`e3fb4d4`) and actual metrics in the release notes.
+
+---
+
+## Adoption Phase — Lessons from ADOPT-01 Follow-Up (2026-08-15)
+
+### `LL-ADOPT-01` — A checker's first output is a hypothesis, not a measurement
+
+The v1.0.0 baseline reported 165 errors. **152 were false positives.** Had those been
+treated as a work queue, the repository would have spent its next several work units
+"fixing" a corpus that was already correct, and the 4 genuinely broken diagrams the
+checker was silently passing would have survived.
+
+**Rule.** Before acting on a checker's findings at scale, validate the checker against a
+reference implementation or a hand-audited sample. A finding count is evidence about the
+checker until it has been shown to be evidence about the corpus.
+
+### `LL-ADOPT-02` — Verify inherited claims, even your own
+
+The previous session recorded that 4 of 6 Mermaid errors were `erDiagram` over-strictness.
+That claim was **half right**: the 4 false positives were real, but the same parser was
+also producing 4 **false negatives** the claim never mentioned. Trusting the summary would
+have propagated a wrong conclusion into the control plane.
+
+**Rule.** A documented finding from a previous session is a hypothesis with provenance,
+not a fact (`VAL-VIS-1745` already says this for measurements; it applies to diagnoses).
+
+### `LL-ADOPT-03` — Wrong in both directions is the diagnostic to look for
+
+A validator with false positives *and* false negatives is worse than none: it generates
+noise that trains readers to ignore it, while providing false assurance. When a checker
+disagrees with a reference implementation, count the disagreements in **both** directions
+before deciding which is wrong.
+
+### `LL-ADOPT-04` — Prefer abstention to guessing
+
+The rewritten Mermaid validator reports `UNSUPPORTED_BY_VALIDATOR` for constructs it
+cannot model. On the corpus this means abstaining on 612 diagrams under the fallback
+engine — and **zero false positives**. An honest "I cannot tell" is more useful than a
+confident wrong answer, because it is actionable: install the real parser.
+
+### `LL-ADOPT-05` — Fixtures catch what review does not
+
+Two real bugs in the `DEC-VIS-052` implementation were caught by the regression fixtures,
+not by reading the code: header signatures learned namespace-globally, and a
+range-restating derived table misread as a second allocation. Both would have produced
+wrong classifications on the real corpus.
+
+**Rule.** `ADOPT-R2` is load-bearing. A behaviour change without a fixture is unverified.
+
+### `LL-ADOPT-06` — Let the checker judge your own work
+
+An early draft of the baseline delta report tabulated three divergent rule texts, and the
+checker flagged it as three `CROSS_FILE_DUPLICATE` definitions. **The finding was
+correct** — a report about identifier semantics had itself redefined three identifiers.
+The document was changed; the rule was not.
+
+**Rule.** When the checker flags an artefact you just authored, the default assumption is
+that the checker is right. Every instinct pulls the other way, and that instinct is how
+validators get quietly weakened.
+
+### `LL-ADOPT-07` — Reclassification is not relaxation, but it must be proven
+
+Clearing 152 errors looks exactly like weakening a check. The distinction is
+demonstrable, and must be demonstrated:
+
+| Test | Answer |
+| :--- | :--- |
+| Threshold loosened? | No — `max_duplicate_ids` remains `0` |
+| Path excluded? | No |
+| Check deleted? | No |
+| Detection capability | **Increased** — 5 defect classes added, 4 previously-missed diagrams caught |
+| Evidence preserved? | Yes — 156 republications retained as `INFO` with definition sites |
+| Reversible? | Yes — `republication_policy: strict`, verified by execution |
+
+**Rule.** Any change that reduces the error count must publish this table.
+
+### `LL-ADOPT-08` — Recover history without touching the working tree
+
+This session opened with local `HEAD` rolled back to `c6f3457` while the working tree
+still held the full accumulated work and the remote branch was at `4e3eacc`. The safe
+recovery was: verify the 46 files byte-identical against the remote commit **first**, then
+`git reset --soft`, which cannot modify the working tree. A `--hard` reset, or a fresh
+commit on the rolled-back HEAD, would have destroyed or duplicated the work.

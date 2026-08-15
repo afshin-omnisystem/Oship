@@ -225,3 +225,45 @@ until a check exists for each.
 Every run performs both passes and evidences both in its output: pass 1 searches for
 ceiling **declarations**, pass 2 for ceiling **decisions**. A run reporting only one pass
 has not performed the audit.
+
+---
+
+## 6. Measured Baseline — Validator 1.1.0 (2026-08-15)
+
+Supersedes §5.1 as the current measurement. §5.1 is retained as history.
+
+| Metric | v1.0.0 | **v1.1.0** | Source check |
+| :--- | ---: | ---: | :--- |
+| Markdown files | 90 | **93** | `MET-COUNTS` |
+| Total lines | 140,351 | **140,668** | `MET-COUNTS` |
+| Total words | 831,477 | **834,191** | `MET-COUNTS` |
+| Mermaid diagrams | 1,998 | **1,998** | `MET-COUNTS` |
+| Mermaid valid | 1,992 (structural) | **1,993** (`mermaid.parse()`) | `MMD-PARSE` |
+| Mermaid invalid | 6 | **5** | `MMD-PARSE` |
+| Mermaid unsupported | n/a | **0** | `MMD-COVERAGE` |
+| Tables | 3,728 | **3,747** | `MD-TABLE-SHAPE` |
+| Validation rules (`VAL-`) | 2,427 | **2,427** | `MET-COUNTS` |
+| Failure modes (`FAL-`) | 758 | **758** | `MET-COUNTS` |
+| Identifier occurrences | 7,587 | **7,588** | `ID-UNIQUE` |
+| → definitions | undifferentiated | **7,369** | `DEC-VIS-052` |
+| → republications (`INFO`) | — | **156** | `DEC-VIS-052` |
+| → semantic duplicates (`ERROR`) | — | **3** | `DEC-VIS-052` |
+| Metadata conformance | 96.3 % | **96.3 %** | `META-*` |
+| Broken anchors | 8 | **8** | `ANC-*` |
+| Visual-density breaches | 0 | **0** | `MET-VISUAL-DENSITY` |
+| **Total errors** | **165** | **13** | |
+| **Total warnings** | **441** | **441** | |
+
+### 6.1 Provenance — `ADOPT-R5`
+
+Every figure above is machine-produced by
+`tools/docs-validate/run-validator.py --reports-dir tools/docs-validate/reports` and is
+reproducible from the committed `metrics.json`. The Mermaid figures are produced by the
+reference implementation (`mermaid` v11 `mermaid.parse()`), not by an approximation.
+
+### 6.2 Metric health warning
+
+The v1.0.0 → v1.1.0 delta is a worked example of `LL-ADOPT-01`: **152 of 165 reported
+errors were artefacts of the measuring instrument.** Any metric in this document that has
+not been validated against a reference implementation or a hand-audited sample should be
+read as provisional. The §4 estimates (`~85%`, `~90%`, `~2.1`) remain unverified.

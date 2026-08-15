@@ -314,3 +314,65 @@ Measured 2026-08-15 by `tools/docs-validate/run-validator.py`, not carried forwa
 - Additions only, except `.ai/` control-plane status updates, which these documents exist to receive.
 - No commit to `main`.
 - `AOM-VIS-001` release remains **PROHIBITED** under `TBL-VIS-757`. `ADOPT-01` opens `QG-4`; `QG-5` stays closed, so the prohibition does **not** lift.
+
+---
+
+## Milestone Register — ADOPT-01 Follow-Up (2026-08-15)
+
+| Field | Value |
+| :--- | :--- |
+| **Scope** | Resolve `ADOPT-OBL-03a`, harden the validator, re-baseline honestly, prepare for `EV4` |
+| **Branch** | `arena/01a003bd-oship` (session-pinned; see deviation note) |
+| **Validator version** | **1.1.0** (was 1.0.0) |
+| **Self-test** | **29 of 29 PASS** (was 11) |
+| **Corpus result** | **FAIL — 13 errors, 441 warnings** (was 165 / 441) |
+| **`ADOPT-OBL-03a`** | **RESOLVED** by `DEC-VIS-052` |
+| **`ADOPT-OBL-01a`** | **RESOLVED** by `DEC-053` |
+| **`ADOPT-OBL-13`** | **OPEN** — workflow still not installed; permission re-verified as blocked |
+| **`EV4`** | **NOT ACHIEVED** — no CI run has occurred |
+
+### Baseline delta
+
+| | BEFORE v1.0.0 | AFTER v1.1.0 |
+| :--- | ---: | ---: |
+| Errors | 165 | **13** |
+| Warnings | 441 | **441** |
+| Mermaid engine | structural | **`mermaid.parse()`** (authoritative) |
+| Mermaid false positives | 4 | **0** |
+| Mermaid false negatives | 4 | **0** |
+| Identifier classification | undifferentiated | 5 classes |
+
+**152 of the 165 original errors were false positives.** The checker was wrong, not the
+corpus. In the same change it gained defect classes it could not previously see and now
+catches four genuinely broken diagrams that v1.0.0 passed. Full analysis:
+[`docs/reports/ADOPT-01-BASELINE-DELTA-2026-08-15.md`](../docs/reports/ADOPT-01-BASELINE-DELTA-2026-08-15.md).
+
+### The 13 remaining errors — all independently verified as real
+
+| Count | Class | Location |
+| ---: | :--- | :--- |
+| 5 | Mermaid parse failures | `AI_AGENT_OPERATING_MANUAL.md:188`, `MASTER_CONTEXT_EXECUTION_MODEL.md:5123`, `MASTER_CONTEXT_SCHEMA.md:365`, `:9120`, `:9132` |
+| 3 | Semantic duplicates | `VAL-VIS-381`, `VAL-VIS-437`, `VAL-VIS-456`, all in `TBL-VIS-394` |
+| 5 | Identifier contiguity gaps | `TBL-ARCH`, `TBL-MCR`, `TBL-MCS`, `DGM-MCS`, `DGM-MEM` |
+
+### Adoption state — unchanged, and stated plainly
+
+| Claim | State |
+| :--- | :--- |
+| Installed workflows | **0** |
+| `EV4` evidence | **NONE** |
+| `QG-4` | **CLOSED** |
+| Wave `W1` | **NOT CLOSED** |
+| Maturity | `M2` SELF-CHECKING — mechanism exists and executes locally |
+| `AOM-VIS-001` release | **PROHIBITED** under `TBL-VIS-757`; `QG-5` still closed |
+
+Nothing in this milestone advanced the adoption state. It made the existing mechanism
+**correct**, which is a precondition for the evidence being worth anything.
+
+### Constraints honoured
+
+- `docs/MASTER_CONTEXT/` **byte-identical** to `main` — verified by `git diff`.
+- No `AOM-VIS-001` part rewritten; no PART 07 opened; `ADOPT-02` respected.
+- Control-plane updates are append-only.
+- No commit to `main`; no tag; no release.
+- Historical baseline `BASELINE-2026-08-15.md` preserved unedited (`ADOPT-R3`).

@@ -218,3 +218,73 @@ clears 154 of 165 errors in one ruling. Then `ADOPT-OBL-01a` (`erDiagram` gramma
 `ADOPT-OBL-02` (the `F{Mount]` typo). `ADOPT-07`, the second `CODEOWNERS` principal,
 remains the highest-leverage human action in the repository and is unaffected by any of
 this.
+
+---
+
+## Context Update — 2026-08-15 (second session) — ADOPT-01 Follow-Up
+
+**The checker now measures the corpus rather than itself.**
+
+`ADOPT-OBL-03a` and `ADOPT-OBL-01a` are **RESOLVED**. Validator **1.1.0**. Corpus result
+**FAIL — 13 errors, 441 warnings**, down from 165 / 441.
+
+### Read this before quoting the delta
+
+**152 of the 165 original errors were false positives.** The corpus did not improve; the
+instrument did. Specifically:
+
+- **154** identifier "duplicates" were **republication** — an identifier restated in a
+  derived table. Resolved by `DEC-VIS-052` after an empirical finding: allocation-table
+  and derived-table header signatures are **disjoint** across every one of the 154, in
+  both `SYSTEM_VISION.md` and `SYSTEM_ARCHITECTURE.md`. Zero overlap.
+- **4** Mermaid errors were **valid** `erDiagram` crow's-foot notation.
+
+And in the same change the checker got **stricter**:
+
+- **3 real semantic duplicates** surfaced that were previously buried — `VAL-VIS-381`,
+  `437`, `456`, all restated with divergent normative text in `TBL-VIS-394`. `VAL-VIS-381`
+  is unambiguous: its definition governs sub-capability maturity, its restatement demands
+  that published figures name their method, and that text appears nowhere else.
+- **4 genuinely broken diagrams that v1.0.0 passed** are now caught, including an
+  unescaped `(` inside a node label in `.ai/AI_AGENT_OPERATING_MANUAL.md:188`.
+
+The previous session's claim that "4 of 6 Mermaid errors are over-strictness" was
+**half right**. The same parser was also producing 4 false negatives. Verified against
+`mermaid` v11 `mermaid.parse()` over 2,006 diagrams, not taken on trust (`LL-ADOPT-02`).
+
+### Adoption state — nothing advanced, and that is the honest reading
+
+| Claim | State |
+| :--- | :--- |
+| Installed workflows | **0** |
+| `EV4` evidence | **NONE** — no CI run has occurred |
+| `QG-4` | **CLOSED** |
+| Wave `W1` | **NOT CLOSED** |
+| Maturity | `M2` SELF-CHECKING (mechanism exists, runs locally) |
+| `OBL-03`, `QG-3`, `K4`, `CC-2` | unchanged; all still need a second `CODEOWNERS` principal |
+| `AOM-VIS-001` release | **PROHIBITED** — `TBL-VIS-757`, `QG-5` closed |
+
+`ADOPT-OBL-13` is **OPEN**. Workflow installation was re-attempted this session by two
+independent paths and blocked by both:
+
+- `git push` → `refusing to allow a GitHub App to create or update workflow ... without 'workflows' permission`
+- REST `PUT /contents/.github/workflows/...` → **HTTP 403** `Resource not accessible by integration`
+
+Missing scope: **`workflows`** on the GitHub App credential. The workflow is committed,
+YAML-validated, and installable at `tools/docs-validate/ci/docs-validate.yml`.
+
+### Standing rules added
+
+`ADOPT-R5` every published metric cites the check that produced it or is labelled an
+estimate. Lessons `LL-ADOPT-01`…`08` recorded, chief among them: **a checker's first
+output is a hypothesis about the checker, not a measurement of the corpus.**
+
+### Next action
+
+1. **`ADOPT-OBL-13`** — a principal with `workflows` scope copies
+   `tools/docs-validate/ci/docs-validate.yml` to `.github/workflows/`. One command; it is
+   the only route to `EV4`, `QG-4` and `W1`.
+2. **`ADOPT-OBL-02`** — repair the 5 real Mermaid defects. All are small and mechanical.
+3. **`ADOPT-OBL-03b`** — human adjudication of the 3 semantic duplicates in `TBL-VIS-394`.
+4. **`ADOPT-07`** — second `CODEOWNERS` principal. Unchanged, and still the highest-
+   leverage human action in the repository.
