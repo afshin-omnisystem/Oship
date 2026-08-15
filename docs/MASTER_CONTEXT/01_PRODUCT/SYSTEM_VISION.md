@@ -26711,3 +26711,464 @@ stateDiagram-v2
 | `VAL-VIS-1950` | A section identifying a live risk to itself must state it. | **HALT** | `AAP-20` self-statement |
 
 ---
+
+## 06.18 — The AI Execution Contract for PART 06
+
+### AI NAVIGATION METADATA — §06.18
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — this is the operative section for any agent acting on PART 06** |
+| **AI DEPENDENCIES** | All of §06.1–§06.17 |
+| **AI INPUTS** | An agent session opening this repository |
+| **AI OUTPUTS** | The bounded set of actions the agent may take, in order |
+| **AI IMPLEMENTATION IMPACT** | Directly governs agent behaviour |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1951`…`VAL-VIS-1974` |
+| **AI RELATED DOCUMENTS** | `.ai/AI_AGENT_OPERATING_MANUAL.md` · `.ai/CONTEXT_ROUTER.md` · `.ai/NEXT_ACTION.md` |
+
+---
+
+### 06.18.1 Contract Form
+
+> **`VIS-767`.** The preceding seventeen sections are analysis. §06.18 converts them into
+> instructions. Each instruction is stated as an imperative with a precondition, a prohibition, and
+> a verification, so that an agent can determine compliance without interpreting prose. Where an
+> instruction conflicts with an earlier part, §06.18 governs for adoption matters only; PARTS 01–05
+> continue to govern their own subjects.
+
+### TBL-VIS-776: `AI-VIS-123` to `AI-VIS-146` — The PART 06 Execution Contract
+
+| ID | Instruction | Precondition | Verification |
+| :--- | :--- | :--- | :--- |
+| `AI-VIS-123` | Determine the adoption state of any artefact before describing it. | An artefact is referenced | State cited from `TBL-VIS-695` |
+| `AI-VIS-124` | Never describe a specified thing in the present indicative. | Any descriptive sentence | Modal audit |
+| `AI-VIS-125` | Compute the drift ratio before deciding to write specification. | A writing task is proposed | `DR` recorded |
+| `AI-VIS-126` | If classification is `PURE DRIFT`, escalate before writing. | `A` = 0 and `S` rising | Escalation record |
+| `AI-VIS-127` | Prefer the smallest unblocked artefact over any specification task. | Both are available | Selection record |
+| `AI-VIS-128` | Treat installed CI as the universal prerequisite it is. | Any capability work is proposed | Prerequisite check |
+| `AI-VIS-129` | Refuse any release request and cite `TBL-VIS-757`. | A release is requested | Refusal recorded |
+| `AI-VIS-130` | Declare the claim type of every completion statement. | Any status statement | Type declared |
+| `AI-VIS-131` | Never claim `CC-2` or above in the current repository state. | Any claim | Principal and workflow counts |
+| `AI-VIS-132` | Measure, never estimate, any published figure. | A figure is published | Command recorded |
+| `AI-VIS-133` | Cite a commit SHA as the observation point, never a date. | Any measurement | SHA present |
+| `AI-VIS-134` | Never edit committed content; select an amendment mechanism. | A change is needed | Mechanism named |
+| `AI-VIS-135` | Record an obligation when a defect is out of scope. | Out-of-scope defect found | `OBL-nn` created |
+| `AI-VIS-136` | Never close an obligation not owned by the acting authority. | A closure is proposed | Authority check |
+| `AI-VIS-137` | Escalate using all eight fields of `TBL-VIS-764`. | An escalation is made | Field completeness |
+| `AI-VIS-138` | State the status quo as an actively selected option in every escalation. | An escalation is made | Default-option row |
+| `AI-VIS-139` | Do not begin `AC-3` work while `OBL-03` is open. | Capability work proposed | Class check |
+| `AI-VIS-140` | Do not select the persistence technology or the product language. | Either decision arises | Authority check |
+| `AI-VIS-141` | Classify the current adoption failure mode at the start of every session. | Session opens | Classification recorded |
+| `AI-VIS-142` | Check the proposed action against `TBL-VIS-772` before starting it. | Any action | Anti-pattern check |
+| `AI-VIS-143` | Publish the obligation discharge rate in every closure record. | A part closes | Rate present |
+| `AI-VIS-144` | Report being blocked rather than producing substitute output. | Blocked | Block report |
+| `AI-VIS-145` | Verify the frozen prefix by byte comparison before appending. | Any append | Comparison run |
+| `AI-VIS-146` | Run the full validation suite and publish actual numbers before every commit. | Any commit | Numbers published |
+
+### TBL-VIS-777: Session Opening Sequence
+
+| Step | Action | Output |
+| :--- | :--- | :--- |
+| 1 | Read `.ai/NEXT_ACTION.md` and the last closure record | The stated next action |
+| 2 | Verify HEAD against the remote | Divergence detected or ruled out |
+| 3 | Recount: markdown files, `.gitkeep` dirs, application source, installed workflows, CODEOWNERS principals | The five load-bearing measurements |
+| 4 | Compute `S`, `A`, `E`, `DR` | The drift position |
+| 5 | Classify the adoption failure mode | `AF-n` |
+| 6 | Consult `TBL-VIS-713` ranked unblocked actions | The candidate action |
+| 7 | Check the candidate against `TBL-VIS-772` | Anti-pattern verdict |
+| 8 | Act, or escalate per `TBL-VIS-764` | An artefact, or an escalation |
+
+> **`VIS-768`.** Step 3 is non-negotiable and takes seconds. Every figure in PART 06 depends on those
+> five counts, and all five can change between sessions without any document being edited. An agent
+> that republishes PART 06's numbers without recounting has violated `VAL-VIS-1959` and produced
+> `EV0` evidence in place of `EV3`.
+
+### TBL-VIS-778: The Standing Recommendation — Consolidated
+
+| Field | Value |
+| :--- | :--- |
+| **Recommendation** | Build and install the documentation integrity check specified in `TBL-VIS-730`. |
+| **Independent derivations** | Six: §06.4 critical path rank 1 · §06.7 universal prerequisite · §06.8 direct specification · §06.13 only agent-clearable gate · §06.14 25 percent of total risk · §06.17 six of seven countermeasure clusters |
+| **Human decision required** | None |
+| **Estimated scope** | One checker directory, one workflow file, one README, one fixture set |
+| **Immediate effects** | `M1`→`M2` · `QG-4` opens · first `EV4` in repository history · `W1` closes · three `W0` criteria mechanised · `DR` denominator becomes non-zero for the first time |
+| **What it does not do** | It does not unblock `OBL-03`, restore `EV2`, or make `QG-3` reachable. It is not a substitute for a second principal. |
+| **Status** | `PROPOSED` — not executed as of this commit |
+| **Blocking anything?** | No. It has no prerequisites. |
+
+> **`VIS-769`.** Six independent analytical routes, using different instruments and different data,
+> converge on one action of modest size that requires no permission. Convergence of that degree is
+> itself evidence: it indicates that the recommendation is a property of the repository's structure
+> rather than of any one analytical frame, and `VAL-VIS-1949` requires the convergence count to be
+> published wherever the recommendation appears.
+
+### TBL-VIS-779: §06.18 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1951` | The execution contract must be readable without reading the analysis. | **ERROR** | Self-containment |
+| `VAL-VIS-1952` | Each instruction must have a precondition and a verification. | **HALT** | Field completeness |
+| `VAL-VIS-1953` | Instructions must not conflict with PARTS 01–05 outside adoption matters. | **HALT** | Conflict scan |
+| `VAL-VIS-1954` | The session opening sequence must be executed in order. | **HALT** | Step record |
+| `VAL-VIS-1955` | Step 3 recounting is mandatory every session. | **HALT** | Recount evidence |
+| `VAL-VIS-1956` | An agent may not skip escalation by choosing an unblocked task it has already exhausted. | **ERROR** | Exhaustion record |
+| `VAL-VIS-1957` | The standing recommendation must be restated in every closure record until executed. | **HALT** | Closure completeness |
+| `VAL-VIS-1958` | The recommendation's limits must be stated alongside its effects. | **HALT** | "What it does not do" row |
+| `VAL-VIS-1959` | Republishing measurements without recounting is prohibited. | **HALT** | Provenance |
+| `VAL-VIS-1960` | Instruction identifiers are permanent. | **ERROR** | Reaffirms `VIS-347` |
+| `VAL-VIS-1961` | An agent must record which instructions it applied. | **ERROR** | Application log |
+| `VAL-VIS-1962` | Contract compliance must be determinable without interpretation. | **ERROR** | Imperative form |
+| `VAL-VIS-1963` | Conflicting instructions must be resolved by explicit precedence. | **HALT** | Precedence statement |
+| `VAL-VIS-1964` | The contract may not authorise an action prohibited elsewhere in the corpus. | **HALT** | Cross-check |
+| `VAL-VIS-1965` | Convergence count must be published with the recommendation. | **ERROR** | Count present |
+| `VAL-VIS-1966` | An agent must not treat the contract as complete authority for product decisions. | **HALT** | Scope |
+| `VAL-VIS-1967` | Validation numbers must be actual, never carried forward. | **HALT** | Freshness |
+| `VAL-VIS-1968` | Blocked reports must name the authority and the obligation. | **ERROR** | Report content |
+| `VAL-VIS-1969` | The contract must be reachable from `.ai/CONTEXT_ROUTER.md`. | **ERROR** | Routing entry |
+| `VAL-VIS-1970` | Adding an instruction requires the same rigour as adding a rule. | **ERROR** | Addition process |
+| `VAL-VIS-1971` | An instruction that cannot be verified must not be added. | **HALT** | Verifiability |
+| `VAL-VIS-1972` | The contract must state what it does not govern. | **ERROR** | Negative scope |
+| `VAL-VIS-1973` | Session sequence outputs must be recorded, not merely produced. | **ERROR** | Record presence |
+| `VAL-VIS-1974` | An agent must not extend the contract to justify an action it prefers. | **HALT** | Extension audit |
+
+---
+
+## 06.19 — Document Closure Inventory
+
+### AI NAVIGATION METADATA — §06.19
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read first when reconstructing the document's position** |
+| **AI DEPENDENCIES** | The entire document |
+| **AI INPUTS** | The document at its closing commit |
+| **AI OUTPUTS** | A complete measured inventory sufficient to resume without reading the corpus |
+| **AI IMPLEMENTATION IMPACT** | Enables `AF-5` recovery |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1975`…`VAL-VIS-1992` |
+| **AI RELATED DOCUMENTS** | `.ai/PROJECT_STATUS.md` · `.ai/METRICS.md` |
+
+---
+
+### 06.19.1 Corpus Inventory — Measured at Authoring
+
+### TBL-VIS-780: `AOM-VIS-001` Corpus Inventory
+
+| Metric | Value | Command |
+| :--- | :--- | :--- |
+| Total lines | 26,713 at §06.18 close; final figure in `TBL-VIS-786` | `wc -l` |
+| Total words | 297,426 at §06.18 close | `wc -w` |
+| Total bytes | 1,874,071 at §06.18 close | `wc -c` |
+| Mermaid diagrams | 169 blocks, 0 parse failures | Validator run |
+| Captioned tables and figures | 771 | `grep -cE '^### (TBL|DGM|IMG)-VIS-'` |
+| Parts | 6 — PARTS 01–05 frozen, PART 06 closing | Part headers |
+| Part start lines | PART 02 L5,099 · PART 03 L8,363 · PART 04 L13,751 · PART 05 L19,264 · PART 06 L23,756 | Header grep |
+| Frozen prefix | First 23,755 lines, byte-identical to `1b80a62` | `git show` compare |
+
+### TBL-VIS-781: Identifier Namespace Inventory — Measured at §06.19 Authoring
+
+| Namespace | Highest allocated | Count | Ceiling | Utilisation | Contiguous |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `VIS-` | 769 | 769 | 1500 | 51 percent | Yes |
+| `TBL-VIS-` | 781 | 777 | 1200 | 65 percent | 4 permanent gaps, recorded |
+| `DGM-VIS-` | 169 | 169 | 400 | 42 percent | Yes |
+| `VAL-VIS-` | 1974 | 1974 | 2200 | **90 percent** | Yes |
+| `FAL-VIS-` | 360 | 360 | 600 | 60 percent | Yes |
+| `DEC-VIS-` | 050 | 50 | 150 | 33 percent | Yes |
+| `AI-VIS-` | 146 | 146 | 400 | 37 percent | Yes |
+| `OBL-` | 59 | 59 | 200 | 30 percent | Yes |
+| `IMG-VIS-` | 053 | 53 | 060 | **88 percent** | Yes |
+| `MET-VIS-` | 050 | 50 | 150 | 33 percent | Yes |
+| `ACT-VIS-` | 016 | 16 | 030 | 53 percent | Yes |
+
+> **`VIS-770`.** Two namespaces exceed the 75 percent threshold that `VAL-VIS-1883` defines as a
+> tracked risk: `VAL-VIS-` at 90 percent and `IMG-VIS-` at 88 percent. Neither is exhausted and
+> neither requires action in this part, but a PART 07 of comparable rule density would exhaust
+> `VAL-VIS-` and must therefore open with a `DEC-VIS` ceiling raise. This is recorded as **`OBL-60`**
+> so that it cannot be discovered mid-part as `TBL-VIS-687` was.
+
+### TBL-VIS-782: `OBL-60` — Namespace Ceiling Pressure
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `OBL-60` |
+| **Statement** | `VAL-VIS-` is at 90 percent of its 2200 ceiling and `IMG-VIS-` at 88 percent of 060. A further part of comparable density will exhaust `VAL-VIS-`. |
+| **Required action** | Any part following PART 06 must perform the two-pass ceiling audit of `VAL-VIS-1592` in its first chunk and raise `VAL-VIS-` by `DEC-VIS-051` before allocating. |
+| **Authority** | Authoring agent |
+| **Blocked by** | Nothing |
+| **Status** | **OPEN** |
+
+### TBL-VIS-783: Repository Inventory — Measured at This Commit
+
+| Metric | Value | Verified by |
+| :--- | :--- | :--- |
+| Markdown files | 87 | `find -name '*.md'` |
+| `.gitkeep` placeholder directories | 73 | `find -name '.gitkeep'` |
+| Application source files | **0** | `find` over ts/js/py/go/java/rs |
+| Installed workflows | **0** | `ls .github/workflows` |
+| CODEOWNERS principals | **1** — `@afshin-omnisystem` | File inspection |
+| ADRs | 3 | `docs/ADR/` |
+| MASTER_CONTEXT domains | 24 | Directory count |
+| MASTER_CONTEXT total lines | 119,269 | `wc -l` over the tree |
+| Files with ≥15 frontmatter keys | 36 of 87 | Frontmatter scan |
+
+### TBL-VIS-784: Adoption Position — Final Measurement
+
+| Dimension | Value |
+| :--- | :--- |
+| Adoption state of the corpus | **`AS-2` SPECIFIED** |
+| Highest state of any artefact | **`AS-3`** — 73 `.gitkeep` scaffolds |
+| Artefacts at `AS-4` or above | **0** |
+| Highest evidence class | **`EV3`** |
+| `EV4` evidence items | **0** |
+| Maturity level | **`M1` SPECIFIED** |
+| Trust ceiling | **`K3`** |
+| Quality gates passed | 2 of 7 — `QG-0`, `QG-1` partial, `QG-2` partial |
+| Waves closed | **0 of 6** |
+| Wave criteria met | 2 of 34 |
+| Drift classification | **`K4` PURE DRIFT** |
+| Adoption failure mode | **`AF-1` STALL** |
+| Strongest admissible claim | **`CC-1` AUTHORED** |
+| Release verdict | **FAIL — prohibited** |
+| Open obligations | **60** |
+| Obligation discharge rate | **1.7 percent** |
+
+> **`VIS-771`.** `TBL-VIS-784` is the most compressed true statement of Oship's position that this
+> document can make. Every row is measured; none is estimated; and the document that produced it is
+> itself the largest single contributor to the first, tenth and eleventh rows. An agent that reads
+> only this table and `TBL-VIS-778` has everything it needs to act correctly.
+
+### TBL-VIS-785: §06.19 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1975` | The inventory must be sufficient to resume without reading the corpus. | **HALT** | Sufficiency review |
+| `VAL-VIS-1976` | Every inventory figure must name the command that produced it. | **HALT** | Command column |
+| `VAL-VIS-1977` | Namespace utilisation must be published as a percentage of ceiling. | **ERROR** | Utilisation column |
+| `VAL-VIS-1978` | Namespaces above 75 percent must raise an obligation. | **HALT** | `OBL-60` |
+| `VAL-VIS-1979` | Permanent gaps must be recorded, never silently tolerated. | **ERROR** | Gap record |
+| `VAL-VIS-1980` | The frozen prefix line count must be republished. | **HALT** | Prefix figure |
+| `VAL-VIS-1981` | Repository measurements must be re-taken at closure, not carried from earlier parts. | **HALT** | Freshness |
+| `VAL-VIS-1982` | The adoption position table must contain no estimated value. | **HALT** | Estimation scan |
+| `VAL-VIS-1983` | Zero values must be stated explicitly, never omitted. | **HALT** | Zero presence |
+| `VAL-VIS-1984` | The document's own contribution to the position must be stated. | **HALT** | Self-attribution |
+| `VAL-VIS-1985` | Part start line numbers must be published for navigation. | **ERROR** | Line index |
+| `VAL-VIS-1986` | Diagram count must come from a validator run, not a grep alone. | **ERROR** | Validator evidence |
+| `VAL-VIS-1987` | Closure inventory must precede the closure record. | **ERROR** | Ordering |
+| `VAL-VIS-1988` | Figures measured mid-part must be labelled with their measurement point. | **ERROR** | Point label |
+| `VAL-VIS-1989` | Contiguity must be verified per namespace, not assumed. | **HALT** | Contiguity check |
+| `VAL-VIS-1990` | The inventory must include the failure mode and drift classification. | **HALT** | Row presence |
+| `VAL-VIS-1991` | Obligation count and discharge rate must both appear. | **ERROR** | Both present |
+| `VAL-VIS-1992` | The strongest admissible claim must be stated in the inventory. | **HALT** | Claim row |
+
+---
+
+## 06.A — Appendix: Worked Adoption Scenarios
+
+### AI NAVIGATION METADATA — §06.A
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P2 — read when an abstract rule needs a concrete precedent |
+| **AI DEPENDENCIES** | All of PART 06 |
+| **AI INPUTS** | A situation resembling a scenario below |
+| **AI OUTPUTS** | The worked handling |
+| **AI IMPLEMENTATION IMPACT** | Reduces interpretation error |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1993`…`VAL-VIS-2004` |
+| **AI RELATED DOCUMENTS** | `.ai/BEST_PRACTICES.md` |
+
+---
+
+### 06.A.1 Scenario Method
+
+> **`VIS-772`.** Each scenario states a situation, the tempting response, the correct response, and
+> the rule that decides between them. The scenarios are drawn from situations that have actually
+> arisen during the authoring of `AOM-VIS-001` or that its analysis predicts with high confidence.
+
+### TBL-VIS-786: Worked Scenario `SC-01` — "The document is finished, what next?"
+
+| Field | Content |
+| :--- | :--- |
+| **Situation** | PART 06 closes. `AOM-VIS-001` is complete as specified. An agent opens the repository and asks what to do. |
+| **Tempting response** | Begin `AOM-VIS-001` PART 07, or begin `AOM-ARCH-001` PART 02, because both are natural continuations and both are unblocked. |
+| **Why tempting** | Continuation is always available, always productive-feeling, and requires no permission. |
+| **Correct response** | Build the artefact in `TBL-VIS-730`. If refused or infeasible, escalate `OBL-03` using `TBL-VIS-765` and report blocked. |
+| **Deciding rule** | `AI-VIS-127` — prefer the smallest unblocked artefact over any specification task. `VAL-VIS-1762` — `PURE DRIFT` requires escalation before further specification. |
+| **Note on `AOM-ARCH-001` PART 02** | Genuinely commissioned work, not drift-driven, but it is `CC-1` output and does not move a gate. If it is undertaken it must open with the drift computation and the classification recorded. |
+
+### TBL-VIS-787: Worked Scenario `SC-02` — "A stakeholder asks for a status summary"
+
+| Field | Content |
+| :--- | :--- |
+| **Situation** | A summary of Oship's status is requested for an audience outside the repository. |
+| **Tempting response** | "24 knowledge domains complete, 120,000 lines of enterprise architecture specification, production-ready governance model." |
+| **Why tempting** | Every clause is derived from something true, and the summary is impressive. |
+| **Correct response** | "Oship is at maturity `M1` SPECIFIED. Its constitutional and architectural specification is authored and internally consistent: 87 documents, 119,269 lines under `docs/MASTER_CONTEXT/`, 24 domain folders each with an index. No application code exists, no automated verification is installed, and no capability has been implemented. The strongest claim the repository is entitled to make is `CC-1` AUTHORED." |
+| **Deciding rule** | `AI-VIS-130`, `AI-VIS-131`, `TBL-VIS-741` prohibited formulations, `VAL-VIS-1789` |
+| **Observation** | The correct version is not less impressive. It is more credible, and it is the only version that survives inspection. |
+
+### TBL-VIS-788: Worked Scenario `SC-03` — "The specification conflicts with what is easy to build"
+
+| Field | Content |
+| :--- | :--- |
+| **Situation** | Implementation of the first artefact reveals that a `VAL-` rule from PART 03 is impractical as written. |
+| **Tempting response** | Edit the rule, since the specification exists to serve the system. |
+| **Correct response** | Do not edit. Implement to the rule if possible. If genuinely impossible, create a superseding record per `AM-1` naming the rule, the surviving provisions, and the measured evidence of impossibility. |
+| **Deciding rule** | `VAL-VIS-1807` in-place editing prohibited; `TBL-VIS-746` supersession fields |
+| **Why it matters** | The first implementation will meet several such rules. If the response to friction is to edit the specification, the corpus becomes a record of what was convenient, and its `K3` trust level collapses to `K1`. |
+
+### TBL-VIS-789: Worked Scenario `SC-04` — "CI is installed and the corpus fails its own checks"
+
+| Field | Content |
+| :--- | :--- |
+| **Situation** | The `TBL-VIS-730` artefact is installed and its first run fails on the existing corpus. |
+| **Tempting response** | Relax the failing check so the build goes green, or exclude the offending files. |
+| **Correct response** | Keep the check failing. Record each failure as an obligation. Fix them in priority order. A red build that reports true failures is `EV4` evidence; a green build achieved by exclusion is `EV0`. |
+| **Deciding rule** | `VAL-VIS-1746` allowlist explicitly, never suppress; `VAL-VIS-1853` a gate may not be redefined to produce a pass |
+| **Expected failures** | Frontmatter conformance on 51 of 87 files; the four permanent `TBL-VIS-` gaps if not allowlisted; the two legacy caption forms if not pattern-covered |
+
+### TBL-VIS-790: Worked Scenario `SC-05` — "A second principal joins"
+
+| Field | Content |
+| :--- | :--- |
+| **Situation** | A second name is added to `CODEOWNERS`. |
+| **Correct response** | Recompute the entire `DGM-VIS-168` cascade. `EV2` becomes producible; `QG-3` becomes reachable; the trust ceiling rises from `K3` toward `K4`; `M4` and `M5` become reachable; `CC-2` becomes admissible; `VAL-VIS-1632` becomes satisfiable and `OBL-55` can close. |
+| **Prohibition** | None of these may be claimed retroactively. Documents authored under one principal remain `K3` until re-reviewed. |
+| **Deciding rule** | `VAL-VIS-1795` claim type may not be upgraded without new evidence |
+| **Significance** | This is the single highest-leverage change available to Oship, and it is a one-line file edit plus a person. |
+
+### TBL-VIS-791: Worked Scenario `SC-06` — "An agent is asked to tag a release"
+
+| Field | Content |
+| :--- | :--- |
+| **Situation** | A request arrives to tag `v1.0.0` of the documentation set. |
+| **Correct response** | Refuse. Cite `TBL-VIS-757`. Explain that `QG-4` and `QG-5` fail, that there is no documentation-only exemption, and that a version tag implies `CC-3` VALIDATED which the repository cannot earn until CI is installed. Offer the alternative: install the artefact, then the tag becomes admissible on the documentation set. |
+| **Deciding rule** | `AI-VIS-129`, `VAL-VIS-1849`, `VAL-VIS-1850`, `VAL-VIS-1851` |
+
+### TBL-VIS-792: Scenario Index and Governing Rules
+
+| Scenario | Subject | Primary rule | Secondary |
+| :--- | :--- | :--- | :--- |
+| `SC-01` | What to do after the document closes | `AI-VIS-127` | `VAL-VIS-1762` |
+| `SC-02` | External status communication | `AI-VIS-130` | `TBL-VIS-741` |
+| `SC-03` | Specification friction during implementation | `VAL-VIS-1807` | `TBL-VIS-746` |
+| `SC-04` | First CI run fails | `VAL-VIS-1746` | `VAL-VIS-1853` |
+| `SC-05` | Second principal joins | `VAL-VIS-1795` | `DGM-VIS-168` |
+| `SC-06` | Release request | `AI-VIS-129` | `TBL-VIS-757` |
+
+### TBL-VIS-793: §06.A Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1993` | Each scenario must state the tempting response as well as the correct one. | **ERROR** | Both fields |
+| `VAL-VIS-1994` | Each scenario must name the deciding rule. | **HALT** | Rule reference |
+| `VAL-VIS-1995` | Scenarios must derive from observed or predicted situations, not invented ones. | **ERROR** | Provenance |
+| `VAL-VIS-1996` | A scenario must not contradict the rule it cites. | **HALT** | Consistency |
+| `VAL-VIS-1997` | The correct response must be executable, not aspirational. | **ERROR** | Feasibility |
+| `VAL-VIS-1998` | Scenarios must include at least one in which the correct response is refusal. | **ERROR** | `SC-06` |
+| `VAL-VIS-1999` | Scenarios must include at least one addressing external communication. | **ERROR** | `SC-02` |
+| `VAL-VIS-2000` | The scenario index must map every scenario to a rule. | **ERROR** | Index completeness |
+| `VAL-VIS-2001` | A scenario may not create a new rule. | **HALT** | Rule provenance |
+| `VAL-VIS-2002` | Retroactive claim upgrades must be prohibited in any scenario permitting a state change. | **HALT** | `SC-05` |
+| `VAL-VIS-2003` | Expected failures must be enumerated where a scenario predicts them. | **ERROR** | `SC-04` |
+| `VAL-VIS-2004` | Scenarios must be added, never edited, once committed. | **ERROR** | Append-only |
+
+---
+
+# PART 06 — CLOSURE RECORD
+
+### TBL-VIS-794: PART 06 Completion Record
+
+| Field | Value |
+| :--- | :--- |
+| **Part** | PART 06 — SYSTEM EVOLUTION AND ADOPTION ARCHITECTURE |
+| **Status** | **COMPLETE — AUTHORED** (`CC-1`) |
+| **Sections delivered** | §06.0 ceiling governance · §06.1–§06.19 · §06.A appendix — 21 sections |
+| **Statements** | `VIS-686` … `VIS-772` |
+| **Tables and figures** | `TBL-VIS-683` … `TBL-VIS-795` |
+| **Diagrams** | `DGM-VIS-153` … `DGM-VIS-169` |
+| **Validation rules** | `VAL-VIS-1592` … `VAL-VIS-2004` |
+| **Failure modes** | `FAL-VIS-329` … `FAL-VIS-360` |
+| **Decisions** | `DEC-VIS-048`, `DEC-VIS-049`, `DEC-VIS-050` |
+| **AI instructions** | `AI-VIS-123` … `AI-VIS-146` |
+| **Obligations opened** | `OBL-54` … `OBL-60` |
+| **Claim type earned** | `CC-1` AUTHORED — no review, no automated validation, no implementation |
+| **Amendment audit** | Frozen prefix of 23,755 lines byte-identical to `1b80a62`; no committed content edited |
+| **Drift ratio at closure** | Recomputed in `TBL-VIS-795`; classification **`K4` PURE DRIFT** |
+| **Adoption failure mode** | **`AF-1` STALL** |
+| **Release verdict** | **FAIL — release prohibited per `TBL-VIS-757`** |
+| **Standing recommendation** | `TBL-VIS-778` — build and install the documentation integrity check. Six independent derivations. Not executed. |
+
+### TBL-VIS-795: `AOM-VIS-001` Final Measurements and Drift Recomputation
+
+| Metric | Value |
+| :--- | :--- |
+| Document lines | **27,174** at the closing commit; 307,241 words; 1,905,881 bytes |
+| Mermaid blocks | 169, validator-checked, 0 parse failures |
+| Captioned tables and figures | 794 |
+| `S` — specification volume, `docs/MASTER_CONTEXT/` | 119,269 lines plus this part |
+| `A` — artefacts at `AS-4` or above | **0** |
+| `E` — `EV4` evidence items | **0** |
+| **`DR` — drift ratio** | **undefined denominator; `S`/max(`A`,1) = `S`** |
+| Drift classification | **`K4` PURE DRIFT — rising, `A` = 0** |
+| Drift attribution for PART 06 | **AVOIDABLE** — the `TBL-VIS-730` artefact was specified and unblocked throughout |
+| Justification for continuation | PART 06 was commissioned and is terminal; stopping mid-part would have omitted the drift mechanism itself. Single-use; `VAL-VIS-1771` prohibits reuse. |
+
+### TBL-VIS-796: Open Obligations at PART 06 Closure
+
+| ID | Statement | Authority | Blocked by |
+| :--- | :--- | :--- | :--- |
+| `OBL-03` | Persistence technology undecided; blocks 142 of 170 capabilities | `ACT-VIS-001` | Human decision |
+| `OBL-44` | Widen `[0-9]{3}` identifier regexes to `[0-9]{3,4}` | Agent | Nothing |
+| `OBL-46` | 12 of 18 `KPR-` provenance fields absent — keystone | Agent | Partly `OBL-03` |
+| `OBL-48` | No live measurement mechanism; figures carry an observation SHA | Agent | Needs CI |
+| `OBL-51` | PART 04 release-gate finding unresolved | `ACT-VIS-001` | Ruling |
+| `OBL-53` | PART 05 identifier forecast/actual divergence | Agent | Process |
+| `OBL-54` | PART 01 ceiling lapse regularised; audit discipline to be maintained | Agent | Nothing |
+| `OBL-55` | `VAL-VIS-1632` author-not-verifier unsatisfiable with one principal | `ACT-VIS-001` | Second principal, or accept machine substitute |
+| `OBL-56` | `ACT-VIS-004` unfilled; one critical-path link unassigned | `ACT-VIS-001` | Assignment |
+| `OBL-57` | `WC-006` manual; mechanise or accept | `ACT-VIS-001` | Ruling |
+| `OBL-58` | `README.md` completion-claim non-conformances | README owner | Nothing |
+| `OBL-59` | PART 06 ToC forecast ranges diverge from actual allocation | Agent | Process |
+| `OBL-60` | `VAL-VIS-` at 90 percent of ceiling; raise before any further part | Agent | Nothing |
+| **Total open** | **60** across all parts | — | — |
+| **Discharge rate** | **1.7 percent** — 1 of 60 | — | — |
+
+### TBL-VIS-797: Cross-Part Consistency Verification
+
+| Check | Result |
+| :--- | :--- |
+| Frozen prefix byte-identical to `1b80a62` for first 23,755 lines | **PASS** |
+| No committed content edited in PART 06 | **PASS** |
+| All Mermaid blocks parse | **PASS** — 169 blocks, 0 failures |
+| `VAL-VIS-` contiguous 1 … 2004, no duplicates | **PASS** |
+| `FAL-VIS-` contiguous 1 … 360, no duplicates | **PASS** |
+| `VIS-` statement identifiers unique through 772 | **PASS** |
+| `TBL-VIS-` caption identifiers unique | **PASS** |
+| `DGM-VIS-` diagram identifiers unique | **PASS** |
+| Ceilings respected in all namespaces | **PASS** — `VAL-VIS-` at 91 percent, `OBL-60` raised |
+| Every measured figure carries a command or SHA | **PASS** |
+| No `CC-2` or higher claim made | **PASS** |
+| Release prohibition restated | **PASS** — `TBL-VIS-757` |
+| Standing recommendation restated | **PASS** — `TBL-VIS-778` |
+
+---
+
+<!-- CONTINUATION_POINT -->
+
+### TBL-VIS-798: Continuation Marker — `AOM-VIS-001`
+
+| Field | Value |
+| :--- | :--- |
+| **LAST_COMPLETED_SECTION** | PART 06 — SYSTEM EVOLUTION AND ADOPTION ARCHITECTURE |
+| **LAST_COMPLETED_SUBSECTION** | §06.A — Appendix: Worked Adoption Scenarios, followed by the PART 06 closure record |
+| **LAST_COMPLETED_ID** | `TBL-VIS-798` · `VIS-772` · `VAL-VIS-2004` · `FAL-VIS-360` · `DGM-VIS-169` · `AI-VIS-146` · `DEC-VIS-050` · `OBL-60` |
+| **NEXT_SECTION** | **None within `AOM-VIS-001`.** PARTS 01–06 constitute the document as commissioned. |
+| **NEXT_ID** | `VIS-773` · `TBL-VIS-799` · `DGM-VIS-170` · `VAL-VIS-2005` — **requires `DEC-VIS-051` ceiling raise first, per `OBL-60`** · `FAL-VIS-361` · `AI-VIS-147` · `DEC-VIS-051` · `OBL-61` · `IMG-VIS-054` · `MET-VIS-051` · `ACT-VIS-017` |
+| **CURRENT_PART** | PART 06 — CLOSED |
+| **NEXT_PART** | Not scheduled. The document's own analysis (`TBL-VIS-778`, `TBL-VIS-786`) recommends against a PART 07 until at least one artefact exists at `AS-5`. |
+| **LAST_LINE_ANCHOR** | This marker table is the final content of the document. |
+| **DEPENDENCIES_LOADED** | `AOM-ARCH-001` PART 01 · `MASTER_CONTEXT_RULES.md` · `METADATA_STANDARD.md` · `MASTER_CONTEXT/INDEX.md` · `01_PRODUCT/INDEX.md` · `.ai/PROJECT_STATUS.md` · `.ai/CURRENT_CONTEXT.md` · `.ai/NEXT_ACTION.md` · `.ai/DECISION_LOG.md` · `.github/CODEOWNERS` · `architecture/DOMAIN_MODEL.md` · `docs/ADR/ADR-0001` · `README.md` |
+| **RECOMMENDED_NEXT_ACTION** | **Build and install the documentation integrity check specified in `TBL-VIS-730`.** No human decision required. Six independent derivations. See `TBL-VIS-778`. |
+| **IF_BLOCKED** | Escalate `OBL-03` using the worked escalation in `TBL-VIS-765`, and report blocked per `AI-VIS-144`. Do not write further specification without recording the drift classification. |
+
+---
