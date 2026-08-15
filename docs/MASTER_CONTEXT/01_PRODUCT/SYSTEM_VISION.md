@@ -26055,3 +26055,251 @@ flowchart TD
 | `VAL-VIS-1842` | The register must distinguish scope-blocked items from decision-blocked items. | **ERROR** | Blocker classification |
 
 ---
+
+## 06.13 — The Release Gate Architecture
+
+### AI NAVIGATION METADATA — §06.13
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | **P0 — read before any release, tag, or version bump** |
+| **AI DEPENDENCIES** | PART 04 quality gates `QG-0`…`QG-6` · §06.2 states · §06.10 claim types |
+| **AI INPUTS** | A proposed release |
+| **AI OUTPUTS** | PASS or FAIL per gate, with the measured basis |
+| **AI IMPLEMENTATION IMPACT** | Whether anything may be released |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1843`…`VAL-VIS-1866` |
+| **AI RELATED DOCUMENTS** | `.github/workflow-skeletons/release` · `ADR-0001` |
+
+---
+
+### 06.13.1 What a Release Gate Is
+
+> **`VIS-748`.** A release gate is a **refusal mechanism**. Its purpose is not to describe quality
+> but to block a transition when a stated condition is unmet, and a gate that cannot block is a
+> checklist. Oship currently has seven described gates and zero blocking gates, because blocking
+> requires a mechanism and the repository has none installed.
+
+> **`VIS-749`.** §06.13 does three things. It reconciles the gate model of PART 04 with the adoption
+> states of §06.2 so the two schemes do not drift apart. It states, per gate, what is measured and by
+> what. And it applies the gates to the current repository and publishes the verdict — which is
+> `FAIL`, and has been in every part that has run it.
+
+### TBL-VIS-754: Release Gate Reconciliation — Gates to States to Claims
+
+| Gate | Question it asks | Adoption state required | Evidence class | Strongest claim it licenses | Attainable today |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `QG-0` Existence | Does the artefact exist in the tree? | `AS-2` | `EV1` | `CC-1` | **Yes** |
+| `QG-1` Structure | Does it conform to the schema and metadata standard? | `AS-2` | `EV1` | `CC-1` | **Yes** |
+| `QG-2` Coherence | Do its internal references resolve? | `AS-2` | `EV3` | `CC-1` | **Yes** |
+| `QG-3` Review | Has a second principal accepted it? | `AS-2` | `EV2` | `CC-2` | **No** — one principal |
+| `QG-4` Verification | Do automated checks pass in CI? | `AS-5` | `EV4` | `CC-3` | **No** — zero workflows |
+| `QG-5` Function | Does the capability do what it specifies? | `AS-6` | `EV4` | `CC-4` | **No** — zero code |
+| `QG-6` Operation | Does it run under observation? | `AS-7` | `EV5` | `CC-5` | **No** — no environment |
+
+> **`VIS-750`.** The reconciliation exposes something the three schemes each hid separately. `QG-3`
+> is blocked by a **governance** fact (one principal), `QG-4` by a **mechanical** fact (no workflow),
+> `QG-5` by an **implementation** fact (no code), and `QG-6` by an **infrastructure** fact. These are
+> four independent blockers, which means they can be cleared in parallel and in any order — and that
+> `QG-4`, the cheapest, does not depend on `QG-3`, the one requiring another human being.
+
+```mermaid
+flowchart LR
+    subgraph OPEN["ATTAINABLE NOW"]
+        Q0["QG-0<br/>Existence"]:::ok
+        Q1["QG-1<br/>Structure"]:::ok
+        Q2["QG-2<br/>Coherence"]:::ok
+    end
+    subgraph BLOCKED["BLOCKED - independent causes"]
+        Q3["QG-3 Review<br/>blocked by:<br/>1 CODEOWNERS principal"]:::gov
+        Q4["QG-4 Verification<br/>blocked by:<br/>0 installed workflows"]:::mech
+        Q5["QG-5 Function<br/>blocked by:<br/>0 application source"]:::impl
+        Q6["QG-6 Operation<br/>blocked by:<br/>no environment"]:::infra
+    end
+    R["RELEASE ADMISSIBLE"]:::rel
+    Q0 --> Q1 --> Q2
+    Q2 --> Q3
+    Q2 --> Q4
+    Q3 --> R
+    Q4 --> R
+    Q5 --> R
+    Q6 --> R
+    Q4 -.->|"clearable without<br/>any human decision"| F["W1 first artefact"]:::ok
+    classDef ok fill:#1b5e20,stroke:#a5d6a7,color:#ffffff
+    classDef gov fill:#4a148c,stroke:#ce93d8,color:#ffffff
+    classDef mech fill:#e65100,stroke:#ffcc80,color:#ffffff
+    classDef impl fill:#b71c1c,stroke:#ef9a9a,color:#ffffff
+    classDef infra fill:#37474f,stroke:#b0bec5,color:#ffffff
+    classDef rel fill:#004d40,stroke:#80cbc4,color:#ffffff
+```
+
+> **Diagram ID:** `DGM-VIS-167` — **Release Gates, Their Independent Blockers, and the Release Join**
+> **Explanation:** The release node is a join, not a chain: **all four blocked gates must clear**,
+> and no ordering among them is imposed. The colour coding separates the blocker *kinds*, which is
+> the operationally useful distinction — a governance blocker needs a person, a mechanical blocker
+> needs a file, an implementation blocker needs a language decision first. Only the amber path has
+> no upstream dependency at all.
+
+### TBL-VIS-755: Release Gate Verdict — Measured at This Commit
+
+| Gate | Verdict | Basis | Failing rules |
+| :--- | :--- | :--- | :--- |
+| `QG-0` | **PASS** | 87 markdown files present; all referenced paths resolve | — |
+| `QG-1` | **PARTIAL** | 36 of 87 files carry ≥15 frontmatter keys | Metadata conformance below 100 percent |
+| `QG-2` | **PARTIAL** | Traceability 76/100; break at L1→L2 | `VAL-VIS-437`, `443`, `456`, `470` |
+| `QG-3` | **FAIL** | 1 CODEOWNERS principal; author equals verifier | `VAL-VIS-1632`, `OBL-55` |
+| `QG-4` | **FAIL** | 0 workflows installed in `.github/workflows/` | `VAL-VIS-1743`, `EVD-VIS-017` |
+| `QG-5` | **FAIL** | 0 lines of application source | `VAL-VIS-1787` |
+| `QG-6` | **FAIL** | No deployment target exists | `VAL-VIS-1788` |
+| **Overall** | **FAIL — release prohibited** | Four hard failures, two partials | — |
+
+> **`VIS-751`.** The verdict is unchanged from PART 04 and PART 05. Three parts of specification have
+> been added since the gate first returned `FAIL`, and **not one gate has moved**. That is the drift
+> ratio of §06.9 expressed in gate terms, and it is the strongest available argument that further
+> specification is not the constraint.
+
+### TBL-VIS-756: What Would Move Each Gate
+
+| Gate | Minimum action | Cost | Human decision required |
+| :--- | :--- | :--- | :--- |
+| `QG-1` → PASS | Add frontmatter to the 51 non-conforming files | Medium, mechanical | No |
+| `QG-2` → PASS | Resolve `OBL-51` and the L1→L2 traceability break | Medium | Partially — `OBL-51` needs an owner ruling |
+| `QG-3` → PASS | Add a second CODEOWNERS principal | Trivial to execute, **impossible for an agent** | **Yes — `ACT-VIS-001`** |
+| `QG-4` → PASS | Commit the §06.8 artefact and install its workflow | Small | **No** |
+| `QG-5` → PASS | Select a language, implement one capability with tests | Large | **Yes — `OBL-03` and `W2`** |
+| `QG-6` → PASS | Select and provision a deployment target | Large | **Yes** |
+
+> **`VIS-752`.** Two rows require no human decision: `QG-1` and `QG-4`. `QG-1` is a bulk mechanical
+> edit that an agent may perform today; `QG-4` is the §06.8 artefact. Together they would take the
+> repository from two passes to four out of seven, which is the largest gate movement available
+> without any human involvement whatsoever, and is recorded as the **second and third ranked
+> unblocked actions** after `TBL-VIS-713` rank 1.
+
+### TBL-VIS-757: Release Prohibition — Standing
+
+| Field | Value |
+| :--- | :--- |
+| **Statement** | No release, tag, or version bump of any Oship component is admissible while `QG-4` and `QG-5` fail. |
+| **Scope** | The entire repository, including documentation-only releases |
+| **Reason for including documentation** | A documentation release implies `CC-3` validated status, which requires `QG-4` |
+| **Exception** | None. There is no documentation-only exemption. |
+| **Who may lift it** | `ACT-VIS-001` only, and only by clearing the gates |
+| **Current status** | **IN FORCE** |
+| **Instruction to agents** | An agent asked to release must refuse and cite this record. |
+
+### TBL-VIS-758: §06.13 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1843` | A gate that cannot block is a checklist and must not be called a gate. | **HALT** | Blocking mechanism present |
+| `VAL-VIS-1844` | Every gate must state its measured basis. | **HALT** | Basis field |
+| `VAL-VIS-1845` | Gate verdicts must be recomputed per part, never carried forward. | **HALT** | Recomputation evidence |
+| `VAL-VIS-1846` | A `PARTIAL` verdict must name the shortfall numerically. | **ERROR** | Numeric shortfall |
+| `VAL-VIS-1847` | Blockers must be classified by kind: governance, mechanical, implementation, infrastructure. | **ERROR** | Classification |
+| `VAL-VIS-1848` | Gates with independent blockers must not be presented as sequential. | **ERROR** | Join semantics |
+| `VAL-VIS-1849` | Release is prohibited while any gate above `QG-3` fails. | **HALT** | Overall verdict |
+| `VAL-VIS-1850` | There is no documentation-only release exemption. | **HALT** | Exception audit |
+| `VAL-VIS-1851` | An agent asked to release must refuse and cite `TBL-VIS-757`. | **HALT** | Refusal record |
+| `VAL-VIS-1852` | Gate-to-state-to-claim reconciliation must be maintained in every part that touches any of the three. | **ERROR** | Reconciliation table |
+| `VAL-VIS-1853` | A gate may not be redefined to produce a pass. | **HALT** | Definition stability |
+| `VAL-VIS-1854` | The count of gates passed must accompany any progress statement. | **ERROR** | Context requirement |
+| `VAL-VIS-1855` | `QG-3` may not be self-satisfied by the author. | **HALT** | Principal comparison |
+| `VAL-VIS-1856` | `QG-4` evidence must be a run log, not a local execution. | **HALT** | Log provenance |
+| `VAL-VIS-1857` | `QG-5` requires tests that cite the specification rules they verify. | **HALT** | Rule citation |
+| `VAL-VIS-1858` | `QG-6` requires telemetry from a non-development environment. | **HALT** | Environment class |
+| `VAL-VIS-1859` | Unchanged verdicts across parts must be reported as unchanged, explicitly. | **ERROR** | Trend statement |
+| `VAL-VIS-1860` | Actions that would move a gate must be listed with their decision requirement. | **ERROR** | Action table |
+| `VAL-VIS-1861` | A gate verdict must cite the commit at which it was measured. | **ERROR** | SHA present |
+| `VAL-VIS-1862` | Partial credit must never be aggregated into an overall pass. | **HALT** | Aggregation rule |
+| `VAL-VIS-1863` | The prohibition record must be reproduced in every closure record. | **ERROR** | Closure completeness |
+| `VAL-VIS-1864` | Gate failure must not be described as a project risk; it is a measured state. | **ERROR** | Framing |
+| `VAL-VIS-1865` | An agent must not propose lowering a gate to achieve a release. | **HALT** | Proposal audit |
+| `VAL-VIS-1866` | The number of gates unmoved across parts must be published. | **HALT** | Stagnation metric |
+
+---
+
+## 06.14 — The Adoption Risk Register
+
+### AI NAVIGATION METADATA — §06.14
+
+| Field | Value |
+| :--- | :--- |
+| **AI READ PRIORITY** | P1 — read when planning any wave |
+| **AI DEPENDENCIES** | §06.3 waves · §06.9 drift · §06.15 human dependency |
+| **AI INPUTS** | A wave or an action under consideration |
+| **AI OUTPUTS** | The risks it carries and their mitigations |
+| **AI IMPLEMENTATION IMPACT** | Informs sequencing and escalation |
+| **AI VALIDATION REQUIREMENTS** | `VAL-VIS-1867`…`VAL-VIS-1884` |
+| **AI RELATED DOCUMENTS** | `.ai/LESSONS_LEARNED.md` · `.ai/COMMON_MISTAKES.md` |
+
+---
+
+### 06.14.1 Scope and Method
+
+> **`VIS-753`.** The register below covers **adoption risks only** — risks to the transition from
+> specification to system. Product risk, market risk and technical risk are out of scope and belong
+> to PART 02 and `AOM-ARCH-001`. Each entry states a condition that is measurable now, not a
+> speculative future event, and each is scored on likelihood and impact against the adoption
+> position rather than against the business.
+
+### TBL-VIS-759: Adoption Risk Register
+
+| ID | Risk | Condition observable now | Likelihood | Impact | Score | Mitigation | Owner |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `ARK-01` | **Single-principal dependency** | 1 CODEOWNERS principal; `QG-3` structurally unreachable | Certain | Severe | **9** | Add a second principal; until then cap claims at `CC-1` | `ACT-VIS-001` |
+| `ARK-02` | **Perpetual `W0`** | Five parts of specification, zero artefacts | Certain | Severe | **9** | Drift rule `VAL-VIS-1762`; halt specification | Agent + `ACT-VIS-001` |
+| `ARK-03` | **`OBL-03` never decided** | Persistence decision open since PART 02; blocks 142 of 170 capabilities | High | Severe | **8** | Escalate with the 84 percent figure; propose a reversible default | `ACT-VIS-001` |
+| `ARK-04` | **Specification unimplementable in aggregate** | 1,842 `VAL-` rules must all hold simultaneously at first implementation | Medium | Severe | **7** | Tag rules by wave; implement `W1` rules first | Agent |
+| `ARK-05` | **Constitution decays before use** | Corpus at `K3`; no revalidation mechanism installed | High | Moderate | **6** | `QG-4` artefact revalidates on every push | Agent |
+| `ARK-06` | **Agent context exhaustion** | The corpus exceeds what any agent can load at once | Certain | Moderate | **6** | Section-level `AI READ PRIORITY`; `CONTEXT_ROUTER.md` | Agent |
+| `ARK-07` | **Tooling language becomes product language by default** | `FAL-VIS-341` latent | Medium | Moderate | **5** | `FA-08` disclaimer in the artefact README | Agent |
+| `ARK-08` | **Skeletons rot** | 8 workflow skeletons uninstalled and unversioned against the platform | Medium | Low | **4** | Install one; the rest gain a working reference | Agent |
+| `ARK-09` | **Identifier exhaustion** | `VAL-VIS-` at 1,842 of 2,200 after one part's growth of 253 | High | Low | **4** | Ceiling audit per `VAL-VIS-1592`; raise via `DEC-VIS` | Agent |
+| `ARK-10` | **Silent supersession accumulates** | 2 unmarked instances in `TBL-VIS-751` | High | Moderate | **6** | Overlap register per part | Agent |
+| `ARK-11` | **Claim inflation in human-facing files** | `README.md` non-conformances, `OBL-58` | Certain | Moderate | **6** | `TBL-VIS-741` replacement table | `README.md` owner |
+| `ARK-12` | **Wave skipping** | `W2` blocked, so pressure to start `W3` capability work | Medium | Severe | **7** | `VAL-VIS-1724` prerequisite matrix as `HALT` | Agent |
+
+> **`VIS-754`.** Nine of the twelve risks are scored 6 or above, and **four of the top five have the
+> same root**: a decision that only a human principal can take, and only one such principal exists.
+> The register is therefore not twelve independent problems. It is largely one problem — `ARK-01`
+> and `ARK-03` — observed through eleven different instruments, which is why §06.15 treats the human
+> dependency as the document's terminal constraint.
+
+### TBL-VIS-760: Risk Score Distribution and Root Attribution
+
+| Root cause | Risks attributed | Total score | Share |
+| :--- | :--- | :--- | :--- |
+| Single human principal / undecided `OBL-03` | `ARK-01`, `ARK-03`, `ARK-11`, `ARK-12` | 30 | 39 percent |
+| Absence of installed mechanism | `ARK-02`, `ARK-05`, `ARK-08` | 19 | 25 percent |
+| Corpus scale | `ARK-04`, `ARK-06`, `ARK-09` | 17 | 22 percent |
+| Documentation hygiene | `ARK-07`, `ARK-10` | 11 | 14 percent |
+| **Total** | 12 risks | **77** | 100 percent |
+
+> **`VIS-755`.** The second row is the actionable one. **Twenty-five percent of total adoption risk
+> is attributable to the absence of installed mechanism, and that entire quarter is dischargeable by
+> a single agent with no human decision** — it is the §06.8 artefact again, arriving here by a fifth
+> independent route. The other 75 percent needs a person or is inherent to a corpus of this size.
+
+### TBL-VIS-761: §06.14 Validation Rules
+
+| ID | Rule | Severity | Check |
+| :--- | :--- | :--- | :--- |
+| `VAL-VIS-1867` | Every risk must state a condition observable at the current commit. | **HALT** | Observability |
+| `VAL-VIS-1868` | Speculative future events are not adoption risks. | **ERROR** | Scope |
+| `VAL-VIS-1869` | Risks must be scored against the adoption position, not the business. | **ERROR** | Scoring basis |
+| `VAL-VIS-1870` | Root-cause attribution must be published alongside the register. | **ERROR** | Attribution table |
+| `VAL-VIS-1871` | Correlated risks must not be presented as independent. | **HALT** | Correlation disclosure |
+| `VAL-VIS-1872` | Each risk must name an owner capable of acting. | **ERROR** | Owner field |
+| `VAL-VIS-1873` | A risk owned by an agent must have an unblocked mitigation. | **ERROR** | Mitigation feasibility |
+| `VAL-VIS-1874` | The share of risk dischargeable without a human decision must be stated. | **HALT** | Share figure |
+| `VAL-VIS-1875` | Likelihood must derive from observation, not judgement, where observation exists. | **ERROR** | Evidence per row |
+| `VAL-VIS-1876` | "Certain" is reserved for conditions already true. | **HALT** | Semantics |
+| `VAL-VIS-1877` | The register must be recomputed per part. | **ERROR** | Recomputation |
+| `VAL-VIS-1878` | A closed risk must be recorded as closed, not deleted. | **ERROR** | Append-only |
+| `VAL-VIS-1879` | Mitigation must not consist of further specification alone. | **HALT** | Mitigation type |
+| `VAL-VIS-1880` | Risks must be traceable to obligations where one exists. | **ERROR** | Cross-reference |
+| `VAL-VIS-1881` | Scores must not be adjusted to change a ranking. | **HALT** | Score stability |
+| `VAL-VIS-1882` | The register must include risks created by the document itself. | **HALT** | Self-inclusion — `ARK-04`, `ARK-06`, `ARK-09` |
+| `VAL-VIS-1883` | Identifier exhaustion must be tracked as a risk while any namespace exceeds 75 percent. | **ERROR** | Ceiling utilisation |
+| `VAL-VIS-1884` | Total risk score must be published, not only individual scores. | **ERROR** | Aggregate |
+
+---
