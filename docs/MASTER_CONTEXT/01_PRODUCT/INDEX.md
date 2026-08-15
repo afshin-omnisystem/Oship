@@ -1,7 +1,7 @@
 ---
 Document ID: MCX-01-001
 Title: Product Knowledge Domain Index
-Version: 1.0.0
+Version: 1.1.0
 Status: ACTIVE
 Knowledge Layer: L1 Constitutional / L2 Blueprints
 Knowledge Domain: 01_PRODUCT
@@ -13,7 +13,7 @@ Estimated AI Read Time: 4 min
 Estimated Human Read Time: 10 min
 Repository Version: v0.1.0-alpha.0 (Phase 0)
 Owner: Product Management / Chief Product Officer
-Last Updated: 2026-08-04
+Last Updated: 2026-08-14
 ---
 # Product Knowledge Domain — INDEX
 
@@ -57,18 +57,19 @@ This domain houses the following documents. All documents follow the enterprise 
 
 | Document | Purpose | Status |
 | :--- | :--- | :--- |
-| [`PRODUCT_VISION.md`](./PRODUCT_VISION.md) | Canonical product vision, mission, and long-term strategic intent. | PLANNED |
+| [`SYSTEM_VISION.md`](./SYSTEM_VISION.md) | `AOM-VIS-001` — the strategic and conceptual constitution of Oship: identity, vision, mission, problem space, actors, value model, capabilities, boundaries, principles, non-goals, success model, outcomes, AI-native model, traceability to `AOM-ARCH-001`, validation rules, and the failure library; from PART 04 — the measurement, evidence and observability model (`EV0`…`EV6` evidence classes, the 21-field metric contract, quality gates, the agent trace contract, the audit evidence chain, and the reproducibility contract); from PART 05 — the system knowledge architecture (knowledge universe, knowledge graph, semantic layer, ontology, taxonomy, ingestion, `K0`…`K6` trust levels, provenance, decay, and the knowledge API model); and from PART 06 — the system evolution and adoption architecture (the `AS-0`…`AS-7` adoption state machine, the six-wave architecture, the critical path, wave entry and exit criteria, the `M0`…`M6` maturity model, capability activation, the first executable artefact, drift detection, the completion claim contract, supersession, deprecation, the release gate architecture, the adoption risk register, the human dependency, adoption failure and recovery, adoption anti-patterns, and the AI execution contract). **All 6 parts complete and frozen.** Supersedes `PRODUCT_VISION.md`. | COMPLETE |
+| ~~`PRODUCT_VISION.md`~~ | Superseded before creation by `SYSTEM_VISION.md`, which carries the canonical product vision, mission, and long-term strategic intent. | SUPERSEDED |
 | [`VALUE_PROPOSITION.md`](./VALUE_PROPOSITION.md) | Customer value model and differentiation versus alternatives. | PLANNED |
 | [`PRODUCT_STRATEGY.md`](./PRODUCT_STRATEGY.md) | Strategic pillars, priorities, and OKR mapping for the product. | PLANNED |
 | [`FEATURE_REGISTRY.md`](./FEATURE_REGISTRY.md) | Master register of product features and their lifecycle states. | PLANNED |
 
 ## Reading Order
 
-Start at PRODUCT_VISION, then VALUE_PROPOSITION, then PRODUCT_STRATEGY, then FEATURE_REGISTRY.
+Start at SYSTEM_VISION, then VALUE_PROPOSITION, then PRODUCT_STRATEGY, then FEATURE_REGISTRY.
 
 ## AI Reading Order
 
-AI agents building features must read PRODUCT_VISION and FEATURE_REGISTRY before touching implementation domains. Route feature-related prompts here first.
+AI agents building features must read SYSTEM_VISION and FEATURE_REGISTRY before touching implementation domains. Route feature-related prompts here first. `SYSTEM_VISION.md` is L1 authority: when it conflicts with any downstream product document, it wins.
 
 ## Cross References
 
