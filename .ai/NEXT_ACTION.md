@@ -215,3 +215,51 @@ being retrievable — not the run being green — is what constitutes `EV4`.
 `ADOPT-01` obligations are discharged. **No specification work was performed this session.**
 `git diff` against `main` for `docs/MASTER_CONTEXT/`, `PROJECT_PHILOSOPHY.md` and
 `README.md` is empty.
+
+---
+
+## Queue update — 2026-08-15, ADOPT-OBL-13 second attempt
+
+Appended. Nothing above is edited.
+
+| Priority | Task ID | Description | Owner | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **P0** | `ADOPT-OBL-13` | Install `.github/workflows/docs-validate.yml` | **Human principal with `workflows` scope** | **`OPEN` — BLOCKED.** Re-tested by both `git push` and the REST Contents API; rejected by both. Missing scope: **`workflows`**. |
+
+### The exact next action
+
+**A human principal, or a credential carrying the `workflows` permission, installs the
+workflow.** Nothing else in the queue can produce `EV4`, and `EV4` gates `QG-4` and Wave
+`W1`.
+
+Option A — grant the scope, then any agent can complete it:
+
+> GitHub → Settings → GitHub Apps → the Arena installation → **Permissions** →
+> **Workflows: Read and write** → save and approve the request.
+
+Option B — a human installs it directly, from a clone of `arena/01a0046f-oship`:
+
+```bash
+mkdir -p .github/workflows
+cp tools/docs-validate/ci/docs-validate.yml .github/workflows/docs-validate.yml
+git add .github/workflows/docs-validate.yml
+git commit -m "ci: install documentation integrity check (ADOPT-OBL-13)"
+git push origin arena/01a0046f-oship
+```
+
+**Expected first run: RED — `FAIL`, 13 errors / 443 warnings**, engine `mermaid.parse`,
+1,998 / 1,998 diagrams parsed. That outcome is correct under `VAL-VIS-1746` / `SC-04`.
+Do not weaken a check to green it. **The retrievable run — not a green run — is `EV4`.**
+
+Verification once installed:
+
+```bash
+gh api /repos/afshin-omnisystem/Oship/actions/workflows --jq '.workflows[]|{id,name,path,state}'
+gh run list --repo afshin-omnisystem/Oship --workflow docs-validate.yml
+```
+
+### Standing prohibition, still in force
+
+`ADOPT-02` blocks new specification work, including PART 07, until the `ADOPT-01`
+obligations are discharged. None was performed this session. `SYSTEM_VISION.md` is
+byte-identical to `main` (blob `8181f72e`).

@@ -445,3 +445,83 @@ not an undo) are recorded in `.ai/LESSONS_LEARNED.md`.
 
 No `MASTER_CONTEXT` part was modified. No PART 07 or new specification document was
 created; `ADOPT-02` remains in force and was observed.
+
+---
+
+## ADOPT-OBL-13 Installation Attempt — 2026-08-15 (second attempt)
+
+Appended. Nothing above is edited.
+
+### Result: **BLOCKED — `ADOPT-OBL-13` remains `OPEN`**
+
+Workflow installation was attempted again, by **two independent paths**. Both were
+rejected by GitHub. No EV4 claim is made.
+
+#### Path 1 — `git push` with the workflow committed
+
+```
+! [remote rejected] arena/01a0046f-oship -> arena/01a0046f-oship
+  (refusing to allow a GitHub App to create or update workflow
+   `.github/workflows/docs-validate.yml` without `workflows` permission)
+```
+
+#### Path 2 — REST Contents API
+
+```
+PUT /repos/afshin-omnisystem/Oship/contents/.github/workflows/docs-validate.yml
+-> HTTP 403  "Resource not accessible by integration"
+```
+
+**Exact missing permission: `workflows` on the GitHub App installation.**
+
+The local commit was reverted with `git reset --soft` (never `--hard`, per
+`LL-ADOPT-11`), and `.github/workflows/` was removed. The repository is unchanged by the
+failed attempt.
+
+### Verified remote state at the time of the attempt
+
+| Field | Value |
+| :--- | :--- |
+| `.github/workflows/docs-validate.yml` remotely | **does not exist** (HTTP 404) |
+| Workflows on the repository | **1** — dynamic Dependabot only |
+| Documentation-check runs | **0** |
+| **`EV4`** | **NOT ACHIEVED** |
+| **`QG-4`** | **CLOSED** |
+
+### Repository identity — a correction was required this session
+
+The session instruction named `afshin0095-lang/Oship` as the authoritative repository.
+**That repository does not exist.** Verified:
+
+| Check | Result |
+| :--- | :--- |
+| `GET /repos/afshin0095-lang/Oship` | **HTTP 404** |
+| `GET /users/afshin0095-lang/repos` | one repository, **`afshin0095-lang/Omnis`** — a JavaScript/pnpm monorepo, unrelated to Oship |
+| `GET /installation/repositories` | exactly one repository: **`afshin-omnisystem/Oship`** |
+
+`afshin-omnisystem/Oship` remains the only real, accessible Oship repository, and is the
+one every prior record refers to. No work was performed against any other repository, and
+no repository was created.
+
+### Session recovery — `LL-ADOPT-08` recurrence
+
+Local `HEAD` was found rolled back to `70468e6` while the working tree still held the
+full v1.2.0 work and the remote branch was at `967d613`. Recovery: fetch, verify all three
+untracked files byte-identical against the remote commit, then `git reset --soft`. No work
+was lost and the working tree was never touched by a destructive command.
+
+### Validation gate re-run at `967d613`
+
+| Check | Result |
+| :--- | :--- |
+| Validator self-test | **33 / 33 PASS** |
+| Full corpus | **FAIL — 13 errors, 443 warnings** (as expected; RED IS VALID) |
+| Mermaid engine | `mermaid.parse`, **authoritative: true** |
+| Diagrams parsed | **1,998 / 1,998**, 0 abstentions |
+| Mermaid defects | **5** |
+| Semantic duplicates | **3** |
+| Contiguity defects | **5** |
+| `SYSTEM_VISION.md` | **byte-identical** to `main` — blob `8181f72ec1dd2448fa2f96fa57bf63411b116ff1` |
+| PART 07 | **not created** |
+
+Every expected count reproduced exactly. No validator was weakened; no finding was hidden.

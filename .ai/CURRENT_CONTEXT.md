@@ -356,3 +356,53 @@ asserts the Mermaid engine — but it is **NOT INSTALLED**, and **`EV4` is NOT A
 3. **`ADOPT-OBL-03b`** — human adjudication of the 3 semantic duplicates in `TBL-VIS-394`.
 4. **`ADOPT-07`** — second `CODEOWNERS` principal. Unchanged, still the highest-leverage
    human action in the repository.
+
+---
+
+## Session update — 2026-08-15, ADOPT-OBL-13 second attempt
+
+Appended. Nothing above is edited.
+
+### Verified state
+
+| Field | Value |
+| :--- | :--- |
+| `BASE_COMMIT` | `967d61303d68bb1948d67ae5aa0994efd74c48d8` |
+| `CURRENT_COMMIT` | `967d61303d68bb1948d67ae5aa0994efd74c48d8` |
+| `CURRENT_BRANCH` | `arena/01a0046f-oship` |
+| `REMOTE_BRANCH` | `origin/arena/01a0046f-oship` — same SHA |
+| `WORKTREE_STATE` | clean |
+| PR #8 | **MERGED** (`arena/01a003bd-oship` → `main`, 2026-08-15T07:57:30Z). Not reopened, not closed. |
+| Open PRs | **none** |
+
+PR #8 is already merged and belongs to the previous adoption branch, so there is no open
+PR to continue. None was created: pushing this branch requires no PR, and the governing
+instruction forbids merge, tag and release.
+
+### `ADOPT-OBL-13` — still OPEN, blocker unchanged
+
+Two installation paths attempted, both rejected:
+
+- `git push` → `refusing to allow a GitHub App to create or update workflow ... without 'workflows' permission`
+- `PUT /contents/.github/workflows/docs-validate.yml` → **HTTP 403** `Resource not accessible by integration`
+
+**Missing scope: `workflows`.** This is the same blocker recorded in the previous session;
+re-tested rather than assumed, and it has not changed.
+
+The workflow artefact at `tools/docs-validate/ci/docs-validate.yml` was re-audited against
+the Phase 1 criteria and is installation-ready: it sets up Node 22, installs `mermaid@11`
+and `jsdom` explicitly, asserts the engine resolved via `ci/assert-engine.py`, and relies
+on **no** local `node_modules`, **no** `NODE_PATH`, and no developer-machine state.
+
+### EV4
+
+**NOT ACHIEVED.** No workflow exists remotely and no run exists. Verified through the
+Actions API, not inferred.
+
+### Repository identity note
+
+This session's instruction named `afshin0095-lang/Oship`. That repository **does not
+exist** (HTTP 404); that owner's only repository is `afshin0095-lang/Omnis`, an unrelated
+JS monorepo. The GitHub App installation can see exactly one repository:
+`afshin-omnisystem/Oship`. Work therefore continued on the real repository, and this
+deviation from the instruction is recorded rather than silently resolved.
