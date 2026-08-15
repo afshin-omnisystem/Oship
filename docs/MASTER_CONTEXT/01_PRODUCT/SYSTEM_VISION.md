@@ -2,18 +2,18 @@
 Document ID: AOM-VIS-001
 Title: Oship System Vision — The Strategic and Conceptual Constitution
 Version: 1.0.0
-Status: IN_PROGRESS
+Status: COMPLETE
 Knowledge Layer: L1 Constitutional
 Knowledge Domain: 01_PRODUCT
 AI Importance: CRITICAL
 Human Importance: CRITICAL
 Dependencies: docs/MASTER_CONTEXT/INDEX.md, docs/MASTER_CONTEXT/01_PRODUCT/INDEX.md, docs/MASTER_CONTEXT/MASTER_CONTEXT_RULES.md, PROJECT_PHILOSOPHY.md, README.md, docs/ADR/ADR-0001-ai-native-repository-architecture.md
 Required By: docs/MASTER_CONTEXT/04_ARCHITECTURE/SYSTEM_ARCHITECTURE.md, docs/MASTER_CONTEXT/02_BUSINESS/INDEX.md, docs/MASTER_CONTEXT/03_USERS/INDEX.md, docs/MASTER_CONTEXT/19_ROADMAP/INDEX.md
-Estimated AI Read Time: 22 min
-Estimated Human Read Time: 95 min
+Estimated AI Read Time: 95 min
+Estimated Human Read Time: 410 min
 Repository Version: v0.1.0-alpha.0
 Owner: Product Management / Chief Product Officer
-Last Updated: 2026-08-14
+Last Updated: 2026-08-15
 ---
 
 # Oship System Vision — The Strategic and Conceptual Constitution
@@ -27083,8 +27083,8 @@ stateDiagram-v2
 | **Part** | PART 06 — SYSTEM EVOLUTION AND ADOPTION ARCHITECTURE |
 | **Status** | **COMPLETE — AUTHORED** (`CC-1`) |
 | **Sections delivered** | §06.0 ceiling governance · §06.1–§06.19 · §06.A appendix — 21 sections |
-| **Statements** | `VIS-686` … `VIS-772` |
-| **Tables and figures** | `TBL-VIS-683` … `TBL-VIS-795` |
+| **Statements** | `VIS-686` … `VIS-773` |
+| **Tables and figures** | `TBL-VIS-683` … `TBL-VIS-799` |
 | **Diagrams** | `DGM-VIS-153` … `DGM-VIS-169` |
 | **Validation rules** | `VAL-VIS-1592` … `VAL-VIS-2004` |
 | **Failure modes** | `FAL-VIS-329` … `FAL-VIS-360` |
@@ -27092,7 +27092,7 @@ stateDiagram-v2
 | **AI instructions** | `AI-VIS-123` … `AI-VIS-146` |
 | **Obligations opened** | `OBL-54` … `OBL-60` |
 | **Claim type earned** | `CC-1` AUTHORED — no review, no automated validation, no implementation |
-| **Amendment audit** | Frozen prefix of 23,755 lines byte-identical to `1b80a62`; no committed content edited |
+| **Amendment audit** | Frozen body of 23,755 lines byte-identical to `1b80a62`; no committed content edited; two errata recorded in `TBL-VIS-798` under `AM-3` |
 | **Drift ratio at closure** | Recomputed in `TBL-VIS-795`; classification **`K4` PURE DRIFT** |
 | **Adoption failure mode** | **`AF-1` STALL** |
 | **Release verdict** | **FAIL — release prohibited per `TBL-VIS-757`** |
@@ -27102,9 +27102,9 @@ stateDiagram-v2
 
 | Metric | Value |
 | :--- | :--- |
-| Document lines | **27,174** at the closing commit; 307,241 words; 1,905,881 bytes |
+| Document lines | **27,193** at the closing commit; 307,486 words; 1,907,427 bytes |
 | Mermaid blocks | 169, validator-checked, 0 parse failures |
-| Captioned tables and figures | 794 |
+| Captioned tables and figures | 795 |
 | `S` — specification volume, `docs/MASTER_CONTEXT/` | 119,269 lines plus this part |
 | `A` — artefacts at `AS-4` or above | **0** |
 | `E` — `EV4` evidence items | **0** |
@@ -27137,12 +27137,12 @@ stateDiagram-v2
 
 | Check | Result |
 | :--- | :--- |
-| Frozen prefix byte-identical to `1b80a62` for first 23,755 lines | **PASS** |
+| Frozen body byte-identical to `1b80a62` from the first heading onward, first 23,755 lines | **PASS** — frontmatter excluded per `VIS-773` |
 | No committed content edited in PART 06 | **PASS** |
 | All Mermaid blocks parse | **PASS** — 169 blocks, 0 failures |
 | `VAL-VIS-` contiguous 1 … 2004, no duplicates | **PASS** |
 | `FAL-VIS-` contiguous 1 … 360, no duplicates | **PASS** |
-| `VIS-` statement identifiers unique through 772 | **PASS** |
+| `VIS-` statement identifiers unique through 773 | **PASS** |
 | `TBL-VIS-` caption identifiers unique | **PASS** |
 | `DGM-VIS-` diagram identifiers unique | **PASS** |
 | Ceilings respected in all namespaces | **PASS** — `VAL-VIS-` at 91 percent, `OBL-60` raised |
@@ -27151,19 +27151,38 @@ stateDiagram-v2
 | Release prohibition restated | **PASS** — `TBL-VIS-757` |
 | Standing recommendation restated | **PASS** — `TBL-VIS-778` |
 
+### TBL-VIS-798: PART 06 Errata Record — `AM-3`
+
+Two defects exist in committed content of this document. Both are recorded here under mechanism
+`AM-3` errata rather than repaired in place, because in-place editing of committed content is
+prohibited by `VAL-VIS-1807`. Neither carries semantic consequence for any rule, identifier, or
+measurement.
+
+| ID | Location | Defect | Correct reading | Semantic consequence |
+| :--- | :--- | :--- | :--- | :--- |
+| `ERR-01` | Document header block, line 21 | Reads "PART 01 and PART 02 of N complete" | **PARTS 01–06 of 6 complete.** The line was accurate when written and was frozen before later parts existed. | None. No rule, identifier or measurement depends on it. |
+| `ERR-02` | PART 06 Table of Contents | Forecast `TBL-VIS-` ranges per section diverge from actual allocation from §06.7 onward | Forecast ranges are advisory. The caption line is the sole allocation record — `VAL-VIS-1820`. Actual ranges are published in `TBL-VIS-794`. | None. Already recorded as `OBL-59`. |
+
+> **`VIS-773`.** Frontmatter is excluded from the freeze. `METADATA_STANDARD.md` requires the
+> `Status` and `Last Updated` keys to describe the document's present condition, and a key whose
+> purpose is to change cannot be frozen. The freeze therefore covers the document **body** from the
+> first heading onward, and `TBL-VIS-797` records the byte-identity check on that basis.
+
+---
+
 ---
 
 <!-- CONTINUATION_POINT -->
 
-### TBL-VIS-798: Continuation Marker — `AOM-VIS-001`
+### TBL-VIS-799: Continuation Marker — `AOM-VIS-001`
 
 | Field | Value |
 | :--- | :--- |
 | **LAST_COMPLETED_SECTION** | PART 06 — SYSTEM EVOLUTION AND ADOPTION ARCHITECTURE |
 | **LAST_COMPLETED_SUBSECTION** | §06.A — Appendix: Worked Adoption Scenarios, followed by the PART 06 closure record |
-| **LAST_COMPLETED_ID** | `TBL-VIS-798` · `VIS-772` · `VAL-VIS-2004` · `FAL-VIS-360` · `DGM-VIS-169` · `AI-VIS-146` · `DEC-VIS-050` · `OBL-60` |
+| **LAST_COMPLETED_ID** | `TBL-VIS-799` · `VIS-772` · `VAL-VIS-2004` · `FAL-VIS-360` · `DGM-VIS-169` · `AI-VIS-146` · `DEC-VIS-050` · `OBL-60` |
 | **NEXT_SECTION** | **None within `AOM-VIS-001`.** PARTS 01–06 constitute the document as commissioned. |
-| **NEXT_ID** | `VIS-773` · `TBL-VIS-799` · `DGM-VIS-170` · `VAL-VIS-2005` — **requires `DEC-VIS-051` ceiling raise first, per `OBL-60`** · `FAL-VIS-361` · `AI-VIS-147` · `DEC-VIS-051` · `OBL-61` · `IMG-VIS-054` · `MET-VIS-051` · `ACT-VIS-017` |
+| **NEXT_ID** | `VIS-773` · `TBL-VIS-800` · `DGM-VIS-170` · `VAL-VIS-2005` — **requires `DEC-VIS-051` ceiling raise first, per `OBL-60`** · `FAL-VIS-361` · `AI-VIS-147` · `DEC-VIS-051` · `OBL-61` · `IMG-VIS-054` · `MET-VIS-051` · `ACT-VIS-017` |
 | **CURRENT_PART** | PART 06 — CLOSED |
 | **NEXT_PART** | Not scheduled. The document's own analysis (`TBL-VIS-778`, `TBL-VIS-786`) recommends against a PART 07 until at least one artefact exists at `AS-5`. |
 | **LAST_LINE_ANCHOR** | This marker table is the final content of the document. |
