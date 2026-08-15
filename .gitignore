@@ -23,6 +23,13 @@ venv/
 # Transient ad-hoc output is ignored:
 tools/docs-validate/reports/validation-report.*
 
+# --- Node tooling (ADOPT-OBL-01b) ---------------------------------------------
+# The authoritative Mermaid engine (mermaid@11 + jsdom) is installed on demand by
+# CI and by local runs. It is a TOOLING dependency, never a product dependency,
+# and must not be committed (FA-08, FAL-VIS-341).
+node_modules/
+package-lock.json
+
 # --- Editor and OS noise -------------------------------------------------------
 .DS_Store
 Thumbs.db
