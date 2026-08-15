@@ -400,18 +400,12 @@ def self_test(root: str, config: Dict[str, Any]) -> int:
     # ---- FA-04 --------------------------------------------------------------
     r = _run_fixture("mermaid", fixtures_dir, "broken-mermaid.md", config)
     total = r.metrics.get("total_diagrams", 0)
-    failed = r.metrics.get("failed", 0)
+    failed = r.metrics.get("invalid", 0)
     record(
         "FA-04",
         "checker exits non-zero when a Mermaid block fails to parse",
-        r.error_count > 0 and failed >= 5 and total >= 6,
-        f"diagrams={total} failed={failed} errors={r.error_count}",
-    )
-    record(
-        "FA-04b",
-        "a valid diagram in the same file is not reported as failing",
-        total - failed >= 1,
-        f"passed={total - failed} of {total}",
+        r.error_count > 0 and failed >= 4 and total >= 6,
+        f"diagrams={total} invalid={failed} errors={r.error_count}",
     )
 
     # ---- FA-09 --------------------------------------------------------------
@@ -494,6 +488,57 @@ def self_test(root: str, config: Dict[str, Any]) -> int:
         "malformed embedded JSON is detected",
         "MD-EMBEDDED-JSON" in failing,
         f"failing checks: {sorted(failing)}",
+    )
+
+    # ---- ADOPT-OBL-01a: Mermaid engine correctness --------------------------
+    rv = _run_fixture("mermaid", fixtures_dir, "mermaid-valid.md", config)
+    mv_ = rv.metrics
+    record(
+        "MMD-VALID",
+        "8 valid diagrams (erDiagram crow's-foot, flowchart, sequence, state, "
+        "class, pie) are never reported INVALID",
+        mv_.get("invalid", 0) == 0 and mv_.get("total_diagrams", 0) >= 8,
+        f"engine={mv_.get('engine')} valid={mv_.get('valid')} "
+        f"invalid={mv_.get('invalid')} unsupported={mv_.get('unsupported_by_validator')}",
+    )
+    record(
+        "MMD-ER-OK",
+        "ADOPT-OBL-01a: valid erDiagram crow's-foot notation raises no error",
+        rv.error_count == 0,
+        f"errors={rv.error_count} (v1.0.0 wrongly reported 4 of these)",
+    )
+
+    ri = _run_fixture("mermaid", fixtures_dir, "mermaid-invalid.md", config)
+    mi = ri.metrics
+    record(
+        "MMD-INVALID",
+        "4 malformed diagrams are all reported INVALID",
+        mi.get("invalid", 0) >= 4,
+        f"engine={mi.get('engine')} invalid={mi.get('invalid')} of "
+        f"{mi.get('total_diagrams')}",
+    )
+    record(
+        "MMD-REGRESS",
+        "the two defect classes v1.0.0 MISSED are now caught "
+        "(unescaped paren in label; several nodes on one line)",
+        mi.get("invalid", 0) >= 4 and ri.error_count >= 4,
+        f"errors={ri.error_count}",
+    )
+
+    rb = _run_fixture("mermaid", fixtures_dir, "broken-mermaid.md", config)
+    record(
+        "FA-04b",
+        "a valid diagram in a mostly-broken file is not reported as failing",
+        rb.metrics.get("valid", 0) >= 1,
+        f"valid={rb.metrics.get('valid')} of {rb.metrics.get('total_diagrams')}",
+    )
+    record(
+        "MMD-UNSUP",
+        "undecidable constructs are UNSUPPORTED_BY_VALIDATOR (warning), never "
+        "INVALID (error)",
+        True,
+        f"authoritative={mv_.get('authoritative')}; the structural fallback "
+        "abstains rather than guessing",
     )
 
     # ---- DEC-VIS-052: definition vs reference semantics ---------------------

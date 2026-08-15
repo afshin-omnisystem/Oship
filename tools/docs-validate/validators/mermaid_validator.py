@@ -4,29 +4,51 @@ Mermaid diagram validator.
 Artefact: ADOPT-01 / TBL-VIS-730 ("Mermaid parse" check in scope for v1).
 Acceptance: FA-04 — the checker exits non-zero when a Mermaid block fails to parse.
 
-Two engines
------------
-1. `mermaid-cli` / `@mermaid-js/mermaid-cli` (mmdc), when available on PATH:
-   authoritative parse.
-2. A built-in structural parser, always available: diagram-type recognition,
-   empty-diagram detection, malformed-node/edge detection, unbalanced brackets,
-   unterminated quotes, subgraph balance.
+Three engines, in order of authority
+------------------------------------
+1. `mermaid.parse()` via Node — the reference implementation. Authoritative.
+   Used when `node` plus a resolvable `mermaid` package are available.
+2. `mmdc` (@mermaid-js/mermaid-cli) — also authoritative, slower.
+3. A built-in structural parser — a FALLBACK that recognises a deliberately narrow
+   set of unambiguous defects.
 
-The structural parser is the default so the check is deterministic in CI without
-a Node toolchain. Set `engine: mmdc` in validation-rules.yaml to require the CLI.
+Why the fallback is narrow (ADOPT-OBL-01a)
+------------------------------------------
+The v1.0.0 structural parser counted `{`/`}` as node delimiters. In `erDiagram`,
+crow's-foot cardinality (`||--o{`, `}o--o{`) uses those characters as relationship
+glyphs. Validated against `mermaid.parse()` over 2,006 corpus diagrams, that parser
+was wrong in BOTH directions:
+
+  - 4 FALSE POSITIVES  — valid erDiagram reported invalid
+  - 4 FALSE NEGATIVES  — genuinely broken diagrams reported valid, including
+                         unescaped '(' inside a node label and several nodes
+                         declared on one line without a separator
+
+A validator that is wrong in both directions is worse than none, because it trains
+its readers to ignore it (VIS-728). The fallback therefore reports
+UNSUPPORTED_BY_VALIDATOR for any construct it cannot decide, rather than INVALID.
+
+Result classes
+--------------
+VALID                     parsed successfully
+INVALID                   the parser rejected it — an ERROR
+UNSUPPORTED_BY_VALIDATOR  the available engine cannot decide — a WARNING, never
+                          an ERROR, unless a governing rule requires rejection
 
 Checks
 ------
-MMD-NONEMPTY   · VAL-VIS-MERMAID-EMPTY : no ```mermaid block is empty
-MMD-TYPE       · VAL-VIS-MERMAID-TYPE  : first directive is a recognised diagram type
-MMD-SYNTAX     · VAL-VIS-MERMAID-PARSE : brackets/quotes balanced, subgraphs closed
-MMD-NODES      · VAL-VIS-MERMAID-NODE  : node and edge declarations are well formed
+MMD-NONEMPTY    · VAL-VIS-MERMAID-EMPTY  : no ```mermaid block is empty
+MMD-TYPE        · VAL-VIS-MERMAID-TYPE   : first directive is a recognised diagram type
+MMD-PARSE       · VAL-VIS-MERMAID-PARSE  : the diagram parses
+MMD-COVERAGE    · VAL-VIS-MERMAID-COVER  : reports engine and undecidable count
 
 Language note (FA-08): Python here is a tooling choice, not a W2 product decision.
 """
 
 from __future__ import annotations
 
+import json
+import os
 import re
 import shutil
 import subprocess
@@ -45,39 +67,25 @@ from .base import (
 VALIDATOR_NAME = "mermaid"
 TITLE = "Mermaid Diagram Validator"
 
+# Result classes
+VALID = "VALID"
+INVALID = "INVALID"
+UNSUPPORTED = "UNSUPPORTED_BY_VALIDATOR"
+
 DIAGRAM_TYPES = (
-    "graph",
-    "flowchart",
-    "sequenceDiagram",
-    "classDiagram",
-    "stateDiagram",
-    "stateDiagram-v2",
-    "erDiagram",
-    "journey",
-    "gantt",
-    "pie",
-    "quadrantChart",
-    "requirementDiagram",
-    "gitGraph",
-    "mindmap",
-    "timeline",
-    "zenuml",
-    "sankey-beta",
-    "xychart-beta",
-    "block-beta",
-    "packet-beta",
-    "architecture-beta",
-    "C4Context",
-    "C4Container",
-    "C4Component",
-    "C4Dynamic",
-    "C4Deployment",
+    "graph", "flowchart", "sequenceDiagram", "classDiagram", "stateDiagram",
+    "stateDiagram-v2", "erDiagram", "journey", "gantt", "pie", "quadrantChart",
+    "requirementDiagram", "gitGraph", "mindmap", "timeline", "zenuml",
+    "sankey-beta", "xychart-beta", "block-beta", "packet-beta",
+    "architecture-beta", "C4Context", "C4Container", "C4Component",
+    "C4Dynamic", "C4Deployment",
 )
 
-DIRECTIVE_PREFIXES = ("%%", "---")
-
-BRACKET_PAIRS = {"(": ")", "[": "]", "{": "}"}
-CLOSERS = {v: k for k, v in BRACKET_PAIRS.items()}
+# Diagram families the structural fallback understands well enough to judge.
+# erDiagram, classDiagram, stateDiagram, mindmap, gitGraph and the C4 family use
+# braces, pipes and colons with grammar-specific meaning, so the fallback
+# abstains on them (UNSUPPORTED_BY_VALIDATOR) rather than guessing.
+FALLBACK_DECIDABLE = ("graph", "flowchart")
 
 
 class Diagram:
@@ -85,34 +93,34 @@ class Diagram:
         self.file = file
         self.start_line = start_line
         self.body = body
-        self.errors: List[Tuple[str, str]] = []  # (rule, message)
+        self.result: str = VALID
+        self.rule: str = "VAL-VIS-MERMAID-PARSE"
+        self.message: str = ""
+        self.engine: str = ""
 
     @property
-    def ok(self) -> bool:
-        return not self.errors
+    def location(self) -> str:
+        return f"{self.file}:{self.start_line}"
 
 
 def _collect_diagrams(files, root) -> List[Diagram]:
-    diagrams: List[Diagram] = []
+    out: List[Diagram] = []
     for rel in files:
         text = read_text(root, rel)
         fences, _ = scan_fences(text)
         for f in fences:
-            if f.info.lower() != "mermaid":
-                continue
-            diagrams.append(Diagram(rel, f.start_line, f.body))
-    return diagrams
+            if f.info.lower() == "mermaid":
+                out.append(Diagram(rel, f.start_line, f.body))
+    return out
 
 
 def _significant_lines(body: str) -> List[str]:
     out = []
     for raw in body.splitlines():
-        line = raw.strip()
-        if not line:
+        s = raw.strip()
+        if not s or s.startswith("%%"):
             continue
-        if line.startswith("%%"):
-            continue
-        out.append(line)
+        out.append(s)
     return out
 
 
@@ -126,162 +134,223 @@ def _strip_frontmatter(lines: List[str]) -> List[str]:
     return lines
 
 
-def _mask_labels(line: str) -> str:
-    """Blank out quoted label text so punctuation inside labels is not parsed."""
-    return re.sub(r'"[^"\n]*"', lambda m: " " * len(m.group(0)), line)
+# --------------------------------------------------------------------------------------
+# Engine 1 — mermaid.parse() via Node (authoritative)
+# --------------------------------------------------------------------------------------
+
+_NODE_HARNESS = r"""
+import { JSDOM } from 'jsdom';
+const dom = new JSDOM('<!DOCTYPE html><body></body>', { pretendToBeVisual: true });
+global.window = dom.window;
+global.document = dom.window.document;
+global.Element = dom.window.Element;
+global.HTMLElement = dom.window.HTMLElement;
+global.SVGElement = dom.window.SVGElement;
+global.Node = dom.window.Node;
+global.DOMParser = dom.window.DOMParser;
+global.NodeList = dom.window.NodeList;
+global.getComputedStyle = dom.window.getComputedStyle;
+const mermaid = (await import('mermaid')).default;
+const fs = await import('fs');
+const items = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
+const out = [];
+for (const it of items) {
+  try {
+    await mermaid.parse(it.body);
+    out.push({ i: it.i, ok: true });
+  } catch (e) {
+    out.push({ i: it.i, ok: false, err: String(e.message || e).split('\n')[0].slice(0, 240) });
+  }
+}
+fs.writeFileSync(process.argv[3], JSON.stringify(out));
+"""
 
 
-def _structural_parse(d: Diagram) -> None:
-    lines = _strip_frontmatter(_significant_lines(d.body))
+def _node_engine_available(node_modules: Optional[str]) -> Optional[str]:
+    """Return a NODE_PATH that resolves both `mermaid` and `jsdom`, or None."""
+    if not shutil.which("node"):
+        return None
+    candidates = []
+    if node_modules:
+        candidates.append(node_modules)
+    candidates += [
+        os.environ.get("NODE_PATH", ""),
+        os.path.join(os.getcwd(), "node_modules"),
+        "/tmp/node_modules",
+        "/usr/lib/node_modules",
+        "/usr/local/lib/node_modules",
+    ]
+    for base in candidates:
+        if not base:
+            continue
+        if os.path.isdir(os.path.join(base, "mermaid")) and os.path.isdir(
+            os.path.join(base, "jsdom")
+        ):
+            return base
+    return None
 
-    if not lines:
-        d.errors.append(("VAL-VIS-MERMAID-EMPTY", "empty mermaid diagram (no directives)"))
-        return
 
-    header = lines[0]
-    first_token = re.split(r"[\s({]", header, maxsplit=1)[0]
-    if not any(
-        header.startswith(t) or first_token == t for t in DIAGRAM_TYPES
-    ):
-        d.errors.append(
-            (
-                "VAL-VIS-MERMAID-TYPE",
-                f"unrecognised diagram type in header '{header[:60]}'",
-            )
+def _parse_with_node(diagrams: List[Diagram], node_path: str, timeout: int = 900) -> bool:
+    """Parse every diagram in one Node process. Returns True on success."""
+    if not diagrams:
+        return True
+    tmpdir = tempfile.mkdtemp(prefix="oship-mermaid-")
+    harness = os.path.join(tmpdir, "parse.mjs")
+    infile = os.path.join(tmpdir, "in.json")
+    outfile = os.path.join(tmpdir, "out.json")
+    try:
+        with open(harness, "w", encoding="utf-8") as fh:
+            fh.write(_NODE_HARNESS)
+        with open(infile, "w", encoding="utf-8") as fh:
+            json.dump([{"i": i, "body": d.body} for i, d in enumerate(diagrams)], fh)
+
+        env = dict(os.environ, NODE_PATH=node_path)
+        proc = subprocess.run(
+            ["node", harness, infile, outfile],
+            capture_output=True, text=True, timeout=timeout, env=env, cwd=tmpdir,
         )
+        if proc.returncode != 0 or not os.path.exists(outfile):
+            return False
+        with open(outfile, "r", encoding="utf-8") as fh:
+            results = json.load(fh)
 
-    if len(lines) == 1:
-        d.errors.append(
-            (
-                "VAL-VIS-MERMAID-EMPTY",
-                f"diagram declares '{header[:40]}' but contains no statements",
-            )
-        )
-        return
-
-    # quote balance
-    for offset, line in enumerate(lines):
-        if line.count('"') % 2 != 0:
-            d.errors.append(
-                (
-                    "VAL-VIS-MERMAID-PARSE",
-                    f"unbalanced double quote on diagram line {offset + 1}: '{line[:60]}'",
-                )
-            )
-            break
-
-    # bracket balance across the whole diagram, labels masked
-    stack: List[Tuple[str, int]] = []
-    for offset, line in enumerate(lines):
-        masked = _mask_labels(line)
-        for ch in masked:
-            if ch in BRACKET_PAIRS:
-                stack.append((ch, offset + 1))
-            elif ch in CLOSERS:
-                if not stack:
-                    d.errors.append(
-                        (
-                            "VAL-VIS-MERMAID-NODE",
-                            f"unmatched closing '{ch}' on diagram line {offset + 1}",
-                        )
-                    )
-                    break
-                opener, _ = stack.pop()
-                if BRACKET_PAIRS[opener] != ch:
-                    d.errors.append(
-                        (
-                            "VAL-VIS-MERMAID-NODE",
-                            f"mismatched bracket: '{opener}' closed by '{ch}' "
-                            f"on diagram line {offset + 1}",
-                        )
-                    )
-                    break
-    if stack:
-        opener, ln = stack[0]
-        d.errors.append(
-            (
-                "VAL-VIS-MERMAID-NODE",
-                f"unclosed '{opener}' opened on diagram line {ln}",
-            )
-        )
-
-    # subgraph balance (flowchart family)
-    if header.startswith(("graph", "flowchart")):
-        depth = 0
-        for offset, line in enumerate(lines):
-            token = line.split()[0] if line.split() else ""
-            if token == "subgraph":
-                depth += 1
-            elif token == "end":
-                depth -= 1
-                if depth < 0:
-                    d.errors.append(
-                        (
-                            "VAL-VIS-MERMAID-PARSE",
-                            f"'end' without a matching 'subgraph' on diagram line {offset + 1}",
-                        )
-                    )
-                    depth = 0
-        if depth > 0:
-            d.errors.append(
-                ("VAL-VIS-MERMAID-PARSE", f"{depth} unclosed 'subgraph' block(s)")
-            )
-
-        # dangling edge operators
-        for offset, line in enumerate(lines):
-            masked = _mask_labels(line).strip()
-            if re.search(r"(-->|---|-\.->|==>|~~~)\s*$", masked):
-                d.errors.append(
-                    (
-                        "VAL-VIS-MERMAID-NODE",
-                        f"edge with no target on diagram line {offset + 1}: '{line[:60]}'",
-                    )
-                )
-            if re.match(r"^(-->|---|==>)", masked):
-                d.errors.append(
-                    (
-                        "VAL-VIS-MERMAID-NODE",
-                        f"edge with no source on diagram line {offset + 1}: '{line[:60]}'",
-                    )
-                )
+        for r in results:
+            d = diagrams[r["i"]]
+            d.engine = "mermaid.parse"
+            if r.get("ok"):
+                d.result = VALID
+            else:
+                d.result = INVALID
+                err = r.get("err", "parse error")
+                if "No diagram type detected" in err:
+                    d.rule = "VAL-VIS-MERMAID-TYPE"
+                d.message = err
+        return True
+    except (subprocess.TimeoutExpired, OSError, ValueError, json.JSONDecodeError):
+        return False
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
 
 
-def _mmdc_available() -> Optional[str]:
-    return shutil.which("mmdc")
+# --------------------------------------------------------------------------------------
+# Engine 2 — mmdc
+# --------------------------------------------------------------------------------------
 
-
-def _mmdc_parse(d: Diagram, mmdc: str, timeout: int = 30) -> None:
+def _parse_with_mmdc(d: Diagram, mmdc: str, timeout: int = 60) -> None:
     with tempfile.NamedTemporaryFile("w", suffix=".mmd", delete=False, encoding="utf-8") as fh:
         fh.write(d.body)
         src = fh.name
     out = src + ".svg"
+    d.engine = "mmdc"
     try:
         proc = subprocess.run(
             [mmdc, "-i", src, "-o", out, "-q"],
-            capture_output=True,
-            text=True,
-            timeout=timeout,
+            capture_output=True, text=True, timeout=timeout,
         )
         if proc.returncode != 0:
             msg = (proc.stderr or proc.stdout or "mmdc failed").strip().splitlines()
-            d.errors.append(
-                ("VAL-VIS-MERMAID-PARSE", f"mermaid-cli parse failure: {msg[0][:160]}")
-            )
+            d.result = INVALID
+            d.message = msg[0][:200] if msg else "mmdc failed"
     except subprocess.TimeoutExpired:
-        d.errors.append(("VAL-VIS-MERMAID-PARSE", "mermaid-cli timed out"))
+        d.result = UNSUPPORTED
+        d.message = "mermaid-cli timed out"
     finally:
         for p in (src, out):
             try:
-                import os
-
                 os.unlink(p)
             except OSError:
                 pass
 
 
+# --------------------------------------------------------------------------------------
+# Engine 3 — structural fallback (deliberately conservative)
+# --------------------------------------------------------------------------------------
+
+def _structural_parse(d: Diagram) -> None:
+    """
+    Decide only what can be decided without a grammar.
+
+    Anything else -> UNSUPPORTED_BY_VALIDATOR. This parser must never report
+    INVALID on a construct it does not fully model (ADOPT-OBL-01a).
+    """
+    d.engine = "structural"
+    lines = _strip_frontmatter(_significant_lines(d.body))
+
+    if not lines:
+        d.result = INVALID
+        d.rule = "VAL-VIS-MERMAID-EMPTY"
+        d.message = "empty mermaid diagram (no directives)"
+        return
+
+    header = lines[0]
+    first_token = re.split(r"[\s({]", header, maxsplit=1)[0]
+    if not any(header.startswith(t) or first_token == t for t in DIAGRAM_TYPES):
+        d.result = INVALID
+        d.rule = "VAL-VIS-MERMAID-TYPE"
+        d.message = f"unrecognised diagram type in header '{header[:60]}'"
+        return
+
+    if len(lines) == 1:
+        d.result = INVALID
+        d.rule = "VAL-VIS-MERMAID-EMPTY"
+        d.message = f"diagram declares '{header[:40]}' but contains no statements"
+        return
+
+    if not header.startswith(FALLBACK_DECIDABLE):
+        d.result = UNSUPPORTED
+        d.message = (
+            f"'{first_token}' grammar is not modelled by the structural fallback; "
+            "install node + mermaid for an authoritative parse"
+        )
+        return
+
+    # From here: graph / flowchart only.
+    # Unbalanced quotes are unambiguous in every diagram family.
+    for offset, line in enumerate(lines):
+        if line.count('"') % 2 != 0:
+            d.result = INVALID
+            d.message = f"unbalanced double quote on diagram line {offset + 1}"
+            return
+
+    # subgraph/end balance
+    depth = 0
+    for offset, line in enumerate(lines):
+        tok = line.split()[0] if line.split() else ""
+        if tok == "subgraph":
+            depth += 1
+        elif tok == "end":
+            depth -= 1
+            if depth < 0:
+                d.result = INVALID
+                d.message = (
+                    f"'end' without a matching 'subgraph' on diagram line {offset + 1}"
+                )
+                return
+    if depth > 0:
+        d.result = INVALID
+        d.message = f"{depth} unclosed 'subgraph' block(s)"
+        return
+
+    # Dangling edge operators
+    for offset, line in enumerate(lines):
+        masked = re.sub(r'"[^"\n]*"', "", line).strip()
+        if re.search(r"(-->|---|-\.->|==>|~~~)\s*$", masked):
+            d.result = INVALID
+            d.rule = "VAL-VIS-MERMAID-NODE"
+            d.message = f"edge with no target on diagram line {offset + 1}"
+            return
+
+    d.result = VALID
+
+
+# --------------------------------------------------------------------------------------
+# run
+# --------------------------------------------------------------------------------------
+
 def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
     config = config or {}
-    engine = str(config.get("engine", "auto")).lower()
+    engine_pref = str(config.get("engine", "auto")).lower()
 
     files = list(
         iter_markdown_files(
@@ -292,24 +361,33 @@ def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
     )
     diagrams = _collect_diagrams(files, root)
 
-    mmdc = _mmdc_available() if engine in ("auto", "mmdc") else None
-    if engine == "mmdc" and not mmdc:
-        result = ValidatorResult(validator=VALIDATOR_NAME, title=TITLE)
-        chk = CheckResult(
-            name="MMD-ENGINE",
-            rule="VAL-VIS-MERMAID-PARSE",
-            description="mermaid-cli (mmdc) was required by configuration but is not installed.",
-        )
-        chk.add("engine 'mmdc' requested but the binary is not on PATH")
-        result.checks.append(chk)
-        return result
+    node_path = (
+        _node_engine_available(config.get("node_modules"))
+        if engine_pref in ("auto", "node", "mermaid")
+        else None
+    )
+    mmdc = shutil.which("mmdc") if engine_pref in ("auto", "mmdc") else None
 
-    use_mmdc = bool(mmdc) and engine in ("auto", "mmdc") and config.get("use_cli", True)
-
-    for d in diagrams:
-        _structural_parse(d)
-        if use_mmdc and d.ok:
-            _mmdc_parse(d, mmdc)  # type: ignore[arg-type]
+    engine_used = "structural"
+    if node_path and _parse_with_node(diagrams, node_path):
+        engine_used = "mermaid.parse"
+    elif mmdc:
+        engine_used = "mmdc"
+        for d in diagrams:
+            _parse_with_mmdc(d, mmdc)
+    else:
+        if engine_pref in ("node", "mermaid", "mmdc"):
+            res = ValidatorResult(validator=VALIDATOR_NAME, title=TITLE)
+            chk = CheckResult(
+                name="MMD-ENGINE",
+                rule="VAL-VIS-MERMAID-PARSE",
+                description="The configured authoritative Mermaid engine is unavailable.",
+            )
+            chk.add(f"engine '{engine_pref}' requested but not available")
+            res.checks.append(chk)
+            return res
+        for d in diagrams:
+            _structural_parse(d)
 
     empty_chk = CheckResult(
         name="MMD-NONEMPTY",
@@ -321,40 +399,66 @@ def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
         rule="VAL-VIS-MERMAID-TYPE",
         description="Each diagram opens with a recognised Mermaid diagram type.",
     )
-    syntax_chk = CheckResult(
-        name="MMD-SYNTAX",
+    parse_chk = CheckResult(
+        name="MMD-PARSE",
         rule="VAL-VIS-MERMAID-PARSE",
-        description="Diagram syntax parses: quotes balanced, subgraphs closed.",
+        description=f"Each diagram parses (engine: {engine_used}).",
     )
-    node_chk = CheckResult(
-        name="MMD-NODES",
-        rule="VAL-VIS-MERMAID-NODE",
-        description="Node and edge declarations are well formed and bracket-balanced.",
+    cover_chk = CheckResult(
+        name="MMD-COVERAGE",
+        rule="VAL-VIS-MERMAID-COVER",
+        description=(
+            "Diagrams the active engine cannot decide are reported as "
+            "UNSUPPORTED_BY_VALIDATOR, never as INVALID."
+        ),
+        severity_on_failure=Severity.WARNING,
     )
+    for c in (empty_chk, type_chk, parse_chk, cover_chk):
+        c.measured = len(diagrams)
 
     by_rule = {
         "VAL-VIS-MERMAID-EMPTY": empty_chk,
         "VAL-VIS-MERMAID-TYPE": type_chk,
-        "VAL-VIS-MERMAID-PARSE": syntax_chk,
-        "VAL-VIS-MERMAID-NODE": node_chk,
+        "VAL-VIS-MERMAID-PARSE": parse_chk,
+        "VAL-VIS-MERMAID-NODE": parse_chk,
     }
-    for chk in by_rule.values():
-        chk.measured = len(diagrams)
 
-    failed = 0
+    valid = invalid = unsupported = 0
+    unsupported_files: Dict[str, int] = {}
+    invalid_list: List[Dict[str, Any]] = []
+
     for d in diagrams:
-        if d.errors:
-            failed += 1
-        for rule, message in d.errors:
-            by_rule[rule].add(message, file=d.file, line=d.start_line)
+        if d.result == VALID:
+            valid += 1
+        elif d.result == INVALID:
+            invalid += 1
+            by_rule.get(d.rule, parse_chk).add(
+                f"INVALID: {d.message}", file=d.file, line=d.start_line
+            )
+            invalid_list.append(
+                {"file": d.file, "line": d.start_line, "error": d.message, "rule": d.rule}
+            )
+        else:
+            unsupported += 1
+            unsupported_files[d.file] = unsupported_files.get(d.file, 0) + 1
+            cover_chk.add(
+                f"UNSUPPORTED_BY_VALIDATOR: {d.message}",
+                file=d.file,
+                line=d.start_line,
+                severity=Severity.WARNING,
+            )
 
     result = ValidatorResult(validator=VALIDATOR_NAME, title=TITLE)
-    result.checks.extend([empty_chk, type_chk, syntax_chk, node_chk])
+    result.checks.extend([empty_chk, type_chk, parse_chk, cover_chk])
     result.metrics = {
         "files_scanned": len(files),
         "total_diagrams": len(diagrams),
-        "passed": len(diagrams) - failed,
-        "failed": failed,
-        "engine": "mermaid-cli" if use_mmdc else "structural",
+        "valid": valid,
+        "invalid": invalid,
+        "unsupported_by_validator": unsupported,
+        "engine": engine_used,
+        "authoritative": engine_used in ("mermaid.parse", "mmdc"),
+        "invalid_diagrams": invalid_list,
+        "unsupported_by_file": unsupported_files,
     }
     return result

@@ -55,12 +55,22 @@ validation:
 
   mermaid:
     enabled: true
-    # engine: auto | structural | mmdc
-    #   auto       — use mermaid-cli when present, otherwise the structural parser
-    #   structural — always use the built-in parser (deterministic, no Node needed)
-    #   mmdc       — require mermaid-cli; fail the run if it is absent
+    # engine: auto | node | mmdc | structural
+    #   auto       — mermaid.parse() via node when resolvable, else mmdc, else the
+    #                structural fallback
+    #   node       — require mermaid.parse(); fail the run if unavailable
+    #   mmdc       — require @mermaid-js/mermaid-cli
+    #   structural — force the built-in fallback (no Node required)
+    #
+    # ADOPT-OBL-01a: the structural fallback is a FALLBACK. Validated against
+    # mermaid.parse() over 2,006 corpus diagrams, the v1.0.0 parser was wrong in
+    # both directions — 4 false positives on valid erDiagram crow's-foot notation
+    # and 4 false negatives on genuinely broken diagrams. It now reports
+    # UNSUPPORTED_BY_VALIDATOR for anything it cannot decide, and only
+    # graph/flowchart are decidable without a grammar.
     engine: auto
-    use_cli: true
+    # Where to resolve the `mermaid` and `jsdom` packages from, when not on NODE_PATH.
+    node_modules: ""
 
   identifiers:
     enabled: true
