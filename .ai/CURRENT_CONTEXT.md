@@ -288,3 +288,71 @@ output is a hypothesis about the checker, not a measurement of the corpus.**
 3. **`ADOPT-OBL-03b`** — human adjudication of the 3 semantic duplicates in `TBL-VIS-394`.
 4. **`ADOPT-07`** — second `CODEOWNERS` principal. Unchanged, and still the highest-
    leverage human action in the repository.
+
+---
+
+## Session update — 2026-08-15, validator v1.2.0
+
+Appended. Nothing above is edited.
+
+### Verified state at session open
+
+| Field | Value |
+| :--- | :--- |
+| `BASE_COMMIT` | `70468e63864c508385017c41b36308e99523814d` |
+| `CURRENT_BRANCH` | `arena/01a0046f-oship` |
+| `REMOTE_BRANCH` | `origin/arena/01a0046f-oship` |
+| `WORKTREE_STATE` | clean at open; all prior work already committed |
+| Remote `main` | `70468e6` — identical; no history rollback this session |
+
+No recovery was needed: unlike the previous session, `HEAD` was not rolled back.
+
+### What this session did
+
+**`ADOPT-OBL-03a` — RESOLVED.** Verified rather than assumed: `DEC-VIS-052` exists, is
+`ACTIVE`, defines all 11 required terms, is encoded in `id_validator.py`, is covered by
+regression cases `DEC-052-C1`…`C12`, and is reversible. The three `SEMANTIC_DUPLICATE`
+errors it surfaces were re-checked by hand against the corpus and are real.
+
+**`ADOPT-OBL-01b` — NEW, and RESOLVED.** The Mermaid engine was fail-open. `NODE_PATH`
+is ignored by the ESM resolver, so the authoritative parser never loaded and the validator
+degraded to the structural fallback **silently**, reporting `MMD-PARSE PASS` while leaving
+612 diagrams unparsed and 5 real defects unreported. Fixed via `createRequire()`; the
+degradation is now an `ERROR` (`MMD-ENGINE`) with published diagnostics.
+
+**Baseline re-established and reproducible.** `FAIL — 13 errors, 443 warnings`, engine
+`mermaid.parse`, 1,998 of 1,998 diagrams parsed, 0 abstentions.
+
+### Honest position on the previous baseline
+
+The committed v1.1.0 baseline (13 / 441) **could not be reproduced**; the same code at the
+same commit gives 8 / 1,055 in a clean checkout. The identical headline error count is a
+coincidence of two offsetting defects, not agreement. Recorded in `.ai/METRICS.md` §7.1
+and `LL-ADOPT-10`.
+
+### `ADOPT-OBL-13` — still OPEN, re-tested this session
+
+Tested empirically, not assumed. `git push` with `.github/workflows/docs-validate.yml`:
+
+```
+! [remote rejected] arena/01a0046f-oship -> arena/01a0046f-oship
+  (refusing to allow a GitHub App to create or update workflow
+   `.github/workflows/docs-validate.yml` without `workflows` permission)
+```
+
+Missing scope: **`workflows`** on the GitHub App credential. Confirmed independently via
+the Actions API: the repository has exactly **1** workflow, the dynamic Dependabot one,
+and **0** runs of any documentation check.
+
+The workflow artefact is YAML-valid, structurally verified, and now also provisions and
+asserts the Mermaid engine — but it is **NOT INSTALLED**, and **`EV4` is NOT ACHIEVED**.
+
+### Next action
+
+1. **`ADOPT-OBL-13`** — a principal with `workflows` scope runs
+   `cp tools/docs-validate/ci/docs-validate.yml .github/workflows/ && git add .github/workflows && git commit && git push`.
+   One command; the only route to `EV4`, `QG-4` and `W1`.
+2. **`ADOPT-OBL-02`** — repair the 5 real Mermaid defects; all small and mechanical.
+3. **`ADOPT-OBL-03b`** — human adjudication of the 3 semantic duplicates in `TBL-VIS-394`.
+4. **`ADOPT-07`** — second `CODEOWNERS` principal. Unchanged, still the highest-leverage
+   human action in the repository.

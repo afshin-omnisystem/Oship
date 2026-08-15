@@ -267,3 +267,77 @@ The v1.0.0 → v1.1.0 delta is a worked example of `LL-ADOPT-01`: **152 of 165 r
 errors were artefacts of the measuring instrument.** Any metric in this document that has
 not been validated against a reference implementation or a hand-audited sample should be
 read as provisional. The §4 estimates (`~85%`, `~90%`, `~2.1`) remain unverified.
+
+---
+
+## 7. Measurement Register — validator v1.2.0, 2026-08-15
+
+Appended, not edited. §6 and its v1.1.0 figures remain as recorded at the time.
+
+### 7.1 The v1.1.0 figures in §6 were not reproducible
+
+Re-running the **committed v1.1.0 validator, unmodified, at the same commit**, in a clean
+checkout produced different numbers from the ones §6 publishes:
+
+| Measure | §6 as published | v1.1.0 code re-run |
+| :--- | ---: | ---: |
+| Errors | 13 | **8** |
+| Warnings | 441 | **1,055** |
+| `MMD-PARSE` | `FAIL`, 5 errors | **`PASS`, 0 errors** |
+| Mermaid engine | `mermaid.parse` | **`structural`** |
+| Diagrams parsed | 1,998 | **1,386** |
+
+Cause: `ADOPT-OBL-01b`. The Node harness resolved `mermaid` via `NODE_PATH`, which the
+ESM resolver ignores, so the authoritative engine never loaded and the validator degraded
+to the structural fallback **silently** while still reporting `PASS`.
+
+`§6.2` warned that unvalidated metrics should be read as provisional. That warning
+applied to `§6` itself.
+
+### 7.2 Measured under v1.2.0 — engine asserted authoritative
+
+| Metric | Value | Produced by |
+| :--- | ---: | :--- |
+| Markdown files | **93** | `MET-COUNTS` |
+| Total lines | **141,202** | `MET-COUNTS` |
+| Total words | **838,143** | `MET-COUNTS` |
+| Mermaid diagrams | **1,998** | `MMD-PARSE` |
+| → parsed by reference implementation | **1,998** | `MMD-ENGINE` |
+| → `UNSUPPORTED_BY_VALIDATOR` | **0** | `MMD-COVERAGE` |
+| → invalid | **5** | `MMD-PARSE` |
+| Tables | **3,758** | `MET-COUNTS` |
+| `VAL-` rules | **2,427** | `MET-COUNTS` |
+| `FAL-` modes | **758** | `MET-COUNTS` |
+| Identifier semantic duplicates (`ERROR`) | **3** | `ID-UNIQUE` |
+| Identifier contiguity gaps (`ERROR`) | **5** | `ID-CONTIGUITY` |
+| Metadata conformance | **96.3 %** | `META-*` |
+| Broken anchors | **8** | `ANC-*` |
+| Visual-density breaches | **0** | `MET-VISUAL-DENSITY` |
+| **Total errors** | **13** | |
+| **Total warnings** | **443** | |
+
+### 7.3 Delta against §6, itemised
+
+| Measure | §6 (v1.1.0) | v1.2.0 | Δ | Real or validator-only |
+| :--- | ---: | ---: | ---: | :--- |
+| Errors | 13 | **13** | 0 | identical count, but now **reproducible** and engine-asserted |
+| Warnings | 441 | **443** | **+2** | **Validator-only.** Two empty-text links in `.ai/DECISION_LOG.md:44` and `.ai/PROJECT_STATUS.md:348`, written by the previous session's own control-plane update **after** its baseline was generated. Not a corpus regression — evidence that the v1.1.0 baseline never described the tree it shipped in. |
+| Total lines | 140,876 | **141,202** | +326 | Same cause. No corpus document was edited; `git diff` against `main` for `docs/`, `README.md` and `PROJECT_PHILOSOPHY.md` is empty. |
+| Tables | 3,747 | **3,758** | +11 | Same cause. |
+
+### 7.4 Provenance — `ADOPT-R5`
+
+Every figure above is machine-produced by
+`tools/docs-validate/run-validator.py --reports-dir tools/docs-validate/reports` and is
+reproducible from the committed `metrics.json`. Mermaid figures come from `mermaid@11`
+`mermaid.parse()` under `jsdom`, with `"authoritative": true` recorded in the report.
+
+**New in v1.2.0:** the report states which engine produced the Mermaid figures, and a run
+that could not obtain an authoritative engine fails rather than publishing a number it
+cannot support. §7.1 is the reason that check exists.
+
+### 7.5 Corrected standing rule
+
+`ADOPT-R6` — **a metric must name the engine that produced it, not only the check.** A
+citation to `MMD-PARSE` was insufficient: the same check produced both `5 invalid` and
+`0 invalid` depending on an environment condition the report did not disclose.

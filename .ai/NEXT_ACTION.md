@@ -169,3 +169,49 @@ corpus is repaired.
 
 `ARCH-02` (`AOM-ARCH-001` PART 02) is **unblocked**: the `ADOPT-02` subordination rule is
 discharged because `ADOPT-01` was executed rather than refused.
+
+---
+
+## Queue update — 2026-08-15, validator v1.2.0
+
+Appended. Nothing above is edited.
+
+| Priority | Task ID | Description | Owner | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **P0** | `ADOPT-OBL-03a` | Formalise identifier definition-vs-reference semantics (`DEC-VIS-052`) and encode them in the validator | AI Agent Mode | **`RESOLVED`** — verified this session, not assumed: record `ACTIVE`, 11 terms defined, encoded, 12 regression cases passing, reversible |
+| **P0** | `ADOPT-OBL-01b` | Mermaid engine fail-open: `NODE_PATH` is ignored by the ESM resolver, so the authoritative parser never loaded and the fallback was used **silently** | AI Agent Mode | **`RESOLVED`** — `createRequire()` resolution; `MMD-ENGINE` fails closed; diagnostics published; CI provisions and asserts the engine |
+| **P0** | `ADOPT-OBL-13` | Install `.github/workflows/docs-validate.yml` | **Human principal with `workflows` scope** | **`OPEN` — BLOCKED.** Re-tested by real `git push` this session and rejected. Actions API confirms 0 documentation workflows and 0 runs. |
+| **P0** | `ADOPT-OBL-02` | Repair the 5 real Mermaid parse failures | AI Agent Mode | `OPEN` — all 5 confirmed by `mermaid.parse()`; small and mechanical |
+| **P0** | `ADOPT-OBL-03b` | Adjudicate the 3 `SEMANTIC_DUPLICATE` findings in `TBL-VIS-394` | **Human Architect** | `OPEN` — re-verified real this session |
+| **P1** | `ADOPT-OBL-06` | 5 identifier contiguity gaps | AI Agent Mode | `OPEN` |
+| **P1** | `ADOPT-OBL-07` | Correct `.ai/METRICS.md` §4 Documentation Count | AI Agent Mode | `OPEN` — measured **93**, §4 still asserts 85; §7 records the measurement without editing §4 |
+| **P1** | `ADOPT-OBL-08`…`11` | 8 broken anchors, 4 duplicate slugs, 2 metadata values, 426 unresolved relative links | AI Agent Mode | `OPEN` |
+| **P0** | `ADOPT-07` | Add a second `CODEOWNERS` principal | **Human principal** | `OPEN` — unchanged, still the highest-leverage human action |
+
+### The exact next action
+
+`ADOPT-OBL-13`. Everything else in this queue is either agent work that does not unblock a
+gate, or human adjudication. **Workflow installation is the only step that produces `EV4`**,
+and `EV4` gates `QG-4` and Wave `W1`.
+
+```bash
+mkdir -p .github/workflows
+cp tools/docs-validate/ci/docs-validate.yml .github/workflows/docs-validate.yml
+git add .github/workflows/docs-validate.yml
+git commit -m "ci: install documentation integrity check (ADOPT-OBL-13)"
+git push
+```
+
+Requires a credential with the **`workflows`** permission. The current GitHub App
+credential does not have it; this was confirmed by executing the push, not by assumption.
+
+**Expected first run: RED.** `FAIL — 13 errors, 443 warnings`. That is the intended and
+correct outcome under `VAL-VIS-1746` / `SC-04`. Do not weaken a check to green it. The run
+being retrievable — not the run being green — is what constitutes `EV4`.
+
+### Standing prohibition, still in force
+
+`ADOPT-02` blocks new specification work — including PART 07 of any document — until the
+`ADOPT-01` obligations are discharged. **No specification work was performed this session.**
+`git diff` against `main` for `docs/MASTER_CONTEXT/`, `PROJECT_PHILOSOPHY.md` and
+`README.md` is empty.

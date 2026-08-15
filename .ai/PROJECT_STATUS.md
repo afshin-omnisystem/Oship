@@ -376,3 +376,72 @@ Nothing in this milestone advanced the adoption state. It made the existing mech
 - Control-plane updates are append-only.
 - No commit to `main`; no tag; no release.
 - Historical baseline `BASELINE-2026-08-15.md` preserved unedited (`ADOPT-R3`).
+
+---
+
+## ADOPT-01 Follow-Up Record — 2026-08-15, validator v1.2.0
+
+Appended under the append-only discipline. Nothing above is edited.
+
+### Obligation status
+
+| Obligation | Before | After | Note |
+| :--- | :---: | :---: | :--- |
+| `ADOPT-OBL-03a` | `OPEN` | **`RESOLVED`** | `DEC-VIS-052` verified this session — record `ACTIVE`, 11 terms defined, encoded in `id_validator.py`, `DEC-052-C1`…`C12` passing, reversible |
+| `ADOPT-OBL-01a` | claimed discharged | **superseded by `01b`** | the discharge was real but measured in an unreproducible environment |
+| `ADOPT-OBL-01b` | — | **`RESOLVED`** | **new.** Mermaid engine was fail-open; now fails closed |
+| `ADOPT-OBL-13` | `OPEN` | **`OPEN`** | re-tested by real `git push`; rejected for want of `workflows` permission |
+| `ADOPT-OBL-02` | `OPEN` | `OPEN` | 5 Mermaid defects, all confirmed by the reference parser |
+| `ADOPT-OBL-03b` | `OPEN` | `OPEN` | 3 semantic duplicates, re-verified real |
+| `ADOPT-OBL-06`…`12` | `OPEN` | `OPEN` | unchanged |
+
+### Measured baseline
+
+| | v1.1.0 as committed | v1.1.0 code re-run clean | **v1.2.0 measured** |
+| :--- | ---: | ---: | ---: |
+| Errors | 13 | 8 | **13** |
+| Warnings | 441 | 1,055 | **443** |
+| Mermaid engine | `mermaid.parse` | `structural` | **`mermaid.parse`, asserted** |
+| Diagrams parsed | 1,998 | 1,386 | **1,998 of 1,998** |
+| Reproducible | **No** | — | **Yes** |
+
+The matching error count between column 1 and column 3 is a coincidence of offsetting
+defects, not agreement. Detail in `.ai/METRICS.md` §7.
+
+### Validator
+
+| Field | Value |
+| :--- | :--- |
+| **Version** | `1.2.0` |
+| **Self-test** | **33 of 33 executed cases PASS**, with and without the engine installed |
+| **Determinism** | verified — two consecutive runs produce byte-identical reports |
+| **New checks** | `MMD-ENGINE` (fail-closed on engine degradation) |
+| **New fixtures** | `mermaid-families.md` — valid erDiagram / flowchart / sequenceDiagram / stateDiagram, malformed erDiagram / flowchart |
+| **New self-test cases** | `MMD-ENGINE-REPORTED`, `MMD-ENGINE-CLOSED`, `MMD-ENGINE-OPT-OUT`, `MMD-ENGINE-DIAG`, `MMD-FAM-NO-FALSE-POS`, `MMD-FAM-VERDICTS` |
+
+### Workflow and EV4 — verified, not claimed
+
+| Field | State |
+| :--- | :--- |
+| `.github/workflows/` in repo | **does not exist** |
+| Workflows on the remote | **1** — dynamic Dependabot only |
+| Documentation-check runs | **0** |
+| Workflow artefact | YAML-valid, structurally verified, provisions and asserts the Mermaid engine |
+| Installation | **NOT INSTALLED** — `git push` rejected: missing `workflows` permission |
+| **`EV4`** | **NOT ACHIEVED** |
+| **`QG-4`** | **CLOSED** |
+
+### Standing rules added
+
+`ADOPT-R6` — a published metric must name the **engine** that produced it, not only the
+check. The same `MMD-PARSE` check produced both `5 invalid` and `0 invalid` depending on
+an environment condition the report did not disclose.
+
+Lessons `LL-ADOPT-09` (a validator that cannot fail to run, fails open), `LL-ADOPT-10`
+(reproduce the baseline before building on it) and `LL-ADOPT-11` (`git reset --hard` is
+not an undo) are recorded in `.ai/LESSONS_LEARNED.md`.
+
+### Scope discipline
+
+No `MASTER_CONTEXT` part was modified. No PART 07 or new specification document was
+created; `ADOPT-02` remains in force and was observed.
