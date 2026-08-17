@@ -1,1 +1,112 @@
+# ==============================================================================
+# OSHIP DOCUMENTATION INTEGRITY CHECK
+# ------------------------------------------------------------------------------
+# Repository:    afshin-omnisystem/Oship
+# Artefact:      ADOPT-01 — Documentation Validation Infrastructure
+# Specification: TBL-VIS-730 (First Executable Artefact)
+# Acceptance:    TBL-VIS-732 — FA-01 (this file exists and is valid),
+#                FA-02 (triggers on push and pull request),
+#                FA-03 (a retrievable run log)
+#
+# This is the FIRST INSTALLED WORKFLOW in Oship's history. Its run log is the
+# first `EV4` evidence the repository has ever produced (TBL-VIS-731).
+#
+# LANGUAGE NOTE (FA-08)
+#   Python is the checker's TOOLING language. It is not a product
+#   implementation-language decision and must never be cited as a de facto
+#   Wave W2 decision (FAL-VIS-341).
+#
+# HONEST-FAILURE NOTE (VAL-VIS-1746, worked scenario SC-04)
+#   This workflow is EXPECTED to fail on the existing corpus. Keep it failing and
+#   record obligations. Do not relax a check, add an exclusion, or add
+#   `continue-on-error` to reach green — doing so destroys the evidence value of
+#   the run and re-enters the `AF-1` STALL failure mode.
+# ==============================================================================
 
+name: "Documentation Integrity Check"
+
+on:
+  push:                     # FA-02 — every push to any branch
+    branches:
+      - "**"
+  pull_request:             # FA-02 — every pull request
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  self-test:
+    name: "Validator self-test (regression fixtures)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install optional YAML support
+        run: python -m pip install --quiet pyyaml || true
+
+      - name: Run regression fixtures (FA-04, FA-09, FA-10, FA-11)
+        run: python3 tools/docs-validate/run-validator.py --self-test
+
+  validate:
+    name: "Validate documentation corpus"
+    runs-on: ubuntu-latest
+    needs: self-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install optional YAML support
+        run: python -m pip install --quiet pyyaml || true
+
+      - name: Declare scope (FA-07)
+        run: |
+          echo "Scope: the whole repository tree, not a single file."
+          echo "Config: tools/docs-validate/configs/validation-rules.yaml"
+
+      # FA-05 is the standing target; until the recorded obligations are
+      # discharged this step is expected to exit non-zero (VAL-VIS-1746).
+      - name: Run documentation validator
+        id: validate
+        run: |
+          python3 tools/docs-validate/run-validator.py \
+            --no-color \
+            --max-findings 40 \
+            --report tools/docs-validate/reports/validation-report.json \
+            --markdown-report tools/docs-validate/reports/validation-report.md
+
+      - name: Job summary
+        if: always()
+        run: |
+          if [ -f tools/docs-validate/reports/validation-report.md ]; then
+            cat tools/docs-validate/reports/validation-report.md >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No report produced — the validator failed before writing output." \
+              >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # FA-03 — a retrievable run log / report artefact.
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-validation-report
+          path: tools/docs-validate/reports/
+          if-no-files-found: warn
+          retention-days: 90
