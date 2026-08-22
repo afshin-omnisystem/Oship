@@ -1690,7 +1690,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at './INDEX.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 9936,
+      "line": 9947,
       "validator": "markdown"
     },
     {
@@ -1699,7 +1699,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 9937,
+      "line": 9948,
       "validator": "markdown"
     },
     {
@@ -1708,7 +1708,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at './INDEX.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 14548,
+      "line": 14559,
       "validator": "markdown"
     },
     {
@@ -1717,7 +1717,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 14548,
+      "line": 14559,
       "validator": "markdown"
     },
     {
@@ -1726,7 +1726,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at '../../README.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 14548,
+      "line": 14559,
       "validator": "markdown"
     },
     {

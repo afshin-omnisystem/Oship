@@ -8,8 +8,8 @@
   "warnings": 426,
   "metrics": {
     "files_scanned": 93,
-    "code_fences": 4113,
-    "headings": 10439,
+    "code_fences": 4123,
+    "headings": 10496,
     "links": 650
   },
   "checks": [
@@ -18,7 +18,7 @@
       "rule": "VAL-VIS-1592-FENCE",
       "description": "Every fenced code block opened in a Markdown file is closed.",
       "status": "PASS",
-      "measured": 4113,
+      "measured": 4123,
       "errors": 0,
       "warnings": 0,
       "findings": [],
@@ -29,7 +29,7 @@
       "rule": "DOC-STD-HEADING",
       "description": "No ATX heading may have an empty text body.",
       "status": "PASS",
-      "measured": 10439,
+      "measured": 10496,
       "errors": 0,
       "warnings": 0,
       "findings": [],
@@ -40,7 +40,7 @@
       "rule": "DOC-STD-HEADING",
       "description": "ATX headings are well formed: a space follows the hashes, depth is 1..6.",
       "status": "PASS",
-      "measured": 10439,
+      "measured": 10496,
       "errors": 0,
       "warnings": 0,
       "findings": [],
@@ -51,7 +51,7 @@
       "rule": "DOC-STD-FENCE",
       "description": "Fence info strings are well formed (no stray backticks, no whitespace-only tag).",
       "status": "PASS",
-      "measured": 4113,
+      "measured": 4123,
       "errors": 0,
       "warnings": 0,
       "findings": [],
@@ -1568,7 +1568,7 @@
           "severity": "WARNING",
           "message": "link with empty text pointing at './INDEX.md'",
           "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "line": 9936
+          "line": 9947
         },
         {
           "rule": "MET-05",
@@ -1576,7 +1576,7 @@
           "severity": "WARNING",
           "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
           "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "line": 9937
+          "line": 9948
         },
         {
           "rule": "MET-05",
@@ -1584,7 +1584,7 @@
           "severity": "WARNING",
           "message": "link with empty text pointing at './INDEX.md'",
           "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "line": 14548
+          "line": 14559
         },
         {
           "rule": "MET-05",
@@ -1592,7 +1592,7 @@
           "severity": "WARNING",
           "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
           "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "line": 14548
+          "line": 14559
         },
         {
           "rule": "MET-05",
@@ -1600,7 +1600,7 @@
           "severity": "WARNING",
           "message": "link with empty text pointing at '../../README.md'",
           "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "line": 14548
+          "line": 14559
         },
         {
           "rule": "MET-05",
@@ -3504,7 +3504,7 @@
       "rule": "DOC-STD-TABLE",
       "description": "A GFM table header row is followed by a delimiter row.",
       "status": "PASS",
-      "measured": 3758,
+      "measured": 3779,
       "errors": 0,
       "warnings": 0,
       "findings": [],

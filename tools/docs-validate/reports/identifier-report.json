@@ -90,7 +90,7 @@
       "rule": "VAL-VIS-ID-FORMAT",
       "description": "Every namespaced identifier occurrence matches PREFIX-SCOPE-NNN with zero-padded numbering.",
       "status": "PASS",
-      "measured": 13217,
+      "measured": 13262,
       "errors": 0,
       "warnings": 0,
       "findings": [],
