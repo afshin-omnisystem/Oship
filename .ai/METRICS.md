@@ -341,3 +341,55 @@ cannot support. §7.1 is the reason that check exists.
 `ADOPT-R6` — **a metric must name the engine that produced it, not only the check.** A
 citation to `MMD-PARSE` was insufficient: the same check produced both `5 invalid` and
 `0 invalid` depending on an environment condition the report did not disclose.
+
+---
+
+## 8. Measurement Register — 2026-08-22, after `ADOPT-OBL-02`
+
+Appended, not edited. §7 remains as recorded.
+
+| Metric | §7 (2026-08-15) | **2026-08-22** | Produced by |
+| :--- | ---: | ---: | :--- |
+| **Total errors** | 13 | **8** | all validators |
+| **Total warnings** | 443 | **443** | all validators |
+| Mermaid diagrams | 1,998 | **1,998** | `MMD-PARSE` |
+| → parsed by reference implementation | 1,998 | **1,998** | `MMD-ENGINE` |
+| → **invalid** | 5 | **0** | `MMD-PARSE` |
+| → `UNSUPPORTED_BY_VALIDATOR` | 0 | **0** | `MMD-COVERAGE` |
+| Identifier semantic duplicates | 3 | **3** | `ID-UNIQUE` |
+| Identifier contiguity gaps | 5 | **5** | `ID-CONTIGUITY` |
+| Self-test | 33 / 33 | **33 / 33** | `--self-test` |
+
+### 8.1 Why the error count fell — `ADOPT-R6` provenance
+
+**Real corpus repair.** Validator version (`1.2.0`), engine (`mermaid.parse`, `mermaid@11`
+under `jsdom`), configuration and thresholds are byte-identical to the 2026-08-15 run.
+Only the corpus changed: 5 malformed diagrams were repaired under `ADOPT-OBL-02`.
+
+This is the **first** error-count reduction in this repository's history that is a genuine
+corpus improvement. Every previous reduction was a checker correction — `LL-ADOPT-01`.
+
+Per the `LL-ADOPT-07` rule, any change that reduces the error count must publish this
+table:
+
+| Test | Answer |
+| :--- | :--- |
+| Threshold loosened? | **No** |
+| Path excluded? | **No** |
+| Check deleted? | **No** |
+| Detection capability | **Unchanged** — same engine, same checks, same config |
+| Findings deleted? | **No** — the 5 defects were **fixed**, not suppressed |
+| Reversible? | **Yes** — `git revert` restores the malformed diagrams and the 13-error count |
+
+### 8.2 CI measurement is NOT yet trustworthy — `ADOPT-OBL-14`
+
+The figures above come from a **local** run with the authoritative engine.
+
+**CI's figures do not match, and should not be cited.** The installed workflow provisions
+Python only and `main` still carries validator v1.1.0, which fails open. CI therefore runs
+the structural fallback, abstains on 612 of 1,998 diagrams, and reports `MMD-PARSE PASS`
+regardless of corpus state — a false green it produced even while the 5 defects were live.
+
+Until `ADOPT-OBL-14` is discharged by merging this branch, **the only trustworthy Mermaid
+measurement is a local run with `mermaid@11` + `jsdom` installed.** `ADOPT-R6` requires
+the engine be named with the metric; for CI the honest engine name is `structural`.

@@ -435,3 +435,48 @@ definition:
 
 A pending permission request leaves installation tokens on the old permission set, which
 matches the observed behaviour exactly.
+
+---
+
+## Session update — 2026-08-22, EV4 achieved and ADOPT-OBL-02 discharged
+
+Appended. Nothing above is edited.
+
+### Verified state
+
+| Field | Value |
+| :--- | :--- |
+| `BASE_COMMIT` | `6f1ea7338a653560745de5ed5eaa3a59f60a2776` |
+| `CURRENT_BRANCH` | `arena/01a0046f-oship` |
+| `main` | `7f5b2918decb6dca72b074ba5fa7877ac77877eb` |
+| `WORKTREE_STATE` | clean after recovery |
+
+Local `HEAD` was again found rolled back to `70468e6` with the work intact in the
+worktree. Recovered per `LL-ADOPT-08`: fetch, verify the three untracked files
+byte-identical against the remote tip, then `git reset` to the remote SHA. No `--hard`,
+nothing lost.
+
+### `EV4` — ACHIEVED
+
+Run **`32287472748`** on `main` @ `7f5b2918`: self-test job **success**, corpus job
+**failure** (the intended RED), artifact `docs-validation-report` id **`9378189141`**,
+75,958 bytes, **not expired**. Confirmed through the Actions API.
+
+### `ADOPT-OBL-02` — DISCHARGED
+
+5 Mermaid defects repaired, all verified against `mermaid@11` before application.
+Corpus: **13 → 8 errors**; Mermaid **5 → 0 invalid**; 1,998 / 1,998 parsed.
+
+### `ADOPT-OBL-14` — NEW, OPEN
+
+The installed workflow and `main` predate `ADOPT-OBL-01b`: Python-only provisioning and
+validator v1.1.0, which fails open. CI has therefore been running the structural fallback
+and reporting a **false green** on Mermaid. The fix exists on this branch; the agent
+credential still cannot push `.github/workflows/` (re-tested, rejected again).
+
+### Next action
+
+Land this branch on `main` so the corrected validator and workflow take effect, then
+re-run CI to obtain an authoritative-engine run. That is a **human merge decision** —
+`VAL-ARCH-301` reserves merge as the only human gate, and `QG-3` still fails on
+author-equals-verifier with one principal.

@@ -305,3 +305,47 @@ git push origin arena/01a0046f-oship
 **Expected first run: RED — `FAIL`, 13 errors / 443 warnings**, engine `mermaid.parse`,
 1,998 / 1,998 diagrams parsed. Correct under `VAL-VIS-1746` / `SC-04`. **The retrievable
 run — not a green run — is `EV4`.**
+
+---
+
+## Queue update — 2026-08-22, EV4 achieved · ADOPT-OBL-02 discharged
+
+Appended. Nothing above is edited.
+
+| Priority | Task ID | Description | Owner | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **P0** | `ADOPT-OBL-13` | Install the docs-validate workflow | Repository owner | **`DISCHARGED`** — workflow `336153182` active on `main` |
+| **P0** | `EV4` | First retrievable CI evidence | — | **`ACHIEVED`** — run `32287472748`, artifact `9378189141` |
+| **P0** | `ADOPT-OBL-02` | Repair the 5 real Mermaid defects | AI Agent Mode | **`DISCHARGED`** — Mermaid 5 → 0; errors 13 → 8 |
+| **P0** | `ADOPT-OBL-14` | **NEW.** Installed workflow + `main` predate `ADOPT-OBL-01b`: Python-only CI and validator v1.1.0 fail open, so CI runs the structural fallback and reports a false green on Mermaid | **Human — merge decision** | **`OPEN`** |
+| **P0** | `ADOPT-OBL-03b` | Adjudicate the 3 `SEMANTIC_DUPLICATE` findings in `TBL-VIS-394` | **Human Architect** | `OPEN` |
+| **P1** | `ADOPT-OBL-06` | 5 identifier contiguity gaps | AI Agent Mode | `OPEN` |
+| **P1** | `ADOPT-OBL-07`…`12` | Metrics drift, anchors, slugs, metadata, links | AI Agent Mode | `OPEN` |
+| **P0** | `ADOPT-07` | Second `CODEOWNERS` principal | **Human principal** | `OPEN` — still the highest-leverage human action |
+
+### The exact next action
+
+**Merge `arena/01a0046f-oship` into `main`** (human decision — `VAL-ARCH-301` makes merge
+the only human gate, and it must not be self-executed by the authoring agent while `QG-3`
+fails on one principal).
+
+This single act discharges `ADOPT-OBL-14` by delivering, together:
+
+- validator **v1.2.0** — fail-closed on Mermaid engine degradation;
+- the corrected **workflow** — provisions Node 22 + `mermaid@11` + `jsdom` and asserts the
+  authoritative engine via `assert-engine.py`;
+- the **5 repaired diagrams**.
+
+**Expected CI result after merge: RED — `FAIL`, 8 errors / 443 warnings**, engine
+`mermaid.parse`, 1,998 / 1,998 parsed, **0 Mermaid errors**. That is correct and must not
+be greened. The remaining 8 are 3 semantic duplicates (`ADOPT-OBL-03b`, human) and 5
+contiguity gaps (`ADOPT-OBL-06`).
+
+Until the merge, CI on `main` will keep reporting the pre-repair corpus through a
+fallback parser that cannot see Mermaid defects at all.
+
+### Standing prohibition, still in force
+
+`ADOPT-02` blocks new specification work, including PART 07, until the `ADOPT-01`
+obligations are discharged. None was performed this session. `SYSTEM_VISION.md` is
+byte-identical to `main`.

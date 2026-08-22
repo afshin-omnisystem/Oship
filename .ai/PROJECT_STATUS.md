@@ -591,3 +591,102 @@ current token is consistent with a token issued before any new grant.
 | PART 07 | **not created** |
 
 No validator was weakened, no finding hidden, no check relaxed.
+
+---
+
+## EV4 ACHIEVED · ADOPT-OBL-02 DISCHARGED — 2026-08-22
+
+Appended. Nothing above is edited.
+
+### 1. `ADOPT-OBL-13` — DISCHARGED by the repository owner
+
+The workflow the agent could not install was installed manually by the owner. Verified
+against the GitHub API, not assumed:
+
+| Field | Value |
+| :--- | :--- |
+| Path | `.github/workflows/docs-validate.yml` on `main` |
+| Workflow ID | `336153182` |
+| State | `active` |
+| Blob SHA | `d368b0b6e7b8f04cede13ff5b64a8e0b3e21314d` |
+
+### 2. `EV4` — **ACHIEVED**
+
+Four real runs exist. The authoritative evidence:
+
+| Field | Value |
+| :--- | :--- |
+| **Run ID** | **`32287472748`** |
+| URL | `https://github.com/afshin-omnisystem/Oship/actions/runs/32287472748` |
+| Commit SHA | `7f5b2918decb6dca72b074ba5fa7877ac77877eb` (`main`) |
+| Event | `workflow_dispatch` |
+| Status / conclusion | `completed` / **`failure`** |
+| Job — self-test | **`success`** |
+| Job — validate corpus | **`failure`** — the intended RED |
+| Artifact | `docs-validation-report`, id `9378189141`, 75,958 bytes, **not expired** |
+| Created | 2026-08-19T18:27:49Z |
+
+This is a real, retrievable Actions execution with a durable artifact. **`EV4` is
+achieved and `QG-4` may now be assessed.** The RED conclusion is the correct outcome
+under `VAL-VIS-1746` / `SC-04`.
+
+> Log *text* could not be downloaded from this sandbox — GitHub's Azure blob endpoint
+> returns `EOF` through the egress proxy. The run, its jobs, their conclusions and the
+> unexpired artifact are all confirmed through the API. The evidence stands on that;
+> the log-text limitation is an environment constraint, recorded rather than glossed.
+
+### 3. `ADOPT-OBL-02` — DISCHARGED
+
+All 5 real Mermaid defects repaired. Every replacement was verified against `mermaid@11`
+`mermaid.parse()` **before** being applied.
+
+| Diagram ID | Location | Defect |
+| :--- | :--- | :--- |
+| `DGM-AIM-003` | `.ai/AI_AGENT_OPERATING_MANUAL.md:188` | unescaped parentheses in a node label |
+| `DGM-EXEC-100` | `MASTER_CONTEXT_EXECUTION_MODEL.md:5123` | `F{Mount]` mismatched bracket |
+| *(untitled)* | `MASTER_CONTEXT_SCHEMA.md:365` | 14 nodes on 4 lines, no separator |
+| `DGM-MCS-049` | `MASTER_CONTEXT_SCHEMA.md:9120` | `architecture-beta` edge port syntax |
+| `DGM-MCS-050` | `MASTER_CONTEXT_SCHEMA.md:9132` | `verifymethod` not a grammar enum |
+
+Two were typos; three were real grammar violations invisible without a reference parser.
+Syntax only — no semantics, node set, edge set or identifier changed.
+
+### 4. Measured baseline
+
+| Measure | 2026-08-15 | **2026-08-22** | Δ |
+| :--- | ---: | ---: | ---: |
+| Errors | 13 | **8** | **−5** |
+| Warnings | 443 | **443** | 0 |
+| Mermaid invalid | 5 | **0** | **−5** |
+| Diagrams parsed | 1,998 / 1,998 | 1,998 / 1,998 | 0 |
+| Self-test | 33 / 33 | 33 / 33 | 0 |
+
+**A real corpus repair, not a reclassification.** Validator version, engine, config and
+thresholds are unchanged; only the corpus changed.
+
+### 5. `ADOPT-OBL-14` — NEW, OPEN: the installed workflow is stale
+
+The installed workflow is the **pre-`ADOPT-OBL-01b`** version. It provisions Python only —
+no Node, no `mermaid`, no `jsdom`, no `assert-engine.py`. `main` also still carries
+validator **v1.1.0**, which fails *open* on engine degradation.
+
+**Therefore every CI run so far has used the structural fallback**, which abstains on 612
+of 1,998 diagrams while reporting `MMD-PARSE PASS`. CI has never parsed this corpus with
+an authoritative engine, and its Mermaid result has been a **false green** throughout —
+including while the 5 defects above were live.
+
+`EV4` is unaffected: the evidence requirement is a retrievable run, and the run is real.
+But the *content* of that run understates the corpus. The corrected workflow and validator
+v1.2.0 exist on `arena/01a0046f-oship` and cannot be pushed — the agent credential still
+lacks the `workflows` permission (re-tested this session; rejected again).
+
+### 6. Integrity
+
+| Check | Result |
+| :--- | :--- |
+| `SYSTEM_VISION.md` | **byte-identical** — blob `8181f72ec1dd2448fa2f96fa57bf63411b116ff1` |
+| PART 07 | **not created** |
+| Identifiers allocated | **none** |
+| Files changed | 3, all Mermaid syntax repairs |
+| Validators weakened | **none** |
+| Findings deleted | **none** |
