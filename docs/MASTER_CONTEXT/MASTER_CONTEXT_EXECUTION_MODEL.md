@@ -5126,7 +5126,7 @@ flowchart TD
     B -->|No| C[No mount]
     B -->|Yes| D{Correct domain?}
     D -->|No| E[Resolve domain]
-    D -->|Yes| F{Mount]
+    D -->|Yes| F[Mount]
 ```
 
 > **Diagram ID:** `DGM-EXEC-100`
