@@ -56,7 +56,19 @@ jobs:
       - name: Install optional YAML support
         run: python -m pip install --quiet pyyaml || true
 
-      - name: Run regression fixtures (FA-04, FA-09, FA-10, FA-11)
+      # ADOPT-OBL-01b — the authoritative Mermaid engine.
+      # Without this the validator degrades to the structural fallback, which
+      # abstains on ~31% of the corpus. MMD-ENGINE now fails closed on that
+      # degradation, so this step is REQUIRED, not optional.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Mermaid reference parser
+        run: npm install --no-save --no-audit --no-fund mermaid@11 jsdom
+
+      - name: Run regression fixtures (FA-04, FA-09…FA-11, DEC-VIS-052, ADOPT-OBL-01b)
         run: python3 tools/docs-validate/run-validator.py --self-test
 
   validate:
@@ -74,6 +86,23 @@ jobs:
 
       - name: Install optional YAML support
         run: python -m pip install --quiet pyyaml || true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # ADOPT-OBL-01b — required. `npm install` places the packages in
+      # ./node_modules, which the harness discovers via createRequire().
+      - name: Install Mermaid reference parser
+        run: npm install --no-save --no-audit --no-fund mermaid@11 jsdom
+
+      - name: Confirm the authoritative engine resolved
+        run: |
+          python3 tools/docs-validate/run-validator.py \
+            --only mermaid --no-color \
+            --report /tmp/mermaid-engine.json || true
+          python3 tools/docs-validate/ci/assert-engine.py /tmp/mermaid-engine.json
 
       - name: Declare scope (FA-07)
         run: |

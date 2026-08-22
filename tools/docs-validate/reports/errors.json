@@ -1,51 +1,6 @@
 {
-  "count": 13,
+  "count": 8,
   "findings": [
-    {
-      "rule": "VAL-VIS-MERMAID-PARSE",
-      "check": "MMD-PARSE",
-      "severity": "ERROR",
-      "message": "INVALID: Parse error on line 7:",
-      "file": ".ai/AI_AGENT_OPERATING_MANUAL.md",
-      "line": 188,
-      "validator": "mermaid"
-    },
-    {
-      "rule": "VAL-VIS-MERMAID-PARSE",
-      "check": "MMD-PARSE",
-      "severity": "ERROR",
-      "message": "INVALID: Parse error on line 6:",
-      "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
-      "line": 5123,
-      "validator": "mermaid"
-    },
-    {
-      "rule": "VAL-VIS-MERMAID-PARSE",
-      "check": "MMD-PARSE",
-      "severity": "ERROR",
-      "message": "INVALID: Parse error on line 3:",
-      "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 365,
-      "validator": "mermaid"
-    },
-    {
-      "rule": "VAL-VIS-MERMAID-PARSE",
-      "check": "MMD-PARSE",
-      "severity": "ERROR",
-      "message": "INVALID: Parsing failed:  Parse error on line 5, column 20: Expecting token of type ':' but found `db`.",
-      "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 9120,
-      "validator": "mermaid"
-    },
-    {
-      "rule": "VAL-VIS-MERMAID-PARSE",
-      "check": "MMD-PARSE",
-      "severity": "ERROR",
-      "message": "INVALID: Parse error on line 6:",
-      "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 9132,
-      "validator": "mermaid"
-    },
     {
       "rule": "TBL-VIS-689",
       "check": "ID-UNIQUE",

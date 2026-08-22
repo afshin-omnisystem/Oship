@@ -116,10 +116,26 @@ python3 tools/docs-validate/run-validator.py --show-warnings --strict
 
 ### Dependencies
 
-**None required.** `PyYAML` is used when importable and a deterministic built-in reader
-is used otherwise, so the checker runs on a bare Python 3.8+ interpreter. Install
-`mermaid-cli` (`mmdc`) to upgrade Mermaid checking from the structural parser to an
-authoritative `mermaid.parse()`; the checker detects it automatically.
+**Python: none required.** `PyYAML` is used when importable and a deterministic built-in
+reader is used otherwise, so the checker runs on a bare Python 3.8+ interpreter.
+
+**Mermaid: one required, and it is now enforced.**
+
+```bash
+npm install --no-save --no-audit --no-fund mermaid@11 jsdom
+```
+
+`ADOPT-OBL-01b`. The structural fallback can only decide `graph`/`flowchart`; it abstains
+on the other 612 of this corpus's 1,998 diagrams. v1.1.0 fell back to it **silently** when
+the Node harness failed — reporting `MMD-PARSE PASS` while 5 genuinely broken diagrams
+went unreported.
+
+v1.2.0 therefore fails closed. Without the packages the run reports an extra `MMD-ENGINE`
+error and Mermaid results are `UNSUPPORTED_BY_VALIDATOR`, never `PASS`. To accept reduced
+coverage deliberately, set `validation.mermaid.require_authoritative: false` — an explicit,
+recorded choice, per `ADOPT-R1`.
+
+`mermaid-cli` (`mmdc`) is also accepted as an authoritative engine and is auto-detected.
 
 ---
 

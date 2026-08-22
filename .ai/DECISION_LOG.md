@@ -99,3 +99,87 @@ this reason. The merge does not repair that; it lands the work with the gap docu
 The corpus result at merge time is **FAIL — 13 errors, 441 warnings**, and that is the
 intended state under `VAL-VIS-1746` / `SC-04`. Merging a red baseline is deliberate: the
 13 findings are real and are tracked as `ADOPT-OBL-01`…`13`.
+
+---
+
+## `DEC-VIS-052` reaffirmed; `ADOPT-OBL-01b` recorded — 2026-08-15
+
+Appended. Nothing above is edited.
+
+### 1. `ADOPT-OBL-03a` — verified RESOLVED, not assumed
+
+`DEC-VIS-052` was allocated and recorded in the previous session. This session did **not**
+take that on trust. Verified directly:
+
+| Check | Result |
+| :--- | :--- |
+| Namespace audit | `DEC-VIS-001`…`052` present; **`053` is next free**. No collision. |
+| Record exists | `docs/reports/DEC-VIS-052-identifier-definition-reference-semantics.md`, `STATUS: ACTIVE` |
+| All 11 required terms defined | Definition, Reference, Allocation, Ownership, Re-publication, Semantic duplication, Cross-reference, Registry row, Evidence row, Derived row, Forward allocation — **all present in §4** |
+| Encoded in the validator | `id_validator.py` occurrence classification; `republication_policy: dec-vis-052` |
+| All 12 required regression cases | `DEC-052-C1`…`C12` present and passing in `--self-test` |
+| Reversible | `republication_policy: strict` restores pre-decision behaviour |
+| The 154 findings deleted? | **No.** 156 retained as `INFO` republication records with definition sites named. |
+| Semantic guard actually catches things | **Yes.** 3 real `SEMANTIC_DUPLICATE` errors, independently re-verified against the corpus this session. |
+
+`VAL-VIS-381` was re-checked by hand: definition at `SYSTEM_VISION.md:12017` reads *"A
+sub-capability's maturity must not exceed its parent's…"*; the restatement at `:13679`
+reads *"Every published figure names its method"*. Same identifier, unrelated normative
+content. A genuine defect, and it stays red.
+
+**`ADOPT-OBL-03a` is RESOLVED.** `ADOPT-OBL-03b` — human adjudication of the three
+duplicates — remains **OPEN**.
+
+### 2. `ADOPT-OBL-01b` — a new decision, forced by evidence
+
+`ADOPT-OBL-01a` was recorded as discharged: the Mermaid engine had been replaced with
+`mermaid.parse()`, eliminating 4 false positives and catching 4 previously-missed defects.
+
+**That discharge was measured in an environment that no clean checkout could reproduce.**
+
+The harness resolved its dependencies with a bare `import 'mermaid'` under `NODE_PATH`.
+`NODE_PATH` is honoured only by the CommonJS resolver; the ESM resolver ignores it
+entirely. The harness runs from `mkdtemp()` under `/tmp`, so the import threw
+`ERR_MODULE_NOT_FOUND` every time, `_parse_with_node()` returned `False`, and the run fell
+through to the structural fallback.
+
+The fallback abstains on everything except `graph`/`flowchart`. The run then printed:
+
+```
+[PASS] MMD-PARSE    enforces VAL-VIS-MERMAID-PARSE  measured=1998  errors=0
+```
+
+**A green check for 1,998 diagrams, 612 of which were never parsed, and 5 of which are
+broken** — including `ADOPT-OBL-02`'s `F{Mount]`, a defect the repository had already
+recorded and knew about.
+
+#### The decision
+
+**Engine degradation is fail-closed.** Falling back to the structural parser is an
+`ERROR` (`MMD-ENGINE`) unless `require_authoritative: false` is set explicitly.
+
+#### Tested against `ADOPT-R1` — the no-relaxation prohibition
+
+| Test | Result |
+| :--- | :--- |
+| Threshold loosened? | **No.** |
+| Path excluded? | **No.** |
+| Check deleted? | **No.** One added. |
+| Detection capability | **Increased.** 5 real diagram defects go from invisible to reported; a whole class of environment failure becomes visible. |
+| Error count reduced? | **No — increased.** A clean checkout now reports 9 rather than 8. |
+| Evidence preserved? | **Yes.** `engine_diagnostics` publishes the reason for degradation. |
+| Reversible? | **Yes**, and the opt-out is recorded, never silent. |
+
+This is the inverse of the usual risk: the change makes the checker **harder** to pass.
+
+### 3. What this does NOT authorise
+
+| Constraint | State |
+| :--- | :--- |
+| `ADOPT-OBL-13` workflow installation | **STILL BLOCKED.** Re-tested this session by actual `git push`; rejected for want of `workflows` permission. |
+| `EV4` | **STILL NONE.** No workflow exists remotely; verified via the Actions API. |
+| `QG-4` | **STILL CLOSED.** |
+| `QG-3` author-not-verifier | **STILL FAILING.** One principal. |
+| Wave `W1` | **NOT CLOSED.** |
+| `ADOPT-07` second `CODEOWNERS` principal | **STILL the highest-leverage human action.** |
+| PART 07 / new specification work | **STILL PROHIBITED** by `ADOPT-02`. None was performed. |

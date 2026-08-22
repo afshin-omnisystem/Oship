@@ -376,3 +376,317 @@ Nothing in this milestone advanced the adoption state. It made the existing mech
 - Control-plane updates are append-only.
 - No commit to `main`; no tag; no release.
 - Historical baseline `BASELINE-2026-08-15.md` preserved unedited (`ADOPT-R3`).
+
+---
+
+## ADOPT-01 Follow-Up Record — 2026-08-15, validator v1.2.0
+
+Appended under the append-only discipline. Nothing above is edited.
+
+### Obligation status
+
+| Obligation | Before | After | Note |
+| :--- | :---: | :---: | :--- |
+| `ADOPT-OBL-03a` | `OPEN` | **`RESOLVED`** | `DEC-VIS-052` verified this session — record `ACTIVE`, 11 terms defined, encoded in `id_validator.py`, `DEC-052-C1`…`C12` passing, reversible |
+| `ADOPT-OBL-01a` | claimed discharged | **superseded by `01b`** | the discharge was real but measured in an unreproducible environment |
+| `ADOPT-OBL-01b` | — | **`RESOLVED`** | **new.** Mermaid engine was fail-open; now fails closed |
+| `ADOPT-OBL-13` | `OPEN` | **`OPEN`** | re-tested by real `git push`; rejected for want of `workflows` permission |
+| `ADOPT-OBL-02` | `OPEN` | `OPEN` | 5 Mermaid defects, all confirmed by the reference parser |
+| `ADOPT-OBL-03b` | `OPEN` | `OPEN` | 3 semantic duplicates, re-verified real |
+| `ADOPT-OBL-06`…`12` | `OPEN` | `OPEN` | unchanged |
+
+### Measured baseline
+
+| | v1.1.0 as committed | v1.1.0 code re-run clean | **v1.2.0 measured** |
+| :--- | ---: | ---: | ---: |
+| Errors | 13 | 8 | **13** |
+| Warnings | 441 | 1,055 | **443** |
+| Mermaid engine | `mermaid.parse` | `structural` | **`mermaid.parse`, asserted** |
+| Diagrams parsed | 1,998 | 1,386 | **1,998 of 1,998** |
+| Reproducible | **No** | — | **Yes** |
+
+The matching error count between column 1 and column 3 is a coincidence of offsetting
+defects, not agreement. Detail in `.ai/METRICS.md` §7.
+
+### Validator
+
+| Field | Value |
+| :--- | :--- |
+| **Version** | `1.2.0` |
+| **Self-test** | **33 of 33 executed cases PASS**, with and without the engine installed |
+| **Determinism** | verified — two consecutive runs produce byte-identical reports |
+| **New checks** | `MMD-ENGINE` (fail-closed on engine degradation) |
+| **New fixtures** | `mermaid-families.md` — valid erDiagram / flowchart / sequenceDiagram / stateDiagram, malformed erDiagram / flowchart |
+| **New self-test cases** | `MMD-ENGINE-REPORTED`, `MMD-ENGINE-CLOSED`, `MMD-ENGINE-OPT-OUT`, `MMD-ENGINE-DIAG`, `MMD-FAM-NO-FALSE-POS`, `MMD-FAM-VERDICTS` |
+
+### Workflow and EV4 — verified, not claimed
+
+| Field | State |
+| :--- | :--- |
+| `.github/workflows/` in repo | **does not exist** |
+| Workflows on the remote | **1** — dynamic Dependabot only |
+| Documentation-check runs | **0** |
+| Workflow artefact | YAML-valid, structurally verified, provisions and asserts the Mermaid engine |
+| Installation | **NOT INSTALLED** — `git push` rejected: missing `workflows` permission |
+| **`EV4`** | **NOT ACHIEVED** |
+| **`QG-4`** | **CLOSED** |
+
+### Standing rules added
+
+`ADOPT-R6` — a published metric must name the **engine** that produced it, not only the
+check. The same `MMD-PARSE` check produced both `5 invalid` and `0 invalid` depending on
+an environment condition the report did not disclose.
+
+Lessons `LL-ADOPT-09` (a validator that cannot fail to run, fails open), `LL-ADOPT-10`
+(reproduce the baseline before building on it) and `LL-ADOPT-11` (`git reset --hard` is
+not an undo) are recorded in `.ai/LESSONS_LEARNED.md`.
+
+### Scope discipline
+
+No `MASTER_CONTEXT` part was modified. No PART 07 or new specification document was
+created; `ADOPT-02` remains in force and was observed.
+
+---
+
+## ADOPT-OBL-13 Installation Attempt — 2026-08-15 (second attempt)
+
+Appended. Nothing above is edited.
+
+### Result: **BLOCKED — `ADOPT-OBL-13` remains `OPEN`**
+
+Workflow installation was attempted again, by **two independent paths**. Both were
+rejected by GitHub. No EV4 claim is made.
+
+#### Path 1 — `git push` with the workflow committed
+
+```
+! [remote rejected] arena/01a0046f-oship -> arena/01a0046f-oship
+  (refusing to allow a GitHub App to create or update workflow
+   `.github/workflows/docs-validate.yml` without `workflows` permission)
+```
+
+#### Path 2 — REST Contents API
+
+```
+PUT /repos/afshin-omnisystem/Oship/contents/.github/workflows/docs-validate.yml
+-> HTTP 403  "Resource not accessible by integration"
+```
+
+**Exact missing permission: `workflows` on the GitHub App installation.**
+
+The local commit was reverted with `git reset --soft` (never `--hard`, per
+`LL-ADOPT-11`), and `.github/workflows/` was removed. The repository is unchanged by the
+failed attempt.
+
+### Verified remote state at the time of the attempt
+
+| Field | Value |
+| :--- | :--- |
+| `.github/workflows/docs-validate.yml` remotely | **does not exist** (HTTP 404) |
+| Workflows on the repository | **1** — dynamic Dependabot only |
+| Documentation-check runs | **0** |
+| **`EV4`** | **NOT ACHIEVED** |
+| **`QG-4`** | **CLOSED** |
+
+### Repository identity — a correction was required this session
+
+The session instruction named `afshin0095-lang/Oship` as the authoritative repository.
+**That repository does not exist.** Verified:
+
+| Check | Result |
+| :--- | :--- |
+| `GET /repos/afshin0095-lang/Oship` | **HTTP 404** |
+| `GET /users/afshin0095-lang/repos` | one repository, **`afshin0095-lang/Omnis`** — a JavaScript/pnpm monorepo, unrelated to Oship |
+| `GET /installation/repositories` | exactly one repository: **`afshin-omnisystem/Oship`** |
+
+`afshin-omnisystem/Oship` remains the only real, accessible Oship repository, and is the
+one every prior record refers to. No work was performed against any other repository, and
+no repository was created.
+
+### Session recovery — `LL-ADOPT-08` recurrence
+
+Local `HEAD` was found rolled back to `70468e6` while the working tree still held the
+full v1.2.0 work and the remote branch was at `967d613`. Recovery: fetch, verify all three
+untracked files byte-identical against the remote commit, then `git reset --soft`. No work
+was lost and the working tree was never touched by a destructive command.
+
+### Validation gate re-run at `967d613`
+
+| Check | Result |
+| :--- | :--- |
+| Validator self-test | **33 / 33 PASS** |
+| Full corpus | **FAIL — 13 errors, 443 warnings** (as expected; RED IS VALID) |
+| Mermaid engine | `mermaid.parse`, **authoritative: true** |
+| Diagrams parsed | **1,998 / 1,998**, 0 abstentions |
+| Mermaid defects | **5** |
+| Semantic duplicates | **3** |
+| Contiguity defects | **5** |
+| `SYSTEM_VISION.md` | **byte-identical** to `main` — blob `8181f72ec1dd2448fa2f96fa57bf63411b116ff1` |
+| PART 07 | **not created** |
+
+Every expected count reproduced exactly. No validator was weakened; no finding was hidden.
+
+---
+
+## ADOPT-OBL-13 Installation Attempt — 2026-08-15 (third attempt, post-grant)
+
+Appended. Nothing above is edited.
+
+### Result: **STILL BLOCKED — `ADOPT-OBL-13` remains `OPEN`**
+
+The session instruction stated that the `workflows` permission had been granted. That
+claim was **tested, not trusted**, and it does not hold for the credential in use.
+
+| Attempt | Result |
+| :--- | :--- |
+| `git push` with the workflow committed | `! [remote rejected] ... refusing to allow a GitHub App to create or update workflow '.github/workflows/docs-validate.yml' without 'workflows' permission` |
+| REST `PUT /contents/.github/workflows/docs-validate.yml` | **HTTP 403** `Resource not accessible by integration` |
+| `git push` retried after a delay (propagation allowance) | **same rejection** |
+
+### The isolating control test
+
+To rule out a stale token, a network fault or a general loss of write access, a
+**non-workflow** file was committed and pushed on the same branch with the same
+credential:
+
+```
+def9291  probe: verify non-workflow write access   -> PUSH SUCCEEDED
+b41a33a  probe: remove scope-test artefact         -> PUSH SUCCEEDED
+```
+
+**The credential has `contents: write` and can push freely. It is rejected only for paths
+under `.github/workflows/`.** This isolates the blocker to exactly one missing
+permission — `workflows` — and rules out every alternative explanation. The probe artefact
+was removed in the same session; it leaves no residue beyond two commits in the branch
+history.
+
+### Verified remote state
+
+| Field | Value |
+| :--- | :--- |
+| `.github/workflows/docs-validate.yml` | **does not exist** (HTTP 404) |
+| Workflows on the repository | **1** — dynamic Dependabot only |
+| Documentation-check runs | **0** |
+| **`EV4`** | **NOT ACHIEVED** |
+| **`QG-4`** | **CLOSED** |
+
+### Why the grant may not have taken effect
+
+The permission was likely granted on the GitHub App **definition** but not **accepted on
+the installation**, or the installation token predates the change. A GitHub App
+permission change raises a pending request that an org/repo admin must **approve on the
+installation itself**; until approval, installation tokens continue to be minted with the
+old permission set. The `x-accepted-github-permissions: metadata=read` header on the
+current token is consistent with a token issued before any new grant.
+
+### Validation gate re-run at `b41a33a`
+
+| Check | Result |
+| :--- | :--- |
+| Validator self-test | **33 / 33 PASS** |
+| Full corpus | **FAIL — 13 errors, 443 warnings** (expected; RED IS VALID) |
+| Mermaid engine | `mermaid.parse`, **authoritative: true** |
+| Diagrams parsed | **1,998 / 1,998**, 0 abstentions |
+| `SYSTEM_VISION.md` | **byte-identical** to `main` — blob `8181f72ec1dd2448fa2f96fa57bf63411b116ff1` |
+| PART 07 | **not created** |
+
+No validator was weakened, no finding hidden, no check relaxed.
+
+---
+
+## EV4 ACHIEVED · ADOPT-OBL-02 DISCHARGED — 2026-08-22
+
+Appended. Nothing above is edited.
+
+### 1. `ADOPT-OBL-13` — DISCHARGED by the repository owner
+
+The workflow the agent could not install was installed manually by the owner. Verified
+against the GitHub API, not assumed:
+
+| Field | Value |
+| :--- | :--- |
+| Path | `.github/workflows/docs-validate.yml` on `main` |
+| Workflow ID | `336153182` |
+| State | `active` |
+| Blob SHA | `d368b0b6e7b8f04cede13ff5b64a8e0b3e21314d` |
+
+### 2. `EV4` — **ACHIEVED**
+
+Four real runs exist. The authoritative evidence:
+
+| Field | Value |
+| :--- | :--- |
+| **Run ID** | **`32287472748`** |
+| URL | `https://github.com/afshin-omnisystem/Oship/actions/runs/32287472748` |
+| Commit SHA | `7f5b2918decb6dca72b074ba5fa7877ac77877eb` (`main`) |
+| Event | `workflow_dispatch` |
+| Status / conclusion | `completed` / **`failure`** |
+| Job — self-test | **`success`** |
+| Job — validate corpus | **`failure`** — the intended RED |
+| Artifact | `docs-validation-report`, id `9378189141`, 75,958 bytes, **not expired** |
+| Created | 2026-08-19T18:27:49Z |
+
+This is a real, retrievable Actions execution with a durable artifact. **`EV4` is
+achieved and `QG-4` may now be assessed.** The RED conclusion is the correct outcome
+under `VAL-VIS-1746` / `SC-04`.
+
+> Log *text* could not be downloaded from this sandbox — GitHub's Azure blob endpoint
+> returns `EOF` through the egress proxy. The run, its jobs, their conclusions and the
+> unexpired artifact are all confirmed through the API. The evidence stands on that;
+> the log-text limitation is an environment constraint, recorded rather than glossed.
+
+### 3. `ADOPT-OBL-02` — DISCHARGED
+
+All 5 real Mermaid defects repaired. Every replacement was verified against `mermaid@11`
+`mermaid.parse()` **before** being applied.
+
+| Diagram ID | Location | Defect |
+| :--- | :--- | :--- |
+| `DGM-AIM-003` | `.ai/AI_AGENT_OPERATING_MANUAL.md:188` | unescaped parentheses in a node label |
+| `DGM-EXEC-100` | `MASTER_CONTEXT_EXECUTION_MODEL.md:5123` | `F{Mount]` mismatched bracket |
+| *(untitled)* | `MASTER_CONTEXT_SCHEMA.md:365` | 14 nodes on 4 lines, no separator |
+| `DGM-MCS-049` | `MASTER_CONTEXT_SCHEMA.md:9120` | `architecture-beta` edge port syntax |
+| `DGM-MCS-050` | `MASTER_CONTEXT_SCHEMA.md:9132` | `verifymethod` not a grammar enum |
+
+Two were typos; three were real grammar violations invisible without a reference parser.
+Syntax only — no semantics, node set, edge set or identifier changed.
+
+### 4. Measured baseline
+
+| Measure | 2026-08-15 | **2026-08-22** | Δ |
+| :--- | ---: | ---: | ---: |
+| Errors | 13 | **8** | **−5** |
+| Warnings | 443 | **443** | 0 |
+| Mermaid invalid | 5 | **0** | **−5** |
+| Diagrams parsed | 1,998 / 1,998 | 1,998 / 1,998 | 0 |
+| Self-test | 33 / 33 | 33 / 33 | 0 |
+
+**A real corpus repair, not a reclassification.** Validator version, engine, config and
+thresholds are unchanged; only the corpus changed.
+
+### 5. `ADOPT-OBL-14` — NEW, OPEN: the installed workflow is stale
+
+The installed workflow is the **pre-`ADOPT-OBL-01b`** version. It provisions Python only —
+no Node, no `mermaid`, no `jsdom`, no `assert-engine.py`. `main` also still carries
+validator **v1.1.0**, which fails *open* on engine degradation.
+
+**Therefore every CI run so far has used the structural fallback**, which abstains on 612
+of 1,998 diagrams while reporting `MMD-PARSE PASS`. CI has never parsed this corpus with
+an authoritative engine, and its Mermaid result has been a **false green** throughout —
+including while the 5 defects above were live.
+
+`EV4` is unaffected: the evidence requirement is a retrievable run, and the run is real.
+But the *content* of that run understates the corpus. The corrected workflow and validator
+v1.2.0 exist on `arena/01a0046f-oship` and cannot be pushed — the agent credential still
+lacks the `workflows` permission (re-tested this session; rejected again).
+
+### 6. Integrity
+
+| Check | Result |
+| :--- | :--- |
+| `SYSTEM_VISION.md` | **byte-identical** — blob `8181f72ec1dd2448fa2f96fa57bf63411b116ff1` |
+| PART 07 | **not created** |
+| Identifiers allocated | **none** |
+| Files changed | 3, all Mermaid syntax repairs |
+| Validators weakened | **none** |
+| Findings deleted | **none** |

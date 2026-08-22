@@ -139,7 +139,28 @@ def _strip_frontmatter(lines: List[str]) -> List[str]:
 # --------------------------------------------------------------------------------------
 
 _NODE_HARNESS = r"""
-import { JSDOM } from 'jsdom';
+// ADOPT-OBL-01b — module resolution.
+//
+// The v1.1.0 harness used bare `import 'mermaid'` and relied on NODE_PATH to
+// resolve it. NODE_PATH is honoured ONLY by the CommonJS resolver; the ESM
+// resolver ignores it entirely. The import therefore threw ERR_MODULE_NOT_FOUND
+// on every machine where the packages were not a parent directory of the
+// harness, `_parse_with_node` returned False, and the validator SILENTLY
+// degraded to the structural fallback — hiding 5 real diagram defects while
+// still reporting MMD-PARSE as PASS.
+//
+// createRequire() gives us the CommonJS resolver rooted at the discovered
+// node_modules directory; pathToFileURL() converts the absolute path into a
+// specifier the ESM loader accepts.
+import { createRequire } from 'module';
+import { pathToFileURL } from 'url';
+
+const modBase = process.argv[4];
+const require_ = createRequire(modBase.endsWith('/') ? modBase : modBase + '/');
+const importFrom = async (name) =>
+  await import(pathToFileURL(require_.resolve(name)).href);
+
+const { JSDOM } = await importFrom('jsdom');
 const dom = new JSDOM('<!DOCTYPE html><body></body>', { pretendToBeVisual: true });
 global.window = dom.window;
 global.document = dom.window.document;
@@ -150,7 +171,7 @@ global.Node = dom.window.Node;
 global.DOMParser = dom.window.DOMParser;
 global.NodeList = dom.window.NodeList;
 global.getComputedStyle = dom.window.getComputedStyle;
-const mermaid = (await import('mermaid')).default;
+const mermaid = (await importFrom('mermaid')).default;
 const fs = await import('fs');
 const items = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 mermaid.initialize({ startOnLoad: false, securityLevel: 'loose' });
@@ -191,8 +212,20 @@ def _node_engine_available(node_modules: Optional[str]) -> Optional[str]:
     return None
 
 
-def _parse_with_node(diagrams: List[Diagram], node_path: str, timeout: int = 900) -> bool:
-    """Parse every diagram in one Node process. Returns True on success."""
+def _parse_with_node(
+    diagrams: List[Diagram],
+    node_path: str,
+    timeout: int = 900,
+    diagnostics: Optional[Dict[str, Any]] = None,
+) -> bool:
+    """
+    Parse every diagram in one Node process. Returns True on success.
+
+    On failure the reason is recorded in `diagnostics` so the caller can report
+    WHY the authoritative engine was unavailable instead of degrading silently
+    (ADOPT-OBL-01b).
+    """
+    diag = diagnostics if diagnostics is not None else {}
     if not diagrams:
         return True
     tmpdir = tempfile.mkdtemp(prefix="oship-mermaid-")
@@ -207,10 +240,24 @@ def _parse_with_node(diagrams: List[Diagram], node_path: str, timeout: int = 900
 
         env = dict(os.environ, NODE_PATH=node_path)
         proc = subprocess.run(
-            ["node", harness, infile, outfile],
+            ["node", harness, infile, outfile, node_path],
             capture_output=True, text=True, timeout=timeout, env=env, cwd=tmpdir,
         )
         if proc.returncode != 0 or not os.path.exists(outfile):
+            err = (proc.stderr or proc.stdout or "").strip().splitlines()
+            diag["reason"] = "node_harness_failed"
+            diag["exit_code"] = proc.returncode
+            diag["detail"] = next(
+                (
+                    l.strip()
+                    for l in err
+                    if l.strip().startswith(
+                        ("Error", "TypeError", "SyntaxError", "ReferenceError")
+                    )
+                ),
+                (err[0].strip() if err else "no stderr"),
+            )[:300]
+            diag["node_path"] = node_path
             return False
         with open(outfile, "r", encoding="utf-8") as fh:
             results = json.load(fh)
@@ -227,7 +274,10 @@ def _parse_with_node(diagrams: List[Diagram], node_path: str, timeout: int = 900
                     d.rule = "VAL-VIS-MERMAID-TYPE"
                 d.message = err
         return True
-    except (subprocess.TimeoutExpired, OSError, ValueError, json.JSONDecodeError):
+    except (subprocess.TimeoutExpired, OSError, ValueError, json.JSONDecodeError) as exc:
+        diag["reason"] = type(exc).__name__
+        diag["detail"] = str(exc)[:300]
+        diag["node_path"] = node_path
         return False
     finally:
         shutil.rmtree(tmpdir, ignore_errors=True)
@@ -361,6 +411,13 @@ def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
     )
     diagrams = _collect_diagrams(files, root)
 
+    # ADOPT-OBL-01b — require_authoritative makes degradation FAIL-CLOSED.
+    # When true (the default), falling back to the structural parser is itself an
+    # ERROR: the fallback abstains on 612 of 1,998 corpus diagrams, so a green
+    # MMD-PARSE under it is not evidence that the corpus parses. Only an explicit
+    # opt-out downgrades that to a warning.
+    require_authoritative = bool(config.get("require_authoritative", True))
+
     node_path = (
         _node_engine_available(config.get("node_modules"))
         if engine_pref in ("auto", "node", "mermaid")
@@ -369,13 +426,22 @@ def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
     mmdc = shutil.which("mmdc") if engine_pref in ("auto", "mmdc") else None
 
     engine_used = "structural"
-    if node_path and _parse_with_node(diagrams, node_path):
+    engine_diag: Dict[str, Any] = {}
+    if node_path and _parse_with_node(diagrams, node_path, diagnostics=engine_diag):
         engine_used = "mermaid.parse"
     elif mmdc:
         engine_used = "mmdc"
         for d in diagrams:
             _parse_with_mmdc(d, mmdc)
     else:
+        if not node_path and engine_pref in ("auto", "node", "mermaid"):
+            engine_diag.setdefault("reason", "packages_not_found")
+            engine_diag.setdefault(
+                "detail",
+                "no directory containing both 'mermaid' and 'jsdom' was found; "
+                "searched validation.mermaid.node_modules, $NODE_PATH, "
+                "./node_modules, /tmp/node_modules and the global prefixes",
+            )
         if engine_pref in ("node", "mermaid", "mmdc"):
             res = ValidatorResult(validator=VALIDATOR_NAME, title=TITLE)
             chk = CheckResult(
@@ -383,7 +449,11 @@ def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
                 rule="VAL-VIS-MERMAID-PARSE",
                 description="The configured authoritative Mermaid engine is unavailable.",
             )
-            chk.add(f"engine '{engine_pref}' requested but not available")
+            chk.add(
+                f"engine '{engine_pref}' requested but not available "
+                f"({engine_diag.get('reason', 'unknown')}: "
+                f"{engine_diag.get('detail', 'no detail')})"
+            )
             res.checks.append(chk)
             return res
         for d in diagrams:
@@ -413,8 +483,33 @@ def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
         ),
         severity_on_failure=Severity.WARNING,
     )
-    for c in (empty_chk, type_chk, parse_chk, cover_chk):
+    authoritative = engine_used in ("mermaid.parse", "mmdc")
+    engine_chk = CheckResult(
+        name="MMD-ENGINE",
+        rule="VAL-VIS-MERMAID-PARSE",
+        description=(
+            "An authoritative Mermaid engine (mermaid.parse or mmdc) is active. "
+            "The structural fallback abstains on most diagram families, so a PASS "
+            "under it is not evidence that the corpus parses (ADOPT-OBL-01b)."
+        ),
+        severity_on_failure=(
+            Severity.ERROR if require_authoritative else Severity.WARNING
+        ),
+    )
+    for c in (empty_chk, type_chk, parse_chk, cover_chk, engine_chk):
         c.measured = len(diagrams)
+
+    if not authoritative:
+        engine_chk.add(
+            "NOT AUTHORITATIVE: the structural fallback is active, so "
+            f"{sum(1 for d in diagrams if d.result == UNSUPPORTED)} of "
+            f"{len(diagrams)} diagrams were NOT parsed. "
+            f"reason={engine_diag.get('reason', 'engine not requested')}; "
+            f"detail={engine_diag.get('detail', 'n/a')}. "
+            "Install node + mermaid + jsdom, or set "
+            "validation.mermaid.require_authoritative to false to accept reduced "
+            "coverage deliberately."
+        )
 
     by_rule = {
         "VAL-VIS-MERMAID-EMPTY": empty_chk,
@@ -449,7 +544,7 @@ def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
             )
 
     result = ValidatorResult(validator=VALIDATOR_NAME, title=TITLE)
-    result.checks.extend([empty_chk, type_chk, parse_chk, cover_chk])
+    result.checks.extend([empty_chk, type_chk, parse_chk, cover_chk, engine_chk])
     result.metrics = {
         "files_scanned": len(files),
         "total_diagrams": len(diagrams),
@@ -457,7 +552,9 @@ def run(root: str, config: Optional[Dict[str, Any]] = None) -> ValidatorResult:
         "invalid": invalid,
         "unsupported_by_validator": unsupported,
         "engine": engine_used,
-        "authoritative": engine_used in ("mermaid.parse", "mmdc"),
+        "authoritative": authoritative,
+        "engine_required": require_authoritative,
+        "engine_diagnostics": engine_diag,
         "invalid_diagrams": invalid_list,
         "unsupported_by_file": unsupported_files,
     }

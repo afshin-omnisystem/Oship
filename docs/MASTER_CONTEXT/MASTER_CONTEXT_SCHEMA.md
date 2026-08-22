@@ -365,16 +365,27 @@ Objects are grouped into categories for clarity.
 ```mermaid
 flowchart TD
     subgraph CONTAINER[Container]
-        C1[Project] C2[Workspace] C3[Repository] C4[Organization]
+        C1[Project]
+        C2[Workspace]
+        C3[Repository]
+        C4[Organization]
     end
     subgraph STRUCT[Structure]
-        S1[Domain] S2[Module] S3[Package]
+        S1[Domain]
+        S2[Module]
+        S3[Package]
     end
     subgraph WORK[Work]
-        W1[Feature] W2[Story] W3[Task] W4[Issue]
+        W1[Feature]
+        W2[Story]
+        W3[Task]
+        W4[Issue]
     end
     subgraph DATA[Data]
-        D1[API] D2[Database] D3[Entity] D4[DTO]
+        D1[API]
+        D2[Database]
+        D3[Entity]
+        D4[DTO]
     end
 ```
 
@@ -9122,7 +9133,7 @@ architecture-beta
     group api[API]
     service server[Server] in api
     service db[Database]
-    server:R --> L db:L
+    server:R --> L:db
 ```
 
 > **Diagram ID:** `DGM-MCS-049`
@@ -9135,7 +9146,7 @@ requirementDiagram
         id: 1
         text: Schema conformance
         risk: high
-        verifymethod: validation
+        verifymethod: Test
     }
 ```
 
