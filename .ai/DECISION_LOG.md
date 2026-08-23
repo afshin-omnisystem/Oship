@@ -183,3 +183,69 @@ This is the inverse of the usual risk: the change makes the checker **harder** t
 | Wave `W1` | **NOT CLOSED.** |
 | `ADOPT-07` second `CODEOWNERS` principal | **STILL the highest-leverage human action.** |
 | PART 07 / new specification work | **STILL PROHIBITED** by `ADOPT-02`. None was performed. |
+
+---
+
+### `DEC-055` — Owner Override of `VAL-ARCH-301` for PR #9
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-055` |
+| **Date (UTC)** | 2026-08-22 |
+| **Decision** | Merge PR #9 (`ADOPT-OBL-02` diagram repairs + fail-closed validator v1.2.0) into `main`. |
+| **Requested by** | Repository owner and sole `CODEOWNERS` principal, explicitly. |
+| **Rule engaged** | `VAL-ARCH-301` "No agent merges to `main`" — `TBL-ARCH-237` Non-Negotiable Set, severity **CRITICAL**. |
+| **Status** | `APPROVED BY OWNER` |
+| **Precedent** | `DEC-054` (PR #8), same rule, same reasoning. |
+
+#### Why this is an owner-executed gate, not a bypassed one
+
+`VAL-ARCH-301` protects the only human gate; `FAL-ARCH-196` names the failure mode it
+guards — *"agent given merge rights for convenience."* The gate is a **human decision
+point**, not a prohibition on the outcome. The owner is that human and has exercised the
+decision directly, after the agent recorded the gate and declined to self-merge.
+
+Recorded because the distinction is only legible if written down: an unrecorded override
+is indistinguishable from the failure mode.
+
+#### What this override does NOT authorise
+
+| Constraint | State after this merge |
+| :--- | :--- |
+| `TBL-VIS-757` — `AOM-VIS-001` release prohibition | **UNAFFECTED.** `SYSTEM_VISION.md` is byte-identical to `main` (blob `8181f72e`). Not a release. No tag, no release. |
+| `QG-3` / `VAL-VIS-1632` author-not-verifier | **STILL FAILING.** One principal; author equals verifier. `OBL-55` remains open. |
+| `QG-4` / `EV4` | **`EV4` ACHIEVED** (run `32287472748`); `QG-4` assessable but **not** asserted closed here. |
+| Wave `W1` | **NOT CLOSED.** |
+| `ADOPT-OBL-14` | **NOT DISCHARGED BY THIS MERGE.** See below. |
+| `ADOPT-07` second `CODEOWNERS` principal | **STILL THE HIGHEST-LEVERAGE HUMAN ACTION.** |
+
+#### `ADOPT-OBL-14` survives this merge — stated plainly
+
+This merge lands validator **v1.2.0** and the corrected workflow **source**, but it does
+**not** update `.github/workflows/docs-validate.yml`. The branch never touched that path,
+because the agent credential lacks the `workflows` permission.
+
+GitHub executes the workflow file as it exists on the target ref. After this merge `main`
+will therefore still run the **Python-only** workflow — no Node, no `mermaid`, no `jsdom`.
+
+Two consequences, both real:
+
+1. `main` will carry a validator that **fails closed** on engine degradation, while CI
+   supplies no engine. The next CI run on `main` is expected to report **9 errors**: the
+   8 real findings plus `MMD-ENGINE`. That is the fail-closed design working — CI will
+   now say *"I could not check"* instead of falsely saying *"I checked and found nothing."*
+2. Until a principal copies `tools/docs-validate/ci/docs-validate.yml` over
+   `.github/workflows/docs-validate.yml`, CI cannot produce an authoritative Mermaid
+   result at all.
+
+`ADOPT-OBL-14` therefore remains **OPEN** after this merge, and the error count on `main`
+is expected to rise from 8 to 9 — an honest increase, not a regression.
+
+#### Residual risk
+
+The change reaches `main` with **zero independent review**: every commit was authored and
+verified by the same agent. `QG-3` fails for exactly this reason. The merge does not
+repair that; it lands the work with the gap documented.
+
+The corpus result at merge time is **FAIL — 8 errors, 443 warnings**, and that is the
+intended state under `VAL-VIS-1746` / `SC-04`.
