@@ -69,8 +69,25 @@ validation:
     # UNSUPPORTED_BY_VALIDATOR for anything it cannot decide, and only
     # graph/flowchart are decidable without a grammar.
     engine: auto
-    # Where to resolve the `mermaid` and `jsdom` packages from, when not on NODE_PATH.
+    # Where to resolve the `mermaid` and `jsdom` packages from.
+    #
+    # ADOPT-OBL-01b: NODE_PATH is honoured only by the CommonJS resolver. The
+    # harness now resolves via createRequire() rooted at the directory found
+    # here, so an absolute path to a node_modules directory works even where the
+    # ESM loader would not find it.
     node_modules: ""
+    # ADOPT-OBL-01b — FAIL-CLOSED on engine degradation.
+    #
+    # v1.1.0 degraded to the structural fallback SILENTLY whenever the node
+    # harness failed. Measured consequence on this corpus: MMD-PARSE reported
+    # PASS with 0 errors while 5 genuinely broken diagrams went unreported and
+    # 612 diagrams were never parsed at all. A checker that reports PASS for work
+    # it did not do is the precise harm VIS-728 warns against.
+    #
+    # true  — the structural fallback is an ERROR (MMD-ENGINE). Default.
+    # false — degradation is a WARNING; use only when reduced coverage is a
+    #         deliberate, recorded choice.
+    require_authoritative: true
 
   identifiers:
     enabled: true
@@ -176,6 +193,8 @@ rule_citations:
   MMD-TYPE: VAL-VIS-MERMAID-TYPE
   MMD-SYNTAX: VAL-VIS-MERMAID-PARSE
   MMD-NODES: VAL-VIS-MERMAID-NODE
+  MMD-COVERAGE: VAL-VIS-MERMAID-COVER
+  MMD-ENGINE: VAL-VIS-MERMAID-PARSE
   ID-FORMAT: VAL-VIS-ID-FORMAT
   ID-UNIQUE: TBL-VIS-689
   ID-CONTIGUITY: VAL-VIS-ID-CONTIG

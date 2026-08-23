@@ -149,3 +149,54 @@ still held the full accumulated work and the remote branch was at `4e3eacc`. The
 recovery was: verify the 46 files byte-identical against the remote commit **first**, then
 `git reset --soft`, which cannot modify the working tree. A `--hard` reset, or a fresh
 commit on the rolled-back HEAD, would have destroyed or duplicated the work.
+
+### `LL-ADOPT-09` — A validator that cannot fail to run, fails open
+
+`LL-ADOPT-01` said a checker's first output is a hypothesis about the checker. This
+session found the sharper form of that trap.
+
+The v1.1.0 Mermaid validator had three engines in a fallback chain. The chain was designed
+for **resilience** — never crash, always produce a report. That design goal, unqualified,
+produced a checker that reported `PASS` for 1,998 diagrams while parsing 1,386 of them and
+missing 5 real defects it had itself been built to catch.
+
+The bug was one line: `import 'mermaid'` under `NODE_PATH`. ESM ignores `NODE_PATH`. But
+the bug was only *damaging* because the fallback was silent.
+
+**Rule.** A quality gate must distinguish *"I checked and found nothing"* from *"I could
+not check."* Any degradation path that produces the first message while meaning the second
+is a fail-open defect, regardless of how correct the individual engines are. Prefer a loud
+failure over a resilient lie.
+
+### `LL-ADOPT-10` — Reproduce the baseline before building on it
+
+The previous session's baseline (13 errors / 441 warnings) was committed as fact and cited
+in five documents. Re-running the same code at the same commit gave 8 / 1,055.
+
+Two independent causes, both invisible without re-running:
+
+1. the Mermaid engine silently degraded (`LL-ADOPT-09`);
+2. the baseline was generated **mid-commit**, before the session's final control-plane
+   edits landed, so it never described the tree it shipped in.
+
+**Rule.** A baseline is evidence only if it is reproducible. Before extending prior work,
+re-run its measurement and diff the result. Record the environment — engine, versions,
+resolved paths — inside the report, so a future reader can tell whether they are looking
+at the same experiment. `ADOPT-R6` now requires this.
+
+The corollary is uncomfortable and worth stating plainly: **the previous session's
+`ADOPT-OBL-01a` discharge was reported honestly and was still wrong.** Honesty about
+method does not substitute for reproduction.
+
+### `LL-ADOPT-11` — `git reset --hard` is not a way to undo a probe
+
+Testing whether the credential could install a workflow required committing
+`.github/workflows/` and attempting a push. The push was correctly rejected. The cleanup —
+`git reset --hard HEAD~1` — then discarded every **tracked** edit made in the session up to
+that point, because those edits were part of the same commit. Untracked files survived.
+
+Roughly 40 minutes of validator work had to be reapplied from the transcript.
+
+**Rule.** Probe destructive-permission questions on a scratch commit that contains *only*
+the probe, or stash the real work first. Prefer `git reset --soft` (`LL-ADOPT-08`), which
+cannot touch the working tree. `--hard` is not an undo; it is a delete.

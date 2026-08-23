@@ -1,5 +1,5 @@
 {
-  "count": 441,
+  "count": 443,
   "findings": [
     {
       "rule": "MET-05",
@@ -1175,6 +1175,15 @@
       "rule": "MET-05",
       "check": "MD-LINK-SYNTAX",
       "severity": "WARNING",
+      "message": "link with empty text pointing at '../docs/reports/DEC-VIS-052-identifier-definition-reference-'",
+      "file": ".ai/DECISION_LOG.md",
+      "line": 44,
+      "validator": "markdown"
+    },
+    {
+      "rule": "MET-05",
+      "check": "MD-LINK-SYNTAX",
+      "severity": "WARNING",
       "message": "link with empty text pointing at '../PROJECT_PHILOSOPHY.md'",
       "file": ".ai/DOCUMENTATION_COMPLETION_STANDARD.md",
       "line": 56,
@@ -1349,6 +1358,15 @@
       "message": "link with empty text pointing at '../docs/MASTER_CONTEXT/INDEX.md'",
       "file": ".ai/METRICS.md",
       "line": 62,
+      "validator": "markdown"
+    },
+    {
+      "rule": "MET-05",
+      "check": "MD-LINK-SYNTAX",
+      "severity": "WARNING",
+      "message": "link with empty text pointing at '../docs/reports/ADOPT-01-BASELINE-DELTA-2026-08-15.md'",
+      "file": ".ai/PROJECT_STATUS.md",
+      "line": 348,
       "validator": "markdown"
     },
     {
@@ -1672,7 +1690,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at './INDEX.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 9936,
+      "line": 9947,
       "validator": "markdown"
     },
     {
@@ -1681,7 +1699,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 9937,
+      "line": 9948,
       "validator": "markdown"
     },
     {
@@ -1690,7 +1708,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at './INDEX.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 14548,
+      "line": 14559,
       "validator": "markdown"
     },
     {
@@ -1699,7 +1717,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at './MASTER_CONTEXT_RULES.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 14548,
+      "line": 14559,
       "validator": "markdown"
     },
     {
@@ -1708,7 +1726,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at '../../README.md'",
       "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-      "line": 14548,
+      "line": 14559,
       "validator": "markdown"
     },
     {
@@ -3814,7 +3832,7 @@
       "severity": "WARNING",
       "message": "link with empty text pointing at '../../docs/reports/ADOPT-01-VALIDATION-BASELINE.md'",
       "file": "tools/docs-validate/README.md",
-      "line": 153,
+      "line": 169,
       "validator": "markdown"
     },
     {

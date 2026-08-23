@@ -99,3 +99,153 @@ this reason. The merge does not repair that; it lands the work with the gap docu
 The corpus result at merge time is **FAIL — 13 errors, 441 warnings**, and that is the
 intended state under `VAL-VIS-1746` / `SC-04`. Merging a red baseline is deliberate: the
 13 findings are real and are tracked as `ADOPT-OBL-01`…`13`.
+
+---
+
+## `DEC-VIS-052` reaffirmed; `ADOPT-OBL-01b` recorded — 2026-08-15
+
+Appended. Nothing above is edited.
+
+### 1. `ADOPT-OBL-03a` — verified RESOLVED, not assumed
+
+`DEC-VIS-052` was allocated and recorded in the previous session. This session did **not**
+take that on trust. Verified directly:
+
+| Check | Result |
+| :--- | :--- |
+| Namespace audit | `DEC-VIS-001`…`052` present; **`053` is next free**. No collision. |
+| Record exists | `docs/reports/DEC-VIS-052-identifier-definition-reference-semantics.md`, `STATUS: ACTIVE` |
+| All 11 required terms defined | Definition, Reference, Allocation, Ownership, Re-publication, Semantic duplication, Cross-reference, Registry row, Evidence row, Derived row, Forward allocation — **all present in §4** |
+| Encoded in the validator | `id_validator.py` occurrence classification; `republication_policy: dec-vis-052` |
+| All 12 required regression cases | `DEC-052-C1`…`C12` present and passing in `--self-test` |
+| Reversible | `republication_policy: strict` restores pre-decision behaviour |
+| The 154 findings deleted? | **No.** 156 retained as `INFO` republication records with definition sites named. |
+| Semantic guard actually catches things | **Yes.** 3 real `SEMANTIC_DUPLICATE` errors, independently re-verified against the corpus this session. |
+
+`VAL-VIS-381` was re-checked by hand: definition at `SYSTEM_VISION.md:12017` reads *"A
+sub-capability's maturity must not exceed its parent's…"*; the restatement at `:13679`
+reads *"Every published figure names its method"*. Same identifier, unrelated normative
+content. A genuine defect, and it stays red.
+
+**`ADOPT-OBL-03a` is RESOLVED.** `ADOPT-OBL-03b` — human adjudication of the three
+duplicates — remains **OPEN**.
+
+### 2. `ADOPT-OBL-01b` — a new decision, forced by evidence
+
+`ADOPT-OBL-01a` was recorded as discharged: the Mermaid engine had been replaced with
+`mermaid.parse()`, eliminating 4 false positives and catching 4 previously-missed defects.
+
+**That discharge was measured in an environment that no clean checkout could reproduce.**
+
+The harness resolved its dependencies with a bare `import 'mermaid'` under `NODE_PATH`.
+`NODE_PATH` is honoured only by the CommonJS resolver; the ESM resolver ignores it
+entirely. The harness runs from `mkdtemp()` under `/tmp`, so the import threw
+`ERR_MODULE_NOT_FOUND` every time, `_parse_with_node()` returned `False`, and the run fell
+through to the structural fallback.
+
+The fallback abstains on everything except `graph`/`flowchart`. The run then printed:
+
+```
+[PASS] MMD-PARSE    enforces VAL-VIS-MERMAID-PARSE  measured=1998  errors=0
+```
+
+**A green check for 1,998 diagrams, 612 of which were never parsed, and 5 of which are
+broken** — including `ADOPT-OBL-02`'s `F{Mount]`, a defect the repository had already
+recorded and knew about.
+
+#### The decision
+
+**Engine degradation is fail-closed.** Falling back to the structural parser is an
+`ERROR` (`MMD-ENGINE`) unless `require_authoritative: false` is set explicitly.
+
+#### Tested against `ADOPT-R1` — the no-relaxation prohibition
+
+| Test | Result |
+| :--- | :--- |
+| Threshold loosened? | **No.** |
+| Path excluded? | **No.** |
+| Check deleted? | **No.** One added. |
+| Detection capability | **Increased.** 5 real diagram defects go from invisible to reported; a whole class of environment failure becomes visible. |
+| Error count reduced? | **No — increased.** A clean checkout now reports 9 rather than 8. |
+| Evidence preserved? | **Yes.** `engine_diagnostics` publishes the reason for degradation. |
+| Reversible? | **Yes**, and the opt-out is recorded, never silent. |
+
+This is the inverse of the usual risk: the change makes the checker **harder** to pass.
+
+### 3. What this does NOT authorise
+
+| Constraint | State |
+| :--- | :--- |
+| `ADOPT-OBL-13` workflow installation | **STILL BLOCKED.** Re-tested this session by actual `git push`; rejected for want of `workflows` permission. |
+| `EV4` | **STILL NONE.** No workflow exists remotely; verified via the Actions API. |
+| `QG-4` | **STILL CLOSED.** |
+| `QG-3` author-not-verifier | **STILL FAILING.** One principal. |
+| Wave `W1` | **NOT CLOSED.** |
+| `ADOPT-07` second `CODEOWNERS` principal | **STILL the highest-leverage human action.** |
+| PART 07 / new specification work | **STILL PROHIBITED** by `ADOPT-02`. None was performed. |
+
+---
+
+### `DEC-055` — Owner Override of `VAL-ARCH-301` for PR #9
+
+| Field | Value |
+| :--- | :--- |
+| **ID** | `DEC-055` |
+| **Date (UTC)** | 2026-08-22 |
+| **Decision** | Merge PR #9 (`ADOPT-OBL-02` diagram repairs + fail-closed validator v1.2.0) into `main`. |
+| **Requested by** | Repository owner and sole `CODEOWNERS` principal, explicitly. |
+| **Rule engaged** | `VAL-ARCH-301` "No agent merges to `main`" — `TBL-ARCH-237` Non-Negotiable Set, severity **CRITICAL**. |
+| **Status** | `APPROVED BY OWNER` |
+| **Precedent** | `DEC-054` (PR #8), same rule, same reasoning. |
+
+#### Why this is an owner-executed gate, not a bypassed one
+
+`VAL-ARCH-301` protects the only human gate; `FAL-ARCH-196` names the failure mode it
+guards — *"agent given merge rights for convenience."* The gate is a **human decision
+point**, not a prohibition on the outcome. The owner is that human and has exercised the
+decision directly, after the agent recorded the gate and declined to self-merge.
+
+Recorded because the distinction is only legible if written down: an unrecorded override
+is indistinguishable from the failure mode.
+
+#### What this override does NOT authorise
+
+| Constraint | State after this merge |
+| :--- | :--- |
+| `TBL-VIS-757` — `AOM-VIS-001` release prohibition | **UNAFFECTED.** `SYSTEM_VISION.md` is byte-identical to `main` (blob `8181f72e`). Not a release. No tag, no release. |
+| `QG-3` / `VAL-VIS-1632` author-not-verifier | **STILL FAILING.** One principal; author equals verifier. `OBL-55` remains open. |
+| `QG-4` / `EV4` | **`EV4` ACHIEVED** (run `32287472748`); `QG-4` assessable but **not** asserted closed here. |
+| Wave `W1` | **NOT CLOSED.** |
+| `ADOPT-OBL-14` | **NOT DISCHARGED BY THIS MERGE.** See below. |
+| `ADOPT-07` second `CODEOWNERS` principal | **STILL THE HIGHEST-LEVERAGE HUMAN ACTION.** |
+
+#### `ADOPT-OBL-14` survives this merge — stated plainly
+
+This merge lands validator **v1.2.0** and the corrected workflow **source**, but it does
+**not** update `.github/workflows/docs-validate.yml`. The branch never touched that path,
+because the agent credential lacks the `workflows` permission.
+
+GitHub executes the workflow file as it exists on the target ref. After this merge `main`
+will therefore still run the **Python-only** workflow — no Node, no `mermaid`, no `jsdom`.
+
+Two consequences, both real:
+
+1. `main` will carry a validator that **fails closed** on engine degradation, while CI
+   supplies no engine. The next CI run on `main` is expected to report **9 errors**: the
+   8 real findings plus `MMD-ENGINE`. That is the fail-closed design working — CI will
+   now say *"I could not check"* instead of falsely saying *"I checked and found nothing."*
+2. Until a principal copies `tools/docs-validate/ci/docs-validate.yml` over
+   `.github/workflows/docs-validate.yml`, CI cannot produce an authoritative Mermaid
+   result at all.
+
+`ADOPT-OBL-14` therefore remains **OPEN** after this merge, and the error count on `main`
+is expected to rise from 8 to 9 — an honest increase, not a regression.
+
+#### Residual risk
+
+The change reaches `main` with **zero independent review**: every commit was authored and
+verified by the same agent. `QG-3` fails for exactly this reason. The merge does not
+repair that; it lands the work with the gap documented.
+
+The corpus result at merge time is **FAIL — 8 errors, 443 warnings**, and that is the
+intended state under `VAL-VIS-1746` / `SC-04`.

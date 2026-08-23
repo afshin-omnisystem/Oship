@@ -192,7 +192,7 @@ flowchart TD
     S2 --> S3[Read .ai/PROJECT_STATUS.md]
     S3 --> S4[Read .ai/CONTEXT_ROUTER.md]
     S4 --> S5[Read .ai/NEXT_ACTION.md]
-    S5 --> S6[Read domain INDEX (task-specific)]
+    S5 --> S6["Read domain INDEX (task-specific)"]
     S6 --> S7[Confirm identity + scope]
     S7 --> S8[Begin task]
 ```

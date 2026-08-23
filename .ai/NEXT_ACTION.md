@@ -169,3 +169,183 @@ corpus is repaired.
 
 `ARCH-02` (`AOM-ARCH-001` PART 02) is **unblocked**: the `ADOPT-02` subordination rule is
 discharged because `ADOPT-01` was executed rather than refused.
+
+---
+
+## Queue update — 2026-08-15, validator v1.2.0
+
+Appended. Nothing above is edited.
+
+| Priority | Task ID | Description | Owner | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **P0** | `ADOPT-OBL-03a` | Formalise identifier definition-vs-reference semantics (`DEC-VIS-052`) and encode them in the validator | AI Agent Mode | **`RESOLVED`** — verified this session, not assumed: record `ACTIVE`, 11 terms defined, encoded, 12 regression cases passing, reversible |
+| **P0** | `ADOPT-OBL-01b` | Mermaid engine fail-open: `NODE_PATH` is ignored by the ESM resolver, so the authoritative parser never loaded and the fallback was used **silently** | AI Agent Mode | **`RESOLVED`** — `createRequire()` resolution; `MMD-ENGINE` fails closed; diagnostics published; CI provisions and asserts the engine |
+| **P0** | `ADOPT-OBL-13` | Install `.github/workflows/docs-validate.yml` | **Human principal with `workflows` scope** | **`OPEN` — BLOCKED.** Re-tested by real `git push` this session and rejected. Actions API confirms 0 documentation workflows and 0 runs. |
+| **P0** | `ADOPT-OBL-02` | Repair the 5 real Mermaid parse failures | AI Agent Mode | `OPEN` — all 5 confirmed by `mermaid.parse()`; small and mechanical |
+| **P0** | `ADOPT-OBL-03b` | Adjudicate the 3 `SEMANTIC_DUPLICATE` findings in `TBL-VIS-394` | **Human Architect** | `OPEN` — re-verified real this session |
+| **P1** | `ADOPT-OBL-06` | 5 identifier contiguity gaps | AI Agent Mode | `OPEN` |
+| **P1** | `ADOPT-OBL-07` | Correct `.ai/METRICS.md` §4 Documentation Count | AI Agent Mode | `OPEN` — measured **93**, §4 still asserts 85; §7 records the measurement without editing §4 |
+| **P1** | `ADOPT-OBL-08`…`11` | 8 broken anchors, 4 duplicate slugs, 2 metadata values, 426 unresolved relative links | AI Agent Mode | `OPEN` |
+| **P0** | `ADOPT-07` | Add a second `CODEOWNERS` principal | **Human principal** | `OPEN` — unchanged, still the highest-leverage human action |
+
+### The exact next action
+
+`ADOPT-OBL-13`. Everything else in this queue is either agent work that does not unblock a
+gate, or human adjudication. **Workflow installation is the only step that produces `EV4`**,
+and `EV4` gates `QG-4` and Wave `W1`.
+
+```bash
+mkdir -p .github/workflows
+cp tools/docs-validate/ci/docs-validate.yml .github/workflows/docs-validate.yml
+git add .github/workflows/docs-validate.yml
+git commit -m "ci: install documentation integrity check (ADOPT-OBL-13)"
+git push
+```
+
+Requires a credential with the **`workflows`** permission. The current GitHub App
+credential does not have it; this was confirmed by executing the push, not by assumption.
+
+**Expected first run: RED.** `FAIL — 13 errors, 443 warnings`. That is the intended and
+correct outcome under `VAL-VIS-1746` / `SC-04`. Do not weaken a check to green it. The run
+being retrievable — not the run being green — is what constitutes `EV4`.
+
+### Standing prohibition, still in force
+
+`ADOPT-02` blocks new specification work — including PART 07 of any document — until the
+`ADOPT-01` obligations are discharged. **No specification work was performed this session.**
+`git diff` against `main` for `docs/MASTER_CONTEXT/`, `PROJECT_PHILOSOPHY.md` and
+`README.md` is empty.
+
+---
+
+## Queue update — 2026-08-15, ADOPT-OBL-13 second attempt
+
+Appended. Nothing above is edited.
+
+| Priority | Task ID | Description | Owner | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **P0** | `ADOPT-OBL-13` | Install `.github/workflows/docs-validate.yml` | **Human principal with `workflows` scope** | **`OPEN` — BLOCKED.** Re-tested by both `git push` and the REST Contents API; rejected by both. Missing scope: **`workflows`**. |
+
+### The exact next action
+
+**A human principal, or a credential carrying the `workflows` permission, installs the
+workflow.** Nothing else in the queue can produce `EV4`, and `EV4` gates `QG-4` and Wave
+`W1`.
+
+Option A — grant the scope, then any agent can complete it:
+
+> GitHub → Settings → GitHub Apps → the Arena installation → **Permissions** →
+> **Workflows: Read and write** → save and approve the request.
+
+Option B — a human installs it directly, from a clone of `arena/01a0046f-oship`:
+
+```bash
+mkdir -p .github/workflows
+cp tools/docs-validate/ci/docs-validate.yml .github/workflows/docs-validate.yml
+git add .github/workflows/docs-validate.yml
+git commit -m "ci: install documentation integrity check (ADOPT-OBL-13)"
+git push origin arena/01a0046f-oship
+```
+
+**Expected first run: RED — `FAIL`, 13 errors / 443 warnings**, engine `mermaid.parse`,
+1,998 / 1,998 diagrams parsed. That outcome is correct under `VAL-VIS-1746` / `SC-04`.
+Do not weaken a check to green it. **The retrievable run — not a green run — is `EV4`.**
+
+Verification once installed:
+
+```bash
+gh api /repos/afshin-omnisystem/Oship/actions/workflows --jq '.workflows[]|{id,name,path,state}'
+gh run list --repo afshin-omnisystem/Oship --workflow docs-validate.yml
+```
+
+### Standing prohibition, still in force
+
+`ADOPT-02` blocks new specification work, including PART 07, until the `ADOPT-01`
+obligations are discharged. None was performed this session. `SYSTEM_VISION.md` is
+byte-identical to `main` (blob `8181f72e`).
+
+---
+
+## Queue update — 2026-08-15, ADOPT-OBL-13 third attempt (post-grant)
+
+Appended. Nothing above is edited.
+
+| Priority | Task ID | Description | Owner | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **P0** | `ADOPT-OBL-13` | Install `.github/workflows/docs-validate.yml` | **Human principal / org admin** | **`OPEN` — STILL BLOCKED** after the reported grant. Re-tested three ways; a control probe isolates the cause to the missing `workflows` permission alone. |
+
+### The exact next action
+
+**Approve the `workflows` permission on the App _installation_, not just the App
+definition.** Changing an App's declared permissions raises a request that must be
+approved where the App is installed; until then, tokens keep the old scope — which is
+exactly what was observed.
+
+> GitHub → repository (or org) **Settings → GitHub Apps** → the Arena installation →
+> **Review request / Configure** → approve **Workflows: Read and write**.
+
+Confirm the grant took effect before re-running the agent:
+
+```bash
+gh api -X PUT /repos/afshin-omnisystem/Oship/contents/.github/workflows/probe.yml \
+  -f message="probe" -f branch="arena/01a0046f-oship" -f content="$(echo 'name: probe' | base64 -w0)"
+```
+
+HTTP 201 means the scope is live. HTTP 403 means it is not.
+
+**Fallback — a human installs it directly** from a clone of `arena/01a0046f-oship`:
+
+```bash
+cp tools/docs-validate/ci/docs-validate.yml .github/workflows/docs-validate.yml
+git add .github/workflows/docs-validate.yml
+git commit -m "ci: install documentation integrity check (ADOPT-OBL-13)"
+git push origin arena/01a0046f-oship
+```
+
+**Expected first run: RED — `FAIL`, 13 errors / 443 warnings**, engine `mermaid.parse`,
+1,998 / 1,998 diagrams parsed. Correct under `VAL-VIS-1746` / `SC-04`. **The retrievable
+run — not a green run — is `EV4`.**
+
+---
+
+## Queue update — 2026-08-22, EV4 achieved · ADOPT-OBL-02 discharged
+
+Appended. Nothing above is edited.
+
+| Priority | Task ID | Description | Owner | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| **P0** | `ADOPT-OBL-13` | Install the docs-validate workflow | Repository owner | **`DISCHARGED`** — workflow `336153182` active on `main` |
+| **P0** | `EV4` | First retrievable CI evidence | — | **`ACHIEVED`** — run `32287472748`, artifact `9378189141` |
+| **P0** | `ADOPT-OBL-02` | Repair the 5 real Mermaid defects | AI Agent Mode | **`DISCHARGED`** — Mermaid 5 → 0; errors 13 → 8 |
+| **P0** | `ADOPT-OBL-14` | **NEW.** Installed workflow + `main` predate `ADOPT-OBL-01b`: Python-only CI and validator v1.1.0 fail open, so CI runs the structural fallback and reports a false green on Mermaid | **Human — merge decision** | **`OPEN`** |
+| **P0** | `ADOPT-OBL-03b` | Adjudicate the 3 `SEMANTIC_DUPLICATE` findings in `TBL-VIS-394` | **Human Architect** | `OPEN` |
+| **P1** | `ADOPT-OBL-06` | 5 identifier contiguity gaps | AI Agent Mode | `OPEN` |
+| **P1** | `ADOPT-OBL-07`…`12` | Metrics drift, anchors, slugs, metadata, links | AI Agent Mode | `OPEN` |
+| **P0** | `ADOPT-07` | Second `CODEOWNERS` principal | **Human principal** | `OPEN` — still the highest-leverage human action |
+
+### The exact next action
+
+**Merge `arena/01a0046f-oship` into `main`** (human decision — `VAL-ARCH-301` makes merge
+the only human gate, and it must not be self-executed by the authoring agent while `QG-3`
+fails on one principal).
+
+This single act discharges `ADOPT-OBL-14` by delivering, together:
+
+- validator **v1.2.0** — fail-closed on Mermaid engine degradation;
+- the corrected **workflow** — provisions Node 22 + `mermaid@11` + `jsdom` and asserts the
+  authoritative engine via `assert-engine.py`;
+- the **5 repaired diagrams**.
+
+**Expected CI result after merge: RED — `FAIL`, 8 errors / 443 warnings**, engine
+`mermaid.parse`, 1,998 / 1,998 parsed, **0 Mermaid errors**. That is correct and must not
+be greened. The remaining 8 are 3 semantic duplicates (`ADOPT-OBL-03b`, human) and 5
+contiguity gaps (`ADOPT-OBL-06`).
+
+Until the merge, CI on `main` will keep reporting the pre-repair corpus through a
+fallback parser that cannot see Mermaid defects at all.
+
+### Standing prohibition, still in force
+
+`ADOPT-02` blocks new specification work, including PART 07, until the `ADOPT-01`
+obligations are discharged. None was performed this session. `SYSTEM_VISION.md` is
+byte-identical to `main`.

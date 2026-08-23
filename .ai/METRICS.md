@@ -267,3 +267,129 @@ The v1.0.0 → v1.1.0 delta is a worked example of `LL-ADOPT-01`: **152 of 165 r
 errors were artefacts of the measuring instrument.** Any metric in this document that has
 not been validated against a reference implementation or a hand-audited sample should be
 read as provisional. The §4 estimates (`~85%`, `~90%`, `~2.1`) remain unverified.
+
+---
+
+## 7. Measurement Register — validator v1.2.0, 2026-08-15
+
+Appended, not edited. §6 and its v1.1.0 figures remain as recorded at the time.
+
+### 7.1 The v1.1.0 figures in §6 were not reproducible
+
+Re-running the **committed v1.1.0 validator, unmodified, at the same commit**, in a clean
+checkout produced different numbers from the ones §6 publishes:
+
+| Measure | §6 as published | v1.1.0 code re-run |
+| :--- | ---: | ---: |
+| Errors | 13 | **8** |
+| Warnings | 441 | **1,055** |
+| `MMD-PARSE` | `FAIL`, 5 errors | **`PASS`, 0 errors** |
+| Mermaid engine | `mermaid.parse` | **`structural`** |
+| Diagrams parsed | 1,998 | **1,386** |
+
+Cause: `ADOPT-OBL-01b`. The Node harness resolved `mermaid` via `NODE_PATH`, which the
+ESM resolver ignores, so the authoritative engine never loaded and the validator degraded
+to the structural fallback **silently** while still reporting `PASS`.
+
+`§6.2` warned that unvalidated metrics should be read as provisional. That warning
+applied to `§6` itself.
+
+### 7.2 Measured under v1.2.0 — engine asserted authoritative
+
+| Metric | Value | Produced by |
+| :--- | ---: | :--- |
+| Markdown files | **93** | `MET-COUNTS` |
+| Total lines | **141,202** | `MET-COUNTS` |
+| Total words | **838,143** | `MET-COUNTS` |
+| Mermaid diagrams | **1,998** | `MMD-PARSE` |
+| → parsed by reference implementation | **1,998** | `MMD-ENGINE` |
+| → `UNSUPPORTED_BY_VALIDATOR` | **0** | `MMD-COVERAGE` |
+| → invalid | **5** | `MMD-PARSE` |
+| Tables | **3,758** | `MET-COUNTS` |
+| `VAL-` rules | **2,427** | `MET-COUNTS` |
+| `FAL-` modes | **758** | `MET-COUNTS` |
+| Identifier semantic duplicates (`ERROR`) | **3** | `ID-UNIQUE` |
+| Identifier contiguity gaps (`ERROR`) | **5** | `ID-CONTIGUITY` |
+| Metadata conformance | **96.3 %** | `META-*` |
+| Broken anchors | **8** | `ANC-*` |
+| Visual-density breaches | **0** | `MET-VISUAL-DENSITY` |
+| **Total errors** | **13** | |
+| **Total warnings** | **443** | |
+
+### 7.3 Delta against §6, itemised
+
+| Measure | §6 (v1.1.0) | v1.2.0 | Δ | Real or validator-only |
+| :--- | ---: | ---: | ---: | :--- |
+| Errors | 13 | **13** | 0 | identical count, but now **reproducible** and engine-asserted |
+| Warnings | 441 | **443** | **+2** | **Validator-only.** Two empty-text links in `.ai/DECISION_LOG.md:44` and `.ai/PROJECT_STATUS.md:348`, written by the previous session's own control-plane update **after** its baseline was generated. Not a corpus regression — evidence that the v1.1.0 baseline never described the tree it shipped in. |
+| Total lines | 140,876 | **141,202** | +326 | Same cause. No corpus document was edited; `git diff` against `main` for `docs/`, `README.md` and `PROJECT_PHILOSOPHY.md` is empty. |
+| Tables | 3,747 | **3,758** | +11 | Same cause. |
+
+### 7.4 Provenance — `ADOPT-R5`
+
+Every figure above is machine-produced by
+`tools/docs-validate/run-validator.py --reports-dir tools/docs-validate/reports` and is
+reproducible from the committed `metrics.json`. Mermaid figures come from `mermaid@11`
+`mermaid.parse()` under `jsdom`, with `"authoritative": true` recorded in the report.
+
+**New in v1.2.0:** the report states which engine produced the Mermaid figures, and a run
+that could not obtain an authoritative engine fails rather than publishing a number it
+cannot support. §7.1 is the reason that check exists.
+
+### 7.5 Corrected standing rule
+
+`ADOPT-R6` — **a metric must name the engine that produced it, not only the check.** A
+citation to `MMD-PARSE` was insufficient: the same check produced both `5 invalid` and
+`0 invalid` depending on an environment condition the report did not disclose.
+
+---
+
+## 8. Measurement Register — 2026-08-22, after `ADOPT-OBL-02`
+
+Appended, not edited. §7 remains as recorded.
+
+| Metric | §7 (2026-08-15) | **2026-08-22** | Produced by |
+| :--- | ---: | ---: | :--- |
+| **Total errors** | 13 | **8** | all validators |
+| **Total warnings** | 443 | **443** | all validators |
+| Mermaid diagrams | 1,998 | **1,998** | `MMD-PARSE` |
+| → parsed by reference implementation | 1,998 | **1,998** | `MMD-ENGINE` |
+| → **invalid** | 5 | **0** | `MMD-PARSE` |
+| → `UNSUPPORTED_BY_VALIDATOR` | 0 | **0** | `MMD-COVERAGE` |
+| Identifier semantic duplicates | 3 | **3** | `ID-UNIQUE` |
+| Identifier contiguity gaps | 5 | **5** | `ID-CONTIGUITY` |
+| Self-test | 33 / 33 | **33 / 33** | `--self-test` |
+
+### 8.1 Why the error count fell — `ADOPT-R6` provenance
+
+**Real corpus repair.** Validator version (`1.2.0`), engine (`mermaid.parse`, `mermaid@11`
+under `jsdom`), configuration and thresholds are byte-identical to the 2026-08-15 run.
+Only the corpus changed: 5 malformed diagrams were repaired under `ADOPT-OBL-02`.
+
+This is the **first** error-count reduction in this repository's history that is a genuine
+corpus improvement. Every previous reduction was a checker correction — `LL-ADOPT-01`.
+
+Per the `LL-ADOPT-07` rule, any change that reduces the error count must publish this
+table:
+
+| Test | Answer |
+| :--- | :--- |
+| Threshold loosened? | **No** |
+| Path excluded? | **No** |
+| Check deleted? | **No** |
+| Detection capability | **Unchanged** — same engine, same checks, same config |
+| Findings deleted? | **No** — the 5 defects were **fixed**, not suppressed |
+| Reversible? | **Yes** — `git revert` restores the malformed diagrams and the 13-error count |
+
+### 8.2 CI measurement is NOT yet trustworthy — `ADOPT-OBL-14`
+
+The figures above come from a **local** run with the authoritative engine.
+
+**CI's figures do not match, and should not be cited.** The installed workflow provisions
+Python only and `main` still carries validator v1.1.0, which fails open. CI therefore runs
+the structural fallback, abstains on 612 of 1,998 diagrams, and reports `MMD-PARSE PASS`
+regardless of corpus state — a false green it produced even while the 5 defects were live.
+
+Until `ADOPT-OBL-14` is discharged by merging this branch, **the only trustworthy Mermaid
+measurement is a local run with `mermaid@11` + `jsdom` installed.** `ADOPT-R6` requires
+the engine be named with the metric; for CI the honest engine name is `structural`.

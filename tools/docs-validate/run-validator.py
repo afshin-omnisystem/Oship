@@ -58,7 +58,7 @@ from validators import (  # noqa: E402
 )
 from validators.base import ValidatorResult, Severity  # noqa: E402
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 VALIDATORS = {
     "markdown": markdown_validator,
@@ -357,6 +357,10 @@ def _run_fixture(validator: str, fixtures_dir: str, fixture: str, config):
     cfg["include_paths"] = [fixture]
     cfg["exclude_paths"] = ()
     cfg["check_local_targets"] = False
+    # MMD-ENGINE is a property of the ENVIRONMENT, not of a fixture. Asserting it
+    # per fixture would attribute a missing npm package to a fixture defect. It is
+    # exercised directly by the MMD-ENGINE-* cases instead (ADOPT-OBL-01b).
+    cfg["require_authoritative"] = False
     cfg.setdefault("thresholds", config.get("thresholds", {}) or {})
     return mod.run(fixtures_dir, cfg)
 
@@ -369,6 +373,7 @@ def _run_fixture_multi(validator: str, fixtures_dir: str, fixtures, config):
     cfg["include_paths"] = list(fixtures)
     cfg["exclude_paths"] = ()
     cfg["check_local_targets"] = False
+    cfg["require_authoritative"] = False
     cfg.setdefault("thresholds", config.get("thresholds", {}) or {})
     return mod.run(fixtures_dir, cfg)
 
@@ -572,6 +577,102 @@ def self_test(root: str, config: Dict[str, Any]) -> int:
         f"authoritative={mv_.get('authoritative')}; the structural fallback "
         "abstains rather than guessing",
     )
+
+    # ---- ADOPT-OBL-01b: engine fail-closed and family coverage --------------
+    #
+    # v1.1.0 degraded to the structural fallback silently. On this corpus that
+    # turned 5 real diagram errors into 0 and left 612 diagrams unparsed, while
+    # MMD-PARSE still reported PASS. These cases assert the degradation is now
+    # VISIBLE and, by default, an ERROR.
+    from validators import mermaid_validator as _mmd  # local import: self-test only
+
+    _fam_cfg = dict((config.get("validation", {}) or {}).get("mermaid", {}) or {})
+    _fam_cfg.pop("enabled", None)
+    _fam_cfg["include_paths"] = ["mermaid-families.md"]
+    _fam_cfg["exclude_paths"] = ()
+
+    _closed = _mmd.run(fixtures_dir, dict(_fam_cfg, require_authoritative=True))
+    _open = _mmd.run(fixtures_dir, dict(_fam_cfg, require_authoritative=False))
+    _closed_eng = _check_by_name(_closed, "MMD-ENGINE")
+    _open_eng = _check_by_name(_open, "MMD-ENGINE")
+    _authoritative = bool(_closed.metrics.get("authoritative"))
+
+    record(
+        "MMD-ENGINE-REPORTED",
+        "ADOPT-OBL-01b: the active engine is always reported, so a structural "
+        "run can never be mistaken for an authoritative one",
+        _closed_eng is not None
+        and "authoritative" in _closed.metrics
+        and "engine" in _closed.metrics,
+        f"engine={_closed.metrics.get('engine')} "
+        f"authoritative={_closed.metrics.get('authoritative')}",
+    )
+    if _authoritative:
+        record(
+            "MMD-ENGINE-CLOSED",
+            "fail-closed: with an authoritative engine present, MMD-ENGINE passes",
+            _closed_eng is not None and _closed_eng.passed,
+            f"engine={_closed.metrics.get('engine')}",
+        )
+    else:
+        record(
+            "MMD-ENGINE-CLOSED",
+            "fail-closed: silent degradation to the structural fallback is an "
+            "ERROR under require_authoritative (the v1.1.0 defect)",
+            _closed_eng is not None and len(_closed_eng.errors) == 1,
+            f"engine={_closed.metrics.get('engine')} "
+            f"errors={len(_closed_eng.errors) if _closed_eng else 'n/a'}; "
+            f"reason={(_closed.metrics.get('engine_diagnostics') or {}).get('reason')}",
+        )
+        record(
+            "MMD-ENGINE-OPT-OUT",
+            "the fail-closed rule has an explicit, recorded opt-out — never a "
+            "silent one: require_authoritative=false downgrades it to WARNING",
+            _open_eng is not None
+            and not _open_eng.errors
+            and len(_open_eng.warnings) == 1,
+            f"errors={len(_open_eng.errors) if _open_eng else 'n/a'} "
+            f"warnings={len(_open_eng.warnings) if _open_eng else 'n/a'}",
+        )
+        record(
+            "MMD-ENGINE-DIAG",
+            "the reason the authoritative engine was unavailable is reported, "
+            "not swallowed",
+            bool((_closed.metrics.get("engine_diagnostics") or {}).get("reason")),
+            f"diagnostics={_closed.metrics.get('engine_diagnostics')}",
+        )
+
+    # Family coverage. Verdicts below were established against mermaid@11
+    # mermaid.parse() and are stated in the fixture headings.
+    _fam = _run_fixture("mermaid", fixtures_dir, "mermaid-families.md", config)
+    _fm = _fam.metrics
+    record(
+        "MMD-FAM-NO-FALSE-POS",
+        "Phase 4: no valid family member (erDiagram crow's-foot, flowchart, "
+        "sequenceDiagram, stateDiagram) is ever reported INVALID",
+        _fm.get("total_diagrams", 0) == 6 and _fm.get("invalid", 0) <= 2,
+        f"engine={_fm.get('engine')} diagrams={_fm.get('total_diagrams')} "
+        f"invalid={_fm.get('invalid')} unsupported="
+        f"{_fm.get('unsupported_by_validator')}",
+    )
+    if _authoritative:
+        record(
+            "MMD-FAM-VERDICTS",
+            "Phase 4: exactly the 2 malformed family members are INVALID and the "
+            "4 valid ones are VALID",
+            _fm.get("invalid", 0) == 2 and _fm.get("valid", 0) == 4,
+            f"valid={_fm.get('valid')} invalid={_fm.get('invalid')}",
+        )
+    else:
+        record(
+            "MMD-FAM-VERDICTS",
+            "Phase 4: per-family valid/invalid verdicts",
+            None,
+            f"UNSUPPORTED_BY_VALIDATOR: engine={_fm.get('engine')}; the "
+            "structural fallback abstains on erDiagram, sequenceDiagram and "
+            "stateDiagram by design. Install node + mermaid + jsdom to exercise "
+            "this case.",
+        )
 
     # ---- DEC-VIS-052: definition vs reference semantics ---------------------
     idsem = _run_fixture_multi(

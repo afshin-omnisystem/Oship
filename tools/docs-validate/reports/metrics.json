@@ -2,58 +2,29 @@
   "meta": {
     "root": "/home/user/Oship",
     "scope": "<whole repository>",
-    "timestamp": "2026-08-15T07:00:27Z",
-    "version": "1.0.0",
+    "timestamp": "2026-08-22T10:58:53Z",
+    "version": "1.2.0",
     "max_findings": 25,
     "show_warnings": false
   },
   "metrics": {
     "markdown": {
       "files_scanned": 93,
-      "code_fences": 4112,
-      "headings": 10411,
-      "links": 648
+      "code_fences": 4123,
+      "headings": 10496,
+      "links": 650
     },
     "mermaid": {
       "files_scanned": 93,
       "total_diagrams": 1998,
-      "valid": 1993,
-      "invalid": 5,
+      "valid": 1998,
+      "invalid": 0,
       "unsupported_by_validator": 0,
       "engine": "mermaid.parse",
       "authoritative": true,
-      "invalid_diagrams": [
-        {
-          "file": ".ai/AI_AGENT_OPERATING_MANUAL.md",
-          "line": 188,
-          "error": "Parse error on line 7:",
-          "rule": "VAL-VIS-MERMAID-PARSE"
-        },
-        {
-          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_EXECUTION_MODEL.md",
-          "line": 5123,
-          "error": "Parse error on line 6:",
-          "rule": "VAL-VIS-MERMAID-PARSE"
-        },
-        {
-          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "line": 365,
-          "error": "Parse error on line 3:",
-          "rule": "VAL-VIS-MERMAID-PARSE"
-        },
-        {
-          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "line": 9120,
-          "error": "Parsing failed:  Parse error on line 5, column 20: Expecting token of type ':' but found `db`.",
-          "rule": "VAL-VIS-MERMAID-PARSE"
-        },
-        {
-          "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "line": 9132,
-          "error": "Parse error on line 6:",
-          "rule": "VAL-VIS-MERMAID-PARSE"
-        }
-      ],
+      "engine_required": true,
+      "engine_diagnostics": {},
+      "invalid_diagrams": [],
       "unsupported_by_file": {}
     },
     "identifiers": {
@@ -136,7 +107,7 @@
     },
     "anchors": {
       "files_scanned": 93,
-      "anchors_defined": 10411,
+      "anchors_defined": 10496,
       "internal_anchor_links": 586,
       "cross_file_anchor_links": 0,
       "broken_anchors": 8,
@@ -160,15 +131,15 @@
     },
     "metrics": {
       "markdown_files": 93,
-      "total_lines": 140876,
-      "total_words": 835570,
-      "total_bytes": 5469937,
+      "total_lines": 141936,
+      "total_words": 843201,
+      "total_bytes": 5521421,
       "mermaid_diagrams": 1998,
       "diagram_identifiers": 1922,
-      "tables": 3747,
+      "tables": 3779,
       "captioned_tables": 2368,
-      "code_blocks": 4112,
-      "headings": 10411,
+      "code_blocks": 4123,
+      "headings": 10496,
       "validation_rules": 2427,
       "failure_modes": 758,
       "largest_documents": [
@@ -182,7 +153,7 @@
         },
         {
           "file": "docs/MASTER_CONTEXT/MASTER_CONTEXT_SCHEMA.md",
-          "lines": 14548
+          "lines": 14559
         },
         {
           "file": "PROJECT_PHILOSOPHY.md",
