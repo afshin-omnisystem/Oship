@@ -104,7 +104,7 @@ jobs:
       # FA-03 — a retrievable run log / report artefact.
       - name: Upload validation report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: docs-validation-report
           path: tools/docs-validate/reports/
