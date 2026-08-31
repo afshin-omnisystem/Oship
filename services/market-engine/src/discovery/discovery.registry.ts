@@ -1,0 +1,1 @@
+import {DiscoveryAgent} from './discovery.types';export class DiscoveryRegistry{private xs:DiscoveryAgent[]=[];register(a:DiscoveryAgent){if(this.xs.some(x=>x.identity.id===a.identity.id))throw new Error('duplicate agent');this.xs.push(a)}all(){return [...this.xs]}}

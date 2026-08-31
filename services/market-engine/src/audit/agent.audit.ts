@@ -1,0 +1,1 @@
+export interface AuditRecord{traceId:string;correlationId:string;causationId:string;timestamp:string;actor:string;component:string;action:string;result:string;reason:string;version:string}export class AuditTrail{private records:AuditRecord[]=[];record(r:AuditRecord){this.records.push({...r});return r}all(){return [...this.records]}}

@@ -1,0 +1,1 @@
+import {sha256} from '../oiin/ids';export const planId=(legs:ExecutionLegLike[],context:unknown)=>`plan_${sha256({legs,context}).slice(0,16)}`;export const executionId=(plan:string,leg:string)=>`exec_${sha256({plan,leg}).slice(0,16)}`;interface ExecutionLegLike{legId:string;venue:string;quantity:number;action:string}

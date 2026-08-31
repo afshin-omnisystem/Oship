@@ -1,0 +1,1 @@
+import {OiinEvent,OiinClock,EventSourceMetadata} from '../types';export interface NormalizationContext{clock:OiinClock;source:EventSourceMetadata;correlationId:string}export interface OiinNormalizer<T=unknown>{supports(input:unknown):boolean;normalize(input:T,context:NormalizationContext):OiinEvent}

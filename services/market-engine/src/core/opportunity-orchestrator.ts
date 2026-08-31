@@ -1,0 +1,1 @@
+import {DiscoveryEngine} from '../discovery/discovery.engine';export class OpportunityOrchestrator{constructor(private discovery:DiscoveryEngine){}rank(){return this.discovery.opportunities().sort((a,b)=>(b.score?.value??0)-(a.score?.value??0))}}

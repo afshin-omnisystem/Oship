@@ -1,0 +1,1 @@
+import {Strategy} from './strategy.types';export class StrategyRegistry{private m=new Map<string,Strategy>();register(s:Strategy){if(this.m.has(s.id))throw new Error('duplicate strategy');this.m.set(s.id,s)}eligible(domain:string,type:string){return [...this.m.values()].filter(s=>s.domain===domain&&s.supportedOpportunityTypes.includes(type))}}

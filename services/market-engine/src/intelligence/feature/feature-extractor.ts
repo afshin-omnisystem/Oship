@@ -1,0 +1,1 @@
+import {OiinEvent} from '../../oiin';import {FeatureRecord} from '../types';import {marketFeatures} from './market-features';import {oddsFeatures} from './odds-features';export function extractFeatures(e:OiinEvent):FeatureRecord[]{const at=new Date(e.timestamp).toISOString();return e.eventType==='ODDS_UPDATE'?oddsFeatures(e.payload,e.id,at):marketFeatures(e.payload,e.id,at)}

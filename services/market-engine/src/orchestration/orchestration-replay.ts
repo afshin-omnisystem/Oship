@@ -1,0 +1,1 @@
+import {EndToEndOrchestrator} from './end-to-end-orchestrator';import {OrchestrationContext} from './types';export class OrchestrationReplay{constructor(private orchestrator:EndToEndOrchestrator){}run(c:OrchestrationContext,legs:Parameters<EndToEndOrchestrator['run']>[1]){return this.orchestrator.run(c,legs)}}

@@ -1,0 +1,1 @@
+import {PipelineContext} from './pipeline-context';import {PipelineState} from './pipeline-state';import {JournalEvent} from './types';export interface PipelineResult{pipelineId:string;status:PipelineState;context:PipelineContext;journal:JournalEvent[];reason?:string}

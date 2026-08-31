@@ -1,0 +1,1 @@
+import {ExecutionResult} from '../execution';export class EndToEndReconciler{reconcile(r:ExecutionResult){if(r.receipts.some(x=>x.status==='FAILED'))throw new Error('execution failure');return{status:'RECONCILED' as const,executions:r.receipts.length}}}

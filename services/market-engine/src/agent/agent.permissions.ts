@@ -1,0 +1,1 @@
+import {AgentIdentity,Permission} from './agent.types'; export function hasPermission(a:AgentIdentity,p:Permission){return a.permissions.has(p)} export function assertPermission(a:AgentIdentity,p:Permission){if(a.status!=='ACTIVE')throw new Error('inactive agent');if(!hasPermission(a,p))throw new Error(`missing permission: ${p}`)}

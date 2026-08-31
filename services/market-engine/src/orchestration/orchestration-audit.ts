@@ -1,0 +1,1 @@
+import {sha256} from '../oiin/ids';export interface OrchestrationAudit{auditId:string;action:string;timestamp:number;correlationId:string;traceId:string;result:string;payloadHash:string}export function audit(action:string,x:Omit<OrchestrationAudit,'auditId'|'payloadHash'>){return{...x,action,auditId:`audit_${sha256({action,x}).slice(0,16)}`,payloadHash:sha256(x)}}

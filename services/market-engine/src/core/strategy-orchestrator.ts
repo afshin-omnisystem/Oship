@@ -1,0 +1,1 @@
+import {StrategyEngine} from '../strategy/strategy.engine';import {Opportunity} from '../discovery/discovery.types';export class StrategyOrchestrator{constructor(private engine:StrategyEngine){} evaluate(o:Opportunity,timestamp:string,correlationId:string){return this.engine.evaluate(o,{timestamp,correlationId})}}

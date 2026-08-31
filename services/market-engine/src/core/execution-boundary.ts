@@ -1,0 +1,4 @@
+import {Domain} from '../agent/agent.types';
+export interface AuthorizedExecutionRequest{executionRequestId:string;opportunityId:string;strategyDecisionId:string;aegisEvaluationId:string;treasuryAuthorizationId:string;domain:Domain;action:string;timestamp:string;correlationId:string}
+/** The only construction path for downstream paper/domain execution. */
+export function createExecutionRequest(input:Omit<AuthorizedExecutionRequest,'executionRequestId'>):AuthorizedExecutionRequest{if(!input.correlationId)throw new Error('missing correlation ID');if(!input.aegisEvaluationId)throw new Error('missing AEGIS evaluation');if(!input.treasuryAuthorizationId)throw new Error('missing Treasury authorization');return {...input,executionRequestId:`exec_${input.strategyDecisionId}_${input.opportunityId}`}}

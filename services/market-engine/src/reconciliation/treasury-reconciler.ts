@@ -1,0 +1,1 @@
+export class TreasuryReconciler{reconcile(input:{treasuryAuthorizationId?:string;executionConsumed:number;authorizedAmount:number}){if(!input.treasuryAuthorizationId)throw new Error('execution without Treasury authorization');if(input.executionConsumed>input.authorizedAmount)throw new Error('capital mismatch');return true}}

@@ -1,0 +1,1 @@
+import {sha256} from '../oiin/ids';export const orchestrationId=(c:OrchestrationContextLike)=>`orch_${sha256(c).slice(0,16)}`;export const transitionId=(x:unknown)=>`orch_evt_${sha256(x).slice(0,16)}`;export interface OrchestrationContextLike{correlationId:string;opportunityId:string;strategyDecisionId:string}

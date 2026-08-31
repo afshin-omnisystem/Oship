@@ -1,0 +1,3 @@
+export interface PortfolioState{readonly portfolioId:string;readonly currency:string;readonly totalCapital:number;readonly availableCapital:number;readonly reservedCapital:number;readonly allocatedCapital:number;readonly realizedPnl:number;readonly unrealizedPnl:number;readonly riskBudget:number;readonly timestamp:number;readonly correlationId:string}
+export interface PortfolioSnapshot extends PortfolioState{readonly snapshotId:string;readonly schemaVersion:'oship.portfolio.v1'}
+export interface PortfolioMetrics{grossExposure:number;netExposure:number;domainExposure:Record<string,number>;strategyExposure:Record<string,number>;riskUtilization:number;dailyRealizedPnl:number;drawdownAmount:number;drawdownPercent:number}

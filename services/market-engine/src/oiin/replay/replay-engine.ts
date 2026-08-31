@@ -1,0 +1,1 @@
+import {OiinEventEnvelope} from '../types';import {InMemoryEventStore} from './event-store';export class OiinReplayEngine{constructor(private store:InMemoryEventStore){}replay(){return this.store.all().map(e=>Object.freeze({...e,replay:true}))}}
