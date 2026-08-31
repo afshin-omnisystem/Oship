@@ -1,0 +1,1 @@
+import {CryptoArbitrageAgent} from './crypto.arbitrage.agent';export class CrossVenueAgent extends CryptoArbitrageAgent{constructor(){super();this.identity={...this.identity,role:'CROSS_VENUE',id:'agent_afis_cross_venue_v1_0_0'}}}

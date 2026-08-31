@@ -1,0 +1,1 @@
+import {PortfolioState} from './types';import {sha256} from '../oiin/ids';export const portfolioId=(currency:string,seed:string)=>`portfolio_${sha256({currency,seed}).slice(0,16)}`;export const snapshotId=(p:PortfolioState)=>`ps_${sha256(p).slice(0,16)}`

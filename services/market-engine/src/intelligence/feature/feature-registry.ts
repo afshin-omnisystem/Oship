@@ -1,0 +1,1 @@
+import {FeatureRecord} from '../types';export class FeatureRegistry{private m=new Map<string,FeatureRecord>();register(f:FeatureRecord){if(this.m.has(f.featureId))throw new Error('duplicate feature');this.m.set(f.featureId,f)}get(id:string){return this.m.get(id)}list(){return[...this.m.values()]}}

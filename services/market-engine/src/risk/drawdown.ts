@@ -1,0 +1,1 @@
+export function drawdown(peak:number,equity:number){if(peak<0||equity<0)throw new Error('invalid equity');return{drawdownAmount:Math.max(0,peak-equity),drawdownPercent:peak?Math.max(0,(peak-equity)/peak):0}}

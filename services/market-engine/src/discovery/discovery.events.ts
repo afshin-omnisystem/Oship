@@ -1,0 +1,1 @@
+export type DiscoveryEventType='ObservationReceived'|'CandidateOpportunityCreated'|'CanonicalOpportunityCreated'; export interface DiscoveryEvent{eventId:string;eventType:DiscoveryEventType;timestamp:string;correlationId:string;causationId:string;payload:unknown;schemaVersion:'1.0'}

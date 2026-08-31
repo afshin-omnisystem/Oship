@@ -1,0 +1,1 @@
+import {ConnectorHealth,OiinSourceDomain} from '../types';export interface OiinConnector{readonly id:string;readonly provider:string;readonly domain:OiinSourceDomain;connect():Promise<void>;disconnect():Promise<void>;health():ConnectorHealth;poll?():Promise<unknown[]>}

@@ -1,0 +1,1 @@
+import {AgentRuntime} from '../agent/agent.runtime';import {Observation} from '../agent/agent.types';import {DiscoveryEngine} from '../discovery/discovery.engine';export class AgentOrchestrator{constructor(private runtime:AgentRuntime,private discovery:DiscoveryEngine){} ingest(o:Observation){return this.discovery.process(o)}}

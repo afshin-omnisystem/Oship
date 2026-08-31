@@ -1,0 +1,1 @@
+import {DiscoveryEngine} from '../discovery/discovery.engine';import {Observation} from '../agent/agent.types';export class DiscoveryReplay{constructor(private engine:DiscoveryEngine){} run(events:Observation[]){return events.flatMap(e=>this.engine.process(e))}}

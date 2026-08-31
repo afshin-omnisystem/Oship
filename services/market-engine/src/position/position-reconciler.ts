@@ -1,0 +1,1 @@
+import {PositionEngine} from './position-engine';export class PortfolioReconciler{constructor(private positions:PositionEngine){}reconcile(positionId:string,quantity:number,price:number,status:'CLOSED'|'SETTLED',timestamp:number,correlationId:string){return this.positions.update({positionId,quantity,price,status,timestamp,correlationId})}}

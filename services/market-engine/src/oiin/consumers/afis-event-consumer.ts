@@ -1,0 +1,1 @@
+import {OiinEventEnvelope} from '../types';export const AFIS_EVENT_TYPES=new Set(['MARKET_TICK','ORDER_BOOK_UPDATE','TRADE','FUNDING_RATE','LIQUIDATION']);export class AfisEventConsumer{constructor(private sink:(e:OiinEventEnvelope)=>void){}consume(e:OiinEventEnvelope){if(AFIS_EVENT_TYPES.has(e.event.eventType))this.sink(e)}}

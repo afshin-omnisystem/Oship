@@ -1,0 +1,1 @@
+import {OiinEventEnvelope} from '../types';export type EventConsumer=(e:OiinEventEnvelope)=>void|Promise<void>;export interface EventBus{publish(e:OiinEventEnvelope):Promise<void>;subscribe(c:EventConsumer):()=>void}

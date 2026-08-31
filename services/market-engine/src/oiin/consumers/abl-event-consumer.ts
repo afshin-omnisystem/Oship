@@ -1,0 +1,1 @@
+import {OiinEventEnvelope} from '../types';export const ABL_EVENT_TYPES=new Set(['ODDS_UPDATE','SPORTS_MARKET_UPDATE','SPORTS_FIXTURE_UPDATE','BETTING_LIMIT_UPDATE']);export class AblEventConsumer{constructor(private sink:(e:OiinEventEnvelope)=>void){}consume(e:OiinEventEnvelope){if(ABL_EVENT_TYPES.has(e.event.eventType))this.sink(e)}}

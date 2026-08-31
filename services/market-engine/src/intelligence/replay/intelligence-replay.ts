@@ -1,0 +1,1 @@
+import {OiinEvent} from '../../oiin';import {IntelligenceEngine} from '../intelligence-engine';export class IntelligenceReplay{constructor(private engine:IntelligenceEngine){}run(events:OiinEvent[]){return events.map(e=>this.engine.processEvent(e))}}

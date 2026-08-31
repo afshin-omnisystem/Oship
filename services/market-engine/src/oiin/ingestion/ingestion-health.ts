@@ -1,0 +1,1 @@
+export interface OiinHealth{status:'ACTIVE'|'DEGRADED';connectors:{count:number;healthy:number;degraded:number;failed:number};events:{received:number;accepted:number;rejected:number;duplicates:number};deadLetters:number;consumerCount:number;consumerFailures:number;lastEventTimestamp?:number;lastSuccessfulIngestion?:number}

@@ -1,0 +1,1 @@
+import {ExecutionOrchestrator,ExecutionRequest,ExecutionResult} from '../execution';export class ExecutionReplay{constructor(private engine:ExecutionOrchestrator){}run(x:ExecutionRequest):ExecutionResult{return this.engine.execute(x)}}

@@ -1,0 +1,1 @@
+export type ExposureDimension='TOTAL'|'DOMAIN'|'ASSET'|'VENUE'|'EVENT'|'STRATEGY'|'AGENT'|'CORRELATION_GROUP';export interface ExposureRecord{exposureId:string;dimension:ExposureDimension;key:string;amount:number;timestamp:number;correlationId:string}export interface CorrelationGroup{groupId:string;name:string;members:string[];limit:number}

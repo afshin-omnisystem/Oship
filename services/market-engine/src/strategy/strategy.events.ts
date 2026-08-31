@@ -1,0 +1,1 @@
+export type StrategyEventType='StrategyEvaluated'|'StrategyRejected'|'StrategySelected';export interface StrategyEvent{eventId:string;eventType:StrategyEventType;timestamp:string;correlationId:string;payload:unknown}

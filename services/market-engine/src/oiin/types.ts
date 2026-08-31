@@ -1,0 +1,7 @@
+export type OiinEventType='MARKET_TICK'|'ORDER_BOOK_UPDATE'|'TRADE'|'FUNDING_RATE'|'LIQUIDATION'|'ODDS_UPDATE'|'SPORTS_MARKET_UPDATE'|'SPORTS_FIXTURE_UPDATE'|'BETTING_LIMIT_UPDATE'|'NEWS_EVENT'|'SOCIAL_EVENT'|'ONCHAIN_EVENT'|'TRANSFER_EVENT'|'SYSTEM_EVENT';
+export type OiinSourceDomain='MARKET'|'SPORTS'|'NEWS'|'SOCIAL'|'ONCHAIN'|'SYSTEM';
+export interface EventSourceMetadata{sourceId:string;provider:string;connectorId:string;domain:OiinSourceDomain;reliability:number;latencyMs?:number;observedAt:number}
+export interface OiinEvent{readonly id:string;readonly schemaVersion:'oiin.event.v1';readonly eventType:OiinEventType;readonly timestamp:number;readonly sourceTimestamp?:number;readonly source:EventSourceMetadata;readonly correlationId:string;readonly sequence?:number;readonly payload:Readonly<Record<string,unknown>>;readonly metadata?:Readonly<Record<string,unknown>>}
+export interface OiinEventEnvelope{readonly event:OiinEvent;readonly receivedAt:number;readonly ingestionSequence:number;readonly traceId:string;readonly parentEventId?:string;readonly replay:boolean}
+export interface OiinClock{now():number} export class SystemClock implements OiinClock{now(){return Date.now()}} export class DeterministicOiinClock implements OiinClock{constructor(private value:number){}now(){return this.value}advance(ms:number){this.value+=ms;return this.value}}
+export interface ConnectorHealth{status:'HEALTHY'|'DEGRADED'|'FAILED';lastSeen?:number;message?:string}

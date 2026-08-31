@@ -1,0 +1,1 @@
+import {MarketPipeline} from './market-pipeline';import {OiinEvent} from '../oiin';export class PipelineReplay{constructor(private pipeline:MarketPipeline){}run(event:OiinEvent){return this.pipeline.processEvent(event,'replay')}}
