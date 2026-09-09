@@ -136,3 +136,25 @@ OIIN is the domain-neutral canonical event plane between external connectors and
 - **Risk→AEGIS→Treasury** — Risk Decision proposes a scale; AEGIS authorizes (unoverrideable); Treasury decides availability/reservation. Risk never bypasses AEGIS and never mutates Treasury.
 - **Risk Budget Utilization** — the share of the unified risk budget consumed (used/total), constrained to ≤ 100%.
 - **Capital at Risk (CaR)** — project deterministic capital-at-risk for a candidate under the configured risk model.
+
+## Sprint 030 — Unified Execution Planning & Smart Routing Engine
+
+- **Execution Plan** — the deterministic answer to WHAT / WHERE / WHEN / HOW for a Risk-approved Allocation: execution_plan_id, allocation_id, opportunity_id, strategy_id, domain, status, requested/approved/planned/unplanned capital, venue/route/order/leg counts, execution_mode, routing_policy, slicing_policy, estimated slippage/fees/latency, expected_fill_ratio, liquidity_utilization, time_horizon, deadline, freshness, risk/allocation/aegis/treasury reference, config/policy version, timestamp and fingerprint. **Planning ≠ Execution.**
+- **Execution Lifecycle** — PROPOSED→VALIDATED→ROUTED→SLICED→READY→AEGIS_APPROVED→TREASURY_AUTHORIZED→PAPER_EXECUTED→RECONCILED, plus terminal BLOCKED/STALE/EXPIRED/CANCELLED/FAILED/PARTIALLY_EXECUTED; explicit deterministic transitions.
+- **Execution Mode** — SINGLE_VENUE, MULTI_VENUE, SEQUENTIAL, PARALLEL, HEDGE_FIRST, LEG_FIRST; legality is decided by strategy semantics (cross-venue BUY A + SELL B, triangular A→B→C→A, market-making, ABL BACK/LAY/HEDGE/MIDDLE/SUREBET).
+- **Smart Router** — deterministic routing over VenueState/Liquidity/Fees/Slippage/Latency/Freshness; route score = net economics → fill probability → liquidity → slippage → fees → latency → venue ID; stable tie-breaking; no ML/randomness.
+- **Route** — a deterministic ExecutionRoute: venue/provider/instrument/event/side/quantity/price/fee/slippage/latency/liquidity/score/priority.
+- **Multi-Venue Allocation** — sum(route capital) ≤ approved capital; route capital ≤ executable liquidity; no route exceeds venue limits; remainder is unplanned.
+- **Order Slice** — FIXED_SIZE, PERCENTAGE, LIQUIDITY_PROPORTIONAL, VWAP_STYLE, TWAP_STYLE; each slice has slice_id, sequence, venue, quantity, notional, estimated price/fee/slippage, deadline.
+- **Partial Fill** — FULL / PARTIAL / UNFILLED; strategy action REMAIN_ON_VENUE / REROUTE / RESIZE / CANCEL / REPLAN. Atomic groups never partial-execute.
+- **Coordinated / Atomic Leg** — leg_id, sequence, dependency_ids, atomic_group_id, side, venue, quantity, planned_price. Triangular/funding/basis/hedge/surebet are atomic; never silently split; unavailable mandatory leg → BLOCKED.
+- **Slippage / Fee Model** — deterministic: slippage from spread/depth/order_notional/liquidity/volatility → bps/price/cost; fees maker/taker/fixed/provider/routing; net = gross − fees − slippage.
+- **Freshness / Expiry** — opportunity/strategy/allocation/risk/venue snapshot staleness; STALE/EXPIRED; a stale or expired plan never reaches AEGIS. Venue failure → deterministic reroute if legal, BLOCKED otherwise; atomic mandatory leg unavailable ⇒ BLOCKED.
+- **AEGIS Boundary** — `evaluateExecutionAegis` decides APPROVED/BLOCKED; the planner never self-authorizes. **AEGIS is unoverrideable.**
+- **Treasury Boundary** — `buildExecutionTreasuryProposal` produces a **recommendation-only** Treasury Authorization Proposal; Treasury remains authoritative and is never mutated by the planner.
+- **Emergency Stop** — EMERGENCY_STOP/HALTED ⇒ BLOCKED; no override; no other risk reduction may precede it.
+- **All-or-Nothing** — triangular/funding/basis/atomic strategies: if required legs cannot be planned consistently → BLOCKED; never partial-execute an atomic group.
+- **Replan** — deterministic trigger (venue unavailable, liquidity reduced, price moved, stale opportunity, risk changed, allocation changed, partial fill, deadline approaching) → REPLAN_REQUIRED or a new version with execution_plan_version, parent_plan_id, replan_reason; history preserved.
+- **Execution Replay** — same input → identical plan ID, routes, slices, ordering, costs, decision and fingerprint.
+- **oship.execution-plan.v1** — audit record with execution_plan_id, allocation_id, risk_decision_id, strategy_id, route_ids, slice_ids, status, planned_capital, estimated cost/slippage, routing/slicing_policy, replan_reference, aegis/treasury_reference, timestamp, fingerprint.
+- **Execution Planning ≠ Execution Authority** — the planner is proposal-only: it never calls a live exchange/bookmaker, never mutates Treasury / Portfolio / Risk, never touches credentials, and never bypasses AEGIS. It introduces no second Portfolio / Risk / Execution authority.

@@ -300,3 +300,55 @@ Re-checks freshness before approval: opportunity expired / strategy stale / allo
 
 ### Replay & Audit (`replay.ts`, `audit.ts`)
 `RiskReplay.runLive`/`runReplay` reproduce the exact decision ids, risk scores, approved capital, states, stress results and fingerprints in fresh isolated engines. `buildRiskAudit` emits `oship.risk.v1` with risk_decision_id, allocation_id, portfolio_id, config/policy version, state, decision, approved/blocked capital, risk score, budget utilization, stress summary, reason, fingerprint, timestamp.
+
+## Sprint 030 — Unified Execution Planning & Smart Routing (`services/market-engine/src/execution/planning/`)
+
+Added the deterministic Execution Planning & Smart Routing Engine on top of the Sprint 029 Risk Decision layer. `execution/planning/` answers **WHAT / WHERE / WHEN / HOW** to convert a Risk-approved Allocation Decision into an auditable, replayable, deterministic **Execution Plan** — but it never executes. **Planning ≠ Execution.** The planner is proposal-only: it never calls a live exchange/bookmaker, never mutates Treasury / Portfolio / Risk, never touches credentials, and never bypasses AEGIS. Paper execution reuses the existing deterministic paper pipeline.
+
+```text
+Opportunity → Strategy → Allocation → RISK DECISION → Execution Plan
+       → Smart Routing (multi-venue) → Slicing → AEGIS → Treasury Authorization
+       → PAPER EXECUTION → Position → Reconciliation → Replay
+```
+
+### Canonical Execution Plan (`types.ts`)
+`ExecutionPlan` carries execution_plan_id, allocation_id, opportunity_id, strategy_id, domain, status, requested/approved/planned/unplanned capital, venue/route/order/leg counts, execution_mode, routing_policy, slicing_policy, estimated slippage/fees/latency, expected_fill_ratio, liquidity_utilization, time_horizon, deadline, freshness, risk/allocation/aegis/treasury reference, config/policy version, timestamp, correlation/trace and fingerprint. All IDs and fingerprints are deterministic SHA-256 over canonical serialization.
+
+### Lifecycle (`lifecycle.ts`)
+PROPOSED → VALIDATED → ROUTED → SLICED → READY → AEGIS_APPROVED → TREASURY_AUTHORIZED → PAPER_EXECUTED → RECONCILED, plus terminal BLOCKED / STALE / EXPIRED / CANCELLED / FAILED / PARTIALLY_EXECUTED. Transitions are explicit and deterministic; the engine advances READY → AEGIS_APPROVED → TREASURY_AUTHORIZED only when AEGIS approves and Treasury can cover the planned capital.
+
+### Execution Modes (`legs.ts`)
+SINGLE_VENUE, MULTI_VENUE, SEQUENTIAL, PARALLEL, HEDGE_FIRST, LEG_FIRST. Strategy semantics decide legality: cross-venue arbitrage BUY A + SELL B coordinated; triangular A→B→C→A leg-ordering (LEG_FIRST); market making ENTRY/QUOTE/REQUOTE/EXIT (SEQUENTIAL); ABL BACK/LAY/HEDGE/MIDDLE/SUREBET (HEDGE_FIRST / PARALLEL). `modeForStrategy` returns the legal mode and `modeLegalForStrategy` validates it.
+
+### Smart Router (`routing.ts`, `routing-score.ts`)
+Deterministic. Inputs: AllocationDecision / Opportunity / Strategy / VenueState / Liquidity / Fees / Slippage / Latency / Freshness / Risk limits. Outputs `ExecutionRoute[]` (venue/provider/instrument/event/side/quantity/price/fee/slippage/latency/liquidity/score/priority). Routes scored by net economics → fill probability → liquidity → slippage → fees → latency → venue ID, with stable tie-breaking (by venue id). No ML, no randomness. A leg with no healthy venue is **skippable** (non-mandatory) → non-blocking `LIQUIDITY_INSUFFICIENT`; a mandatory/atomic leg with no healthy venue → blocking `VENUE_UNAVAILABLE`. If **no route at all** forms, the engine emits a blocking `NO_LEGIBLE_ROUTE`.
+
+### Multi-Venue Allocation
+sum(route capital) ≤ approved capital; each route capital ≤ executable liquidity; no route exceeds a venue limit; planned capital = min(sum(routes), approved), with the remainder unplanned.
+
+### Slicing (`slicing.ts`)
+FIXED_SIZE, PERCENTAGE, LIQUIDITY_PROPORTIONAL, VWAP_STYLE, TWAP_STYLE. Each slice carries slice_id, sequence, venue, quantity, notional, estimated_price/fee/slippage and deadline; slices are deterministic and sum to the route notional.
+
+### Partial Fill (`partial-fill.ts`)
+FULL / PARTIAL / UNFILLED; per-strategy action REMAIN_ON_VENUE / REROUTE / RESIZE / CANCEL / REPLAN. All-or-nothing (atomic) strategies never partial-execute; an incomplete atomic group triggers REPLAN.
+
+### Atomic & Coordinated Legs (`legs.ts`)
+leg_id, sequence, dependency_ids, atomic_group_id, side, venue, quantity, planned_price. Triangular / funding / basis / hedge / surebet are coordinated; their atomic groups are never silently split. A required leg that cannot be planned consistently → BLOCKED.
+
+### Freshness & Expiry (`freshness.ts`)
+Re-checks opportunity / strategy / allocation / risk / venue snapshot staleness. STALE → STALE, EXPIRED → EXPIRED; a stale/expired plan never reaches AEGIS.
+
+### Boundaries (`boundaries.ts`)
+`evaluateExecutionAegis` decides APPROVED / BLOCKED (never self-authorize). `buildExecutionTreasuryProposal` produces a **recommendation only** Treasury Authorization Proposal; Treasury stays authoritative and is never mutated. `executionEmergencyGate` enforces EMERGENCY_STOP/HALTED → BLOCKED with no override.
+
+### Invariants (`invariants.ts`)
+Fail-closed: planned ≥ 0; planned ≤ approved; sum(routes) ≤ planned; sum(slices) ≤ route allocation; slice quantity ≥ 0; route capital ≤ executable liquidity; no duplicate atomic leg; atomic group coordinated; all required legs present; expired not READY; stale cannot reach AEGIS; blocked cannot execute; emergency stop not bypassed; AEGIS/Treasury required; same input → same plan; replan preserves parent history.
+
+### Replan (`replan.ts`)
+Deterministic triggers (venue unavailable, liquidity reduced, price moved, stale opportunity, risk changed, allocation changed, partial fill, deadline approaching) → REPLAN_REQUIRED or a new version. Versioning preserves history; `execution_plan_version`, `parent_plan_id`, `replan_reason`; fingerprints change when the plan changes.
+
+### Replay (`replay.ts`) & Audit (`audit.ts`)
+Same input → identical plan id, routes, slices, ordering, costs, decision and fingerprint. `buildExecutionAudit` emits `oship.execution-plan.v1` with execution_plan_id, allocation_id, risk_decision_id, strategy_id, route_ids, slice_ids, status, planned_capital, estimated cost/slippage, routing/slicing_policy, replan_reference, aegis/treasury_reference, timestamp and fingerprint.
+
+### Demo (`execution-planning-demo.ts`)
+`demo:execution-planning` wires Allocation → Risk → Planning → Routing → Slicing → AEGIS → Treasury → Paper → Position → Reconcile and shows FULL / PARTIAL / BLOCKED / REROUTED / REPLAN plans, with AFIS + ABL unified. Paper only; no real-money / provider creds.
