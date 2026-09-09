@@ -352,3 +352,66 @@ Same input → identical plan id, routes, slices, ordering, costs, decision and 
 
 ### Demo (`execution-planning-demo.ts`)
 `demo:execution-planning` wires Allocation → Risk → Planning → Routing → Slicing → AEGIS → Treasury → Paper → Position → Reconcile and shows FULL / PARTIAL / BLOCKED / REROUTED / REPLAN plans, with AFIS + ABL unified. Paper only; no real-money / provider creds.
+
+## Sprint 031 — Deterministic Market Microstructure & Execution Simulation (`services/market-engine/src/simulation/execution/`)
+
+Added the deterministic, paper-only Market Microstructure & Execution Simulation Engine on top of the Sprint 030 Execution Plan layer. It consumes an already-authorized **Execution Plan** and simulates its execution against a deterministic market model down to canonical fills, positions, metrics, quality, reconciliation, replay and an audit record.
+
+**SIMULATION ≠ EXECUTION AUTHORITY. SIMULATION ≠ LIVE TRADING. PAPER ONLY.** This engine is an execution *implementation*, not a new authority. It never calls a live exchange/bookmaker, never mutates Treasury / Portfolio / Risk, never touches credentials, and never bypasses AEGIS. It introduces **no second Execution / Risk / Portfolio / Treasury authority and no second AEGIS**. Positions flow through the existing Position subsystem; reconciliation through the existing reconciliation layer. A single shared simulation infrastructure serves both AFIS and ABL strategies — there is **no ABL-specific simulator**.
+
+```text
+Opportunity → Strategy → Allocation → Risk Decision → AEGIS → Treasury Authorization
+       → Execution Plan → SIMULATION MARKET → ORDERS → MATCHING ENGINE → FILLS
+       → POSITION → RECONCILIATION → REPLAY
+```
+
+### Canonical Model (`types.ts`, `ids.ts`)
+Deterministic `SimulationMarket` (market_id, venue_id, instrument_id, timestamp, sequence, bid/ask levels with price/quantity/sequence, last_price, spread, depth, trade_flow, status), `MarketEvent` (BOOK_SNAPSHOT / BOOK_UPDATE / TRADE / QUOTE / MARKET_STATUS / VENUE_STATUS / LATENCY with event_id/timestamp/sequence/venue_id/instrument_id/fingerprint, monotonic sequences), `VenueModel` (venue_id, health HEALTHY/DEGRADED/UNAVAILABLE, latency, fees, liquidity, capacity, order book), `Order` (order_id, plan_id, route_id, slice_id, venue_id, instrument_id, side, order_type, quantity, remaining_quantity, limit_price, status, time_in_force, created_at, sequence, fingerprint), `Fill`, `ExecutionSlice`, `AtomicGroupState`, `ExecutionMetrics`, `ExecutionQualityScore`, `ReconciliationResult`, `PositionResult` and `ExecutionSimAuditRecord`. All IDs and fingerprints are canonical SHA-256 over canonical serialization; no `Date.now` / `Math.random` / random UUID.
+
+### Deterministic Clock (`clock.ts`)
+Injected `simulation_start_time`, monotonic `event_time`, monotonic `sequence`. Zero wall-clock. `tick(deltaMs, step)` advances time by a deterministic delta and sequence by a step; used to build events and order sequences.
+
+### Versioned Config (`config.ts`)
+`simulation_config_version`, `matching_policy_version`, `fee_policy_version`, `latency_policy_version`, `slippage_policy_version`, `market_impact_policy_version`. All models (fee / latency / slippage / market-impact) are explicit and validated; the versioned fields participate in `simulationConfigurationFingerprint` and therefore in the final simulation fingerprint, so every replay reports exactly which policies produced a result.
+
+### Simulation Market & Events (`market.ts`, `events.ts`)
+Per-venue books built from explicit levels (bids best-first, asks best-first; no hidden liquidity). `buildMarket` produces a deterministic market_id from venue+instrument+book identity. `buildMarketEvent` emits monotonic `MarketEvent`s with a canonical fingerprint.
+
+### Fees, Latency, Slippage, Market Impact (`fees.ts`, `latency.ts`, `slippage.ts`)
+Deterministic, versioned. Maker/taker/fixed fee stack → gross_notional, fee, net_notional. Latency is composable (network + venue + matching + ack), no randomness. Market impact / slippage is a replaceable deterministic policy (order_size, available_depth, spread, liquidity, volatility_proxy → price_impact, execution_cost) with VWAP and realized slippage_bps; no synthetic improvement.
+
+### Orders & Order Types (`orders.ts`, `order-types.ts`)
+MARKET / LIMIT / IOC / FOK / POST_ONLY with TIF GTC / IOC / FOK / DAY. `consumeBook` (PRICE_TIME: better price first, earlier sequence first) consumes asks best→worst for BUY and bids best→worst for SELL. LIMIT matches only executable levels (buy ≤ limit, sell ≥ limit). IOC executes available then cancels remainder (no residual live order). FOK is atomic (full quantity or nothing — no partial). POST_ONLY never crosses; if marketable it is REJECTED.
+
+### Matching Engine (`matching.ts`)
+`consumeBook` / `executeOrderType` implement price-time matching, partial fills (quantity conservation: requested 100 / available 63 → filled 63, remaining 37, PARTIALLY_FILLED), VWAP / average_execution_price / realized slippage_bps. `marketSide` normalizes ABL `BACK`→BUY (consumes asks) and `LAY`→SELL (consumes bids); fills carry the original side.
+
+### Slicing (`slicing.ts`)
+`buildExecutionSlices` decomposes a plan into `ExecutionSlice`s (slice_id, plan/route/venue/instrument, planned/submitted/filled/remaining/cancelled/rejected quantity, status, sequence, fingerprint). Deterministic `defaultSubmittedFn` maps an unavailable/halted venue to submitted 0; sum(slice planned) = planned.
+
+### Venue Health (`venue.ts`)
+UNAVAILABLE venues accept no new orders (fail closed); DEGRADED venues are flagged. `canPlaceOrder` / `isDegraded` gate order placement.
+
+### Atomic Groups (`atomic.ts`)
+`isAtomicStrategy` = Sprint 030 coordinated strategies ∪ `CROSS_VENUE_ARBITRAGE`. `groupForPlan` builds the group; `evaluateGroup` returns COMPLETE / PARTIAL / FAILED with a deterministic `recoveryAction` (CANCEL_REMAINDER / HEDGE / REROUTE / REPRICE / REPLAN / ABORT). The engine executes the configured policy; it never invents strategy.
+
+### Position & Reconciliation (`position.ts`, `reconciliation.ts`)
+Position delta = net fills (BUY/BACK long, SELL/LAY short); integrate with the existing Position subsystem (no parallel position engine, no per-venue position authority). `reconcile` balances planned/submitted/filled/cancelled/remaining quantity and capital / fees / slippage / position_delta, fail-closed on any imbalance.
+
+### Metrics & Quality (`metrics.ts`, `quality.ts`)
+`fill_ratio`, `completion_ratio`, `average_price`, `vwap`, `slippage_bps`, `fees`, `gross_cost`, `net_cost`, `latency_ms`, `market_impact`, `cancel_ratio`, `reject_ratio`. `computeQuality` produces an explainable, deterministic Execution Quality Score (fill_ratio, slippage, fees, latency, market_impact, completion_ratio) with per-factor weight/value/contribution — no ML.
+
+### Recovery & Replay (`recovery.ts`, `replay.ts`)
+Deterministic `chooseRecovery` maps a `FailureClass` (venue unavailable/degraded, partial fill, thin liquidity, empty book, price moved, market halt, atomic incomplete, order rejected, latency spike) to one recovery action, always respecting Plan / Risk / AEGIS / Treasury boundaries. `compareExecutionReplay` verifies identical orders, fills, VWAP, fees, latency, positions, reconciliation and fingerprint for identical inputs.
+
+### Audit (`audit.ts`)
+`buildExecutionSimAudit` emits `oship.execution-sim.v1` (simulation_id, plan_id, order ids, fill ids, venue ids, metrics, fees, slippage, latency, market_impact, status, config_versions, timestamp, fingerprint).
+
+### Engine (`engine.ts`)
+`ExecutionSimulationEngine.simulate` runs the full pipeline: validate config → AEGIS/Treasury authorization gate → build slices → build orders → per-venue execution → derive slice state → position → metrics → atomic evaluation → quality → reconciliation → invariants (fail-closed) → configuration fingerprint + simulation fingerprint. `validateAuthorization` blocks any run that is not AEGIS- and Treasury-authorised.
+
+### Invariants (`invariants.ts`)
+Fail-closed: filled ≤ submitted; remaining ≥ 0; filled + remaining + cancelled (+ rejected) = submitted; FOK never partial; IOC never live remainder; POST_ONLY never TAKER-filled; fee ≥ 0; slippage ≥ 0; cancelled orders cannot fill; unknown venues cannot fill; position delta = net fills; atomic groups obey policy (incomplete WITH recovery); reconciliation balances.
+
+### Demo (`execution-simulation-demo.ts`)
+`demo:execution-simulation` shows FULL FILL, PARTIAL FILL, SLIPPAGE+FEES, IOC, FOK, POST_ONLY, MULTI-VENUE, VENUE FAILURE, ATOMIC FAILURE, LATENCY, REPLAY, RECONCILIATION+AUDIT, ending with `SYSTEM STATUS: RECONCILED / REPLAY: PASS / INVARIANTS: PASS`.

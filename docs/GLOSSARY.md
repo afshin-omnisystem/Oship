@@ -158,3 +158,34 @@ OIIN is the domain-neutral canonical event plane between external connectors and
 - **Execution Replay** — same input → identical plan ID, routes, slices, ordering, costs, decision and fingerprint.
 - **oship.execution-plan.v1** — audit record with execution_plan_id, allocation_id, risk_decision_id, strategy_id, route_ids, slice_ids, status, planned_capital, estimated cost/slippage, routing/slicing_policy, replan_reference, aegis/treasury_reference, timestamp, fingerprint.
 - **Execution Planning ≠ Execution Authority** — the planner is proposal-only: it never calls a live exchange/bookmaker, never mutates Treasury / Portfolio / Risk, never touches credentials, and never bypasses AEGIS. It introduces no second Portfolio / Risk / Execution authority.
+
+## Sprint 031 — Deterministic Market Microstructure & Execution Simulation Engine
+
+- **Execution Simulation Engine** — the deterministic paper-only simulation of an already-authorized Execution Plan against a deterministic market model (`simulation/execution/`). It is an execution *implementation*, not a new authority. **SIMULATION ≠ EXECUTION AUTHORITY. SIMULATION ≠ LIVE TRADING. PAPER ONLY.** It never calls a live exchange/bookmaker, never mutates Treasury/Portfolio/Risk, never touches credentials, never bypasses AEGIS, and introduces no second Execution/Risk/Portfolio/Treasury authority and no second AEGIS. One shared simulation infra serves AFIS and ABL; no ABL-specific simulator.
+- **Simulation Market** — per-venue, per-instrument deterministic book: market_id, venue_id, instrument_id, timestamp, sequence, bid/ask levels (price/quantity/sequence), last_price, spread, depth, trade_flow, status. Books are built from explicit levels; no hidden liquidity.
+- **Market Event** — BOOK_SNAPSHOT / BOOK_UPDATE / TRADE / QUOTE / MARKET_STATUS / VENUE_STATUS / LATENCY, each with event_id, type, timestamp, sequence, venue_id, instrument_id, fingerprint; monotonic sequences.
+- **Deterministic Clock** — injected simulation_start_time, monotonic event_time and sequence; no `Date.now` / `Math.random` / random UUID in canonical math.
+- **Versioned Simulation Config** — simulation_config_version, matching_policy_version, fee_policy_version, latency_policy_version, slippage_policy_version, market_impact_policy_version; all participate in the simulation fingerprint so every replay reports exactly which policies produced a result.
+- **Order** — order_id, plan_id, route_id, slice_id, venue_id, instrument_id, side, order_type, quantity, remaining_quantity, limit_price, status, time_in_force, created_at, sequence, fingerprint. Types MARKET/LIMIT/IOC/FOK/POST_ONLY; TIF GTC/IOC/FOK/DAY.
+- **Matching Engine (PRICE_TIME)** — better price first, then earlier sequence. MARKET buy consumes asks best→worst; MARKET sell consumes bids best→worst. LIMIT matches executable levels (buy ≤ limit, sell ≥ limit). No hidden liquidity.
+- **Partial Fill** — requested 100 / available 63 → filled 63, remaining 37, PARTIALLY_FILLED; quantity conservation (filled + remaining = requested).
+- **IOC** — executes available liquidity then cancels the remainder; no residual live order.
+- **FOK** — atomic all-or-nothing: full quantity or nothing; no partial fill.
+- **POST_ONLY** — never crosses the book; if marketable, REJECTED.
+- **Slippage** — realized VWAP vs reference; average_execution_price, slippage_bps, price_impact; no synthetic improvement.
+- **Fees** — maker/taker/fixed; gross_notional, fee, net_notional; deterministic and versioned.
+- **Latency** — composable network + venue + matching (+ ack); deterministic, no random jitter.
+- **Market Impact** — replaceable deterministic policy over order_size, available_depth, spread, liquidity, volatility_proxy → price_impact, execution_cost.
+- **Venue Health** — HEALTHY / DEGRADED / UNAVAILABLE; UNAVAILABLE venues accept no new orders (fail closed).
+- **Execution Slice** — plan→slices; slice_id, plan/route/venue/instrument, planned/submitted/filled/remaining/cancelled/rejected quantity, status, sequence, fingerprint; sum(slice planned) = planned. `remainingQuantity` is measured against submitted, so an unavailable venue's un-submitted slice contributes 0.
+- **Atomic Group** — all-or-nothing strategy (triangular/cross-venue/funding/basis/hedge/back-lay/middle). Incomplete → deterministic recovery (CANCEL_REMAINDER/HEDGE/REROUTE/REPRICE/REPLAN/ABORT). The engine executes the configured policy; it never invents strategy.
+- **Fill** — fill_id, order_id, plan_id, route_id, slice_id, venue_id, instrument_id, side, quantity, price, fee, liquidity_source, timestamp, sequence, fingerprint; traceable to plan/route/slice/order/venue.
+- **Position Integration** — position delta = net fills (BUY/BACK long, SELL/LAY short); uses the existing Position subsystem; no parallel position engine, no per-venue position authority.
+- **Reconciliation** — balances planned/submitted/filled/cancelled/remaining quantity plus capital, fees, slippage, position_delta; fail-closed on any imbalance.
+- **Execution Metrics** — fill_ratio, completion_ratio, average_price, vwap, slippage_bps, fees, gross_cost, net_cost, latency_ms, market_impact, cancel_ratio, reject_ratio.
+- **Execution Quality Score** — explainable deterministic composite (fill_ratio, slippage, fees, latency, market_impact, completion_ratio) with per-factor weight/value/contribution; no ML.
+- **Recovery** — deterministic `chooseRecovery` maps a FailureClass (venue unavailable/degraded, partial fill, thin liquidity, empty book, price moved, market halt, atomic incomplete, order rejected, latency spike) to one action, always respecting Plan/Risk/AEGIS/Treasury boundaries.
+- **Replay** — market events + execution plan + simulation configuration + evaluation timestamp → orders/fills/metrics/positions/reconciliation/fingerprint; run twice → identical.
+- **oship.execution-sim.v1** — audit record: simulation_id, plan_id, order ids, fill ids, venue ids, metrics, fees, slippage, latency, market_impact, status, config_versions, timestamp, fingerprint.
+- **Fail-Closed Invariant** — filled ≤ submitted; remaining ≥ 0; filled + remaining + cancelled (+ rejected) = submitted; FOK never partial; IOC never live remainder; POST_ONLY never TAKER-filled; fee ≥ 0; slippage ≥ 0; cancelled orders cannot fill; unknown venues cannot fill; position delta = net fills; atomic incomplete WITH recovery; reconciliation balances.
+- **Simulation ≠ Execution Authority** — the simulated engine is a deterministic execution implementation, not a new authority; it cannot and does not gain direct access to Treasury or live execution. **Simulation ≠ Live Trading** — paper only.
