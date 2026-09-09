@@ -15,7 +15,8 @@
     "demo:state-plane": "node services/market-engine/dist/state-plane-demo.js",
     "demo:recovery": "node services/market-engine/dist/recovery-demo.js",
     "demo:control": "node services/market-engine/dist/control-demo.js",
-    "demo:opportunity-engine": "node services/market-engine/dist/opportunity-demo.js"
+    "demo:opportunity-engine": "node services/market-engine/dist/opportunity-demo.js",
+    "demo:strategy-engine": "node services/market-engine/dist/strategy-demo.js"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
