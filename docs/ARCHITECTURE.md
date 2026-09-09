@@ -210,3 +210,47 @@ A single immutable, versioned catalog of 25 strategy templates. AFIS: cross-venu
 Opportunity → Strategy (proposal) → Portfolio → Risk → Allocation → AEGIS → Treasury → Execution
 ```
 Strategy NEVER mutates Portfolio / Risk / Allocation / AEGIS / Treasury / Execution; no real-money execution.
+
+## Sprint 028 — Unified Capital Allocation & Portfolio Optimization (`services/market-engine/src/allocation/optimizer/`)
+
+The allocation layer answers HOW MUCH of the single unified OSHIP Treasury should be committed to each eligible (Opportunity + selected Strategy). It is proposal-only and strictly subordinate to Portfolio / Risk / AEGIS / Treasury / Execution.
+
+### Authority Chain (partial pipeline)
+```text
+OIIN → Intelligence → Opportunity Discovery → Strategy Selection → Portfolio Context
+     → Risk Evaluation → Capital Optimization → Allocation → AEGIS → Treasury → Execution
+```
+Allocation answers HOW MUCH; AEGIS answers IS AUTHORIZED; Treasury answers IS CAPITAL AVAILABLE/RESERVED. No role is collapsed; no authority is bypassed. Allocation NEVER mutates Treasury / Portfolio / Risk / AEGIS / Execution.
+
+### Canonical Allocation Model (`types.ts`)
+`AllocationCandidate` exposes required/maximum/minimum capital, gross/net/risk-adjusted expected return, edge, capital efficiency, confidence, liquidity, execution probability, risk, correlation group/factor, time horizon, capital duration and capital turnover, allocation mode (PARTIAL_ALLOWED / ALL_OR_NOTHING), and a validity fingerprint. `AllocationDecision` carries the allocation_id, opportunity_id, strategy_id, domain, requested/allocated/unallocated capital, allocation_ratio, capital efficiency, expected/risk-adjusted return, confidence, liquidity, risk score, correlation_exposure, portfolio_exposure, time horizon, duration, turnover, status, reason, policy/config version, timestamp and fingerprint. `AllocationResult` exposes input/reserved/available capital, total/scheduled/unallocated capital, decisions, rankings, rejections, scores, constraints, policy/config version, invariant violations and a fail-closed decision.
+
+### Lifecycle (`lifecycle.ts`)
+Deterministic state machine PROPOSED→EVALUATED→OPTIMIZED→RISK_APPROVED→AEGIS_APPROVED→TREASURY_AUTHORIZED→ALLOCATED, plus terminal REJECTED/RISK_BLOCKED/CAPITAL_BLOCKED/AEGIS_BLOCKED/TREASURY_BLOCKED/EXPIRED/STALE/CANCELLED. `assertAllocationTransition` guards illegal transitions; blocks map to the correct rejected status.
+
+### Candidate Builder (`candidate-builder.ts`)
+`buildAllocationCandidate` maps an Opportunity + selected Strategy (+ definition) into a validated candidate, deriving allocation mode from the strategy type (triangular/funding/basis → ALL_OR_NOTHING; market-making/sports +EV/surebet → PARTIAL_ALLOWED), computing capital efficiency = risk-adjusted return / required capital, capital duration and turnover from the horizon, and re-checking opportunity expiry/freshness at evaluation time. Invalid candidates (missing capital, non-finite economics, below min edge/confidence, stale/expired) are rejected before optimization.
+
+### Scoring (`scoring.ts`)
+`scoreCandidate` produces a transparent composite (edge, confidence, execution, liquidity, capital efficiency, duration bonus, risk penalty, correlation penalty). Eight policies (Fixed, Confidence Weighted, Edge Weighted, Capital Efficiency Weighted, Risk Adjusted, Liquidity Constrained, Correlation Adjusted, Hybrid) re-weight the same observable factors; every factor is surfaced in `CandidateScore.factors`.
+
+### Constraints (`constraints.ts`)
+`checkCandidateConstraints` verifies total/domain/strategy/position/event/correlation exposure, per-candidate cap, liquidity reserve, minimum viable allocation and executable-liquidity bounds. `allocationInvariantCheck` verifies cross-cutting invariants (sum(allocations) ≤ allocatable budget; available+reserved+allocated = total; exposure ≤ limits; allocation ≤ executable liquidity) and fails closed to ALLOCATION_BLOCKED.
+
+### Optimizer (`optimizer.ts`)
+`CapitalOptimizer.optimize` is a deterministic, bounded greedy constrained-capital optimizer: filter invalid/stale → score → sort with stable tie-breakers (risk-adjusted return, capital efficiency, confidence, opportunity id, strategy id) → clamp partial candidates to the binding capital/exposure/liquidity budget → enforce all-or-nothing (full required capital or reject) and minimum viable allocation → verify every invariant. It is cross-domain (AFIS + ABL compete for ONE Treasury), portfolio-aware (uses existing portfolio exposure), correlation-aware (respects correlation-group budget), liquidity-aware, and deterministic across identical inputs.
+
+### Reallocation (`reallocation.ts`)
+`computeReallocation` derives per-candidate delta (previous/new/delta) for a controlled REALLOCATE and re-verifies every constraint; it never mutates Treasury.
+
+### Boundaries (`boundaries.ts`)
+`evaluateAllocationAegis` marks an allocation AEGIS-approved (unoverrideable). `buildTreasuryProposal` only proposes (amount/purpose/strategy/opportunity/risk context) — Treasury remains authoritative. `allocationAuthorizationGate` and `allocationEmergencyGate` enforce fail-closed treasury-cover and EMERGENCY_STOP/HALTED → NO_NEW_ALLOCATION.
+
+### Revalidation (`revalidation.ts`)
+`revalidateAllocation` re-checks Opportunity/Strategy/Portfolio/Risk/Liquidity/Correlation/Capital and reports a deterministic ControlAction (CONTINUE / REVALIDATE / REJECT / EXPIRED / STALE) with explicit material changes, reusing the existing Control vocabulary.
+
+### Replay & Audit (`replay.ts`)
+`AllocationReplay.runLive`/`runReplay` reproduce the exact candidate filtering, scores, ranking, allocations, rejections and ids in fresh isolated optimizers; `compare` reports divergence. `buildAllocationAudit` emits `oship.allocation.v1` with optimization_id, candidate_ids, strategy_ids, input/reserved/available capital, scores, ranking, allocations, rejections, constraints, decision and reason.
+
+### Engine (`engine.ts`)
+`UnifiedAllocationEngine.allocate` runs candidate build → optimize → AEGIS → Treasury proposal → audit → revalidation in one deterministic pass, returning a rich output and a replay key. EMERGENCY_STOP/HALTED blocks new allocation while reconciliation/audit/replay remain available.

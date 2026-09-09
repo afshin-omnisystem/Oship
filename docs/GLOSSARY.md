@@ -108,3 +108,19 @@ OIIN is the domain-neutral canonical event plane between external connectors and
 - **Strategy Registry** — canonical register/unregister/enable/disable/lookup/compatibility/versioning/health for strategy templates.
 - **Strategy Fingerprint** — canonical SHA-256 over opportunity + strategy + configuration + portfolio/risk context; drives deterministic replay.
 - **Adaptive Strategy Advisory** — suggests an action (CONTINUE/REVALIDATE/RESIZE/REROUTE/ABORT/HEDGE/PAUSE/HALT) to the existing Control Engine; it never decides.
+
+## Sprint 028 — Unified Capital Allocation & Portfolio Optimization Engine
+
+- **Allocation Candidate** — proposal for how much capital to commit to an (Opportunity + selected Strategy), exposing required/max/min capital, gross/net/risk-adjusted return, edge, capital efficiency, confidence, liquidity, execution probability, risk, correlation group/factor, time horizon, duration and turnover, and allocation mode.
+- **Allocation Mode** — PARTIAL_ALLOWED (clamp to the binding constraint; market-making / sports +EV / surebet) vs ALL_OR_NOTHING (full required capital or reject; triangular / funding / basis), derived from the strategy type.
+- **Allocation Policy** — deterministic scoring recipe: Fixed, Confidence Weighted, Edge Weighted, Capital Efficiency Weighted, Risk Adjusted, Liquidity Constrained, Correlation Adjusted, Hybrid; every factor observable.
+- **Allocation Score** — transparent configurable composite over edge, confidence, execution, liquidity, capital efficiency, duration, risk penalty and correlation penalty; never raw return.
+- **Capital Constraints** — total/domain/strategy/position/event/correlation exposure, per-candidate cap, minimum viable allocation, liquidity reserve; never over-allocate.
+- **Allocation Invariants** — sum(allocations) ≤ allocatable; available+reserved+allocated = total; exposure ≤ limits; allocation ≤ executable liquidity; fail closed → ALLOCATION_BLOCKED.
+- **Allocation Lifecycle** — PROPOSED→EVALUATED→OPTIMIZED→RISK_APPROVED→AEGIS_APPROVED→TREASURY_AUTHORIZED→ALLOCATED, plus REJECTED/RISK_BLOCKED/CAPITAL_BLOCKED/AEGIS_BLOCKED/TREASURY_BLOCKED/EXPIRED/STALE/CANCELLED.
+- **Unified Capital Optimization** — one cross-domain optimizer over ONE Treasury; AFIS and ABL compete, never separate pools.
+- **Capital Efficiency** — risk-adjusted expected return / allocated capital; deterministic, guarded against zero/negative/invalid.
+- **Capital Turnover** — deterministic metric from the horizon (short arb recycles capital faster than long value), exposed with time_horizon and capital_duration.
+- **Dynamic Reallocation** — controlled REALLOCATE that computes previous/new/delta per candidate and re-verifies constraints; never mutates Treasury.
+- **Allocation Revalidation** — deterministic re-check of Opportunity/Strategy/Portfolio/Risk/Liquidity/Correlation/Capital using the Control vocabulary (CONTINUE/REVALIDATE/REJECT/EXPIRED/STALE).
+- **Allocation→AEGIS→Treasury** — Allocation proposes; AEGIS authorizes (unoverrideable); Treasury decides availability/reservation; Allocation never mutates Treasury.
