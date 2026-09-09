@@ -1,1 +1,29 @@
-{"name":"oship","private":true,"scripts":{"build":"tsc -p services/market-engine/tsconfig.json","test":"node --test services/market-engine/dist/**/*.test.js","demo:agent-runtime":"node services/market-engine/dist/demo.js","demo:oiin":"node services/market-engine/dist/oiin-demo.js","demo:intelligence":"node services/market-engine/dist/intelligence-demo.js","demo:portfolio":"node services/market-engine/dist/portfolio-demo.js","demo:execution":"node services/market-engine/dist/execution-demo.js","demo:sprint020":"node services/market-engine/dist/sprint020-demo.js","demo:orchestration":"node services/market-engine/dist/orchestration-demo.js","demo:pipeline":"node services/market-engine/dist/pipeline-demo.js"},"devDependencies":{"@types/node":"^26.4.0","typescript":"^5.7.2"}}
+{
+  "name": "oship",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p services/market-engine/tsconfig.json",
+    "test": "node --test services/market-engine/dist/**/*.test.js",
+    "demo:agent-runtime": "node services/market-engine/dist/demo.js",
+    "demo:oiin": "node services/market-engine/dist/oiin-demo.js",
+    "demo:intelligence": "node services/market-engine/dist/intelligence-demo.js",
+    "demo:portfolio": "node services/market-engine/dist/portfolio-demo.js",
+    "demo:execution": "node services/market-engine/dist/execution-demo.js",
+    "demo:sprint020": "node services/market-engine/dist/sprint020-demo.js",
+    "demo:orchestration": "node services/market-engine/dist/orchestration-demo.js",
+    "demo:pipeline": "node services/market-engine/dist/pipeline-demo.js",
+    "demo:state-plane": "node services/market-engine/dist/state-plane-demo.js",
+    "demo:recovery": "node services/market-engine/dist/recovery-demo.js",
+    "demo:control": "node services/market-engine/dist/control-demo.js",
+    "demo:opportunity-engine": "node services/market-engine/dist/opportunity-demo.js",
+    "demo:strategy-engine": "node services/market-engine/dist/strategy-demo.js",
+    "demo:allocation-engine": "node services/market-engine/dist/allocation-demo.js",
+    "demo:risk-engine": "node services/market-engine/dist/risk-demo.js",
+    "demo:execution-simulation": "node services/market-engine/dist/execution-simulation-demo.js",
+    "demo:execution-planning": "node services/market-engine/dist/execution-planning-demo.js"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "typescript": "^5.7.2"
+  }
+}
