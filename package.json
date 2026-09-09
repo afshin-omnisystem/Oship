@@ -17,7 +17,8 @@
     "demo:control": "node services/market-engine/dist/control-demo.js",
     "demo:opportunity-engine": "node services/market-engine/dist/opportunity-demo.js",
     "demo:strategy-engine": "node services/market-engine/dist/strategy-demo.js",
-    "demo:allocation-engine": "node services/market-engine/dist/allocation-demo.js"
+    "demo:allocation-engine": "node services/market-engine/dist/allocation-demo.js",
+    "demo:risk-engine": "node services/market-engine/dist/risk-demo.js"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",

@@ -254,3 +254,49 @@ Deterministic state machine PROPOSED→EVALUATED→OPTIMIZED→RISK_APPROVED→A
 
 ### Engine (`engine.ts`)
 `UnifiedAllocationEngine.allocate` runs candidate build → optimize → AEGIS → Treasury proposal → audit → revalidation in one deterministic pass, returning a rich output and a replay key. EMERGENCY_STOP/HALTED blocks new allocation while reconciliation/audit/replay remain available.
+
+## Sprint 029 — Unified Portfolio Risk Decision & Risk Budget (`services/market-engine/src/risk/decision/`)
+
+The risk decision layer answers **IS THE ALLOCATION SAFE**. It is a decision/assessment authority: it never mutates Treasury / Portfolio / Risk / Execution, never executes, never calls a provider, and never bypasses AEGIS.
+
+### Authority Chain (partial pipeline)
+```text
+OIIN → Intelligence → Opportunity → Strategy → Allocation → RISK DECISION → AEGIS → Treasury → Execution
+```
+Allocation answers HOW MUCH; Risk Decision answers IS IT SAFE; AEGIS answers IS AUTHORIZED; Treasury answers IS CAPITAL AVAILABLE/RESERVED. OSHIP has ONE Portfolio, ONE Risk Authority, and ONE Treasury; AFIS and ABL are assessed together in a single unified risk budget with no preferential treatment.
+
+### Canonical Risk Decision Model (`types.ts`)
+`RiskAssessmentMetrics` exposes per-candidate projected total/domain/strategy/opportunity/position/event/correlation/instrument exposure, liquidity exposure, capital-at-risk, max loss, expected loss, risk-adjusted return, concentration, utilization, risk budget remaining, available capital after, stress loss, worst-case portfolio impact, confidence, freshness, expiry, time horizon, allocation mode and minimum viable. `RiskDecision` carries the risk_decision_id, allocation_id, candidate_id, domain, requested/approved/blocked capital, risk-safe capital, scale, state, violations (priority-sorted), metrics, risk score, reason, config/policy/budget version, configuration fingerprint, timestamp and fingerprint.
+
+### Lifecycle (`lifecycle.ts`)
+PROPOSED→ASSESSED→RISK_CHECKED→RISK_APPROVED, plus terminal REJECTED / RISK_BLOCKED / CAPITAL_BLOCKED / LIQUIDITY_BLOCKED / CORRELATION_BLOCKED / CONCENTRATION_BLOCKED / STALE / EXPIRED / CANCELLED. `riskBlockStateFor` maps a primary violation to its terminal state.
+
+### Config (`config.ts`)
+Versioned `RiskConfig` (version / policyVersion / budgetVersion), `RiskLimits` (total/domain/strategy/opportunity/position/event/correlation/instrument exposure, concentration, min confidence, liquidity reserve, capital-at-risk, expected-loss, max-loss, stress-loss, drawdown), `RiskBudget` (total → domain → strategy, used/remaining/utilization), and `StressConfig` (NORMAL/ADVERSE/SEVERE/EXTREME with multiplier + loss factors). All validated; `riskConfigurationFingerprint` makes a run's config fully observable.
+
+### Exposure (`exposure.ts`)
+`projectExposureForCandidate` / `aggregateProjectedExposure` fold the portfolio snapshot + the candidate's proposed capital into the resulting exposure per dimension. The Portfolio remains authoritative; this is a pure value computation used to decide risk.
+
+### Concentration / Correlation / Liquidity / Drawdown
+`concentrationMetrics` measures share-of-total-capital on instrument/opportunity/strategy/event/correlation. `correlationMetrics` computes the projected correlation-group exposure and factor-adjusted exposure. `liquidityMetrics` ensures risk never allocates beyond real executable liquidity and preserves the reserve. `drawdownMetrics` derives drawdown from peak vs projected equity; `riskBudgetMetrics` computes utilization and remaining budget.
+
+### Stress (`stress.ts`)
+Deterministic stress engine. For each scenario (NORMAL/ADVERSE/SEVERE/EXTREME) it computes portfolio loss, candidate loss, domain loss, risk-budget utilization and remaining budget from the configured loss factors. `runStress` returns the full ordered scenario set, worst-case scenario/loss, and a max-scenario-loss-exceeded flag.
+
+### Scoring (`scoring.ts`)
+Deterministic composite risk score over observable bounded factors (exposure, concentration, correlation, liquidity, drawdown, stress loss, capital-at-risk, freshness, confidence). `scoreToScale` maps a score to FULL/PARTIAL/REDUCED/BLOCKED. Higher = riskier; no ML.
+
+### Assessor (`assessor.ts`)
+`assessCandidate` projects the portfolio, evaluates every dimension, computes the risk-safe capital (the largest amount satisfying all limits), and derives a deterministic scale. It exposes a running (sequential) budget so the shared available capital + exposure are enforced across the batch (AFIS + ABL together). Fatal violations (emergency-stop/stale/expired/all-or-nothing-block) block outright; scalable exposure/concentration/liquidity/drawdown/stress violations scale the approved capital down to the risk-safe amount. Final metrics are computed from the APPROVED capital (never the full request).
+
+### Engine (`engine.ts`)
+`RiskAssessorEngine.assess` consumes Allocation Decisions + candidates + portfolio, processes them sequentially against a running portfolio snapshot (enforcing the unified budget), aggregates violations (priority-sorted), runs the aggregate stress, checks invariants (fail-closed), performs revalidation, and returns a `RiskDecisionResult` plus a deterministic fingerprint.
+
+### Revalidation (`revalidation.ts`)
+Re-checks freshness before approval: opportunity expired / strategy stale / allocation stale / risk config changed → REVALIDATE / REJECT / EXPIRED / STALE, using the existing Control vocabulary.
+
+### Boundaries (`boundaries.ts`)
+`evaluateRiskAegis` maps a risk scale to AEGIS APPROVED / PARTIALLY_APPROVED / BLOCKED (risk never bypasses AEGIS). `riskTreasuryGate` only reports whether the proposed amount is coverable — Treasury remains authoritative and is never touched here. `riskEmergencyGate` enforces EMERGENCY_STOP/HALTED → no approval.
+
+### Replay & Audit (`replay.ts`, `audit.ts`)
+`RiskReplay.runLive`/`runReplay` reproduce the exact decision ids, risk scores, approved capital, states, stress results and fingerprints in fresh isolated engines. `buildRiskAudit` emits `oship.risk.v1` with risk_decision_id, allocation_id, portfolio_id, config/policy version, state, decision, approved/blocked capital, risk score, budget utilization, stress summary, reason, fingerprint, timestamp.

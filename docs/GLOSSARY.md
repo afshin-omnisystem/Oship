@@ -124,3 +124,15 @@ OIIN is the domain-neutral canonical event plane between external connectors and
 - **Dynamic Reallocation** — controlled REALLOCATE that computes previous/new/delta per candidate and re-verifies constraints; never mutates Treasury.
 - **Allocation Revalidation** — deterministic re-check of Opportunity/Strategy/Portfolio/Risk/Liquidity/Correlation/Capital using the Control vocabulary (CONTINUE/REVALIDATE/REJECT/EXPIRED/STALE).
 - **Allocation→AEGIS→Treasury** — Allocation proposes; AEGIS authorizes (unoverrideable); Treasury decides availability/reservation; Allocation never mutates Treasury.
+- **Portfolio Risk Authority** — the single Risk Decision layer (`risk/decision/`) that decides whether a proposed Allocation is safe against the Portfolio, Risk Budget, Exposure, Correlation and AFIS/ABL limits, before AEGIS/Treasury. One authority total; no department-specific Risk Authority.
+- **Risk Decision** — the deterministic outcome for a candidate: a scale (FULL_APPROVAL/PARTIAL_APPROVAL/REDUCED/BLOCKED), approved/blocked capital, risk state, risk-safe capital, priority-sorted violations, risk score, reason and fingerprint.
+- **Risk-Safe Capital** — the largest amount satisfying all exposure/concentration/liquidity/drawdown/budget limits; drives PARTIAL/REDUCED scaling.
+- **Risk Budget** — a versioned, unified budget (total → domain → strategy → candidate) shared by AFIS and ABL with no preferential treatment.
+- **Risk Scaling** — the non-binary decision: expose violations scale the approved capital to risk-safe (PARTIAL_APPROVAL/REDUCED), while fatal violations (emergency-stop/stale/expired/all-or-nothing-block) block outright.
+- **Stress Scenario** — NORMAL/ADVERSE/SEVERE/EXTREME; deterministic portfolio/candidate/domain loss, budget utilization and remaining budget.
+- **Projected Portfolio** — existing portfolio + existing allocations + the new allocation; risk is always computed on this projected basis.
+- **Risk Invariant** — fail-closed checks: allocated ≥ 0, approved ≤ requested, approved ≤ risk-safe, exposure ≤ limits, stress loss ≤ limit, budget utilization ≤ 100%, blocked not approved, emergency stop not bypassed, all-or-nothing no sub-minimum.
+- **Risk Revalidation** — deterministic re-check (CONTINUE/REVALIDATE/REJECT/EXPIRED/STALE) after allocation/opportunity staleness or risk-config change, before approval.
+- **Risk→AEGIS→Treasury** — Risk Decision proposes a scale; AEGIS authorizes (unoverrideable); Treasury decides availability/reservation. Risk never bypasses AEGIS and never mutates Treasury.
+- **Risk Budget Utilization** — the share of the unified risk budget consumed (used/total), constrained to ≤ 100%.
+- **Capital at Risk (CaR)** — project deterministic capital-at-risk for a candidate under the configured risk model.
