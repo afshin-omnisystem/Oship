@@ -120,6 +120,26 @@ export function leakageDecomposition(
         estimatedFees !== null ? Math.max(0, realizedFees - estimatedFees) : 0,
         'MEASURED', 'realized fees − estimated fees (at scale)',
         estimatedFees !== null, `realized ${realizedFees.toFixed(4)} vs estimated ${(estimatedFees ?? 0).toFixed(4)}`);
+    } else if (leakName === 'PARTIAL_FILL_LEAKAGE') {
+      // Sprint 034's PARTIAL_FILL_COST is the NOTIONAL of the unfilled
+      // quantity (remaining × benchmark) — not an edge-dollar cost. The
+      // honest edge-unit leakage is the gross edge at scale that was never
+      // delivered: grossEdgeAtScale × (1 − fillCompletion).
+      const completion = realized.fillCompletion;
+      add('PARTIAL_FILL_LEAKAGE',
+        decayAvailable ? Math.max(0, (grossAtScale ?? 0) * (1 - completion)) : 0,
+        'DERIVED', 'grossEdgeAtScale × (1 − fillCompletion)',
+        decayAvailable,
+        `fillCompletion ${completion.toFixed(4)}${c.available ? `; Sprint 034 unfilled notional ${c.value} (notional, not edge cost)` : ''}`);
+    } else if (leakName === 'MARKET_IMPACT') {
+      // Sprint 034's MARKET_IMPACT is an impact NOTIONAL that overlaps the
+      // slippage component by construction; its dollar effect is already
+      // embedded in the realized prices counted inside realizedNetValue.
+      // Copying it here would double-count a notional-scale figure as
+      // edge-dollar leakage — so it is documented, never summed.
+      add('MARKET_IMPACT', 0, 'DERIVED',
+        '0 by construction — impact dollar effect is embedded in realized prices (overlaps SLIPPAGE)',
+        true, `Sprint 034 impact notional ${c.value} documented, not double-counted`);
     } else {
       add(leakName, c.value, 'MEASURED', `Sprint 034 attribution ${perfName}`,
         c.available, c.available ? 'measured execution cost' : 'no Sprint 034 attribution');
