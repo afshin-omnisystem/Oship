@@ -23,7 +23,8 @@
     "demo:execution-planning": "node services/market-engine/dist/execution-planning-demo.js",
     "demo:execution-intelligence": "node services/market-engine/dist/execution-intelligence-demo.js",
     "demo:execution-control": "node services/market-engine/dist/execution-control-demo.js",
-    "demo:execution-performance": "node services/market-engine/dist/execution-performance-demo.js"
+    "demo:execution-performance": "node services/market-engine/dist/execution-performance-demo.js",
+    "demo:closed-loop-intelligence": "node services/market-engine/dist/closed-loop-intelligence-demo.js"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
