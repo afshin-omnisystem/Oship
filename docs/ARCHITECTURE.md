@@ -452,3 +452,49 @@ REPRICE: one tick through the current mid, tick-aligned, clamped to the price-li
 
 ### Demo (`execution-intelligence-demo.ts`)
 `demo:execution-intelligence` drives the real closed loop through every action and condition — KEEP, REPRICE (30bps drift, remainder repriced one tick), RESLICE (40% fill, remainder re-sliced, total preserved), REROUTE (partially-filled venue loses to a superior alternative; **the remaining 6 units move, not the original 10**), REPLAN (atomic venue failure, legs preserved), ABORT (emergency stop, full cancellation), VENUE DEGRADATION (DEGRADED → RECOVERING hysteresis), VENUE FAILURE (no alternative → fail-closed ABORT), PARTIAL FILL, HIGH LATENCY, HIGH SLIPPAGE, FAIL-CLOSED REPLAN (uncoverable candidates → null proposal, rejected + audited, remainder intact), REPLAY (identical), AUDIT (hash chain verified), INVARIANTS — ending with `SYSTEM STATUS: RECONCILED`.
+
+## Sprint 033 — Autonomous Execution Control Plane (`services/market-engine/src/execution/control/`)
+
+Added the deterministic, paper-only **Autonomous Execution Control Plane** — one control engine over the Sprint 030–032 execution stack. Each control cycle runs the full loop: simulate the current plan (Sprint 031), observe telemetry/signals/quality/venue health (Sprint 032), move through a 12-state control machine, resolve a precedence-ordered control decision, validate it through the narrow Risk/AEGIS bridges, apply the chosen action as a plan revision through the ONE Execution authority, checkpoint the session, and feed the result into the next cycle — until COMPLETED, ABORTED or EXHAUSTED.
+
+**THE CONTROL PLANE IS NOT AN AUTHORITY. PAPER ONLY.** It may observe, evaluate, request validation/authorization, submit execution revisions and receive results. It may NOT mutate Treasury or Portfolio, override Risk, bypass AEGIS, execute directly, or call provider APIs. The authority bridge exposes exactly three surfaces — `risk`, `aegis`, `execution` — with literal `treasuryMutation: false` / `portfolioMutation: false` markers enforced by invariant.
+
+```text
+Execution Plan → Simulation → Telemetry → Execution Intelligence → Control Cycle
+  → Decision (precedence: EMERGENCY_STOP > HARD_RISK_VIOLATION > AEGIS_REJECTION
+    > ABORT > REPLAN > REROUTE > REPRICE/RESLICE > WAIT > CONTINUE > COMPLETE)
+  → Risk/AEGIS validation (fail closed on anything ≠ APPROVED)
+  → Action applied through the Execution authority (budgeted, deduped, lineaged)
+  → Checkpoint → Feedback (current vs previous vs baseline) → next cycle
+  → COMPLETED / ABORTED / EXHAUSTED
+```
+
+### Control Machine (`state.ts`, `transition.ts`)
+Twelve canonical states — INITIALIZED, OBSERVING, EVALUATING, DECIDING, VALIDATING, EXECUTING, WAITING_FEEDBACK, REASSESSING, REPLANNING, COMPLETED, ABORTED, EXHAUSTED — with an explicit adjacency table and `canTransition` validation. Every applied transition is validated (illegal transitions throw, fail closed), recorded immutably on the tracker history, and emitted to the hash-chained audit log. Cycles pass OBSERVING → EVALUATING → DECIDING → VALIDATING and then either EXECUTING/REPLANNING → WAITING_FEEDBACK (a revision was applied), WAITING_FEEDBACK directly (CONTINUE/WAIT/rejected action — the no-op path), or a terminal state. WAITING_FEEDBACK → REASSESSING → OBSERVING carries the next cycle; WAITING_FEEDBACK → EXHAUSTED is the canonical edge for "budget ran out with work left". No semantically-required state is ever skipped.
+
+### Control Cycle (`telemetry.ts`, `controller.ts`, `types.ts`)
+`ExecutionControlCycle` carries cycleId, executionPlanId, parentCycleId, cycleNumber, startedAt/completedAt, state, telemetry, signals, quality, decision, action, result, configurationFingerprint, inputFingerprint and outputFingerprint. Cycles are frozen on completion (immutability is an invariant) and never re-applied after recovery.
+
+### Budgets & Limits (`budget.ts`, `limits.ts`, `scheduler.ts`)
+Per-action budgets (maxCycles/maxReprices/maxReslices/maxReroutes/maxReplans/maxFailures/maxExecutionTimeMs) with current/max/remaining accounting and deterministic rejection reasons; hard limits (maxSlippageBps, maxImpactNotional, maxLatencyMs) feed abort verdicts. An unaffordable want becomes an explicit WAIT(ACTION_UNAFFORDABLE); exhausted budgets terminate the session EXHAUSTED (or ABORTED/BUDGET_EXHAUSTED for the failure budget) — never a silent continue. Counters are monotonic and ceiling-bound (invariants).
+
+### Decision (`decision.ts`, `safety.ts`)
+`decideControl` collects every candidate verdict and resolves by the canonical precedence — safety can never be overridden by an optimization. Emergency stop dominates everything; Risk/AEGIS validation that is not APPROVED (rejected *or* pending) aborts fail-closed; oscillation protection outranks ordinary adaptations; with work outstanding the Sprint 032 policy suite maps onto control actions (REPLAN/REROUTE/REPRICE/RESLICE); WAIT is a deliberate deferral (same-action cooldown, venue-recovery hysteresis, improving-trend, unaffordable action); CONTINUE maps from KEEP; COMPLETE only when the completion engine's conditions all hold, and optimization verdicts are suppressed entirely once no work remains.
+
+### Multi-Cycle Feedback, Oscillation, Hysteresis (`multi-cycle feedback via controller`, `decision.ts`)
+Feedback compares current vs previous vs baseline quality: improving/degrading trends, oscillation, repeated failures, repeated reroutes/reprices, diminishing improvement and recovery. `detectOscillation` catches venue flip-flops (reroute A→B→A), repeated identical actions and action ping-pong, deterministic and windowed; on detection the configured policy fires (ABORT, or REPLAN). Quality bands and venue health use hysteresis with recovery thresholds distinct from degradation thresholds, so bands never flap around a boundary.
+
+### Completion & Abort (`completion.ts`, `abort.ts`)
+COMPLETED requires: target filled, all atomic legs satisfied, risk valid, AEGIS valid, reconciliation valid, and no unresolved mandatory actions; partial completion is distinguishable. Twelve canonical abort reasons (EMERGENCY_STOP, RISK_LIMIT, AEGIS_REJECTED, BUDGET_EXHAUSTED, EXCESSIVE_SLIPPAGE, EXCESSIVE_IMPACT, EXCESSIVE_LATENCY, VENUE_UNAVAILABLE, OSCILLATION_DETECTED, STALE_MARKET, UNRECOVERABLE_PLAN, INVARIANT_FAILURE). An abort preserves the full history, telemetry, audit chain, lineage, filled + remaining quantity and final state, and records a terminal ABORT revision in lineage (through the Execution authority) before the session terminates. An atomic plan that ends partially filled on a non-aborted session is converted to a fail-closed UNRECOVERABLE_PLAN abort.
+
+### Checkpoints, Recovery, Replay (`checkpoint.ts`, `recovery.ts`, `replay.ts`)
+Every cycle records a checkpoint carrying the full recovery journal (completed cycles, prior checkpoints, next sequence, budget, lineage, venue/quality/risk/aegis state, applied-action keys, audit events) with a verifiable fingerprint. `recoverControlSession` refuses unverified or foreign checkpoints (fail closed), resumes at checkpoint.cycleNumber + 1 and never re-applies an action; a recovered session is byte-identical to the uninterrupted run. `replayControlSession` re-runs the same input and proves identical cycles, decisions, audit chain, final result and session fingerprint — two replays are byte-identical to each other. `verifyAuditStream` independently re-derives every hash from the genesis.
+
+### Audit & Invariants (`audit.ts`, `invariants.ts`)
+`oship.execution-control.v1` hash-chained audit log (12 lifecycle event types: SESSION_STARTED, STATE_CHANGED, CYCLE_COMPLETED, CONTROL_DECISION, ACTION_APPLIED, ACTION_REJECTED, CHECKPOINT_RECORDED, SESSION_RECOVERED, SESSION_COMPLETED, SESSION_ABORTED, SESSION_EXHAUSTED, REPLAY_COMPLETED). `checkControlInvariants` enforces 24 hard invariants — deterministic transitions and decisions, immutable cycles and plans, lineage chain, quantity preservation at every revision boundary, budget monotonicity and ceilings, no duplicate actions/fills, ES dominance, fail-closed semantics, authority boundaries (no Treasury/Portfolio surface), checkpoint/recovery consistency, replay equivalence, atomic integrity, AFIS/ABL domain + semantic-side compatibility, and no live execution — any violation fails closed.
+
+### Config (`config.ts`)
+Versioned, validated, deep-mergeable configuration (budgets, limits, oscillation, hysteresis, adaptive thresholds) whose canonical form participates in the configuration fingerprint; two engines with the same config produce the same fingerprints.
+
+### Demo (`execution-control-demo.ts`)
+`demo:execution-control` drives the real control plane through 23 assertion-backed sections — CONTINUE, REPRICE, RESLICE, REROUTE, REPLAN, WAIT, COMPLETE, ABORT, MULTI-CYCLE, VENUE FAILURE, VENUE RECOVERY, OSCILLATION (venue + action), HYSTERESIS, BUDGET, EMERGENCY STOP, CHECKPOINT, RECOVERY, REPLAY, AUDIT, INVARIANTS, AFIS, ABL, AUTHORITY — ending `SYSTEM STATUS: RECONCILED`. One control engine serves AFIS and ABL; BACK maps to BUY/long and LAY to SELL/short with ABL semantic sides preserved across every lineage revision.

@@ -21,7 +21,8 @@
     "demo:risk-engine": "node services/market-engine/dist/risk-demo.js",
     "demo:execution-simulation": "node services/market-engine/dist/execution-simulation-demo.js",
     "demo:execution-planning": "node services/market-engine/dist/execution-planning-demo.js",
-    "demo:execution-intelligence": "node services/market-engine/dist/execution-intelligence-demo.js"
+    "demo:execution-intelligence": "node services/market-engine/dist/execution-intelligence-demo.js",
+    "demo:execution-control": "node services/market-engine/dist/execution-control-demo.js"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
