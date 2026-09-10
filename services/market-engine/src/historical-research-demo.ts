@@ -589,6 +589,12 @@ function main(): void {
     const tampered = result.auditEvents.map((e) => ({...e}));
     tampered[4] = {...tampered[4], payload: {...tampered[4].payload, injected: true}};
     s.check(!verifyResearchAudit(tampered).valid, 'payload substitution detected');
+    const reordered = [...result.auditEvents];
+    const at = 10;
+    const swap = reordered[at]!;
+    reordered[at] = reordered[at + 1]!;
+    reordered[at + 1] = swap;
+    s.check(!verifyResearchAudit(reordered, result.auditEvents.length).valid, 'reorder detected');
     const truncated = result.auditEvents.slice(0, -3);
     s.check(!verifyResearchAudit(truncated, result.auditEvents.length).valid, 'truncation detected');
     s.equal(result.invariants.checks.length, 46, '46 named invariant checks');
