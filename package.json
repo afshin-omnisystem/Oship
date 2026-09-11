@@ -20,7 +20,15 @@
     "demo:allocation-engine": "node services/market-engine/dist/allocation-demo.js",
     "demo:risk-engine": "node services/market-engine/dist/risk-demo.js",
     "demo:execution-simulation": "node services/market-engine/dist/execution-simulation-demo.js",
-    "demo:execution-planning": "node services/market-engine/dist/execution-planning-demo.js"
+    "demo:execution-planning": "node services/market-engine/dist/execution-planning-demo.js",
+    "demo:execution-intelligence": "node services/market-engine/dist/execution-intelligence-demo.js",
+    "demo:execution-control": "node services/market-engine/dist/execution-control-demo.js",
+    "demo:execution-performance": "node services/market-engine/dist/execution-performance-demo.js",
+    "demo:closed-loop-intelligence": "node services/market-engine/dist/closed-loop-intelligence-demo.js",
+    "demo:historical-research": "node services/market-engine/dist/historical-research-demo.js",
+    "demo:intelligence-learning": "node services/market-engine/dist/intelligence-learning-demo.js",
+    "demo:opportunity-intelligence": "node services/market-engine/dist/opportunity-intelligence-demo.js",
+    "demo:decision-intelligence": "node services/market-engine/dist/decision-intelligence-demo.js"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
