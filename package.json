@@ -27,7 +27,8 @@
     "demo:closed-loop-intelligence": "node services/market-engine/dist/closed-loop-intelligence-demo.js",
     "demo:historical-research": "node services/market-engine/dist/historical-research-demo.js",
     "demo:intelligence-learning": "node services/market-engine/dist/intelligence-learning-demo.js",
-    "demo:opportunity-intelligence": "node services/market-engine/dist/opportunity-intelligence-demo.js"
+    "demo:opportunity-intelligence": "node services/market-engine/dist/opportunity-intelligence-demo.js",
+    "demo:decision-intelligence": "node services/market-engine/dist/decision-intelligence-demo.js"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
