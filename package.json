@@ -28,7 +28,8 @@
     "demo:historical-research": "node services/market-engine/dist/historical-research-demo.js",
     "demo:intelligence-learning": "node services/market-engine/dist/intelligence-learning-demo.js",
     "demo:opportunity-intelligence": "node services/market-engine/dist/opportunity-intelligence-demo.js",
-    "demo:decision-intelligence": "node services/market-engine/dist/decision-intelligence-demo.js"
+    "demo:decision-intelligence": "node services/market-engine/dist/decision-intelligence-demo.js",
+    "demo:decision-governance": "node services/market-engine/dist/decision-governance-demo.js"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
