@@ -31,7 +31,7 @@
     "demo:decision-intelligence": "node services/market-engine/dist/decision-intelligence-demo.js"
   },
   "devDependencies": {
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.5.1",
     "typescript": "^5.7.2"
   }
 }
