@@ -31,7 +31,8 @@
     "demo:decision-intelligence": "node services/market-engine/dist/decision-intelligence-demo.js",
     "demo:decision-governance": "node services/market-engine/dist/decision-governance-demo.js",
     "demo:strategy-intent": "node services/market-engine/dist/strategy-intent-demo.js",
-    "demo:strategy-intent-evaluation": "node services/market-engine/dist/strategy-intent-evaluation-demo.js"
+    "demo:strategy-intent-evaluation": "node services/market-engine/dist/strategy-intent-evaluation-demo.js",
+    "demo:portfolio-decision-input": "node services/market-engine/dist/intelligence/portfolio-decision-input/portfolio-decision-input-demo.js"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
